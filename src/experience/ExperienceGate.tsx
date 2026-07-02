@@ -9,11 +9,19 @@ const Experience = dynamic(() => import("./Experience"), {
 
 /**
  * Decides between the immersive WebGL experience and the classic site.
- * The classic site is server-rendered (SEO + no-JS), then we upgrade to
- * 3D when the device can carry it. Escape hatches:
- *  - ?classic=1 forces the classic site
- *  - prefers-reduced-motion gets the classic site (no motion trap)
- *  - missing WebGL gets the classic site
+ * The 3D venue is the default face of the site — it loads for every
+ * device that can run it. The classic site is server-rendered first
+ * (SEO + no-JS) and remains the genuine fallback. Escape hatches:
+ *  - ?classic       forces the classic site
+ *  - missing WebGL  falls back to the classic site
+ *  - the venue's own "SKIP · CLASSIC SITE" link (and ?classic) let any
+ *    visitor — including motion-sensitive ones — opt out of the 3D.
+ *
+ * Note: we intentionally do NOT auto-route prefers-reduced-motion users to
+ * the classic site. This is a flagship marketing experience, so the venue
+ * is the default; reduced-motion is still honoured *inside* it (Framer's
+ * useReducedMotion calms non-essential animation), and the skip link is
+ * always one click away.
  */
 export default function ExperienceGate({ classic }: { classic: ReactNode }) {
   const [mode, setMode] = useState<"classic" | "3d">("classic");
@@ -21,15 +29,11 @@ export default function ExperienceGate({ classic }: { classic: ReactNode }) {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.has("classic")) return;
-    // reduced-motion users get the calm site unless they opt in explicitly
-    const forced = params.has("experience");
-    if (!forced && window.matchMedia("(prefers-reduced-motion: reduce)").matches)
-      return;
     try {
       const canvas = document.createElement("canvas");
       const gl =
         canvas.getContext("webgl2") ?? canvas.getContext("webgl");
-      if (!gl) return;
+      if (!gl) return; // no WebGL → classic fallback
     } catch {
       return;
     }
