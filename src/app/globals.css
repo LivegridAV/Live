@@ -1,0 +1,429 @@
+@import "tailwindcss";
+
+/* ── LivegridAV brand tokens ───────────────────────────── */
+:root {
+  --paper: #eceeed;      /* light surface        */
+  --ink: #13201e;        /* dark surface / ink   */
+  --ink-soft: #22332f;   /* unlit cell on dark   */
+  --aqua: #1fa093;       /* primary accent       */
+  --glow: #3fd6c8;       /* bright glow accent   */
+  --text: #161b1a;       /* body text on light   */
+  --text-inv: #f4f6f5;   /* body text on dark    */
+  --muted: #525a58;      /* secondary text       */
+  --faint: #8a918f;      /* labels / captions    */
+  --line: #dcdfde;       /* hairline borders     */
+
+  --background: var(--paper);
+  --foreground: var(--text);
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-aqua: var(--aqua);
+  --color-glow: var(--glow);
+  --color-text: var(--text);
+  --color-text-inv: var(--text-inv);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --font-sans: var(--font-space-grotesk);
+  --font-mono: var(--font-space-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Brand signal-grid "pop" — reusable across the site */
+@keyframes lgPop {
+  0%   { transform: scale(0.35); opacity: 0.12; }
+  14%  { transform: scale(1);    opacity: 1; }
+  78%  { transform: scale(1);    opacity: 1; }
+  100% { transform: scale(0.35); opacity: 0.12; }
+}
+
+/* ══════════════════════════════════════════════════════════
+   The immersive experience (src/experience)
+   Dark venue chrome: mono instrumentation labels, glass panels,
+   one glow accent at a time.
+   ══════════════════════════════════════════════════════════ */
+
+.lg-experience {
+  background: #060b0a;
+  color: var(--text-inv);
+  min-height: 100vh;
+  cursor: none; /* the energy orb takes over */
+}
+.lg-experience a, .lg-experience button, .lg-experience input,
+.lg-experience textarea, .lg-experience label { cursor: none; }
+@media (pointer: coarse) {
+  .lg-experience, .lg-experience a, .lg-experience button,
+  .lg-experience input, .lg-experience textarea { cursor: auto; }
+}
+
+/* ── vignette over the canvas ── */
+.lg-vignette {
+  position: fixed; inset: 0; pointer-events: none; z-index: 5;
+  background: radial-gradient(ellipse at center,
+    transparent 55%, rgba(2, 6, 5, 0.55) 100%);
+}
+
+/* ── cursor orb ── */
+.lg-cursor { position: fixed; inset: 0; pointer-events: none; z-index: 90; }
+@media (pointer: coarse) { .lg-cursor { display: none; } }
+.lg-cursor-dot {
+  position: absolute; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--glow); box-shadow: 0 0 12px var(--glow);
+}
+.lg-cursor-halo {
+  position: absolute; width: 32px; height: 32px; border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--glow) 55%, transparent);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--glow) 30%, transparent);
+}
+
+/* ── power intro ── */
+.lg-intro {
+  position: fixed; inset: 0; z-index: 80; background: #04080a;
+  display: grid; place-items: center; overflow: hidden;
+  transition: opacity 1s ease, visibility 1s;
+}
+.lg-intro.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
+.lg-intro.is-powering { background: transparent; }
+.lg-intro-halo {
+  position: absolute; width: 500px; height: 500px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(63,214,200,0.07) 0%, transparent 65%);
+  pointer-events: none;
+}
+.lg-intro-center { display: grid; place-items: center; gap: 20px; text-align: center; }
+.lg-intro-pulse {
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--glow); box-shadow: 0 0 24px var(--glow);
+  animation: lgPulse 2.4s ease-in-out infinite;
+}
+@keyframes lgPulse {
+  0%, 100% { transform: scale(0.6); opacity: 0.5; }
+  50% { transform: scale(1.4); opacity: 1; }
+}
+.lg-intro-hint {
+  font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.3em;
+  text-transform: uppercase; color: var(--faint);
+  animation: lgFadeIn 1s ease 1.4s both;
+}
+.lg-intro-brand {
+  font-size: 20px; font-weight: 600; letter-spacing: -0.02em;
+  color: var(--text-inv); opacity: 0.5; animation: lgFadeIn 1s ease 2.2s both;
+}
+.lg-intro-brand span { color: var(--glow); }
+@keyframes lgFadeIn { from { opacity: 0; } to { opacity: 1; } }
+.lg-intro-boot {
+  font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.18em;
+  display: grid; gap: 10px; color: var(--glow);
+  background: rgba(4, 10, 9, 0.72); padding: 28px 34px; border-radius: 14px;
+  border: 1px solid rgba(63, 214, 200, 0.18);
+}
+.lg-intro-boot p { opacity: 0; transform: translateX(-8px); transition: all 0.3s ease; }
+.lg-intro-boot p.is-on { opacity: 1; transform: none; }
+.lg-intro-skip {
+  position: absolute; bottom: 24px; right: 28px;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--muted); text-decoration: none;
+}
+.lg-intro-skip:hover { color: var(--glow); }
+
+/* ── HUD chrome ── */
+.lg-hud-top {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 60;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 18px 28px;
+  background: linear-gradient(to bottom, rgba(4,9,8,0.75), transparent);
+}
+.lg-wordmark {
+  font-family: var(--font-sans); font-size: 19px; font-weight: 600;
+  letter-spacing: -0.02em; color: var(--text-inv); background: none; border: 0;
+}
+.lg-wordmark span { color: var(--glow); }
+.lg-hud-actions { display: flex; gap: 10px; align-items: center; }
+.lg-chip {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em;
+  color: var(--faint); background: rgba(19, 32, 30, 0.6); border: 1px solid var(--ink-soft);
+  padding: 8px 14px; border-radius: 999px; backdrop-filter: blur(8px);
+  transition: color 0.2s, border-color 0.2s;
+}
+.lg-chip.is-on { color: var(--glow); border-color: color-mix(in srgb, var(--glow) 40%, transparent); }
+.lg-chip-cta { color: var(--ink); background: var(--glow); border-color: var(--glow); font-weight: 700; }
+.lg-chip-cta:hover { box-shadow: 0 0 18px color-mix(in srgb, var(--glow) 50%, transparent); }
+@media (max-width: 767px) {
+  .lg-hud-top { padding: 12px 16px; }
+  .lg-chip { padding: 6px 10px; font-size: 9px; white-space: nowrap; }
+  .lg-console { width: 178px; left: 14px; bottom: 14px; }
+}
+
+/* chapter rail */
+.lg-rail {
+  position: fixed; right: 22px; top: 50%; transform: translateY(-50%);
+  z-index: 60; display: grid; gap: 14px;
+}
+@media (max-width: 767px) { .lg-rail { display: none; } }
+.lg-rail-item {
+  display: flex; align-items: center; gap: 10px; justify-content: flex-end;
+  background: none; border: 0; color: var(--faint);
+}
+.lg-rail-label {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em;
+  text-transform: uppercase; opacity: 0; transform: translateX(6px);
+  transition: all 0.25s ease;
+}
+.lg-rail-item:hover .lg-rail-label, .lg-rail-item.is-active .lg-rail-label {
+  opacity: 1; transform: none;
+}
+.lg-rail-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--ink-soft);
+  transition: all 0.25s ease; flex-shrink: 0;
+}
+.lg-rail-item.is-active .lg-rail-dot {
+  background: var(--glow); box-shadow: 0 0 10px var(--glow);
+}
+
+/* stage control console */
+.lg-console {
+  position: fixed; left: 22px; bottom: 22px; z-index: 60; width: 210px;
+  border-radius: 16px; overflow: hidden;
+  background: rgba(10, 20, 17, 0.55); backdrop-filter: blur(14px);
+  border: 1px solid rgba(63, 214, 200, 0.2);
+  box-shadow: 0 0 30px rgba(63, 214, 200, 0.08);
+  opacity: 0; transform: translateY(16px); pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.lg-console.is-visible { opacity: 1; transform: none; pointer-events: auto; }
+.lg-console-head {
+  width: 100%; display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.22em;
+  color: var(--glow); padding: 12px 16px; background: rgba(63,214,200,0.06); border: 0;
+}
+.lg-console-body { padding: 10px; display: grid; gap: 6px; }
+.lg-toggle {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em;
+  color: var(--faint); background: rgba(19,32,30,0.5); border: 1px solid transparent;
+  padding: 9px 12px; border-radius: 10px; text-align: left;
+  transition: all 0.2s ease;
+}
+.lg-toggle:hover { border-color: var(--ink-soft); color: var(--text-inv); }
+.lg-toggle.is-on { color: var(--text-inv); }
+.lg-toggle-led {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--ink-soft);
+  transition: all 0.2s ease; flex-shrink: 0;
+}
+.lg-toggle.is-on .lg-toggle-led, .lg-toggle-led.is-on {
+  background: var(--glow); box-shadow: 0 0 8px var(--glow);
+}
+.lg-console-themes { display: flex; gap: 8px; padding: 6px 12px 8px; }
+.lg-theme-dot {
+  width: 18px; height: 18px; border-radius: 50%; border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+.lg-theme-dot.is-active { border-color: var(--text-inv); transform: scale(1.15); }
+.lg-theme-signal { background: #3fd6c8; }
+.lg-theme-cyber { background: #e84ad4; }
+.lg-theme-ember { background: #ffb35c; }
+
+/* scroll hint */
+.lg-scrollhint {
+  position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%);
+  z-index: 55; display: grid; place-items: center; gap: 8px;
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.24em;
+  text-transform: uppercase; color: var(--faint);
+  animation: lgFadeIn 1s ease 1s both;
+}
+.lg-scrollhint-wheel {
+  width: 20px; height: 32px; border: 1px solid var(--faint); border-radius: 10px;
+  position: relative;
+}
+.lg-scrollhint-wheel::after {
+  content: ""; position: absolute; left: 50%; top: 6px; width: 3px; height: 7px;
+  margin-left: -1.5px; border-radius: 2px; background: var(--glow);
+  animation: lgWheel 1.8s ease-in-out infinite;
+}
+@keyframes lgWheel {
+  0% { transform: translateY(0); opacity: 1; }
+  70% { transform: translateY(12px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 0; }
+}
+
+/* ── in-scene labels (drei Html) ── */
+.lg-label {
+  display: grid; gap: 3px; padding: 10px 14px; border-radius: 12px;
+  background: rgba(8, 17, 15, 0.78); backdrop-filter: blur(10px);
+  border: 1px solid rgba(63, 214, 200, 0.28);
+  box-shadow: 0 0 24px rgba(63, 214, 200, 0.12);
+  white-space: nowrap; text-align: left;
+}
+.lg-label-name { font-weight: 600; font-size: 14px; color: var(--text-inv); letter-spacing: -0.01em; }
+.lg-label-role { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.1em; color: var(--glow); }
+.lg-label-meta { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.06em; color: var(--faint); }
+.lg-label-hint { font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.14em; color: var(--faint); text-transform: uppercase; margin-top: 3px; }
+
+/* services panel labels */
+.lg-panel-label { display: grid; gap: 4px; width: 96px; text-align: center; justify-items: center; }
+.lg-panel-num { font-family: var(--font-mono); font-size: 8px; color: var(--glow); letter-spacing: 0.2em; }
+.lg-panel-name { font-weight: 600; font-size: 11px; color: var(--text-inv); line-height: 1.25; }
+.lg-panel-desc { font-size: 8px; color: var(--faint); line-height: 1.45; }
+.lg-panel-label.is-active .lg-panel-name { color: var(--glow); }
+
+/* stat pillars */
+.lg-pillar { width: 190px; text-align: center; display: grid; gap: 6px; justify-items: center; }
+.lg-pillar-value {
+  font-size: 44px; font-weight: 600; letter-spacing: -0.03em; color: var(--text-inv);
+  text-shadow: 0 0 22px color-mix(in srgb, var(--glow) 45%, transparent);
+}
+.lg-pillar-value span { color: var(--glow); }
+.lg-pillar-label {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--faint);
+}
+.lg-pillar-story {
+  font-size: 11px; line-height: 1.5; color: var(--faint); max-width: 180px;
+  opacity: 0; transform: translateY(4px); transition: all 0.3s ease;
+}
+.lg-pillar.is-open .lg-pillar-story { opacity: 1; transform: none; }
+
+/* ── journey blocks ── */
+.lg-journey { position: relative; z-index: 10; pointer-events: none; }
+.lg-journey a, .lg-journey button, .lg-journey input, .lg-journey textarea,
+.lg-journey form, .lg-journey label { pointer-events: auto; }
+.lg-block {
+  position: absolute; left: 6vw; max-width: 480px; display: grid; gap: 14px;
+}
+.lg-block-right { left: auto; right: 8vw; text-align: right; justify-items: end; }
+.lg-block-center { left: 50%; transform: translateX(-50%); text-align: center; justify-items: center; }
+@media (max-width: 767px) {
+  .lg-block, .lg-block-right { left: 6vw; right: 6vw; text-align: left; justify-items: start; max-width: none; }
+  .lg-block-center { left: 6vw; transform: none; }
+}
+.lg-eyebrow {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.24em;
+  text-transform: uppercase; color: var(--glow);
+}
+.lg-block-title {
+  font-size: clamp(30px, 4.5vw, 52px); font-weight: 600; line-height: 1.06;
+  letter-spacing: -0.03em; color: var(--text-inv);
+  text-shadow: 0 2px 30px rgba(4, 9, 8, 0.9);
+}
+.lg-block-copy {
+  font-size: 15px; line-height: 1.6; color: color-mix(in srgb, var(--text-inv) 75%, transparent);
+  max-width: 42ch; text-shadow: 0 1px 12px rgba(4, 9, 8, 0.9);
+}
+
+/* ── finale ── */
+.lg-finale {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  width: min(92vw, 760px); display: grid; gap: 26px; justify-items: center;
+  text-align: center; padding-bottom: 12vh;
+}
+.lg-finale-title {
+  font-size: clamp(26px, 4.2vw, 46px); font-weight: 600; line-height: 1.12;
+  letter-spacing: -0.02em; color: var(--text-inv);
+  text-shadow: 0 2px 34px rgba(4, 9, 8, 0.95);
+}
+.lg-finale-title span { color: var(--glow); text-shadow: 0 0 34px color-mix(in srgb, var(--glow) 55%, transparent); }
+.lg-finale-ctas { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+.lg-finale-foot { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em; color: var(--faint); text-transform: uppercase; }
+
+.lg-btn {
+  font-family: var(--font-sans); font-size: 14px; font-weight: 500;
+  color: var(--text-inv); background: rgba(19, 32, 30, 0.6);
+  border: 1px solid var(--ink-soft); border-radius: 13px; padding: 12px 22px;
+  backdrop-filter: blur(8px); transition: all 0.2s ease; display: inline-block;
+}
+.lg-btn:hover { border-color: var(--glow); color: var(--glow); }
+.lg-btn-primary {
+  background: var(--glow); color: var(--ink); border-color: var(--glow); font-weight: 600;
+}
+.lg-btn-primary:hover {
+  color: var(--ink); filter: brightness(1.08);
+  box-shadow: 0 0 26px color-mix(in srgb, var(--glow) 55%, transparent);
+}
+
+/* holographic contact console */
+.lg-contact {
+  width: min(88vw, 460px); display: grid; gap: 14px; text-align: left;
+  padding: 26px; border-radius: 20px;
+  background: rgba(8, 17, 15, 0.66); backdrop-filter: blur(16px);
+  border: 1px solid rgba(63, 214, 200, 0.22);
+  box-shadow: 0 0 34px rgba(63, 214, 200, 0.07);
+  transition: box-shadow 0.4s ease, border-color 0.4s ease;
+}
+.lg-contact.is-typing {
+  border-color: color-mix(in srgb, var(--glow) 55%, transparent);
+  box-shadow: 0 0 46px color-mix(in srgb, var(--glow) 22%, transparent);
+}
+.lg-contact-head {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.24em; color: var(--glow);
+}
+.lg-contact-led {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--glow);
+  box-shadow: 0 0 8px var(--glow); animation: lgPulse 2s ease-in-out infinite;
+}
+.lg-contact label { display: grid; gap: 6px; }
+.lg-contact label span {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.2em; color: var(--faint);
+}
+.lg-contact input, .lg-contact textarea {
+  font-family: var(--font-mono); font-size: 14px; color: var(--glow);
+  background: rgba(19, 32, 30, 0.55); border: 1px solid var(--ink-soft);
+  border-radius: 10px; padding: 11px 14px; outline: none; resize: vertical;
+  caret-color: var(--glow); transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.lg-contact input:focus, .lg-contact textarea:focus {
+  border-color: var(--glow); box-shadow: 0 0 14px color-mix(in srgb, var(--glow) 25%, transparent);
+}
+.lg-contact input::placeholder, .lg-contact textarea::placeholder { color: var(--muted); }
+.lg-contact-foot { font-family: var(--font-mono); font-size: 10px; color: var(--faint); letter-spacing: 0.08em; }
+
+/* ── modals (spec card, project, credits) ── */
+.lg-modal {
+  position: fixed; inset: 0; z-index: 70; display: grid; place-items: center;
+  background: rgba(4, 9, 8, 0.72); backdrop-filter: blur(6px);
+  animation: lgFadeIn 0.25s ease both; padding: 20px;
+}
+.lg-modal-card {
+  width: min(92vw, 430px); display: grid; gap: 12px; padding: 30px;
+  border-radius: 20px; background: rgba(10, 20, 17, 0.92);
+  border: 1px solid rgba(63, 214, 200, 0.3);
+  box-shadow: 0 0 50px rgba(63, 214, 200, 0.12);
+}
+.lg-modal-eyebrow { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.24em; color: var(--glow); }
+.lg-modal-card h3 { font-size: 26px; font-weight: 600; letter-spacing: -0.02em; color: var(--text-inv); }
+.lg-modal-role, .lg-modal-body { font-size: 14px; line-height: 1.6; color: var(--faint); }
+.lg-spec-list, .lg-project-specs { display: grid; gap: 10px; margin: 8px 0; }
+.lg-spec-list div, .lg-project-specs div {
+  display: flex; justify-content: space-between; gap: 16px;
+  border-bottom: 1px solid var(--ink-soft); padding-bottom: 8px;
+}
+.lg-spec-list dt, .lg-project-specs dt {
+  font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em; color: var(--faint);
+}
+.lg-spec-list dd, .lg-project-specs dd { font-size: 13px; color: var(--text-inv); text-align: right; }
+.lg-modal-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+.lg-project-visual {
+  height: 110px; border-radius: 14px; display: grid; place-items: center;
+  border: 1px solid var(--ink-soft);
+}
+.lg-project-visual span { width: 34px; height: 34px; border-radius: 8px; display: block; }
+
+/* fallback banner for the classic site */
+.lg-fallback-note {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
+  color: var(--faint); text-align: center; padding: 10px;
+  background: var(--ink); border-bottom: 1px solid var(--ink-soft);
+}
