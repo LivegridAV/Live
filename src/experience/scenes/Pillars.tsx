@@ -5,33 +5,16 @@ import { Html } from "@react-three/drei";
 import * as THREE from "three";
 import { audio } from "../audio";
 import { chapterT, signals, THEMES, useChapterActive, useExperience } from "../store";
+import { STATS } from "@/content/site";
 
 /**
  * Scene 5 — company achievements as holographic glass pillars.
  * Pillars rise as the chapter begins; hovering one expands it and
- * runs its counter + story.
+ * runs its counter + story. Stats are shared with the classic site
+ * via src/content/site.ts.
  */
 
 const CENTER_Z = -120;
-
-const STATS = [
-  {
-    value: 10, suffix: "+", label: "Years Experience",
-    story: "A decade of shows — from ballroom launches to stadium stages.",
-  },
-  {
-    value: 500, suffix: "+", label: "Events Delivered",
-    story: "Concerts, summits, weddings, product reveals. All on time, all on cue.",
-  },
-  {
-    value: 100, suffix: "%", label: "Nationwide Operations",
-    story: "Crew, trucking and gear that reach every corner of the country.",
-  },
-  {
-    value: 24, suffix: "/7", label: "Technical Team",
-    story: "Engineers on comms before doors, during show, and after strike.",
-  },
-];
 
 function useCounter(target: number, active: boolean) {
   const [n, setN] = useState(0);

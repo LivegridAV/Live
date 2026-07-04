@@ -5,29 +5,19 @@ import { Html } from "@react-three/drei";
 import * as THREE from "three";
 import { audio } from "../audio";
 import { THEMES, useChapterActive, useExperience } from "../store";
+import { SERVICES } from "@/content/site";
 
 /**
  * Scene 4 — a gigantic frosted-glass cylinder of services.
  * Grab and throw it: real momentum + inertia, no auto-rotate.
  * Clicking a panel pulls it forward and plays a 3D demonstration
- * in the middle of the ring.
+ * in the middle of the ring. Service data is shared with the classic
+ * site via src/content/site.ts.
  */
 
 const CENTER = new THREE.Vector3(0, 3, -80);
 const RADIUS = 7.5;
 const tmpV = new THREE.Vector3();
-
-export const SERVICES = [
-  { name: "LED Display Rental", desc: "Indoor & outdoor walls, any size, installed and operated.", demo: "wall" },
-  { name: "Watchout Programming", desc: "Frame-accurate multi-display shows, programmed and operated.", demo: "timeline" },
-  { name: "Live Streaming", desc: "Multi-camera broadcast, mixed and delivered anywhere.", demo: "converge" },
-  { name: "VJ Service", desc: "Live visuals performed in sync with your show.", demo: "mix" },
-  { name: "Motion Graphics", desc: "Content built pixel-perfect for your exact screen.", demo: "morph" },
-  { name: "Naked Eye 3D", desc: "Anamorphic illusions that leap off the wall.", demo: "popout" },
-  { name: "Video Editing", desc: "Aftermovies, openers and screen content, cut to the beat.", demo: "timeline" },
-  { name: "Hybrid Events", desc: "Physical and virtual audiences, one seamless show.", demo: "converge" },
-  { name: "Equipment Rental", desc: "Processors, servers, switchers — tested and show-ready.", demo: "orbit" },
-] as const;
 
 /** One frosted glass panel on the ring. */
 function Panel({

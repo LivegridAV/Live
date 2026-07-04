@@ -3,6 +3,7 @@ import SiteNav from "@/components/SiteNav";
 import Hero from "@/components/Hero";
 import Services from "@/components/Services";
 import Work from "@/components/Work";
+import Stats from "@/components/Stats";
 import Process from "@/components/Process";
 import CTA from "@/components/CTA";
 import SiteFooter from "@/components/SiteFooter";
@@ -23,6 +24,7 @@ export default function Home() {
             <Hero />
             <Services />
             <Work />
+            <Stats />
             <Process />
             <CTA />
           </main>

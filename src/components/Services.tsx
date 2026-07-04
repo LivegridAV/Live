@@ -1,24 +1,6 @@
 import Reveal from "./Reveal";
 import SignalGrid from "./SignalGrid";
-
-const SERVICES = [
-  {
-    title: "LED Video Walls",
-    body: "Fine-pitch indoor and outdoor walls, engineered and calibrated for your exact space and viewing distance.",
-  },
-  {
-    title: "Interactive Installations",
-    body: "Touch, motion, and sensor-driven experiences that respond to people in real time.",
-  },
-  {
-    title: "Content & Control",
-    body: "Live media, scheduling, and one-tap control — your wall, run from a single screen.",
-  },
-  {
-    title: "Rental & Events",
-    body: "Turnkey walls for stages, launches, and pop-ups. Delivered, built, and operated by us.",
-  },
-];
+import { SERVICES } from "@/content/site";
 
 export default function Services() {
   return (
@@ -29,25 +11,34 @@ export default function Services() {
             What we do
           </p>
           <h2 className="mt-4 max-w-[18ch] text-4xl font-semibold tracking-[-0.02em] text-text md:text-5xl">
-            From bare wall to living display.
+            Nine services. One production team.
           </h2>
+          <p className="mt-5 max-w-[52ch] leading-relaxed text-muted">
+            From the LED wall to the media server to the operator at front of
+            house — LiveGridAV designs, builds and runs the whole visual show.
+          </p>
         </Reveal>
 
-        <div className="mt-14 grid gap-5 sm:grid-cols-2">
+        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {SERVICES.map((s, i) => (
-            <Reveal key={s.title} delay={i * 0.06}>
-              <article className="group h-full rounded-[20px] border border-line bg-white p-8 transition-all duration-300 hover:-translate-y-1 hover:border-aqua/40 hover:shadow-[0_18px_40px_-24px_rgba(31,160,147,0.5)]">
-                <SignalGrid
-                  cell={11}
-                  gap={2.5}
-                  palette="light"
-                  animate={false}
-                  glow={false}
-                />
-                <h3 className="mt-6 text-xl font-semibold tracking-[-0.01em] text-text">
-                  {s.title}
+            <Reveal key={s.name} delay={(i % 3) * 0.06}>
+              <article className="group flex h-full flex-col rounded-[20px] border border-line bg-white p-7 transition-all duration-300 hover:-translate-y-1 hover:border-aqua/40 hover:shadow-[0_18px_40px_-24px_rgba(31,160,147,0.5)]">
+                <div className="flex items-center justify-between">
+                  <SignalGrid
+                    cell={10}
+                    gap={2.5}
+                    palette="light"
+                    animate={false}
+                    glow={false}
+                  />
+                  <span className="font-mono text-[11px] tracking-[0.2em] text-faint">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                </div>
+                <h3 className="mt-6 text-lg font-semibold tracking-[-0.01em] text-text">
+                  {s.name}
                 </h3>
-                <p className="mt-3 leading-relaxed text-muted">{s.body}</p>
+                <p className="mt-2 leading-relaxed text-muted">{s.desc}</p>
               </article>
             </Reveal>
           ))}

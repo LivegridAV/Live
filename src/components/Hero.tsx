@@ -3,9 +3,9 @@ import { motion } from "motion/react";
 import SignalGrid from "./SignalGrid";
 
 const STATS = [
-  { value: "120+", label: "installs delivered" },
-  { value: "4K+", label: "pixels / m²" },
-  { value: "24/7", label: "live support" },
+  { value: "10+", label: "years experience" },
+  { value: "500+", label: "events delivered" },
+  { value: "24/7", label: "technical team" },
 ];
 
 export default function Hero() {
