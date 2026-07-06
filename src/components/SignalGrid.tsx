@@ -1,6 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { motion, useReducedMotion } from "motion/react";
+
+const emptySubscribe = () => () => {};
 
 const HEIGHTS = [2, 4, 3, 5, 4] as const;
 
@@ -29,8 +31,11 @@ export default function SignalGrid({
   const reduce = useReducedMotion();
   // Only animate after mount so the server and first client render match
   // (avoids a hydration mismatch from reduced-motion detection).
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
 
   const { on, off } = PALETTES[palette];
   const radius =
