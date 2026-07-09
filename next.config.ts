@@ -6,6 +6,10 @@ const nextConfig: NextConfig = {
   // Pages). Produces an `out/` folder on `next build`.
   output: "export",
 
+  // Sub-path hosting (GitHub Pages serves at /<repo>). Set by the deploy
+  // workflow; local dev and root-domain hosting leave it unset.
+  basePath: process.env.BASE_PATH || undefined,
+
   // Static export has no image optimization server; serve images as-is.
   images: { unoptimized: true },
 };

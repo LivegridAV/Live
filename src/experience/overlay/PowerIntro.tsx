@@ -83,7 +83,7 @@ export default function PowerIntro() {
           </div>
           <a
             className="lg-intro-skip"
-            href="/?classic"
+            href="?classic"
             onClick={(e) => e.stopPropagation()}
           >
             skip · classic site
