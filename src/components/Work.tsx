@@ -31,12 +31,9 @@ export default function Work() {
                 muted
                 loop
                 playsInline
-                poster={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/brand/profile-1024.png`}
+                poster="/brand/profile-1024.png"
               >
-                <source
-                  src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/brand/hero-dark.mp4`}
-                  type="video/mp4"
-                />
+                <source src="/brand/hero-dark.mp4" type="video/mp4" />
               </video>
               <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/30 to-transparent" />
               <div className="absolute bottom-0 left-0 p-7">

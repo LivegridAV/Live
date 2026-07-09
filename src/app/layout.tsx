@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     url: "https://livegridav.com",
     siteName: "livegridAV",
   },
-  icons: { icon: `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/favicon.svg` },
+  icons: { icon: "/favicon.svg" },
 };
 
 export default function RootLayout({
