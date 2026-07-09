@@ -4,7 +4,7 @@ import { useFrame, ThreeEvent } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import * as THREE from "three";
 import { audio } from "../audio";
-import { EquipmentInfo, THEMES, useExperience } from "../store";
+import { EquipmentInfo, signals, THEMES, useExperience } from "../store";
 
 /**
  * Scene 6 — the equipment lab. Signal-chain hardware floats in
@@ -85,6 +85,7 @@ function DeviceBox({ device, index }: { device: Device; index: number }) {
 
   const onDown = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation();
+    signals.sceneGrab = true; // the device owns this drag, not free-look
     drag.current = { on: true, x: e.clientX, y: e.clientY, moved: 0 };
   };
   const onMove = (e: ThreeEvent<PointerEvent>) => {
@@ -105,6 +106,7 @@ function DeviceBox({ device, index }: { device: Device; index: number }) {
       setSpecCard(device);
     }
     drag.current.on = false;
+    signals.sceneGrab = false;
   };
 
   return (

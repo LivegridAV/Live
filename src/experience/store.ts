@@ -116,6 +116,8 @@ export const signals = {
   pointerSmooth: { x: 0, y: 0 },
   /** Seconds since the venue powered on (0 while dark). */
   poweredAt: 0,
+  /** A scene prop (cylinder, lab device…) owns the current drag. */
+  sceneGrab: false,
 };
 
 if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {

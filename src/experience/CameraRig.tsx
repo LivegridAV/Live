@@ -1,5 +1,5 @@
 "use client";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { signals, useExperience } from "./store";
@@ -8,6 +8,12 @@ import { signals, useExperience } from "./store";
  * Scroll-driven camera path. The world is a sequence of "rooms" laid out
  * along -Z; keyframes map journey progress → camera position + look target.
  * Mouse adds a subtle parallax so the venue always feels alive.
+ *
+ * Free look: dragging on empty space rotates the view — full 360° yaw and
+ * clamped pitch — so visitors can turn around and take in the cosmos.
+ * Releasing eases the view back onto the authored tour. Prop drags (the
+ * services cylinder, lab devices) win via `signals.sceneGrab`, and drags
+ * that start over UI or an interactive prop are ignored.
  */
 
 interface Key {
@@ -40,14 +46,69 @@ const KEYS: Key[] = [
 
 const smooth = (t: number) => t * t * (3 - 2 * t);
 
+const UP = new THREE.Vector3(0, 1, 0);
+const tmpDir = new THREE.Vector3();
+const tmpRight = new THREE.Vector3();
+
 export default function CameraRig() {
   const camera = useThree((s) => s.camera) as THREE.PerspectiveCamera;
   const booted = useExperience((s) => s.booted);
   const pos = useRef(new THREE.Vector3(0, 3.4, 30));
   const look = useRef(new THREE.Vector3(0, 5, 0));
   const shake = useRef(0);
+  const freeLook = useRef({ yaw: 0, pitch: 0, active: false, lastX: 0, lastY: 0 });
+  if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
+    (window as unknown as Record<string, unknown>).__lgFreeLook = freeLook.current;
+  }
 
-  useFrame((state) => {
+  // drag-to-look listeners
+  useEffect(() => {
+    const l = freeLook.current;
+    const down = (e: PointerEvent) => {
+      if (e.pointerType === "touch") return; // touch drag scrolls the journey
+      if (e.button !== 0) return;
+      if (!useExperience.getState().booted) return;
+      const t = e.target as HTMLElement | null;
+      // over HUD / console / forms — not a look gesture
+      if (t && t.closest("button, a, input, textarea, [role='button']")) return;
+      // over an interactive prop (they set the cursor on hover)
+      const cursor = document.body.style.cursor;
+      if (cursor === "pointer" || cursor === "grab") return;
+      l.active = true;
+      l.lastX = e.clientX;
+      l.lastY = e.clientY;
+    };
+    const move = (e: PointerEvent) => {
+      if (!l.active) return;
+      if (signals.sceneGrab) { l.active = false; return; } // a prop drag won
+      // button no longer held (missed pointerup) — end the drag
+      if (e.buttons === 0) { up(); return; }
+      // grab-the-world convention: drag the sky down to look up
+      l.yaw += (e.clientX - l.lastX) * 0.0032;
+      l.pitch += (e.clientY - l.lastY) * 0.0026;
+      l.pitch = Math.max(-1.25, Math.min(1.25, l.pitch));
+      l.lastX = e.clientX;
+      l.lastY = e.clientY;
+    };
+    const up = () => {
+      if (!l.active) return;
+      l.active = false;
+      // unwind by the short way home
+      l.yaw = Math.atan2(Math.sin(l.yaw), Math.cos(l.yaw));
+    };
+    window.addEventListener("pointerdown", down);
+    window.addEventListener("pointermove", move, { passive: true });
+    window.addEventListener("pointerup", up);
+    window.addEventListener("pointercancel", up);
+    return () => {
+      window.removeEventListener("pointerdown", down);
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      window.removeEventListener("pointercancel", up);
+    };
+  }, []);
+
+  useFrame((state, delta) => {
     const p = signals.progress;
 
     // find segment
@@ -90,6 +151,21 @@ export default function CameraRig() {
       shake.current *= 0.92;
     }
 
+    // free-look: rotate the view direction around the camera position
+    const fl = freeLook.current;
+    if (!fl.active) {
+      const decay = 1 - Math.min(1, delta * 1.8);
+      fl.yaw *= decay;
+      fl.pitch *= decay;
+    }
+    if (Math.abs(fl.yaw) > 1e-4 || Math.abs(fl.pitch) > 1e-4) {
+      tmpDir.subVectors(look.current, pos.current);
+      tmpDir.applyAxisAngle(UP, fl.yaw);
+      tmpRight.crossVectors(tmpDir, UP).normalize();
+      tmpDir.applyAxisAngle(tmpRight, fl.pitch);
+      look.current.copy(pos.current).add(tmpDir);
+    }
+
     camera.position.lerp(pos.current, 0.12);
     camera.lookAt(look.current);
     if (process.env.NODE_ENV === "development") {
@@ -106,11 +182,13 @@ export default function CameraRig() {
     }
   });
 
-  // expose a shake trigger via the store subscription (power-on moment)
-  useRef(
-    useExperience.subscribe((s, prev) => {
-      if (s.powered && !prev.powered) shake.current = 0.5;
-    }),
+  // shake trigger on the power-on moment (subscription cleaned up on unmount)
+  useEffect(
+    () =>
+      useExperience.subscribe((s, prev) => {
+        if (s.powered && !prev.powered) shake.current = 0.5;
+      }),
+    [],
   );
 
   return null;

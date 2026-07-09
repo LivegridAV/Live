@@ -4,7 +4,7 @@ import { useFrame, ThreeEvent } from "@react-three/fiber";
 import { Html } from "@react-three/drei";
 import * as THREE from "three";
 import { audio } from "../audio";
-import { THEMES, useChapterActive, useExperience } from "../store";
+import { signals, THEMES, useChapterActive, useExperience } from "../store";
 import { SERVICES } from "@/content/site";
 
 /**
@@ -185,6 +185,7 @@ export default function ServicesCylinder() {
 
   const onDown = (e: ThreeEvent<PointerEvent>) => {
     spin.current.dragging = true;
+    signals.sceneGrab = true; // the cylinder owns this drag, not free-look
     spin.current.lastX = e.clientX;
     (e.target as HTMLElement)?.setPointerCapture?.(e.pointerId);
   };
@@ -199,7 +200,10 @@ export default function ServicesCylinder() {
       setActiveService(null); // dragging closes the open panel
     }
   };
-  const onUp = () => { spin.current.dragging = false; };
+  const onUp = () => {
+    spin.current.dragging = false;
+    signals.sceneGrab = false;
+  };
 
   return (
     <group position={CENTER}>
