@@ -24,6 +24,7 @@ import Beams from "./scenes/Beams";
 import Smoke from "./scenes/Smoke";
 import Equipment from "./scenes/Equipment";
 import Universe from "./scenes/Universe";
+import Space from "./scenes/Space";
 import ServicesCylinder from "./scenes/ServicesCylinder";
 import Pillars from "./scenes/Pillars";
 import Lab from "./scenes/Lab";
@@ -66,7 +67,8 @@ function Atmosphere() {
   const bg = useRef(new THREE.Color("#060b0a"));
   useFrame(({ scene }) => {
     const th = THEMES[useExperience.getState().theme];
-    bg.current.lerp(new THREE.Color(th.deep).multiplyScalar(0.55), 0.03);
+    // keep the void properly dark — space, not haze
+    bg.current.lerp(new THREE.Color(th.deep).multiplyScalar(0.38), 0.03);
     if (scene.background instanceof THREE.Color) {
       scene.background.copy(bg.current);
     } else {
@@ -83,6 +85,9 @@ function SceneContent() {
     <>
       <Atmosphere />
       <CameraRig />
+
+      {/* the cosmos around the venue — persistent through every room */}
+      <Space />
 
       <ambientLight intensity={0.16} color="#8fb5ae" />
       <hemisphereLight intensity={0.12} color="#3fd6c8" groundColor="#0a1411" />

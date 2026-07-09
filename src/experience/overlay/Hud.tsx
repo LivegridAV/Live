@@ -155,7 +155,7 @@ export default function Hud() {
       {inStage && (
         <div className="lg-scrollhint" aria-hidden>
           <span className="lg-scrollhint-wheel" />
-          scroll to walk in
+          scroll to walk in · drag to look around
         </div>
       )}
 

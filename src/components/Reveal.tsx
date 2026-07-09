@@ -1,7 +1,9 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { motion, useReducedMotion, type Variants } from "motion/react";
 import type { ReactNode } from "react";
+
+const emptySubscribe = () => () => {};
 
 export default function Reveal({
   children,
@@ -20,8 +22,11 @@ export default function Reveal({
   // Gate the reduced-motion branch behind mount so the server render and the
   // first client render are identical (otherwise the `hidden` variant differs
   // and React reports a hydration mismatch).
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
   const reduced = mounted && reduce;
 
   const MotionTag = motion[as];
