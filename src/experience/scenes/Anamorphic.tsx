@@ -2,58 +2,80 @@
 import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { signals, THEMES, useExperience } from "../store";
+import { signals, useExperience } from "../store";
 
 /**
- * The anamorphic hero moment (brief §7): a procedural energy form that appears
- * to break past the front plane of the main LED wall and lunge toward the
- * audience. Built from a particle mass + a few glowing shards — a stand-in for a
- * real tiger/vehicle asset, driven entirely in code. Gated by the "3D VISUAL"
- * control; it tracks the pointer to sell the pop-out from the designed viewpoint.
+ * The anamorphic hero moment (brief §7): a naturally-coloured creature form that
+ * appears to break past the front plane of the main LED wall and lunge toward
+ * the audience.
  *
- * Placement: in front of the main wall (centre ≈ 0,5.5,0), spanning from just
- * inside the LED (z≈0) forward to z≈6, so it reads as emerging from the screen.
+ * Art direction (immutable, brief §11/§12/§57): the tiger reads as a REAL tiger —
+ * orange fur, black stripes, white underside — NOT a neon/cyan graphic. Colours
+ * live in a per-particle vertex-colour attribute with NORMAL blending, so it does
+ * not glow; only a faint cyan rim on the top edge represents the LED environment
+ * light spilling onto the fur. This is a procedural stand-in for a real tiger GLB
+ * (see docs) — swap the geometry/material for a rigged model when the asset lands.
+ * Gated by the "3D VISUAL" control; tracks the pointer to sell the pop-out.
  */
 
-const COUNT = 1300;
+const COUNT = 1800;
+
+// natural tiger palette
+const C_ORANGE = new THREE.Color("#d9741f");
+const C_DARK = new THREE.Color("#160c05"); // near-black stripe
+const C_WHITE = new THREE.Color("#efe4d6");
+const C_RIM = new THREE.Color("#3fd6c8"); // LED environment spill (subtle)
 
 export default function Anamorphic() {
   const group = useRef<THREE.Group>(null);
   const points = useRef<THREE.Points>(null);
   const mat = useRef<THREE.PointsMaterial>(null);
-  const shardMat = useRef<THREE.MeshBasicMaterial>(null);
   const shown = useRef(0); // eased 0..1 visibility
 
-  // Elongated forward-leaning mass, denser toward the "head" (front, +z).
+  // Forward-leaning body mass, denser toward the head (front, +z), coloured
+  // per-particle so it reads as fur rather than an energy field.
   const geo = useMemo(() => {
     const positions = new Float32Array(COUNT * 3);
+    const colors = new Float32Array(COUNT * 3);
     let seed = 1337;
     const rnd = () => {
       seed = (seed * 1664525 + 1013904223) % 4294967296;
       return seed / 4294967296;
     };
+    const tmp = new THREE.Color();
     for (let i = 0; i < COUNT; i++) {
-      // bias t toward the front so the head is dense
       const t = Math.pow(rnd(), 0.6); // 0 = tail (at wall), 1 = head (forward)
-      const radius = (0.35 + 1.35 * (1 - Math.abs(t - 0.62) * 1.4)) * (0.5 + rnd() * 0.7);
+      const bodyR = 0.9 * (0.5 + 1.1 * (1 - Math.abs(t - 0.6) * 1.3));
+      const head = t > 0.82 ? 0.5 : 0; // fuller cluster at the head
+      const radius = (bodyR + head) * (0.55 + rnd() * 0.6);
       const ang = rnd() * Math.PI * 2;
       const r = radius * Math.sqrt(rnd());
       const x = Math.cos(ang) * r * 1.15;
       const y = Math.sin(ang) * r;
-      const z = t * 6.0; // 0 → 6, from the wall out toward the crowd
       positions[i * 3] = x;
-      positions[i * 3 + 1] = y + Math.sin(t * Math.PI) * 0.6; // slight arc
-      positions[i * 3 + 2] = z;
+      positions[i * 3 + 1] = y + Math.sin(t * Math.PI) * 0.5; // arch of the back
+      positions[i * 3 + 2] = t * 6.0;
+
+      // colour — orange base, black vertical stripes, white belly + face
+      tmp.copy(C_ORANGE);
+      if (Math.sin(t * 26 + x * 1.5) > 0.45) tmp.lerp(C_DARK, 0.82); // stripe
+      const vert = Math.sin(ang); // -1 belly … +1 back
+      if (vert < -0.35) tmp.lerp(C_WHITE, 0.6); // underside
+      if (t > 0.9 && vert > 0.1) tmp.lerp(C_WHITE, 0.35); // cheek/face
+      if (vert > 0.62) tmp.lerp(C_RIM, 0.16); // faint LED rim on the back
+      colors[i * 3] = tmp.r;
+      colors[i * 3 + 1] = tmp.g;
+      colors[i * 3 + 2] = tmp.b;
     }
     const g = new THREE.BufferGeometry();
     g.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    g.setAttribute("color", new THREE.BufferAttribute(colors, 3));
     return g;
   }, []);
 
   useFrame((state, delta) => {
     if (!group.current) return;
     const s = useExperience.getState();
-    const th = THEMES[s.theme];
 
     // ease visibility so toggling crossfades rather than pops
     const target = s.visual3d && s.powered ? 1 : 0;
@@ -62,30 +84,24 @@ export default function Anamorphic() {
     if (!group.current.visible) return;
 
     const t = state.clock.elapsedTime;
-    // periodic lunge — every ~6.5s the subject roars and surges out of the wall
-    // toward the crowd (a 0→1→0 pulse over ~1.4s), the anamorphic "wow" beat.
+    // periodic lunge — every ~6.5s the tiger surges out of the wall toward the
+    // crowd (a refined 0→1→0 pulse over ~1.4s), then settles. Not game-y.
     const cyc = t % 6.5;
     const lunge = cyc < 1.4 ? Math.sin((cyc / 1.4) * Math.PI) ** 1.5 : 0;
-    // breathe + lunge; offset to the right half of the wall (clear of headline).
-    const breathe = 1 + Math.sin(t * 1.6) * 0.05;
-    const sc = shown.current * breathe * (1.3 + lunge * 0.4);
+    const breathe = 1 + Math.sin(t * 1.6) * 0.04;
+    const sc = shown.current * breathe * (1.35 + lunge * 0.4);
     group.current.scale.setScalar(sc);
+    // offset to the right half of the wall (clear of the headline)
     group.current.position.x = 4.4 + signals.pointerSmooth.x * (1.4 + lunge * 1.2);
-    group.current.position.y = 5.6 + signals.pointerSmooth.y * 0.6 + Math.sin(t * 0.9) * 0.15;
+    group.current.position.y = 5.6 + signals.pointerSmooth.y * 0.6 + Math.sin(t * 0.9) * 0.12;
     group.current.position.z = lunge * 3.4; // forward, past the LED plane
-    group.current.rotation.y = signals.pointerSmooth.x * 0.35 + Math.sin(t * 0.4) * 0.06 - lunge * 0.12;
+    group.current.rotation.y = signals.pointerSmooth.x * 0.32 + Math.sin(t * 0.4) * 0.05 - lunge * 0.1;
 
     if (mat.current) {
-      mat.current.color.copy(new THREE.Color(th.glow));
-      mat.current.opacity = shown.current * (0.9 + Math.sin(t * 3) * 0.1 + lunge * 0.25);
-      mat.current.size = 0.12 + Math.sin(t * 2.2) * 0.02 + lunge * 0.05;
+      mat.current.opacity = shown.current;
+      mat.current.size = 0.11 + lunge * 0.03;
     }
-    if (shardMat.current) {
-      // shards flash warm on the roar
-      shardMat.current.color.copy(new THREE.Color(th.warm)).lerp(new THREE.Color("#fff"), lunge * 0.5);
-      shardMat.current.opacity = shown.current * (0.9 + lunge * 0.4);
-    }
-    if (points.current) points.current.rotation.z = Math.sin(t * 0.5) * 0.05;
+    if (points.current) points.current.rotation.z = Math.sin(t * 0.5) * 0.04;
   });
 
   return (
@@ -93,27 +109,14 @@ export default function Anamorphic() {
       <points ref={points} geometry={geo}>
         <pointsMaterial
           ref={mat}
+          vertexColors
           transparent
           depthWrite={false}
-          blending={THREE.AdditiveBlending}
-          size={0.09}
+          size={0.11}
           sizeAttenuation
-          toneMapped={false}
+          opacity={0}
         />
       </points>
-
-      {/* a few solid glowing shards near the head for mass */}
-      {[
-        [0.5, 0.3, 5.2, 0.5],
-        [-0.6, -0.1, 4.6, 0.45],
-        [0.1, 0.7, 4.9, 0.4],
-        [0.0, -0.4, 5.6, 0.35],
-      ].map(([x, y, z, r], i) => (
-        <mesh key={i} position={[x, y, z]} rotation={[i, i * 1.3, 0]}>
-          <octahedronGeometry args={[r, 0]} />
-          <meshBasicMaterial ref={i === 0 ? shardMat : undefined} transparent depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} />
-        </mesh>
-      ))}
     </group>
   );
 }

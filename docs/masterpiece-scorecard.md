@@ -1,0 +1,60 @@
+# LiveGridAV — Masterpiece Scorecard
+
+Honest, self-assessed state of each surface against the masterpiece directive.
+Scale 0–10. Anything **< 8** is a revision target; major pages target **9+**;
+homepage target **9.5+**. Updated as passes land — not aspirational scores.
+
+Legend for the compact table: **FI** first impression · **Ref** reference
+fidelity · **Nat** natural visual realism · **ID** LiveGridAV identity ·
+**3D** depth · **Mo** motion · **Ix** interaction · **AV** AV credibility ·
+**Info** clarity · **Perf** performance · **Mob** mobile · **A11y** accessibility ·
+**SEO** · **Pol** polish.
+
+## Surfaces
+
+| Page | Overall | Top gaps to close |
+|---|---|---|
+| Home (3D venue) | 7.5 | Tiger is a procedural particle stand-in (needs a real rigged GLB); 3D headline is DOM-parallax, not extruded in-scene; no mobile swipe-to-look. |
+| Services hub | 8.5 | Strong: icons + living hero visual + dark system. Could add per-card motion. |
+| Service detail (×15) | 8 | Live per-service demos landed; some demos (network, web) can be richer; hero could go full-bleed. |
+| Work hub | 7.5 | Vibe-tinted tiles + living hero. Cards need real muted-video/motion previews (currently gradient + drift). |
+| Work / project detail | 6.5 | Honest case-study data only; needs hero motion + animated system diagram + BTS. |
+| LED hub + types | 8 | Pixel-pitch tool + living hero + type pages. Floor LED needs a walk-on demo. |
+| 3D / Anamorphic | 7 | Live demo shows break-out; still needs the viewpoint slider (normal ↔ correct angle). |
+| Projection | 7 | Demo shows mapped facade; needs the look-selector (architectural/brand/geometric/cinematic). |
+| Show Control | 8 | Console demo (PVW/PGM + cues) reads well; could let the visitor fire a cue. |
+| Live Production | 7.5 | Console demo; wants camera→switcher→program follow-through. |
+| Virtual / Hybrid | 7 | Network demo; wants the venue↔remote↔online connect interaction. |
+| Sound | 6.5 | Meters demo; needs the hover-coverage interactive stage (PA/sub/monitor zones). |
+| Lighting | 6.5 | Beam demo; needs the fixture-swap interactive stage (beam/wash/profile transform). |
+| Equipment | 8 | Icon directory + living hero; solid and clear. |
+| AV Lab | 7.5 | Interactive signal-path explorer works; wants a 3D control-room + camera moves. |
+| Contact | 8.5 | Guided brief, real submit + WhatsApp, dark, clear. Effortless. |
+| Insights (+articles) | 8 | Clean, crawlable, internally linked. |
+| 404 | 8 | Branded, on-system. |
+
+## Locked business rules (must never regress)
+- Show Control = one combined service (VJ + Watchout + Resolume + media-server + AV-console).
+- Video tech named only where relevant: PixelHue, NovaStar, Magnimaze, Blackmagic. **No Barco.**
+- Unreal Engine = content creation / real-time visual production only, never rental gear.
+- Sound & Lighting: **no manufacturer brands**; positioned as coordinated partners.
+- LED: no unsupported fine-pitch indoor rental claim; specs "confirmed after review".
+- No misleading ownership/inventory language.
+
+## Natural-colour QA (immutable — brief §11/§12/§57)
+- [x] Anamorphic subject is orange/black/white **fur palette**, normal-blended (not additive/neon).
+- [x] Only a faint cyan **rim** on the subject represents LED environment spill.
+- [ ] Physical materials elsewhere (stage steel, consoles, stone) reviewed for natural PBR — pending.
+- [ ] Bloom restricted to genuine light sources (LED, lasers, lamps, emissive UI) — audit pending.
+
+## Toolchain status (this environment)
+- **Available & in use:** in-app Browser, Playwright MCP, Chrome DevTools MCP, `ui-ux-pro-max` skill, `livegridav-ui` skill.
+- **Needs user setup (API key + Claude Code restart) — cannot self-install/verify mid-session:** Blender MCP, Context7, 21st MCP, dedicated Three.js/GSAP skill packs.
+- **Present but unused here:** unrealMCP.
+
+## Biggest levers to reach 9+
+1. Real rigged **tiger GLB** (Blender/asset pipeline) → replaces the procedural stand-in on Home + Anamorphic.
+2. Interactive **Sound coverage** + **Lighting fixture-swap** stages (the two lowest scores).
+3. **Work** cards as motion portals + project-detail hero motion.
+4. True in-scene **3D extruded headline**.
+5. Mobile swipe-to-look + dedicated mobile scene; perf profiling pass.
