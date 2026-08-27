@@ -51,7 +51,7 @@ export default function Equipment() {
                 <Reveal key={cat.name} delay={(i % 3) * 0.05}>
                   <article className="flex h-full flex-col rounded-[20px] border border-line bg-paper p-7">
                     <div className="flex items-center justify-between">
-                      <SignalGrid cell={9} gap={2.5} palette="light" animate={false} glow={false} />
+                      <SignalGrid cell={9} gap={2.5} palette="dark" animate={false} glow={false} />
                       <span className="font-mono text-[11px] tracking-[0.2em] text-faint">
                         {String(i + 1).padStart(2, "0")}
                       </span>

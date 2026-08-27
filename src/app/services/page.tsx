@@ -67,7 +67,7 @@ export default function ServicesHub() {
             <div className="mx-auto max-w-[1180px] px-6 md:px-12">
               <Reveal>
                 <div className="flex items-center gap-4">
-                  <SignalGrid cell={10} gap={2.5} palette="light" animate={false} glow={false} />
+                  <SignalGrid cell={10} gap={2.5} palette="dark" animate={false} glow={false} />
                   <div>
                     <h2 className="text-xl font-semibold tracking-[-0.01em] text-text md:text-2xl">
                       {group.label}

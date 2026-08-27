@@ -29,6 +29,8 @@ import ServicesCylinder from "./scenes/ServicesCylinder";
 import Pillars from "./scenes/Pillars";
 import Lab from "./scenes/Lab";
 import ProjectsCity from "./scenes/ProjectsCity";
+import Anamorphic from "./scenes/Anamorphic";
+import Projection from "./scenes/Projection";
 import Finale from "./scenes/Finale";
 import Hud from "./overlay/Hud";
 import PowerIntro from "./overlay/PowerIntro";
@@ -66,7 +68,8 @@ function Atmosphere() {
   const fogRef = useRef<THREE.Fog>(null);
   const bg = useRef(new THREE.Color("#060b0a"));
   useFrame(({ scene }) => {
-    const th = THEMES[useExperience.getState().theme];
+    const s = useExperience.getState();
+    const th = THEMES[s.theme];
     // keep the void properly dark — space, not haze
     bg.current.lerp(new THREE.Color(th.deep).multiplyScalar(0.38), 0.03);
     if (scene.background instanceof THREE.Color) {
@@ -74,13 +77,21 @@ function Atmosphere() {
     } else {
       scene.background = bg.current.clone();
     }
-    if (fogRef.current) fogRef.current.color.copy(bg.current);
+    if (fogRef.current) {
+      fogRef.current.color.copy(bg.current);
+      // "ATMOSPHERE" control thickens the haze — fog closes in
+      const near = s.atmosphere ? 8 : 18;
+      const far = s.atmosphere ? 52 : 85;
+      fogRef.current.near += (near - fogRef.current.near) * 0.04;
+      fogRef.current.far += (far - fogRef.current.far) * 0.04;
+    }
   });
   return <fog ref={fogRef} attach="fog" args={["#060b0a", 18, 85]} />;
 }
 
 function SceneContent() {
   const quality = useExperience((s) => s.quality);
+  const atmosphere = useExperience((s) => s.atmosphere);
   return (
     <>
       <Atmosphere />
@@ -96,12 +107,17 @@ function SceneContent() {
       <Room from={0} to={0.34}>
         <Stage />
         <Beams />
+        <Projection />
         <Smoke count={quality === "high" ? 34 : 16} />
+        {/* extra haze when the ATMOSPHERE control is on */}
+        {atmosphere && <Smoke count={quality === "high" ? 26 : 12} />}
         <Equipment />
         {/* side LED wings flanking the main wall */}
         <LedWall position={[-14.5, 6, 1.5]} rotation={[0, 0.35, 0]} size={[7, 9]} main={false} />
         <LedWall position={[14.5, 6, 1.5]} rotation={[0, -0.35, 0]} size={[7, 9]} main={false} />
         <LedWall position={[0, 6, 0]} size={[19.2, 10.8]} main />
+        {/* anamorphic subject bursting from the main wall — "3D VISUAL" control */}
+        <Anamorphic />
       </Room>
 
       {/* Scene 3: the naked-eye universe inside the wall */}

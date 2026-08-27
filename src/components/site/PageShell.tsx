@@ -34,7 +34,7 @@ export default function PageShell({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <div className="flex min-h-full flex-col bg-paper text-text">
+    <div className="lg-dark flex min-h-full flex-col bg-paper text-text">
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
           scrolled
@@ -44,8 +44,8 @@ export default function PageShell({ children }: { children: ReactNode }) {
       >
         <nav className="mx-auto flex max-w-[1180px] items-center justify-between px-6 py-4 md:px-12">
           <Link href="/" className="flex items-center gap-3 text-text">
-            <SignalGrid cell={14} gap={3} palette="light" animate={false} glow={false} />
-            <Wordmark className="text-xl" accent="aqua" />
+            <SignalGrid cell={14} gap={3} palette="dark" animate={false} glow={false} />
+            <Wordmark className="text-xl" accent="glow" />
           </Link>
 
           <div className="hidden items-center gap-6 md:flex">

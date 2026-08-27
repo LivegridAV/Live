@@ -8,7 +8,7 @@ export default function NotFound() {
       <section className="flex min-h-[70vh] items-center bg-paper py-32">
         <div className="mx-auto max-w-[620px] px-6 text-center md:px-12">
           <div className="flex justify-center">
-            <SignalGrid cell={16} gap={4} palette="light" animate glow />
+            <SignalGrid cell={16} gap={4} palette="dark" animate glow />
           </div>
           <p className="mt-8 font-mono text-xs uppercase tracking-[0.2em] text-aqua">404 · Signal lost</p>
           <h1 className="mt-4 text-4xl font-semibold tracking-[-0.02em] text-text md:text-5xl">

@@ -93,7 +93,7 @@ export default function LedHub() {
                   href={`/led/${t.slug}`}
                   className="group flex h-full flex-col rounded-[20px] border border-line bg-paper p-7 transition-all duration-300 hover:-translate-y-1 hover:border-aqua/40 hover:shadow-[0_18px_40px_-24px_rgba(31,160,147,0.5)]"
                 >
-                  <SignalGrid cell={9} gap={2.5} palette="light" animate={false} glow={false} />
+                  <SignalGrid cell={9} gap={2.5} palette="dark" animate={false} glow={false} />
                   <h3 className="mt-5 text-lg font-semibold tracking-[-0.01em] text-text group-hover:text-aqua">
                     {t.title}
                   </h3>

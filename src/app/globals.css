@@ -164,22 +164,22 @@ body {
 @media (max-width: 767px) {
   .lg-hud-top { padding: 12px 16px; }
   .lg-chip { padding: 6px 10px; font-size: 9px; white-space: nowrap; }
-  .lg-console { width: 178px; left: 14px; bottom: 14px; }
+  .lg-console { width: 168px; right: 10px; }
 }
 
 /* chapter rail */
 .lg-rail {
-  position: fixed; right: 22px; top: 50%; transform: translateY(-50%);
+  position: fixed; left: 22px; top: 50%; transform: translateY(-50%);
   z-index: 60; display: grid; gap: 14px;
 }
-@media (max-width: 767px) { .lg-rail { display: none; } }
+@media (max-width: 1024px) { .lg-rail { display: none; } }
 .lg-rail-item {
-  display: flex; align-items: center; gap: 10px; justify-content: flex-end;
+  display: flex; align-items: center; gap: 10px; justify-content: flex-start;
   background: none; border: 0; color: var(--faint);
 }
 .lg-rail-label {
   font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em;
-  text-transform: uppercase; opacity: 0; transform: translateX(6px);
+  text-transform: uppercase; opacity: 0; transform: translateX(-6px);
   transition: all 0.25s ease;
 }
 .lg-rail-item:hover .lg-rail-label, .lg-rail-item.is-active .lg-rail-label {
@@ -195,15 +195,16 @@ body {
 
 /* stage control console */
 .lg-console {
-  position: fixed; left: 22px; bottom: 22px; z-index: 60; width: 210px;
-  border-radius: 16px; overflow: hidden;
-  background: rgba(10, 20, 17, 0.55); backdrop-filter: blur(14px);
+  position: fixed; right: 20px; top: 50%; z-index: 62; width: 224px;
+  max-height: 84vh; overflow-y: auto; overflow-x: hidden;
+  border-radius: 16px;
+  background: rgba(10, 20, 17, 0.62); backdrop-filter: blur(14px);
   border: 1px solid rgba(63, 214, 200, 0.2);
   box-shadow: 0 0 30px rgba(63, 214, 200, 0.08);
-  opacity: 0; transform: translateY(16px); pointer-events: none;
+  opacity: 0; transform: translateY(calc(-50% + 16px)); pointer-events: none;
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
-.lg-console.is-visible { opacity: 1; transform: none; pointer-events: auto; }
+.lg-console.is-visible { opacity: 1; transform: translateY(-50%); pointer-events: auto; }
 .lg-console-head {
   width: 100%; display: flex; justify-content: space-between; align-items: center;
   font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.22em;
@@ -226,7 +227,22 @@ body {
 .lg-toggle.is-on .lg-toggle-led, .lg-toggle-led.is-on {
   background: var(--glow); box-shadow: 0 0 8px var(--glow);
 }
-.lg-console-themes { display: flex; gap: 8px; padding: 6px 12px 8px; }
+.lg-console-sub {
+  font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.24em;
+  text-transform: uppercase; color: var(--faint); padding: 8px 12px 2px;
+}
+.lg-preset-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 0 10px 6px; }
+.lg-preset {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.1em;
+  color: var(--faint); background: rgba(19, 32, 30, 0.5);
+  border: 1px solid transparent; border-radius: 9px; padding: 8px 6px;
+  text-transform: uppercase; transition: all 0.2s ease;
+}
+.lg-preset:hover { border-color: var(--ink-soft); color: var(--text-inv); }
+.lg-preset.is-active {
+  color: var(--ink); background: var(--glow); border-color: var(--glow); font-weight: 700;
+}
+.lg-console-themes { display: flex; gap: 8px; padding: 6px 12px 10px; }
 .lg-theme-dot {
   width: 18px; height: 18px; border-radius: 50%; border: 2px solid transparent;
   transition: all 0.2s ease;
@@ -353,6 +369,36 @@ body {
   box-shadow: 0 0 26px color-mix(in srgb, var(--glow) 55%, transparent);
 }
 
+/* ── approved hero ── */
+.lg-hero { max-width: 640px; gap: 20px; }
+.lg-hero-title { font-size: clamp(34px, 5.4vw, 66px); line-height: 1.02; }
+.lg-accent {
+  color: var(--glow);
+  text-shadow: 0 0 42px color-mix(in srgb, var(--glow) 55%, transparent);
+}
+.lg-hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 4px; }
+.lg-btn-ghost { background: transparent; border-color: transparent; color: var(--glow); }
+.lg-btn-ghost:hover { border-color: color-mix(in srgb, var(--glow) 40%, transparent); color: var(--glow); }
+.lg-hero-stats {
+  display: flex; flex-wrap: wrap; gap: 30px; margin-top: 20px;
+  padding-top: 20px; border-top: 1px solid rgba(63, 214, 200, 0.16);
+}
+.lg-hero-stats div { display: grid; gap: 2px; }
+.lg-hero-stats dt {
+  font-size: 26px; font-weight: 600; letter-spacing: -0.02em; color: var(--text-inv);
+  text-shadow: 0 0 18px color-mix(in srgb, var(--glow) 40%, transparent);
+}
+.lg-hero-stats dd {
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--faint);
+}
+@media (max-width: 767px) {
+  .lg-hero-stats { gap: 16px 22px; }
+  .lg-hero-stats dt { font-size: 20px; }
+}
+.lg-showreel { width: min(92vw, 900px); padding: 14px; display: grid; gap: 12px; justify-items: center; }
+.lg-showreel video { width: 100%; border-radius: 12px; background: #000; }
+
 /* holographic contact console */
 .lg-contact {
   width: min(88vw, 460px); display: grid; gap: 14px; text-align: left;
@@ -426,4 +472,36 @@ body {
   font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em;
   color: var(--faint); text-align: center; padding: 10px;
   background: var(--ink); border-bottom: 1px solid var(--ink-soft);
+}
+
+/* ──────────────────────────────────────────────────────────────
+   DARK SITE THEME (multipage routes)
+   PageShell applies `.lg-dark`, which re-points the design tokens to a
+   dark, cyan "experience engineering" palette matching the approved
+   reference. The 3D homepage is not wrapped in PageShell, so it's
+   unaffected. Only a few literal-colour utilities need scoped fixes.
+   ────────────────────────────────────────────────────────────── */
+.lg-dark {
+  --paper: #060c0b;   /* darkest — page & darkest sections */
+  --ink: #0b1613;     /* mid dark — inset sections / footer */
+  --ink-soft: #17322d;
+  --text: #edf3f1;    /* body text → light */
+  --muted: #96a3a0;
+  --faint: #66746f;
+  --line: #16403a;    /* cyan-tinted hairline → glowing-edge cards */
+  color-scheme: dark;
+}
+/* card / input surfaces that were literal white → lifted dark panel */
+.lg-dark .bg-white { background-color: #0f1c19; }
+/* accent text (eyebrows, links) → brighter neon on dark */
+.lg-dark .text-aqua { color: var(--glow); }
+.lg-dark .hover\:text-aqua:hover { color: var(--glow); }
+.lg-dark .group:hover .group-hover\:text-aqua { color: var(--glow); }
+/* primary buttons → bright cyan fill with dark text */
+.lg-dark .bg-aqua { background-color: var(--glow); color: var(--ink); }
+.lg-dark .hover\:border-aqua:hover { border-color: color-mix(in srgb, var(--glow) 55%, transparent); }
+/* cards lift with a faint cyan glow on hover, like the reference */
+.lg-dark .rounded-\[20px\].border:hover,
+.lg-dark .rounded-\[24px\].border:hover {
+  box-shadow: 0 0 34px -10px color-mix(in srgb, var(--glow) 45%, transparent);
 }

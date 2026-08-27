@@ -16,6 +16,25 @@ import { create } from "zustand";
 
 export type ColorTheme = "signal" | "cyber" | "ember";
 
+export type PresetKey = "corporate" | "liveshow" | "immersive" | "anamorphic" | "cinematic";
+
+/** Scene presets (brief §9) — each crossfades the whole rig to a mood. */
+export const PRESETS: Record<
+  PresetKey,
+  {
+    label: string;
+    lasers: boolean; smoke: boolean; stageLights: boolean; audienceLights: boolean;
+    projection: boolean; visual3d: boolean; atmosphere: boolean;
+    ledContent: number; theme: ColorTheme;
+  }
+> = {
+  corporate:  { label: "Corporate",  lasers: false, smoke: false, stageLights: true,  audienceLights: true,  projection: true,  visual3d: false, atmosphere: false, ledContent: 0, theme: "signal" },
+  liveshow:   { label: "Live Show",  lasers: true,  smoke: true,  stageLights: true,  audienceLights: true,  projection: false, visual3d: false, atmosphere: true,  ledContent: 1, theme: "signal" },
+  immersive:  { label: "Immersive",  lasers: true,  smoke: true,  stageLights: true,  audienceLights: true,  projection: true,  visual3d: true,  atmosphere: true,  ledContent: 2, theme: "cyber" },
+  anamorphic: { label: "Anamorphic", lasers: false, smoke: true,  stageLights: true,  audienceLights: true,  projection: false, visual3d: true,  atmosphere: true,  ledContent: 3, theme: "signal" },
+  cinematic:  { label: "Cinematic",  lasers: true,  smoke: true,  stageLights: false, audienceLights: true,  projection: true,  visual3d: true,  atmosphere: true,  ledContent: 0, theme: "ember" },
+};
+
 export interface EquipmentInfo {
   id: string;
   name: string;
@@ -34,8 +53,12 @@ interface ExperienceState {
   smoke: boolean;
   stageLights: boolean;
   audienceLights: boolean;
+  projection: boolean; // projection-mapped light onto the stage
+  visual3d: boolean; // anamorphic subject breaks the LED plane
+  atmosphere: boolean; // extra haze / particle depth
   ledContent: number; // cycles LED wall programs
   theme: ColorTheme;
+  preset: PresetKey | null;
 
   /* ── Interactions ───────────────────────────────────── */
   specCard: EquipmentInfo | null;
@@ -53,7 +76,13 @@ interface ExperienceState {
 
   powerOn: () => void;
   finishBoot: () => void;
-  toggle: (key: "lasers" | "smoke" | "stageLights" | "audienceLights" | "audioOn" | "musicOn") => void;
+  toggle: (
+    key:
+      | "lasers" | "smoke" | "stageLights" | "audienceLights"
+      | "projection" | "visual3d" | "atmosphere"
+      | "audioOn" | "musicOn",
+  ) => void;
+  applyPreset: (key: PresetKey) => void;
   cycleLedContent: () => void;
   setTheme: (t: ColorTheme) => void;
   setSpecCard: (e: EquipmentInfo | null) => void;
@@ -74,8 +103,12 @@ export const useExperience = create<ExperienceState>((set) => ({
   smoke: true,
   stageLights: true,
   audienceLights: true,
+  projection: false,
+  visual3d: false,
+  atmosphere: false,
   ledContent: 0,
   theme: "signal",
+  preset: null,
 
   specCard: null,
   activeService: null,
@@ -91,7 +124,17 @@ export const useExperience = create<ExperienceState>((set) => ({
 
   powerOn: () => set({ powered: true }),
   finishBoot: () => set({ booted: true }),
-  toggle: (key) => set((s) => ({ [key]: !s[key] }) as Partial<ExperienceState>),
+  toggle: (key) => set((s) => ({ [key]: !s[key], preset: null }) as Partial<ExperienceState>),
+  applyPreset: (key) =>
+    set(() => {
+      const p = PRESETS[key];
+      return {
+        lasers: p.lasers, smoke: p.smoke, stageLights: p.stageLights,
+        audienceLights: p.audienceLights, projection: p.projection,
+        visual3d: p.visual3d, atmosphere: p.atmosphere,
+        ledContent: p.ledContent, theme: p.theme, preset: key,
+      };
+    }),
   cycleLedContent: () => set((s) => ({ ledContent: (s.ledContent + 1) % 4 })),
   setTheme: (theme) => set({ theme }),
   setSpecCard: (specCard) => set({ specCard }),

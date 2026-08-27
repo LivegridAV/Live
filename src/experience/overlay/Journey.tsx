@@ -2,8 +2,77 @@
 import { FormEvent, useState } from "react";
 import { audio } from "../audio";
 import { CONTACT, contactLinks, LEAD_WEBHOOK_URL } from "../contact";
+import { journeyScroll } from "../ScrollRig";
 import { PROJECTS } from "../scenes/ProjectsCity";
-import { useExperience } from "../store";
+import { CHAPTERS, useExperience } from "../store";
+
+/** Hero stats — from the approved reference. Owner-supplied marketing figures. */
+const HERO_STATS: [string, string][] = [
+  ["500+", "Projects"],
+  ["150+", "Clients"],
+  ["25+", "Cities"],
+  ["10M+", "Audience"],
+  ["24/7", "Support"],
+];
+
+/** The approved hero: spatial headline, three CTAs, trust strip. */
+function Hero() {
+  const [showreel, setShowreel] = useState(false);
+  const go = (band: readonly [number, number]) => journeyScroll((band[0] + band[1]) / 2);
+
+  return (
+    <section className="lg-block lg-hero" style={bandStyle(0.02)}>
+      <p className="lg-eyebrow">LIVEGRIDAV · EXPERIENCE ENGINEERING</p>
+      <h1 className="lg-block-title lg-hero-title">
+        WE TURN IDEAS INTO<br />
+        <span className="lg-accent">UNFORGETTABLE EXPERIENCES</span>
+      </h1>
+      <p className="lg-block-copy">
+        AV engineering, content, LED, projection and show technology —
+        designed, programmed and operated as one.
+      </p>
+
+      <div className="lg-hero-ctas">
+        <button
+          className="lg-btn lg-btn-primary"
+          onClick={() => { go(CHAPTERS.projects); audio.blip(1.2); }}
+        >
+          EXPLORE OUR WORK
+        </button>
+        <button
+          className="lg-btn"
+          onClick={() => { go(CHAPTERS.finale); audio.blip(1.1); }}
+        >
+          START A PROJECT →
+        </button>
+        <button
+          className="lg-btn lg-btn-ghost"
+          onClick={() => { setShowreel(true); audio.blip(1.4); }}
+        >
+          ▶ WATCH SHOWREEL
+        </button>
+      </div>
+
+      <dl className="lg-hero-stats">
+        {HERO_STATS.map(([value, label]) => (
+          <div key={label}>
+            <dt>{value}</dt>
+            <dd>{label}</dd>
+          </div>
+        ))}
+      </dl>
+
+      {showreel && (
+        <div className="lg-modal" role="dialog" aria-label="Showreel" onClick={() => setShowreel(false)}>
+          <div className="lg-modal-card lg-showreel" onClick={(e) => e.stopPropagation()}>
+            <video src="/brand/hero-dark.mp4" autoPlay loop playsInline controls poster="/brand/profile-1024.png" />
+            <button className="lg-btn" onClick={() => setShowreel(false)}>Close</button>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
 
 /**
  * The scrollable DOM behind the canvas: 1000vh of journey.
@@ -139,12 +208,7 @@ export default function Journey() {
 
   return (
     <div className="lg-journey" style={{ height: "1000vh" }}>
-      <Block at={0.02} eyebrow="LIVEGRIDAV · LIVE PRODUCTION" title={<>You&apos;re standing<br />in our venue.</>}>
-        <p className="lg-block-copy">
-          LED walls, lighting, lasers, sound — everything on this stage is
-          real gear we deploy. Move your mouse: the rig is watching.
-        </p>
-      </Block>
+      <Hero />
 
       <Block at={0.15} align="right" eyebrow="THE CANVAS" title={<>19.2 metres of<br />living pixels.</>}>
         <p className="lg-block-copy">
