@@ -1,7 +1,7 @@
 "use client";
 import { FormEvent, useState } from "react";
 import { audio } from "../audio";
-import { CONTACT, contactLinks } from "../contact";
+import { CONTACT, contactLinks, LEAD_WEBHOOK_URL } from "../contact";
 import { PROJECTS } from "../scenes/ProjectsCity";
 import { useExperience } from "../store";
 
@@ -35,24 +35,56 @@ function Block({
   );
 }
 
-/** Holographic contact console — typing lights up the frame. */
+/** Holographic contact console — typing lights up the frame. Submits straight to the
+ * marketing lead-capture pipeline (n8n → backend agent → sales handoff); falls back to
+ * opening the visitor's mail client if the transmission itself fails, so an enquiry is
+ * never silently lost. */
 function ContactConsole() {
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [typing, setTyping] = useState(false);
 
-  const submit = (e: FormEvent<HTMLFormElement>) => {
+  const submit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    const body = [
-      `Name: ${data.get("name")}`,
-      `Event: ${data.get("event")}`,
-      "",
-      `${data.get("brief")}`,
-    ].join("\n");
-    window.location.href = `${contactLinks.email("Quote request — livegridav.com")}&body=${encodeURIComponent(body)}`;
-    setSent(true);
-    audio.click(undefined, 1.5);
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    const message = [
+      data.get("event") ? `Event / date: ${data.get("event")}` : null,
+      data.get("brief"),
+    ]
+      .filter(Boolean)
+      .join("\n\n");
+
+    setStatus("sending");
+    try {
+      const res = await fetch(LEAD_WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.get("name"),
+          email: data.get("email"),
+          phone: data.get("phone") || null,
+          company: data.get("company") || null,
+          message,
+        }),
+      });
+      if (!res.ok) throw new Error(`webhook responded ${res.status}`);
+      setStatus("sent");
+      audio.click(undefined, 1.5);
+      form.reset();
+    } catch {
+      // n8n/webhook unreachable — fall back to the old mailto behaviour so the brief still arrives.
+      const body = [`Name: ${data.get("name")}`, `Email: ${data.get("email")}`, `Event: ${data.get("event")}`, "", `${data.get("brief")}`].join("\n");
+      window.location.href = `${contactLinks.email("Quote request — livegridav.com")}&body=${encodeURIComponent(body)}`;
+      setStatus("error");
+    }
   };
+
+  const label = {
+    idle: "TRANSMIT BRIEF",
+    sending: "TRANSMITTING…",
+    sent: "TRANSMISSION OPENED ▮",
+    error: "SENT VIA EMAIL INSTEAD ▮",
+  }[status];
 
   return (
     <form
@@ -71,6 +103,18 @@ function ContactConsole() {
         <input name="name" required autoComplete="name" placeholder="_" />
       </label>
       <label>
+        <span>EMAIL</span>
+        <input name="email" type="email" required autoComplete="email" placeholder="you@company.com" />
+      </label>
+      <label>
+        <span>PHONE (OPTIONAL)</span>
+        <input name="phone" type="tel" autoComplete="tel" placeholder="_" />
+      </label>
+      <label>
+        <span>COMPANY (OPTIONAL)</span>
+        <input name="company" autoComplete="organization" placeholder="_" />
+      </label>
+      <label>
         <span>EVENT / DATE</span>
         <input name="event" placeholder="Product launch · March" />
       </label>
@@ -78,11 +122,11 @@ function ContactConsole() {
         <span>THE BRIEF</span>
         <textarea name="brief" rows={4} required placeholder="Tell us about the show…" />
       </label>
-      <button type="submit" className="lg-btn lg-btn-primary">
-        {sent ? "TRANSMISSION OPENED ▮" : "TRANSMIT BRIEF"}
+      <button type="submit" className="lg-btn lg-btn-primary" disabled={status === "sending"}>
+        {label}
       </button>
       <p className="lg-contact-foot">
-        Opens your mail client → {CONTACT.email}
+        {status === "error" ? `Delivered to ${CONTACT.email}` : "Goes straight to our team"}
       </p>
     </form>
   );
