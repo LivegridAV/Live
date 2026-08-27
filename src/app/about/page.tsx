@@ -3,6 +3,7 @@ import Link from "next/link";
 import PageShell from "@/components/site/PageShell";
 import Reveal from "@/components/Reveal";
 import SignalGrid from "@/components/SignalGrid";
+import HeroVisual from "@/components/site/HeroVisual";
 import { contactLinks, CONTACT } from "@/experience/contact";
 import { COMPANY, STATS } from "@/content/site";
 
@@ -68,7 +69,7 @@ export default function About() {
 
       {/* Hero */}
       <section className="bg-paper pt-32 pb-20 md:pt-40 md:pb-28">
-        <div className="mx-auto max-w-[1180px] px-6 md:px-12">
+        <div className="mx-auto grid max-w-[1180px] gap-12 px-6 md:grid-cols-[1.05fr_0.95fr] md:items-center md:px-12">
           <Reveal>
             <p className="font-mono text-xs uppercase tracking-[0.2em] text-aqua">About</p>
             <h1 className="mt-5 flex flex-wrap gap-x-5 gap-y-1 text-4xl font-semibold tracking-[-0.02em] text-text md:text-6xl">
@@ -86,6 +87,9 @@ export default function About() {
               combination is the difference — one team that connects the creative
               side and the technical side of your event.
             </p>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <HeroVisual variant="about" />
           </Reveal>
         </div>
       </section>

@@ -4,6 +4,7 @@ import PageShell from "@/components/site/PageShell";
 import Reveal from "@/components/Reveal";
 import SignalGrid from "@/components/SignalGrid";
 import Icon, { EQUIPMENT_ICON } from "@/components/site/Icon";
+import HeroVisual from "@/components/site/HeroVisual";
 import { contactLinks } from "@/experience/contact";
 import { EQUIPMENT_DIRECTORY } from "@/content/equipment";
 import { getService } from "@/content/services";
@@ -27,7 +28,7 @@ export default function Equipment() {
   return (
     <PageShell>
       <section className="bg-paper pt-32 pb-14 md:pt-40 md:pb-16">
-        <div className="mx-auto max-w-[1180px] px-6 md:px-12">
+        <div className="mx-auto grid max-w-[1180px] gap-12 px-6 md:grid-cols-[1.05fr_0.95fr] md:items-center md:px-12">
           <Reveal>
             <p className="font-mono text-xs uppercase tracking-[0.2em] text-aqua">Equipment</p>
             <h1 className="mt-4 max-w-[22ch] text-4xl font-semibold leading-[1.05] tracking-[-0.02em] text-text md:text-6xl">
@@ -39,6 +40,9 @@ export default function Equipment() {
               where it&rsquo;s relevant. The right configuration is always confirmed
               after a technical review of your event.
             </p>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <HeroVisual variant="equipment" />
           </Reveal>
         </div>
       </section>

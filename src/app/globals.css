@@ -510,6 +510,46 @@ body {
   border-color: color-mix(in srgb, var(--glow) 50%, transparent);
   box-shadow: 0 0 26px -6px color-mix(in srgb, var(--glow) 65%, transparent);
 }
+
+/* procedural hero visual — glowing LED wall in perspective */
+.lg-herovis {
+  position: relative; width: 100%; aspect-ratio: 4 / 3;
+  perspective: 1100px; overflow: hidden; border-radius: 20px;
+  border: 1px solid var(--line);
+  background:
+    radial-gradient(120% 90% at 62% 28%, rgba(63, 214, 200, 0.12), transparent 60%),
+    linear-gradient(160deg, #0b1714, #060c0b);
+}
+.lg-herovis-panel {
+  position: absolute; inset: 9% 7%;
+  display: grid;
+  grid-template-columns: repeat(14, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  gap: 3px; transform-style: preserve-3d;
+}
+.lg-herovis-cell { border-radius: 2px; animation: lgTwinkle 3.2s ease-in-out infinite; }
+@keyframes lgTwinkle {
+  0%, 100% { filter: brightness(0.82); }
+  50% { filter: brightness(1.22); }
+}
+.lg-herovis-bloom {
+  position: absolute; width: 44%; height: 44%; transform: translate(-50%, -50%);
+  border-radius: 50%; pointer-events: none; filter: blur(8px);
+  background: radial-gradient(circle, rgba(63, 214, 200, 0.3), transparent 70%);
+}
+.lg-herovis-scan {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(transparent, rgba(63, 214, 200, 0.07), transparent);
+  background-size: 100% 42%; background-repeat: no-repeat;
+  animation: lgScan 5.5s linear infinite;
+}
+@keyframes lgScan {
+  0% { background-position: 0 -42%; }
+  100% { background-position: 0 142%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lg-herovis-cell, .lg-herovis-scan { animation: none; }
+}
 /* accent text (eyebrows, links) → brighter neon on dark */
 .lg-dark .text-aqua { color: var(--glow); }
 .lg-dark .hover\:text-aqua:hover { color: var(--glow); }

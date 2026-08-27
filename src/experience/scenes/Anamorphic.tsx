@@ -62,23 +62,28 @@ export default function Anamorphic() {
     if (!group.current.visible) return;
 
     const t = state.clock.elapsedTime;
-    // breathe + lunge toward the pointer to sell the anamorphic pop-out.
-    // Offset to the right half of the wall so it never fights the headline.
+    // periodic lunge — every ~6.5s the subject roars and surges out of the wall
+    // toward the crowd (a 0→1→0 pulse over ~1.4s), the anamorphic "wow" beat.
+    const cyc = t % 6.5;
+    const lunge = cyc < 1.4 ? Math.sin((cyc / 1.4) * Math.PI) ** 1.5 : 0;
+    // breathe + lunge; offset to the right half of the wall (clear of headline).
     const breathe = 1 + Math.sin(t * 1.6) * 0.05;
-    const sc = shown.current * breathe * 1.3;
+    const sc = shown.current * breathe * (1.3 + lunge * 0.4);
     group.current.scale.setScalar(sc);
-    group.current.position.x = 4.4 + signals.pointerSmooth.x * 1.4;
+    group.current.position.x = 4.4 + signals.pointerSmooth.x * (1.4 + lunge * 1.2);
     group.current.position.y = 5.6 + signals.pointerSmooth.y * 0.6 + Math.sin(t * 0.9) * 0.15;
-    group.current.rotation.y = signals.pointerSmooth.x * 0.35 + Math.sin(t * 0.4) * 0.06;
+    group.current.position.z = lunge * 3.4; // forward, past the LED plane
+    group.current.rotation.y = signals.pointerSmooth.x * 0.35 + Math.sin(t * 0.4) * 0.06 - lunge * 0.12;
 
     if (mat.current) {
       mat.current.color.copy(new THREE.Color(th.glow));
-      mat.current.opacity = shown.current * (0.9 + Math.sin(t * 3) * 0.1);
-      mat.current.size = 0.12 + Math.sin(t * 2.2) * 0.02;
+      mat.current.opacity = shown.current * (0.9 + Math.sin(t * 3) * 0.1 + lunge * 0.25);
+      mat.current.size = 0.12 + Math.sin(t * 2.2) * 0.02 + lunge * 0.05;
     }
     if (shardMat.current) {
-      shardMat.current.color.copy(new THREE.Color(th.warm));
-      shardMat.current.opacity = shown.current * 0.9;
+      // shards flash warm on the roar
+      shardMat.current.color.copy(new THREE.Color(th.warm)).lerp(new THREE.Color("#fff"), lunge * 0.5);
+      shardMat.current.opacity = shown.current * (0.9 + lunge * 0.4);
     }
     if (points.current) points.current.rotation.z = Math.sin(t * 0.5) * 0.05;
   });

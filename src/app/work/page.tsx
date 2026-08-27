@@ -3,6 +3,7 @@ import PageShell from "@/components/site/PageShell";
 import Reveal from "@/components/Reveal";
 import SignalGrid from "@/components/SignalGrid";
 import WorkGallery from "@/components/site/WorkGallery";
+import HeroVisual from "@/components/site/HeroVisual";
 import { contactLinks } from "@/experience/contact";
 import { WORK } from "@/content/work";
 
@@ -42,7 +43,7 @@ export default function WorkHub() {
       />
 
       <section className="bg-paper pt-32 pb-14 md:pt-40 md:pb-16">
-        <div className="mx-auto max-w-[1180px] px-6 md:px-12">
+        <div className="mx-auto grid max-w-[1180px] gap-12 px-6 md:grid-cols-[1.05fr_0.95fr] md:items-center md:px-12">
           <Reveal>
             <p className="font-mono text-xs uppercase tracking-[0.2em] text-aqua">Work</p>
             <h1 className="mt-4 max-w-[22ch] text-4xl font-semibold leading-[1.05] tracking-[-0.02em] text-text md:text-6xl">
@@ -53,6 +54,9 @@ export default function WorkHub() {
               live show control. Filter by what you&rsquo;re planning, then open a
               case study.
             </p>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <HeroVisual variant="work" />
           </Reveal>
         </div>
       </section>
