@@ -3,6 +3,7 @@ import Link from "next/link";
 import PageShell from "@/components/site/PageShell";
 import Reveal from "@/components/Reveal";
 import SignalGrid from "@/components/SignalGrid";
+import Icon, { EQUIPMENT_ICON } from "@/components/site/Icon";
 import { contactLinks } from "@/experience/contact";
 import { EQUIPMENT_DIRECTORY } from "@/content/equipment";
 import { getService } from "@/content/services";
@@ -51,7 +52,9 @@ export default function Equipment() {
                 <Reveal key={cat.name} delay={(i % 3) * 0.05}>
                   <article className="flex h-full flex-col rounded-[20px] border border-line bg-paper p-7">
                     <div className="flex items-center justify-between">
-                      <SignalGrid cell={9} gap={2.5} palette="dark" animate={false} glow={false} />
+                      <span className="lg-icon-badge">
+                        <Icon name={EQUIPMENT_ICON[cat.name] ?? "spark"} />
+                      </span>
                       <span className="font-mono text-[11px] tracking-[0.2em] text-faint">
                         {String(i + 1).padStart(2, "0")}
                       </span>

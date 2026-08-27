@@ -3,6 +3,7 @@ import Link from "next/link";
 import PageShell from "@/components/site/PageShell";
 import Reveal from "@/components/Reveal";
 import SignalGrid from "@/components/SignalGrid";
+import Icon, { SERVICE_ICON } from "@/components/site/Icon";
 import { contactLinks } from "@/experience/contact";
 import { SERVICES, SERVICE_GROUPS } from "@/content/services";
 
@@ -84,18 +85,21 @@ export default function ServicesHub() {
                       href={`/services/${s.slug}`}
                       className="group flex h-full flex-col rounded-[20px] border border-line bg-paper p-7 transition-all duration-300 hover:-translate-y-1 hover:border-aqua/40 hover:shadow-[0_18px_40px_-24px_rgba(31,160,147,0.5)]"
                     >
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-start justify-between">
+                        <span className="lg-icon-badge">
+                          <Icon name={SERVICE_ICON[s.slug] ?? "spark"} />
+                        </span>
                         <span className="font-mono text-[11px] tracking-[0.2em] text-faint">
                           {s.order}
-                        </span>
-                        <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-aqua opacity-0 transition-opacity group-hover:opacity-100">
-                          Explore →
                         </span>
                       </div>
                       <h3 className="mt-5 text-lg font-semibold tracking-[-0.01em] text-text group-hover:text-aqua">
                         {s.title}
                       </h3>
                       <p className="mt-2 leading-relaxed text-muted">{s.tagline}</p>
+                      <span className="mt-4 font-mono text-[10px] uppercase tracking-[0.16em] text-aqua opacity-0 transition-opacity group-hover:opacity-100">
+                        Explore →
+                      </span>
                     </Link>
                   </Reveal>
                 ))}

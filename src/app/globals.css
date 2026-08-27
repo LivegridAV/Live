@@ -493,6 +493,23 @@ body {
 }
 /* card / input surfaces that were literal white → lifted dark panel */
 .lg-dark .bg-white { background-color: #0f1c19; }
+
+/* reference-style glowing line-icons in feature cards */
+.lg-icon { filter: drop-shadow(0 0 5px color-mix(in srgb, currentColor 45%, transparent)); }
+.lg-icon-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+  color: var(--glow);
+  background: color-mix(in srgb, var(--glow) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--glow) 26%, transparent);
+  box-shadow: 0 0 22px -8px color-mix(in srgb, var(--glow) 55%, transparent);
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+.lg-icon-badge-sm { width: 36px; height: 36px; border-radius: 10px; }
+.group:hover .lg-icon-badge {
+  border-color: color-mix(in srgb, var(--glow) 50%, transparent);
+  box-shadow: 0 0 26px -6px color-mix(in srgb, var(--glow) 65%, transparent);
+}
 /* accent text (eyebrows, links) → brighter neon on dark */
 .lg-dark .text-aqua { color: var(--glow); }
 .lg-dark .hover\:text-aqua:hover { color: var(--glow); }

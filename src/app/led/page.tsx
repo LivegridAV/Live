@@ -4,6 +4,7 @@ import PageShell from "@/components/site/PageShell";
 import Reveal from "@/components/Reveal";
 import SignalGrid from "@/components/SignalGrid";
 import PixelPitchTool from "@/components/site/PixelPitchTool";
+import Icon, { type IconName } from "@/components/site/Icon";
 import { contactLinks } from "@/experience/contact";
 import { LED_TYPES } from "@/content/led";
 
@@ -22,13 +23,13 @@ export const metadata: Metadata = {
   },
 };
 
-const FACTORS = [
-  { t: "Viewing distance", b: "How close the nearest audience sits drives how fine the panel needs to be." },
-  { t: "Screen size", b: "Width and height set the resolution and the rigging or ground support." },
-  { t: "Indoor or outdoor", b: "Outdoor needs more brightness and weather rating; indoor prioritises image quality." },
-  { t: "Camera use", b: "Filmed or streamed screens usually need a finer pitch to look clean on camera." },
-  { t: "Brightness", b: "Ambient light in the room or outdoors sets how bright the screen must be." },
-  { t: "Budget", b: "We balance pitch, size and quality against what the event needs to spend." },
+const FACTORS: { t: string; b: string; icon: IconName }[] = [
+  { t: "Viewing distance", b: "How close the nearest audience sits drives how fine the panel needs to be.", icon: "eye" },
+  { t: "Screen size", b: "Width and height set the resolution and the rigging or ground support.", icon: "expand" },
+  { t: "Indoor or outdoor", b: "Outdoor needs more brightness and weather rating; indoor prioritises image quality.", icon: "building" },
+  { t: "Camera use", b: "Filmed or streamed screens usually need a finer pitch to look clean on camera.", icon: "camera" },
+  { t: "Brightness", b: "Ambient light in the room or outdoors sets how bright the screen must be.", icon: "sun" },
+  { t: "Budget", b: "We balance pitch, size and quality against what the event needs to spend.", icon: "tag" },
 ];
 
 export default function LedHub() {
@@ -60,7 +61,10 @@ export default function LedHub() {
             {FACTORS.map((f, i) => (
               <Reveal key={f.t} delay={(i % 3) * 0.05}>
                 <div className="rounded-[20px] border border-line bg-paper p-6">
-                  <h2 className="text-base font-semibold tracking-[-0.01em] text-text">{f.t}</h2>
+                  <span className="lg-icon-badge lg-icon-badge-sm">
+                    <Icon name={f.icon} size={20} />
+                  </span>
+                  <h2 className="mt-4 text-base font-semibold tracking-[-0.01em] text-text">{f.t}</h2>
                   <p className="mt-2 text-sm leading-relaxed text-muted">{f.b}</p>
                 </div>
               </Reveal>

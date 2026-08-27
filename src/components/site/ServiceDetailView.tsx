@@ -3,6 +3,7 @@ import Link from "next/link";
 import Reveal from "../Reveal";
 import SignalGrid from "../SignalGrid";
 import SignalFlow from "./SignalFlow";
+import Icon, { SERVICE_ICON } from "./Icon";
 import { contactLinks } from "@/experience/contact";
 import { PROJECTS } from "@/content/site";
 import { getService, type ServiceDetail } from "@/content/services";
@@ -46,6 +47,9 @@ export default function ServiceDetailView({ service }: { service: ServiceDetail 
               <span className="px-2">/</span>
               <span className="text-muted">{service.eyebrow}</span>
             </nav>
+            <span className="lg-icon-badge mb-5" style={{ width: 52, height: 52 }}>
+              <Icon name={SERVICE_ICON[service.slug] ?? "spark"} size={26} />
+            </span>
             <SectionEyebrow>{`${service.order} · ${service.eyebrow}`}</SectionEyebrow>
             <h1 className="mt-4 text-4xl font-semibold leading-[1.05] tracking-[-0.02em] text-text md:text-6xl">
               {service.title}
