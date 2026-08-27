@@ -2,7 +2,7 @@
 import Link from "next/link";
 import Reveal from "../Reveal";
 import SignalGrid from "../SignalGrid";
-import SignalFlow from "./SignalFlow";
+import ServiceDemo, { SERVICE_DEMO } from "./ServiceDemo";
 import Icon, { SERVICE_ICON } from "./Icon";
 import { contactLinks } from "@/experience/contact";
 import { PROJECTS } from "@/content/site";
@@ -75,23 +75,12 @@ export default function ServiceDetailView({ service }: { service: ServiceDetail 
             </div>
           </Reveal>
 
-          {/* one glow moment: the live signal path on a dark inset panel */}
+          {/* the unforgettable moment: a live, animated demo of this service */}
           <Reveal delay={0.1}>
-            <div className="rounded-[20px] bg-ink p-7 text-text-inv md:p-8">
-              <div className="flex items-center justify-between">
-                <SignalGrid cell={12} gap={3} palette="dark" animate glow />
-                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-faint">
-                  Live signal
-                </span>
-              </div>
-              <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.18em] text-glow">
-                Signal path
-              </p>
-              <SignalFlow nodes={service.flow} className="mt-4" />
-              <p className="mt-6 text-sm leading-relaxed text-text-inv/60">
-                {service.plain}
-              </p>
-            </div>
+            <ServiceDemo demo={SERVICE_DEMO[service.slug] ?? "signal"} />
+            <p className="mt-5 max-w-[48ch] text-sm leading-relaxed text-muted">
+              {service.plain}
+            </p>
           </Reveal>
         </div>
       </section>

@@ -550,6 +550,162 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .lg-herovis-cell, .lg-herovis-scan { animation: none; }
 }
+
+/* ── live service demos ─────────────────────────────────── */
+.lg-demo {
+  position: relative; width: 100%; aspect-ratio: 4 / 3; overflow: hidden;
+  border-radius: 20px; border: 1px solid var(--line);
+  background: linear-gradient(160deg, #0b1714, #060c0b);
+}
+.lg-demo[data-live="false"] * { animation-play-state: paused !important; }
+.lg-demo-tag {
+  position: absolute; left: 14px; bottom: 12px; z-index: 6;
+  font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--glow);
+}
+@media (prefers-reduced-motion: reduce) { .lg-demo * { animation: none !important; } }
+
+/* LED wall — content wave sweeps the fixed panels */
+.lg-demo-led { position: absolute; inset: 12%; display: grid;
+  grid-template-columns: repeat(12, 1fr); grid-template-rows: repeat(6, 1fr); gap: 4px; }
+.lg-demo-led-cell { border-radius: 2px; background: rgba(63, 214, 200, 0.12);
+  animation: lgLedWave 2.4s ease-in-out infinite; }
+@keyframes lgLedWave {
+  0%, 100% { background: rgba(63, 214, 200, 0.1); box-shadow: none; }
+  50% { background: rgba(63, 214, 200, 0.85); box-shadow: 0 0 10px rgba(63, 214, 200, 0.7); }
+}
+
+/* signal path — nodes light + a pulse runs the chain */
+.lg-demo-signal { position: absolute; inset: 0; display: grid; place-items: center; }
+.lg-demo-signal-row { position: relative; display: flex; align-items: center; gap: 12px; padding: 0 18px; }
+.lg-demo-signal-row::before { content: ""; position: absolute; left: 18px; right: 18px; top: 50%; height: 1px; background: var(--ink-soft); }
+.lg-demo-node { position: relative; z-index: 2; font-family: var(--font-mono); font-size: 9px;
+  letter-spacing: 0.1em; color: rgba(244, 246, 245, 0.5); background: #08110f;
+  border: 1px solid var(--ink-soft); border-radius: 8px; padding: 7px 7px;
+  animation: lgNodeLit 2.4s ease-in-out infinite; }
+@keyframes lgNodeLit {
+  0%, 100% { border-color: var(--ink-soft); color: rgba(244, 246, 245, 0.5); box-shadow: none; }
+  50% { border-color: var(--glow); color: var(--glow); box-shadow: 0 0 12px -4px var(--glow); }
+}
+.lg-demo-pulse { position: absolute; left: 18px; top: 50%; width: 8px; height: 8px; margin-top: -4px;
+  border-radius: 50%; background: var(--glow); box-shadow: 0 0 12px var(--glow); z-index: 3;
+  animation: lgPulseRun 2.4s linear infinite; }
+@keyframes lgPulseRun { 0% { left: 18px; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { left: calc(100% - 18px); opacity: 0; } }
+
+/* content — motion graphics playing + a timeline */
+.lg-demo-content { position: absolute; inset: 0; display: grid; grid-template-rows: 1fr auto; }
+.lg-demo-mg { position: relative; display: grid; place-items: center; }
+.lg-demo-mg-ring { width: 70px; height: 70px; border: 2px solid var(--glow); border-radius: 50%;
+  border-right-color: transparent; animation: lgSpin 2.2s linear infinite; }
+.lg-demo-mg-ring2 { position: absolute; width: 44px; height: 44px; border-color: var(--aqua);
+  border-bottom-color: transparent; animation: lgSpin 1.6s linear infinite reverse; }
+.lg-demo-mg-bar { position: absolute; width: 90px; height: 6px; border-radius: 3px;
+  background: linear-gradient(90deg, var(--glow), transparent); animation: lgScaleX 1.8s ease-in-out infinite; }
+@keyframes lgSpin { to { transform: rotate(360deg); } }
+@keyframes lgScaleX { 0%, 100% { transform: scaleX(0.4); } 50% { transform: scaleX(1); } }
+.lg-demo-timeline { position: relative; display: grid; gap: 4px; padding: 12px 16px 22px; }
+.lg-demo-track { height: 6px; border-radius: 3px; background: rgba(63, 214, 200, 0.15);
+  transform-origin: left; animation: lgTrack 2.6s ease-in-out infinite; }
+@keyframes lgTrack { 0%, 100% { transform: scaleX(0.3); opacity: 0.5; } 50% { transform: scaleX(0.92); opacity: 1; } }
+.lg-demo-playhead { position: absolute; top: 8px; bottom: 18px; width: 2px; background: var(--glow);
+  box-shadow: 0 0 8px var(--glow); animation: lgPlayhead 3s linear infinite; }
+@keyframes lgPlayhead { 0% { left: 16px; } 100% { left: calc(100% - 16px); } }
+
+/* anamorphic — object pops past the screen frame */
+.lg-demo-ana { position: absolute; inset: 0; display: grid; place-items: center; }
+.lg-demo-ana-screen { position: relative; width: 62%; aspect-ratio: 16 / 10; display: grid;
+  grid-template-columns: repeat(9, 1fr); grid-template-rows: repeat(5, 1fr); gap: 2px;
+  border: 1px solid var(--line); border-radius: 6px; padding: 6px; background: #08110f; }
+.lg-demo-ana-px { border-radius: 1px; background: rgba(63, 214, 200, 0.18); }
+.lg-demo-ana-object { position: absolute; width: 62px; height: 62px; border-radius: 14px;
+  background: radial-gradient(circle at 40% 35%, var(--glow), #0a6b60);
+  box-shadow: 0 0 26px -4px var(--glow); animation: lgPop 3.6s ease-in-out infinite; }
+@keyframes lgPop {
+  0%, 100% { transform: translateY(8px) scale(0.72); filter: brightness(0.8); }
+  50% { transform: translateY(-36px) scale(1.06); filter: brightness(1.2); }
+}
+
+/* show control — PVW/PGM monitors + advancing cue list */
+.lg-demo-console { position: absolute; inset: 10%; display: grid; grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr auto; gap: 8px; }
+.lg-demo-mon { position: relative; border-radius: 6px; border: 1px solid var(--ink-soft);
+  overflow: hidden; background: #08110f; }
+.lg-demo-mon span { position: absolute; left: 6px; top: 5px; z-index: 2; font-family: var(--font-mono);
+  font-size: 8px; letter-spacing: 0.1em; color: var(--faint); }
+.lg-demo-mon::after { content: ""; position: absolute; inset: 0;
+  background: linear-gradient(120deg, transparent, rgba(63, 214, 200, 0.35), transparent);
+  background-size: 220% 100%; animation: lgSweep 3s linear infinite; }
+.lg-demo-mon-pgm { border-color: color-mix(in srgb, var(--glow) 50%, transparent);
+  box-shadow: inset 0 0 20px -8px var(--glow); }
+.lg-demo-mon-pgm::after { animation-duration: 2.2s; }
+@keyframes lgSweep { 0% { background-position: 220% 0; } 100% { background-position: -220% 0; } }
+.lg-demo-cues { grid-column: 1 / -1; display: flex; gap: 5px; }
+.lg-demo-cue { flex: 1; text-align: center; font-family: var(--font-mono); font-size: 7px;
+  letter-spacing: 0.06em; color: var(--faint); border: 1px solid var(--ink-soft); border-radius: 5px;
+  padding: 5px 2px; animation: lgCue 5.5s steps(1, end) infinite; }
+@keyframes lgCue { 0%, 82%, 100% { color: var(--faint); border-color: var(--ink-soft); background: transparent; }
+  10%, 70% { color: var(--ink); background: var(--glow); border-color: var(--glow); } }
+
+/* projection — mapped wash over a fixed facade */
+.lg-demo-proj { position: absolute; inset: 0; display: grid; place-items: center; }
+.lg-demo-building { position: relative; width: 52%; aspect-ratio: 3 / 4; display: grid;
+  grid-template-columns: repeat(6, 1fr); grid-template-rows: repeat(4, 1fr); gap: 6px; padding: 10px;
+  background: #0c1512; border: 1px solid var(--ink-soft); border-radius: 4px; overflow: hidden; }
+.lg-demo-window { border-radius: 2px; background: rgba(255, 255, 255, 0.05); }
+.lg-demo-map { position: absolute; inset: -20%; mix-blend-mode: screen; opacity: 0.55;
+  background: conic-gradient(from 0deg, var(--glow), var(--aqua), #7fb8ff, var(--glow));
+  animation: lgMap 6s linear infinite; }
+@keyframes lgMap { to { transform: rotate(360deg) scale(1.4); } }
+
+/* network — venue hub + remote feeds with pulsing links */
+.lg-demo-net { position: absolute; inset: 0; }
+.lg-demo-net-hub { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 3;
+  font-family: var(--font-mono); font-size: 8px; letter-spacing: 0.1em; color: var(--ink);
+  background: var(--glow); border-radius: 8px; padding: 8px 10px; box-shadow: 0 0 18px -4px var(--glow); }
+.lg-demo-net-node { position: absolute; z-index: 2; width: 34px; height: 24px; border: 1px solid var(--ink-soft);
+  border-radius: 5px; background: #08110f; display: grid; place-items: center; }
+.lg-demo-net-node-0 { left: 14%; top: 22%; } .lg-demo-net-node-1 { right: 14%; top: 18%; } .lg-demo-net-node-2 { right: 16%; bottom: 16%; }
+.lg-demo-net-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--glow); animation: lgBlink 1.6s ease-in-out infinite; }
+@keyframes lgBlink { 0%, 100% { opacity: 0.35; box-shadow: none; } 50% { opacity: 1; box-shadow: 0 0 8px var(--glow); } }
+.lg-demo-net-links { position: absolute; inset: 0; width: 100%; height: 100%; }
+.lg-demo-net-link { stroke: var(--glow); stroke-width: 0.6; stroke-dasharray: 3 3; opacity: 0.6; animation: lgDash 1s linear infinite; }
+@keyframes lgDash { to { stroke-dashoffset: -12; } }
+
+/* sound — coverage field + bouncing meters */
+.lg-demo-sound { position: absolute; inset: 0; display: grid; place-items: center; }
+.lg-demo-coverage { position: absolute; width: 68%; aspect-ratio: 1; border-radius: 50%;
+  background: radial-gradient(circle, rgba(63, 214, 200, 0.16), transparent 62%); animation: lgPulseScale 3s ease-in-out infinite; }
+@keyframes lgPulseScale { 0%, 100% { transform: scale(0.9); opacity: 0.6; } 50% { transform: scale(1.05); opacity: 1; } }
+.lg-demo-meters { position: relative; display: flex; align-items: flex-end; gap: 4px; height: 46%; }
+.lg-demo-meter { width: 6px; height: 100%; border-radius: 2px; transform-origin: bottom;
+  background: linear-gradient(var(--glow), var(--aqua)); animation: lgMeter 0.9s ease-in-out infinite; }
+@keyframes lgMeter { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(1); } }
+
+/* lighting — beams sweeping over a stage line */
+.lg-demo-light { position: absolute; inset: 0; overflow: hidden; }
+.lg-demo-beam { position: absolute; top: 12%; width: 0; height: 0; border-left: 14px solid transparent;
+  border-right: 14px solid transparent; border-top: 130px solid rgba(63, 214, 200, 0.16);
+  transform-origin: top center; filter: blur(1px); }
+.lg-demo-beam-0 { left: 24%; animation: lgSweepA 4s ease-in-out infinite; }
+.lg-demo-beam-1 { left: 42%; animation: lgSweepB 3.4s ease-in-out infinite; }
+.lg-demo-beam-2 { left: 58%; animation: lgSweepA 3.8s ease-in-out infinite reverse; }
+.lg-demo-beam-3 { left: 74%; animation: lgSweepB 4.2s ease-in-out infinite reverse; }
+@keyframes lgSweepA { 0%, 100% { transform: rotate(-22deg); } 50% { transform: rotate(14deg); } }
+@keyframes lgSweepB { 0%, 100% { transform: rotate(18deg); } 50% { transform: rotate(-16deg); } }
+.lg-demo-stage { position: absolute; left: 8%; right: 8%; bottom: 14%; height: 5px; border-radius: 3px;
+  background: var(--glow); box-shadow: 0 0 14px var(--glow); opacity: 0.8; }
+
+/* web — browser frame with a perspective grid */
+.lg-demo-web { position: absolute; inset: 12%; border: 1px solid var(--ink-soft); border-radius: 8px;
+  overflow: hidden; background: #08110f; display: grid; grid-template-rows: auto 1fr; }
+.lg-demo-web-bar { display: flex; gap: 5px; padding: 8px 10px; border-bottom: 1px solid var(--ink-soft); }
+.lg-demo-web-bar span { width: 7px; height: 7px; border-radius: 50%; background: var(--ink-soft); }
+.lg-demo-web-bar span:first-child { background: var(--glow); }
+.lg-demo-web-body { perspective: 420px; display: grid; place-items: center; overflow: hidden; }
+.lg-demo-web-grid { display: grid; grid-template-columns: repeat(6, 14px); grid-auto-rows: 14px; gap: 4px;
+  transform: rotateX(52deg); animation: lgWebSpin 14s linear infinite; }
+.lg-demo-web-grid span { background: rgba(63, 214, 200, 0.2); border-radius: 2px; animation: lgTwinkle 2.4s ease-in-out infinite; }
+@keyframes lgWebSpin { to { transform: rotateX(52deg) rotateZ(360deg); } }
 /* accent text (eyebrows, links) → brighter neon on dark */
 .lg-dark .text-aqua { color: var(--glow); }
 .lg-dark .hover\:text-aqua:hover { color: var(--glow); }
