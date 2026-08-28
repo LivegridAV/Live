@@ -8,6 +8,8 @@ import LightingStage from "./LightingStage";
 import AnamorphicViewpoint from "./AnamorphicViewpoint";
 import ProjectionLooks from "./ProjectionLooks";
 import HybridConnect from "./HybridConnect";
+import LiveSwitcher from "./LiveSwitcher";
+import ShowControlCues from "./ShowControlCues";
 import Icon, { SERVICE_ICON } from "./Icon";
 import { contactLinks } from "@/experience/contact";
 
@@ -19,6 +21,9 @@ const SERVICE_FEATURE: Record<string, () => React.JSX.Element> = {
   "projection-mapping": ProjectionLooks,
   "virtual-events": HybridConnect,
   "hybrid-events": HybridConnect,
+  "live-production": LiveSwitcher,
+  "broadcast-streaming": LiveSwitcher,
+  "show-control-media-server": ShowControlCues,
 };
 import { PROJECTS } from "@/content/site";
 import { getService, type ServiceDetail } from "@/content/services";

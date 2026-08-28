@@ -22,8 +22,8 @@ fidelity · **Nat** natural visual realism · **ID** LiveGridAV identity ·
 | LED hub + types | 8 | Pixel-pitch tool + living hero + type pages. Floor LED needs a walk-on demo. |
 | 3D / Anamorphic | 8.5 | Viewpoint slider landed (real bake→reproject geometry): solid object at the sweet spot, shears to flat LED off-axis. Could add a real rigged subject. |
 | Projection | 8.5 | Look-selector landed: one neutral facade, four screen-blended projected looks (architectural edge-map / brand / geometric / cinematic scene). Natural colour on cinematic. |
-| Show Control | 8 | Console demo (PVW/PGM + cues) reads well; could let the visitor fire a cue. |
-| Live Production | 7.5 | Console demo; wants camera→switcher→program follow-through. |
+| Show Control | 9 | Fire-a-cue stack landed: GO cuts each cue to the program output (intro/keynote/video/award/close), red on-air tally, done/next states. |
+| Live Production | 8.5 | Switcher landed: load a camera to preview, TAKE to air (camera→switcher→program); neutral feeds + cyan LED graphics, real red on-air tally. Also on broadcast-streaming. |
 | Virtual / Hybrid | 8.5 | Connect interaction landed: toggle remote studio / sister venue / online / broadcast onto the main-venue hub, flowing signal, "one show" readout. |
 | Sound | 8 | Coverage stage landed: pick PA/sub/monitor/front/delay, see the zone on a neutral venue plan (cyan overlay only). |
 | Lighting | 8 | Fixture-swap stage landed: beam/wash/profile/strobe/blinder/spot transform a neutral-steel stage; glow only on the emissive beam. |
