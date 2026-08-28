@@ -2,6 +2,7 @@
 import Link from "next/link";
 import Reveal from "../Reveal";
 import SignalGrid from "../SignalGrid";
+import WorkSignalFlow from "./WorkSignalFlow";
 import { contactLinks } from "@/experience/contact";
 import { WORK, projectSummary, vibeBg, type WorkItem } from "@/content/work";
 
@@ -82,8 +83,11 @@ export default function WorkDetailView({ project }: { project: WorkItem }) {
               technical review.
             </p>
           </Reveal>
-          <Reveal delay={0.08}>
+          <Reveal delay={0.08} className="min-w-0">
             <p className="font-mono text-xs uppercase tracking-[0.2em] text-aqua">The system</p>
+            <div className="mt-5 min-w-0 overflow-hidden rounded-[20px] border border-line bg-paper p-4">
+              <WorkSignalFlow project={project} />
+            </div>
             <div className="mt-5 flex flex-wrap gap-2.5">
               {gearItems.map((g) => (
                 <span

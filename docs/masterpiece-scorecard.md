@@ -18,7 +18,7 @@ fidelity · **Nat** natural visual realism · **ID** LiveGridAV identity ·
 | Services hub | 8.5 | Strong: icons + living hero visual + dark system. Could add per-card motion. |
 | Service detail (×15) | 8 | Live per-service demos landed; some demos (network, web) can be richer; hero could go full-bleed. |
 | Work hub | 7.5 | Vibe-tinted tiles + living hero. Cards need real muted-video/motion previews (currently gradient + drift). |
-| Work / project detail | 6.5 | Honest case-study data only; needs hero motion + animated system diagram + BTS. |
+| Work / project detail | 7.5 | Animated signal-path diagram landed (content→media server→processor→output, adaptive per project's LED/projection/anamorphic + real spec). Still wants hero motion + real BTS media. |
 | LED hub + types | 8 | Pixel-pitch tool + living hero + type pages. Floor LED needs a walk-on demo. |
 | 3D / Anamorphic | 8.5 | Viewpoint slider landed (real bake→reproject geometry): solid object at the sweet spot, shears to flat LED off-axis. Could add a real rigged subject. |
 | Projection | 8.5 | Look-selector landed: one neutral facade, four screen-blended projected looks (architectural edge-map / brand / geometric / cinematic scene). Natural colour on cinematic. |
