@@ -718,8 +718,10 @@ body {
 @keyframes lgSpotMove { 0%, 100% { transform: translateX(-40px); } 50% { transform: translateX(40px); } }
 .lg-proj { animation: lgProjIn 0.45s ease both; }
 @keyframes lgProjIn { from { opacity: 0; } to { opacity: 1; } }
+.lg-flow { animation: lgFlow 0.8s linear infinite; }
+@keyframes lgFlow { to { stroke-dashoffset: -18; } }
 @media (prefers-reduced-motion: reduce) {
-  .lg-cov-zone, .lg-lite, .lg-strobe, .lg-spot, .lg-proj { animation: none; }
+  .lg-cov-zone, .lg-lite, .lg-strobe, .lg-spot, .lg-proj, .lg-flow { animation: none; }
 }
 /* anamorphic viewpoint slider — dark track, glowing cyan thumb */
 .lg-ana-range { -webkit-appearance: none; appearance: none; height: 4px; border-radius: 999px;

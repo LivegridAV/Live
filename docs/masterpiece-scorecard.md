@@ -24,9 +24,9 @@ fidelity · **Nat** natural visual realism · **ID** LiveGridAV identity ·
 | Projection | 8.5 | Look-selector landed: one neutral facade, four screen-blended projected looks (architectural edge-map / brand / geometric / cinematic scene). Natural colour on cinematic. |
 | Show Control | 8 | Console demo (PVW/PGM + cues) reads well; could let the visitor fire a cue. |
 | Live Production | 7.5 | Console demo; wants camera→switcher→program follow-through. |
-| Virtual / Hybrid | 7 | Network demo; wants the venue↔remote↔online connect interaction. |
-| Sound | 6.5 | Meters demo; needs the hover-coverage interactive stage (PA/sub/monitor zones). |
-| Lighting | 6.5 | Beam demo; needs the fixture-swap interactive stage (beam/wash/profile transform). |
+| Virtual / Hybrid | 8.5 | Connect interaction landed: toggle remote studio / sister venue / online / broadcast onto the main-venue hub, flowing signal, "one show" readout. |
+| Sound | 8 | Coverage stage landed: pick PA/sub/monitor/front/delay, see the zone on a neutral venue plan (cyan overlay only). |
+| Lighting | 8 | Fixture-swap stage landed: beam/wash/profile/strobe/blinder/spot transform a neutral-steel stage; glow only on the emissive beam. |
 | Equipment | 8 | Icon directory + living hero; solid and clear. |
 | AV Lab | 7.5 | Interactive signal-path explorer works; wants a 3D control-room + camera moves. |
 | Contact | 8.5 | Guided brief, real submit + WhatsApp, dark, clear. Effortless. |

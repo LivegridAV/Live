@@ -7,6 +7,7 @@ import SoundCoverage from "./SoundCoverage";
 import LightingStage from "./LightingStage";
 import AnamorphicViewpoint from "./AnamorphicViewpoint";
 import ProjectionLooks from "./ProjectionLooks";
+import HybridConnect from "./HybridConnect";
 import Icon, { SERVICE_ICON } from "./Icon";
 import { contactLinks } from "@/experience/contact";
 
@@ -16,6 +17,8 @@ const SERVICE_FEATURE: Record<string, () => React.JSX.Element> = {
   "professional-lighting": LightingStage,
   "3d-anamorphic": AnamorphicViewpoint,
   "projection-mapping": ProjectionLooks,
+  "virtual-events": HybridConnect,
+  "hybrid-events": HybridConnect,
 };
 import { PROJECTS } from "@/content/site";
 import { getService, type ServiceDetail } from "@/content/services";
