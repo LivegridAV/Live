@@ -723,6 +723,50 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .lg-cov-zone, .lg-lite, .lg-strobe, .lg-spot, .lg-proj, .lg-flow { animation: none; }
 }
+
+/* work-card ambient motion — varied by project category, tinted to its vibe.
+   Subtle at rest, intensifies on hover; all animation stops under reduced motion. */
+.lg-cardfx { position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+  opacity: 0.55; transition: opacity 0.4s ease; }
+.group:hover .lg-cardfx { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .lg-cardfx::before, .lg-cardfx::after { animation: none !important; } }
+
+/* LED — pixel grid with a sweeping shine */
+.lg-cardfx-led::before { content: ""; position: absolute; inset: 0; opacity: 0.5;
+  background:
+    linear-gradient(color-mix(in srgb, var(--vibe) 22%, transparent) 1px, transparent 1px) 0 0 / 22px 22px,
+    linear-gradient(90deg, color-mix(in srgb, var(--vibe) 22%, transparent) 1px, transparent 1px) 0 0 / 22px 22px; }
+.lg-cardfx-led::after { content: ""; position: absolute; inset: -30%;
+  background: linear-gradient(115deg, transparent 40%, color-mix(in srgb, var(--vibe) 55%, transparent) 50%, transparent 60%);
+  animation: lgCardSweep 5.5s ease-in-out infinite; }
+@keyframes lgCardSweep { 0%, 100% { transform: translateX(-70%); } 50% { transform: translateX(70%); } }
+
+/* BEAM — slow light shafts (live events) */
+.lg-cardfx-beam::before, .lg-cardfx-beam::after { content: ""; position: absolute; left: 50%; top: 118%;
+  width: 55%; height: 175%; transform-origin: top center; filter: blur(7px);
+  background: linear-gradient(color-mix(in srgb, var(--vibe) 40%, transparent), transparent 72%); }
+.lg-cardfx-beam::before { animation: lgCardBeamA 7s ease-in-out infinite; }
+.lg-cardfx-beam::after { animation: lgCardBeamB 9s ease-in-out infinite; }
+@keyframes lgCardBeamA { 0%, 100% { transform: translateX(-50%) rotate(-24deg); } 50% { transform: translateX(-50%) rotate(-8deg); } }
+@keyframes lgCardBeamB { 0%, 100% { transform: translateX(-50%) rotate(22deg); } 50% { transform: translateX(-50%) rotate(6deg); } }
+
+/* SCAN — a program scan line easing down (show control / hybrid) */
+.lg-cardfx-scan::after { content: ""; position: absolute; left: 0; right: 0; height: 2px;
+  background: color-mix(in srgb, var(--vibe) 70%, transparent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--vibe) 60%, transparent);
+  animation: lgCardScan 6s cubic-bezier(0.5, 0, 0.5, 1) infinite; }
+@keyframes lgCardScan { 0% { top: 8%; opacity: 0; } 12% { opacity: 1; } 88% { opacity: 1; } 100% { top: 92%; opacity: 0; } }
+
+/* DEPTH — concentric rings pushing toward the viewer (anamorphic / immersive) */
+.lg-cardfx-depth::before, .lg-cardfx-depth::after { content: ""; position: absolute; left: 50%; top: 46%;
+  width: 40%; aspect-ratio: 1; border: 1.5px solid color-mix(in srgb, var(--vibe) 55%, transparent);
+  border-radius: 50%; transform: translate(-50%, -50%) scale(0.25); animation: lgCardDepth 5s ease-out infinite; }
+.lg-cardfx-depth::after { animation-delay: 2.5s; }
+@keyframes lgCardDepth {
+  0% { transform: translate(-50%, -50%) scale(0.25); opacity: 0; }
+  30% { opacity: 0.8; }
+  100% { transform: translate(-50%, -50%) scale(1.7); opacity: 0; }
+}
 /* anamorphic viewpoint slider — dark track, glowing cyan thumb */
 .lg-ana-range { -webkit-appearance: none; appearance: none; height: 4px; border-radius: 999px;
   background: linear-gradient(90deg, var(--line), color-mix(in srgb, var(--glow) 45%, var(--line)), var(--line));

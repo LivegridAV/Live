@@ -1,16 +1,34 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-import { motion, useReducedMotion } from "motion/react";
-import { WORK, WORK_CATEGORIES, vibeBg, type WorkCategory } from "@/content/work";
+import { WORK, WORK_CATEGORIES, vibeBg, type WorkCategory, type WorkItem } from "@/content/work";
 
 /**
- * The /work gallery — a filterable wall of project tiles. Tiles carry a gentle
- * drifting sheen (decorative, disabled under prefers-reduced-motion) rather than
- * a fake video reel, and each links into its case study.
+ * The /work gallery — a filterable wall of project tiles. Each tile carries a
+ * distinct ambient motion chosen from its own project category and tinted to its
+ * vibe (LED shimmer / event beams / show-control scan / anamorphic depth) — a
+ * real per-project sign of life, not a fake video reel. All motion is disabled
+ * under prefers-reduced-motion (CSS). Each tile links into its case study.
  */
+
+/**
+ * Distinct ambient-motion variant per project, chosen from the set that genuinely
+ * fits its real categories, then spread deterministically by a slug hash so the
+ * grid shows variety (LED shimmer / event beams / show-control scan / depth)
+ * instead of one repeated animation.
+ */
+type FxVariant = "led" | "beam" | "scan" | "depth";
+function motionVariant(p: WorkItem): FxVariant {
+  const applicable: FxVariant[] = [];
+  if (p.categories.includes("Anamorphic")) applicable.push("depth");
+  if (p.categories.includes("Live Events")) applicable.push("beam");
+  if (p.categories.includes("Show Control") || p.categories.includes("Hybrid")) applicable.push("scan");
+  applicable.push("led"); // every project is an LED project
+  const hash = [...p.slug].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7);
+  return applicable[hash % applicable.length];
+}
+
 export default function WorkGallery() {
-  const reduce = useReducedMotion();
   const [active, setActive] = useState<"All" | WorkCategory>("All");
 
   const items = active === "All" ? WORK : WORK.filter((w) => w.categories.includes(active));
@@ -48,22 +66,12 @@ export default function WorkGallery() {
             className="group relative flex min-h-[240px] flex-col justify-end overflow-hidden rounded-[20px] border border-ink-soft p-6 text-text-inv transition-transform duration-300 hover:-translate-y-1"
             style={{ background: vibeBg(p.vibe) }}
           >
-            {/* drifting sheen — the tile's quiet sign of life */}
-            {!reduce && (
-              <motion.span
-                aria-hidden
-                className="pointer-events-none absolute inset-0"
-                style={{
-                  background: `radial-gradient(40% 40% at 30% 25%, ${p.vibe}22, transparent 70%)`,
-                }}
-                animate={{
-                  x: ["-8%", "10%", "-8%"],
-                  y: ["-6%", "8%", "-6%"],
-                  opacity: [0.5, 0.9, 0.5],
-                }}
-                transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-              />
-            )}
+            {/* project-specific ambient motion — the tile's quiet sign of life */}
+            <span
+              aria-hidden
+              className={`lg-cardfx lg-cardfx-${motionVariant(p)}`}
+              style={{ ["--vibe" as string]: p.vibe }}
+            />
 
             <div className="relative">
               <div className="flex flex-wrap gap-1.5">
