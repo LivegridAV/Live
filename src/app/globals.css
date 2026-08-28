@@ -716,8 +716,10 @@ body {
 @keyframes lgStrobe { 0%, 49% { opacity: 0.92; } 50%, 100% { opacity: 0.14; } }
 .lg-spot { animation: lgSpotMove 4.5s ease-in-out infinite; }
 @keyframes lgSpotMove { 0%, 100% { transform: translateX(-40px); } 50% { transform: translateX(40px); } }
+.lg-proj { animation: lgProjIn 0.45s ease both; }
+@keyframes lgProjIn { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) {
-  .lg-cov-zone, .lg-lite, .lg-strobe, .lg-spot { animation: none; }
+  .lg-cov-zone, .lg-lite, .lg-strobe, .lg-spot, .lg-proj { animation: none; }
 }
 /* anamorphic viewpoint slider — dark track, glowing cyan thumb */
 .lg-ana-range { -webkit-appearance: none; appearance: none; height: 4px; border-radius: 999px;

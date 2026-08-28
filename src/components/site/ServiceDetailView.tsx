@@ -6,6 +6,7 @@ import ServiceDemo, { SERVICE_DEMO } from "./ServiceDemo";
 import SoundCoverage from "./SoundCoverage";
 import LightingStage from "./LightingStage";
 import AnamorphicViewpoint from "./AnamorphicViewpoint";
+import ProjectionLooks from "./ProjectionLooks";
 import Icon, { SERVICE_ICON } from "./Icon";
 import { contactLinks } from "@/experience/contact";
 
@@ -14,6 +15,7 @@ const SERVICE_FEATURE: Record<string, () => React.JSX.Element> = {
   "professional-sound": SoundCoverage,
   "professional-lighting": LightingStage,
   "3d-anamorphic": AnamorphicViewpoint,
+  "projection-mapping": ProjectionLooks,
 };
 import { PROJECTS } from "@/content/site";
 import { getService, type ServiceDetail } from "@/content/services";

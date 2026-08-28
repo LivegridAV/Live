@@ -21,7 +21,7 @@ fidelity · **Nat** natural visual realism · **ID** LiveGridAV identity ·
 | Work / project detail | 6.5 | Honest case-study data only; needs hero motion + animated system diagram + BTS. |
 | LED hub + types | 8 | Pixel-pitch tool + living hero + type pages. Floor LED needs a walk-on demo. |
 | 3D / Anamorphic | 8.5 | Viewpoint slider landed (real bake→reproject geometry): solid object at the sweet spot, shears to flat LED off-axis. Could add a real rigged subject. |
-| Projection | 7 | Demo shows mapped facade; needs the look-selector (architectural/brand/geometric/cinematic). |
+| Projection | 8.5 | Look-selector landed: one neutral facade, four screen-blended projected looks (architectural edge-map / brand / geometric / cinematic scene). Natural colour on cinematic. |
 | Show Control | 8 | Console demo (PVW/PGM + cues) reads well; could let the visitor fire a cue. |
 | Live Production | 7.5 | Console demo; wants camera→switcher→program follow-through. |
 | Virtual / Hybrid | 7 | Network demo; wants the venue↔remote↔online connect interaction. |
