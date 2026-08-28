@@ -20,7 +20,7 @@ fidelity · **Nat** natural visual realism · **ID** LiveGridAV identity ·
 | Work hub | 7.5 | Vibe-tinted tiles + living hero. Cards need real muted-video/motion previews (currently gradient + drift). |
 | Work / project detail | 6.5 | Honest case-study data only; needs hero motion + animated system diagram + BTS. |
 | LED hub + types | 8 | Pixel-pitch tool + living hero + type pages. Floor LED needs a walk-on demo. |
-| 3D / Anamorphic | 7 | Live demo shows break-out; still needs the viewpoint slider (normal ↔ correct angle). |
+| 3D / Anamorphic | 8.5 | Viewpoint slider landed (real bake→reproject geometry): solid object at the sweet spot, shears to flat LED off-axis. Could add a real rigged subject. |
 | Projection | 7 | Demo shows mapped facade; needs the look-selector (architectural/brand/geometric/cinematic). |
 | Show Control | 8 | Console demo (PVW/PGM + cues) reads well; could let the visitor fire a cue. |
 | Live Production | 7.5 | Console demo; wants camera→switcher→program follow-through. |
@@ -48,8 +48,12 @@ fidelity · **Nat** natural visual realism · **ID** LiveGridAV identity ·
 - [ ] Bloom restricted to genuine light sources (LED, lasers, lamps, emissive UI) — audit pending.
 
 ## Toolchain status (this environment)
-- **Available & in use:** in-app Browser, Playwright MCP, Chrome DevTools MCP, `ui-ux-pro-max` skill, `livegridav-ui` skill.
-- **Needs user setup (API key + Claude Code restart) — cannot self-install/verify mid-session:** Blender MCP, Context7, 21st MCP, dedicated Three.js/GSAP skill packs.
+- **Live & verified:** in-app Browser, Playwright MCP, Chrome DevTools MCP, Context7 MCP
+  (doc lookups working), shadcn MCP, 21st MCP (API key set, connected), `ui-ux-pro-max` +
+  `livegridav-ui` skills. Full setup in `docs/AI_WEB_DEVELOPMENT_TOOLCHAIN.md`.
+- **Configured, needs the app open:** Blender MCP connects, but 3D-asset work needs Blender
+  running with the addon (port 9876) — and rigged/animated assets still need a real pipeline,
+  not text-to-3D. Addon at `C:\Users\<user>\blender-mcp-addon.py`.
 - **Present but unused here:** unrealMCP.
 
 ## Biggest levers to reach 9+
