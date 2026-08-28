@@ -13,6 +13,9 @@
 # testing
 /coverage
 
+# browser-automation MCP output (Playwright MCP / Chrome DevTools MCP session artifacts)
+/.playwright-mcp/
+
 # next.js
 /.next/
 /out/
