@@ -3,8 +3,16 @@ import Link from "next/link";
 import Reveal from "../Reveal";
 import SignalGrid from "../SignalGrid";
 import ServiceDemo, { SERVICE_DEMO } from "./ServiceDemo";
+import SoundCoverage from "./SoundCoverage";
+import LightingStage from "./LightingStage";
 import Icon, { SERVICE_ICON } from "./Icon";
 import { contactLinks } from "@/experience/contact";
+
+/** Page-specific interactive stage (brief §30's "one unforgettable interaction"). */
+const SERVICE_FEATURE: Record<string, () => React.JSX.Element> = {
+  "professional-sound": SoundCoverage,
+  "professional-lighting": LightingStage,
+};
 import { PROJECTS } from "@/content/site";
 import { getService, type ServiceDetail } from "@/content/services";
 
@@ -32,6 +40,7 @@ export default function ServiceDetailView({ service }: { service: ServiceDetail 
     .map(getService)
     .filter((s): s is ServiceDetail => Boolean(s));
   const work = relatedWork(service.order);
+  const Feature = SERVICE_FEATURE[service.slug];
   const waText = `Hi LiveGridAV — I'd like to talk about ${service.title} for an event.`;
 
   return (
@@ -139,6 +148,17 @@ export default function ServiceDetailView({ service }: { service: ServiceDetail 
           </ol>
         </div>
       </section>
+
+      {/* ── Interactive stage (page-specific "unforgettable moment") ── */}
+      {Feature && (
+        <section className="bg-white py-20 md:py-28">
+          <div className="mx-auto max-w-[1180px] px-6 md:px-12">
+            <Reveal>
+              <Feature />
+            </Reveal>
+          </div>
+        </section>
+      )}
 
       {/* ── Technical capability · Related systems ───────── */}
       <section className="bg-ink py-20 text-text-inv md:py-28">

@@ -706,6 +706,19 @@ body {
   transform: rotateX(52deg); animation: lgWebSpin 14s linear infinite; }
 .lg-demo-web-grid span { background: rgba(63, 214, 200, 0.2); border-radius: 2px; animation: lgTwinkle 2.4s ease-in-out infinite; }
 @keyframes lgWebSpin { to { transform: rotateX(52deg) rotateZ(360deg); } }
+
+/* interactive service stages — sound coverage / lighting fixtures */
+.lg-cov-zone { animation: lgCovPulse 2.6s ease-in-out infinite; }
+@keyframes lgCovPulse { 0%, 100% { opacity: 0.72; } 50% { opacity: 1; } }
+.lg-lite { animation: lgLiteIn 0.4s ease both; transform-origin: top center; }
+@keyframes lgLiteIn { from { opacity: 0; } to { opacity: 1; } }
+.lg-strobe { animation: lgStrobe 0.9s steps(1, end) infinite; }
+@keyframes lgStrobe { 0%, 49% { opacity: 0.92; } 50%, 100% { opacity: 0.14; } }
+.lg-spot { animation: lgSpotMove 4.5s ease-in-out infinite; }
+@keyframes lgSpotMove { 0%, 100% { transform: translateX(-40px); } 50% { transform: translateX(40px); } }
+@media (prefers-reduced-motion: reduce) {
+  .lg-cov-zone, .lg-lite, .lg-strobe, .lg-spot { animation: none; }
+}
 /* accent text (eyebrows, links) → brighter neon on dark */
 .lg-dark .text-aqua { color: var(--glow); }
 .lg-dark .hover\:text-aqua:hover { color: var(--glow); }
