@@ -56,7 +56,7 @@ export default function CameraRig() {
   const pos = useRef(new THREE.Vector3(0, 3.4, 30));
   const look = useRef(new THREE.Vector3(0, 5, 0));
   const shake = useRef(0);
-  const freeLook = useRef({ yaw: 0, pitch: 0, active: false, lastX: 0, lastY: 0 });
+  const freeLook = useRef({ yaw: 0, pitch: 0, active: false, touchActive: false, lastX: 0, lastY: 0 });
   if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
     (window as unknown as Record<string, unknown>).__lgFreeLook = freeLook.current;
   }
@@ -108,6 +108,64 @@ export default function CameraRig() {
     };
   }, []);
 
+  // touch swipe-to-look (yaw only). A horizontal-dominant swipe turns the view;
+  // a vertical swipe falls straight through to the page scroll (the journey),
+  // so we never trap scrolling. Pitch stays mouse-only — it can't fight scroll.
+  useEffect(() => {
+    const l = freeLook.current;
+    const g = { on: false, mode: "" as "" | "look" | "scroll", sx: 0, sy: 0, lx: 0, vel: 0 };
+    const start = (e: TouchEvent) => {
+      if (e.touches.length !== 1) return;
+      if (!useExperience.getState().booted || signals.sceneGrab) return;
+      const t = e.target as HTMLElement | null;
+      if (t && typeof t.closest === "function" &&
+          t.closest("button, a, input, textarea, select, [role='button']")) return;
+      const cur = document.body.style.cursor;
+      if (cur === "pointer" || cur === "grab") return;
+      g.on = true; g.mode = ""; g.vel = 0;
+      g.sx = g.lx = e.touches[0].clientX;
+      g.sy = e.touches[0].clientY;
+    };
+    const move = (e: TouchEvent) => {
+      if (!g.on || e.touches.length !== 1) return;
+      const x = e.touches[0].clientX;
+      const y = e.touches[0].clientY;
+      if (!g.mode) {
+        const dx = Math.abs(x - g.sx);
+        const dy = Math.abs(y - g.sy);
+        if (dx < 8 && dy < 8) return; // wait until the intent is clear
+        // horizontal-dominant → look; otherwise let the page scroll
+        g.mode = dx > dy * 1.3 ? "look" : "scroll";
+        if (g.mode === "scroll") { g.on = false; return; }
+        l.touchActive = true;
+      }
+      if (g.mode === "look") {
+        const dxm = x - g.lx;
+        l.yaw += dxm * 0.005;
+        g.vel = dxm;
+        g.lx = x;
+        if (e.cancelable) e.preventDefault(); // hold the horizontal swipe for the look
+      }
+    };
+    const end = () => {
+      if (!g.on && g.mode !== "look") { l.touchActive = false; return; }
+      g.on = false;
+      l.touchActive = false;
+      l.yaw += g.vel * 0.02; // a little inertia
+      l.yaw = Math.atan2(Math.sin(l.yaw), Math.cos(l.yaw));
+    };
+    window.addEventListener("touchstart", start, { passive: true });
+    window.addEventListener("touchmove", move, { passive: false });
+    window.addEventListener("touchend", end);
+    window.addEventListener("touchcancel", end);
+    return () => {
+      window.removeEventListener("touchstart", start);
+      window.removeEventListener("touchmove", move);
+      window.removeEventListener("touchend", end);
+      window.removeEventListener("touchcancel", end);
+    };
+  }, []);
+
   useFrame((state, delta) => {
     const p = signals.progress;
 
@@ -153,7 +211,7 @@ export default function CameraRig() {
 
     // free-look: rotate the view direction around the camera position
     const fl = freeLook.current;
-    if (!fl.active) {
+    if (!fl.active && !fl.touchActive) {
       const decay = 1 - Math.min(1, delta * 1.8);
       fl.yaw *= decay;
       fl.pitch *= decay;
