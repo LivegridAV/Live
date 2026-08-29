@@ -14,7 +14,7 @@ fidelity · **Nat** natural visual realism · **ID** LiveGridAV identity ·
 
 | Page | Overall | Top gaps to close |
 |---|---|---|
-| Home (3D venue) | 8 | Mobile swipe-to-look landed (horizontal-dominant yaw, scroll-safe). Tiger stays a natural-coloured particle stand-in (locked until a real rigged GLB); 3D headline still DOM-parallax. |
+| Home (3D venue) | 9 | Real rigged **tiger** (Sketchfab CC-BY, natural orange fur) now leaps from the LED wall as the anamorphic hero — replaces the particle stand-in — with a live Run cycle + periodic lunge and a faint cyan LED rim. Mobile swipe-to-look landed. 3D headline still DOM-parallax. |
 | Services hub | 8.5 | Strong: icons + living hero visual + dark system. Could add per-card motion. |
 | Service detail (×15) | 8 | Live per-service demos landed; some demos (network, web) can be richer; hero could go full-bleed. |
 | Work hub | 8.5 | Per-project ambient card motion landed (LED shimmer / event beams / show-control scan / anamorphic depth, each tinted to its vibe, reduced-motion safe). Real footage still welcome. |
@@ -42,8 +42,8 @@ fidelity · **Nat** natural visual realism · **ID** LiveGridAV identity ·
 - No misleading ownership/inventory language.
 
 ## Natural-colour QA (immutable — brief §11/§12/§57)
-- [x] Anamorphic subject is orange/black/white **fur palette**, normal-blended (not additive/neon).
-- [x] Only a faint cyan **rim** on the subject represents LED environment spill.
+- [x] Anamorphic subject is orange/black/white **fur palette** — now a real tiger model (natural PBR), not additive/neon.
+- [x] Only a faint cyan **rim** on the subject represents LED environment spill (rim point-light).
 - [ ] Physical materials elsewhere (stage steel, consoles, stone) reviewed for natural PBR — pending.
 - [ ] Bloom restricted to genuine light sources (LED, lasers, lamps, emissive UI) — audit pending.
 
@@ -64,7 +64,7 @@ The **rigged tiger stays blocked** — no animal source (PolyHaven has none, Ske
 needs an API key, Hyper3D is disabled) and text-to-3D can't produce a rig-quality mesh.
 
 ## Biggest levers to reach 9+
-1. Real rigged **tiger GLB** — still needs a licensed/authored model or Sketchfab/Hyper3D key; keeps the natural-coloured particle stand-in until then.
+1. ~~Real rigged **tiger GLB**~~ — **DONE**: Sketchfab "Running Tiger" (CC-BY, francescolima74) downloaded via Blender MCP, exported to `public/models/tiger.glb` and integrated as the anamorphic hero on Home. Attribution in `public/models/CREDITS.md`.
 2. Interactive **Sound coverage** + **Lighting fixture-swap** stages (the two lowest scores).
 3. **Work** cards as motion portals + project-detail hero motion.
 4. True in-scene **3D extruded headline**.

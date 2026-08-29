@@ -1,83 +1,67 @@
 "use client";
-import { useMemo, useRef } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
+import { useGLTF, useAnimations } from "@react-three/drei";
 import * as THREE from "three";
 import { signals, useExperience } from "../store";
 
 /**
- * The anamorphic hero moment (brief §7): a naturally-coloured creature form that
- * appears to break past the front plane of the main LED wall and lunge toward
- * the audience.
+ * The anamorphic hero moment (brief §7/§10/§12): a REAL, naturally-coloured tiger
+ * that appears to break past the front plane of the main LED wall and lunge toward
+ * the audience — the naked-eye-3D signature.
  *
- * Art direction (immutable, brief §11/§12/§57): the tiger reads as a REAL tiger —
- * orange fur, black stripes, white underside — NOT a neon/cyan graphic. Colours
- * live in a per-particle vertex-colour attribute with NORMAL blending, so it does
- * not glow; only a faint cyan rim on the top edge represents the LED environment
- * light spilling onto the fur. This is a procedural stand-in for a real tiger GLB
- * (see docs) — swap the geometry/material for a rigged model when the asset lands.
- * Gated by the "3D VISUAL" control; tracks the pointer to sell the pop-out.
+ * Art direction (immutable, brief §11/§12/§57): a real tiger — orange fur, black
+ * stripes, white underside — NOT a neon/cyan graphic. The model keeps its natural
+ * PBR materials; the only cyan is a faint rim light standing in for the LED wall's
+ * environment spill on the fur. Rigged "Run" cycle plays continuously; the whole
+ * body periodically surges forward past the LED plane, then settles.
+ *
+ * Asset: Sketchfab "Running Tiger" by francescolima74 (CC-BY) — see
+ * public/models/CREDITS.md. Gated by the "3D VISUAL" control.
  */
 
-const COUNT = 1800;
+const MODEL = "/models/tiger.glb";
+const BASE_SCALE = 1.5; // tuned against the 19.2 m wall
+const BASE_YAW = Math.PI * 0.5; // broadside-to-camera, leaping across the stage
 
-// natural tiger palette
-const C_ORANGE = new THREE.Color("#d9741f");
-const C_DARK = new THREE.Color("#160c05"); // near-black stripe
-const C_WHITE = new THREE.Color("#efe4d6");
-const C_RIM = new THREE.Color("#3fd6c8"); // LED environment spill (subtle)
+function Tiger() {
+  const { scene, animations } = useGLTF(MODEL);
+  const { actions, names } = useAnimations(animations, scene);
+
+  useEffect(() => {
+    const n = names[0];
+    const a = n ? actions[n] : null;
+    if (a) {
+      a.reset().setLoop(THREE.LoopRepeat, Infinity).play();
+      a.timeScale = 0.85;
+    }
+    // keep materials natural (no self-glow on fur), let the scene light it
+    scene.traverse((o) => {
+      const m = o as THREE.Mesh;
+      if (m.isMesh) {
+        m.frustumCulled = false;
+        const mat = m.material as THREE.MeshStandardMaterial | undefined;
+        if (mat && "emissiveIntensity" in mat) mat.emissiveIntensity = 0;
+      }
+    });
+    return () => {
+      if (a) a.stop();
+    };
+  }, [actions, names, scene]);
+
+  return <primitive object={scene} />;
+}
+useGLTF.preload(MODEL);
 
 export default function Anamorphic() {
   const group = useRef<THREE.Group>(null);
-  const points = useRef<THREE.Points>(null);
-  const mat = useRef<THREE.PointsMaterial>(null);
   const shown = useRef(0); // eased 0..1 visibility
-
-  // Forward-leaning body mass, denser toward the head (front, +z), coloured
-  // per-particle so it reads as fur rather than an energy field.
-  const geo = useMemo(() => {
-    const positions = new Float32Array(COUNT * 3);
-    const colors = new Float32Array(COUNT * 3);
-    let seed = 1337;
-    const rnd = () => {
-      seed = (seed * 1664525 + 1013904223) % 4294967296;
-      return seed / 4294967296;
-    };
-    const tmp = new THREE.Color();
-    for (let i = 0; i < COUNT; i++) {
-      const t = Math.pow(rnd(), 0.6); // 0 = tail (at wall), 1 = head (forward)
-      const bodyR = 0.9 * (0.5 + 1.1 * (1 - Math.abs(t - 0.6) * 1.3));
-      const head = t > 0.82 ? 0.5 : 0; // fuller cluster at the head
-      const radius = (bodyR + head) * (0.55 + rnd() * 0.6);
-      const ang = rnd() * Math.PI * 2;
-      const r = radius * Math.sqrt(rnd());
-      const x = Math.cos(ang) * r * 1.15;
-      const y = Math.sin(ang) * r;
-      positions[i * 3] = x;
-      positions[i * 3 + 1] = y + Math.sin(t * Math.PI) * 0.5; // arch of the back
-      positions[i * 3 + 2] = t * 6.0;
-
-      // colour — orange base, black vertical stripes, white belly + face
-      tmp.copy(C_ORANGE);
-      if (Math.sin(t * 26 + x * 1.5) > 0.45) tmp.lerp(C_DARK, 0.82); // stripe
-      const vert = Math.sin(ang); // -1 belly … +1 back
-      if (vert < -0.35) tmp.lerp(C_WHITE, 0.6); // underside
-      if (t > 0.9 && vert > 0.1) tmp.lerp(C_WHITE, 0.35); // cheek/face
-      if (vert > 0.62) tmp.lerp(C_RIM, 0.16); // faint LED rim on the back
-      colors[i * 3] = tmp.r;
-      colors[i * 3 + 1] = tmp.g;
-      colors[i * 3 + 2] = tmp.b;
-    }
-    const g = new THREE.BufferGeometry();
-    g.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-    g.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-    return g;
-  }, []);
 
   useFrame((state, delta) => {
     if (!group.current) return;
     const s = useExperience.getState();
 
-    // ease visibility so toggling crossfades rather than pops
+    // ease visibility so toggling the "3D VISUAL" control crossfades
     const target = s.visual3d && s.powered ? 1 : 0;
     shown.current += (target - shown.current) * Math.min(1, delta * 3.5);
     group.current.visible = shown.current > 0.01;
@@ -85,38 +69,32 @@ export default function Anamorphic() {
 
     const t = state.clock.elapsedTime;
     // periodic lunge — every ~6.5s the tiger surges out of the wall toward the
-    // crowd (a refined 0→1→0 pulse over ~1.4s), then settles. Not game-y.
+    // crowd (a refined 0→1→0 pulse over ~1.4s), then settles.
     const cyc = t % 6.5;
     const lunge = cyc < 1.4 ? Math.sin((cyc / 1.4) * Math.PI) ** 1.5 : 0;
-    const breathe = 1 + Math.sin(t * 1.6) * 0.04;
-    const sc = shown.current * breathe * (1.35 + lunge * 0.4);
+    const breathe = 1 + Math.sin(t * 1.6) * 0.03;
+    const sc = shown.current * breathe * (BASE_SCALE + lunge * 0.22);
     group.current.scale.setScalar(sc);
-    // offset to the right half of the wall (clear of the headline)
-    group.current.position.x = 4.4 + signals.pointerSmooth.x * (1.4 + lunge * 1.2);
-    group.current.position.y = 5.6 + signals.pointerSmooth.y * 0.6 + Math.sin(t * 0.9) * 0.12;
-    group.current.position.z = lunge * 3.4; // forward, past the LED plane
-    group.current.rotation.y = signals.pointerSmooth.x * 0.32 + Math.sin(t * 0.4) * 0.05 - lunge * 0.1;
 
-    if (mat.current) {
-      mat.current.opacity = shown.current;
-      mat.current.size = 0.11 + lunge * 0.03;
-    }
-    if (points.current) points.current.rotation.z = Math.sin(t * 0.5) * 0.04;
+    // offset to the right half of the wall (clear of the headline), standing
+    // slightly proud of the LED plane and surging further forward on the lunge
+    group.current.position.x = 5.4 + signals.pointerSmooth.x * (1.2 + lunge * 1.0);
+    group.current.position.y = 3.7 + signals.pointerSmooth.y * 0.5 + Math.sin(t * 0.9) * 0.12;
+    group.current.position.z = 8 + lunge * 4.5; // proud of the wall, surging at the crowd
+    group.current.rotation.y = BASE_YAW + signals.pointerSmooth.x * 0.26 - lunge * 0.14;
   });
 
   return (
-    <group ref={group} position={[4.4, 5.6, 0]}>
-      <points ref={points} geometry={geo}>
-        <pointsMaterial
-          ref={mat}
-          vertexColors
-          transparent
-          depthWrite={false}
-          size={0.11}
-          sizeAttenuation
-          opacity={0}
-        />
-      </points>
+    <group ref={group} position={[5.4, 3.7, 8]}>
+      <Suspense fallback={null}>
+        <Tiger />
+      </Suspense>
+      {/* warm key so the orange fur reads as real */}
+      <pointLight color="#ffe7c6" intensity={16} distance={14} decay={1.6} position={[2.6, 2.8, 3.4]} />
+      {/* soft fill from the front so the face + chest aren't lost in shadow */}
+      <pointLight color="#fff4e6" intensity={7} distance={12} decay={1.6} position={[-1.2, 1.4, 3.6]} />
+      {/* faint cyan LED environment spill on the top/back edge (art rule) */}
+      <pointLight color="#3fd6c8" intensity={6} distance={8} decay={1.8} position={[-1.8, 2.6, -1.8]} />
     </group>
   );
 }
