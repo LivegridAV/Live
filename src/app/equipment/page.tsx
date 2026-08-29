@@ -95,6 +95,46 @@ export default function Equipment() {
         </div>
       </section>
 
+      {/* Down to the pixel — an in-house LED-cabinet render (custom 3D asset) */}
+      <section className="bg-paper py-16 md:py-24">
+        <div className="mx-auto grid max-w-[1180px] items-center gap-12 px-6 md:grid-cols-2 md:px-12">
+          <Reveal>
+            <div className="overflow-hidden rounded-[24px] border border-line bg-ink p-6">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/models/led-panel.webp"
+                width={981}
+                height={906}
+                loading="lazy"
+                alt="Close-up render of a modular LED cabinet — a dense matrix of pixels behind a machined metal frame"
+                className="mx-auto block w-full max-w-[440px]"
+              />
+            </div>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-aqua">Down to the pixel</p>
+            <h2 className="mt-4 text-3xl font-semibold tracking-[-0.02em] text-text md:text-4xl">
+              An LED wall is built from cabinets.
+            </h2>
+            <p className="mt-5 max-w-[52ch] leading-relaxed text-muted">
+              Every wall is a grid of identical cabinets — each a dense matrix of LEDs
+              behind a machined frame. The gap between pixels, the pitch, sets how close
+              the audience can stand before the image breaks up. We spec pitch, size and
+              processing to your venue, and confirm it after a technical review.
+            </p>
+            <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-faint">
+              In-house 3D visualization
+            </p>
+            <Link
+              href="/led"
+              className="mt-6 inline-block font-mono text-[11px] uppercase tracking-[0.16em] text-aqua transition-colors hover:text-text"
+            >
+              Explore LED solutions →
+            </Link>
+          </Reveal>
+        </div>
+      </section>
+
       <section className="bg-ink py-24 text-text-inv md:py-32">
         <div className="mx-auto max-w-[720px] px-6 text-center md:px-12">
           <div className="flex justify-center">

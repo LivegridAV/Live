@@ -27,7 +27,7 @@ fidelity · **Nat** natural visual realism · **ID** LiveGridAV identity ·
 | Virtual / Hybrid | 8.5 | Connect interaction landed: toggle remote studio / sister venue / online / broadcast onto the main-venue hub, flowing signal, "one show" readout. |
 | Sound | 8 | Coverage stage landed: pick PA/sub/monitor/front/delay, see the zone on a neutral venue plan (cyan overlay only). |
 | Lighting | 8 | Fixture-swap stage landed: beam/wash/profile/strobe/blinder/spot transform a neutral-steel stage; glow only on the emissive beam. |
-| Equipment | 8 | Icon directory + living hero; solid and clear. |
+| Equipment | 8.5 | Icon directory + living hero + a "down to the pixel" band featuring a custom in-house Blender LED-cabinet render (real pixel pitch, dark metal frame). |
 | AV Lab | 7.5 | Interactive signal-path explorer works; wants a 3D control-room + camera moves. |
 | Contact | 8.5 | Guided brief, real submit + WhatsApp, dark, clear. Effortless. |
 | Insights (+articles) | 8 | Clean, crawlable, internally linked. |
@@ -56,8 +56,15 @@ fidelity · **Nat** natural visual realism · **ID** LiveGridAV identity ·
   not text-to-3D. Addon at `C:\Users\<user>\blender-mcp-addon.py`.
 - **Present but unused here:** unrealMCP.
 
+## Blender → web pipeline (now live)
+Blender MCP is connected and the pipeline is proven: a custom modular **LED cabinet**
+was modelled procedurally, exported as `public/models/led-panel.glb` (125 KB, web-ready)
+and rendered to `public/models/led-panel.webp` (136 KB), now featured on /equipment.
+The **rigged tiger stays blocked** — no animal source (PolyHaven has none, Sketchfab
+needs an API key, Hyper3D is disabled) and text-to-3D can't produce a rig-quality mesh.
+
 ## Biggest levers to reach 9+
-1. Real rigged **tiger GLB** (Blender/asset pipeline) → replaces the procedural stand-in on Home + Anamorphic.
+1. Real rigged **tiger GLB** — still needs a licensed/authored model or Sketchfab/Hyper3D key; keeps the natural-coloured particle stand-in until then.
 2. Interactive **Sound coverage** + **Lighting fixture-swap** stages (the two lowest scores).
 3. **Work** cards as motion portals + project-detail hero motion.
 4. True in-scene **3D extruded headline**.
