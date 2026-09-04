@@ -117,7 +117,7 @@ export default function Hud() {
           <div className="lg-console-body">
             <button className="lg-toggle" onClick={() => { s.cycleLedContent(); audio.blip(1.2); }}>
               <span className="lg-toggle-led is-on" aria-hidden />
-              LED CONTENT · {["LOGO", "AUDIO", "WAVES", "WARP"][s.ledContent]}
+              LED CONTENT · {["FOREST", "AUDIO", "WAVES", "WARP"][s.ledContent]}
             </button>
             {(
               [

@@ -99,13 +99,13 @@ export const useExperience = create<ExperienceState>((set) => ({
   powered: false,
   booted: false,
 
-  lasers: true,
+  lasers: false, // no neon laser fan in the opening (brief §18 — remove cyan lines)
   smoke: true,
   stageLights: true,
   audienceLights: true,
   projection: false,
-  visual3d: false,
-  atmosphere: false,
+  visual3d: true, // the anamorphic tiger IS the hero — visible on power-on (brief §8)
+  atmosphere: true, // cinematic haze depth from the first frame
   ledContent: 0,
   theme: "signal",
   preset: null,
@@ -169,14 +169,26 @@ if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
   w.__lgStore = useExperience;
 }
 
-/* ── Theme palettes used by materials + shaders ── */
+/**
+ * Functional signal colours (brief §16/§17) — cyan means *signal / active /
+ * connected*, red means *live / on-air / tally*. They are UI/instrumentation
+ * accents, NOT environmental tints, so they live outside the theme palettes.
+ */
+export const SIGNAL_CYAN = "#3fd6c8";
+export const PROGRAM_RED = "#ff3b30";
+
+/* ── Theme palettes used by materials + shaders ──
+ * Default `signal` is a NATURAL cinematic grade (brief §16): warm graphite
+ * blacks, motivated amber/tungsten light, muted gold — no environmental cyan.
+ * Cyan survives only as the functional SIGNAL_CYAN accent above. `cyber` and
+ * `ember` remain as optional mood toggles in Stage Control. */
 export const THEMES: Record<
   ColorTheme,
   { accent: string; glow: string; deep: string; warm: string }
 > = {
-  signal: { accent: "#1fa093", glow: "#3fd6c8", deep: "#0a1411", warm: "#e8b84a" },
+  signal: { accent: "#a9642c", glow: "#f2a63a", deep: "#0b0a08", warm: "#ffd6a0" },
   cyber: { accent: "#a04ae8", glow: "#e84ad4", deep: "#120a18", warm: "#4ad4e8" },
-  ember: { accent: "#e86a2a", glow: "#ffb35c", deep: "#181008", warm: "#3fd6c8" },
+  ember: { accent: "#e86a2a", glow: "#ffb35c", deep: "#181008", warm: "#ffd0a0" },
 };
 
 /* ── Chapter map: where each scene lives in scroll space ── */

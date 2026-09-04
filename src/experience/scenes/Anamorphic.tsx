@@ -22,7 +22,13 @@ import { signals, useExperience } from "../store";
 
 const MODEL = "/models/tiger.glb";
 const BASE_SCALE = 1.5; // tuned against the 19.2 m wall
-const BASE_YAW = Math.PI * 0.5; // broadside-to-camera, leaping across the stage
+const BASE_YAW = Math.PI * 0.5; // broadside-to-camera, prowling across the stage
+
+/** smootherstep — eases in AND out, so the prowl has no visible snap. */
+function smoother(x: number) {
+  x = Math.min(1, Math.max(0, x));
+  return x * x * x * (x * (x * 6 - 15) + 10);
+}
 
 function Tiger() {
   const { scene, animations } = useGLTF(MODEL);
@@ -33,7 +39,8 @@ function Tiger() {
     const a = n ? actions[n] : null;
     if (a) {
       a.reset().setLoop(THREE.LoopRepeat, Infinity).play();
-      a.timeScale = 0.85;
+      // slowed right down to a heavy prowl (brief §8/§9 — weight, not a sprint)
+      a.timeScale = 0.5;
     }
     // keep materials natural (no self-glow on fur), let the scene light it
     scene.traverse((o) => {
@@ -68,20 +75,31 @@ export default function Anamorphic() {
     if (!group.current.visible) return;
 
     const t = state.clock.elapsedTime;
-    // periodic lunge — every ~6.5s the tiger surges out of the wall toward the
-    // crowd (a refined 0→1→0 pulse over ~1.4s), then settles.
-    const cyc = t % 6.5;
-    const lunge = cyc < 1.4 ? Math.sin((cyc / 1.4) * Math.PI) ** 1.5 : 0;
-    const breathe = 1 + Math.sin(t * 1.6) * 0.03;
-    const sc = shown.current * breathe * (BASE_SCALE + lunge * 0.22);
-    group.current.scale.setScalar(sc);
 
-    // offset to the right half of the wall (clear of the headline), standing
-    // slightly proud of the LED plane and surging further forward on the lunge
-    group.current.position.x = 5.4 + signals.pointerSmooth.x * (1.2 + lunge * 1.0);
-    group.current.position.y = 3.7 + signals.pointerSmooth.y * 0.5 + Math.sin(t * 0.9) * 0.12;
-    group.current.position.z = 8 + lunge * 4.5; // proud of the wall, surging at the crowd
-    group.current.rotation.y = BASE_YAW + signals.pointerSmooth.x * 0.26 - lunge * 0.14;
+    // ── One long, seamless prowl cycle (brief §10): the tiger eases FORWARD
+    // out of the LED environment, past the physical screen plane, holds proud
+    // of the wall to breathe, then eases back into the scene. A smootherstep
+    // ping-pong means both ends decelerate — there is no reset the eye can
+    // catch. Period ~26s so it never reads as a short game loop.
+    const PERIOD = 26;
+    const phase = (t % PERIOD) / PERIOD;
+    const pingpong = 1 - Math.abs(phase * 2 - 1); // 0→1→0
+    const emerge = smoother(pingpong); // eased approach/retreat 0..1
+
+    // gentle breathing only — no scale "pop"
+    const breathe = 1 + Math.sin(t * 1.15) * 0.018;
+    group.current.scale.setScalar(shown.current * breathe * BASE_SCALE);
+
+    // stays on the right half of the wall (clear of the headline); depth is
+    // driven by the eased prowl so paws travel with the body, not in place
+    group.current.position.x = 5.4 + signals.pointerSmooth.x * 0.7;
+    group.current.position.y =
+      3.55 + signals.pointerSmooth.y * 0.35 + Math.sin(t * 0.7) * 0.08;
+    // z: -1 (deep behind the LED plane, inside the forest) → 9 (proud of the wall)
+    group.current.position.z = -1 + emerge * 10;
+    // turns a little toward the crowd as it emerges
+    group.current.rotation.y =
+      BASE_YAW + signals.pointerSmooth.x * 0.16 - emerge * 0.12;
   });
 
   return (
@@ -89,12 +107,13 @@ export default function Anamorphic() {
       <Suspense fallback={null}>
         <Tiger />
       </Suspense>
-      {/* warm key so the orange fur reads as real */}
-      <pointLight color="#ffe7c6" intensity={16} distance={14} decay={1.6} position={[2.6, 2.8, 3.4]} />
-      {/* soft fill from the front so the face + chest aren't lost in shadow */}
-      <pointLight color="#fff4e6" intensity={7} distance={12} decay={1.6} position={[-1.2, 1.4, 3.6]} />
-      {/* faint cyan LED environment spill on the top/back edge (art rule) */}
-      <pointLight color="#3fd6c8" intensity={6} distance={8} decay={1.8} position={[-1.8, 2.6, -1.8]} />
+      {/* warm tungsten key so the orange fur + cream chest read as real */}
+      <pointLight color="#ffe3bf" intensity={17} distance={14} decay={1.6} position={[2.6, 2.8, 3.4]} />
+      {/* soft warm fill from the front so the face isn't lost in shadow */}
+      <pointLight color="#fff2e2" intensity={7} distance={12} decay={1.6} position={[-1.2, 1.4, 3.6]} />
+      {/* faint cool moonlight rim from behind — natural back-edge separation,
+          NOT a neon cyan spill (brief §11) */}
+      <pointLight color="#9fb0bd" intensity={4.5} distance={9} decay={1.9} position={[-1.8, 2.8, -2.2]} />
     </group>
   );
 }

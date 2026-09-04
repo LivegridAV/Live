@@ -1239,6 +1239,22 @@ function ShootingStar() {
 
 /* ── Assembly ──────────────────────────────────────────────────────── */
 
+/**
+ * Cosmic bodies (gas giant, sun, satellite, traffic) belong to the "universe
+ * inside the wall" — NOT floating over the physical opening venue (brief §4).
+ * This gate keeps them hidden through the enclosed stage chapter and fades
+ * them in only as the camera dives toward/through the LED wall (progress ≳0.2).
+ */
+function GatedCosmos({ children }: { children: React.ReactNode }) {
+  const g = useRef<THREE.Group>(null);
+  useFrame(() => {
+    if (!g.current) return;
+    const on = signals.progress > 0.19;
+    g.current.visible = on;
+  });
+  return <group ref={g}>{children}</group>;
+}
+
 export default function Space() {
   const quality = useExperience((s) => s.quality);
   const high = quality === "high";
@@ -1268,13 +1284,15 @@ export default function Space() {
       <DustMotes count={high ? 70 : 30} />
       <MilkyDust quality={quality} />
       <Nebulae quality={quality} />
-      <Sun />
-      <Planet />
-      <Satellite />
-      {lanes.map((lane, i) => (
-        <Ship key={i} lane={lane} />
-      ))}
-      {high && <ShootingStar />}
+      <GatedCosmos>
+        <Sun />
+        <Planet />
+        <Satellite />
+        {lanes.map((lane, i) => (
+          <Ship key={i} lane={lane} />
+        ))}
+        {high && <ShootingStar />}
+      </GatedCosmos>
     </group>
   );
 }

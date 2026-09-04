@@ -100,8 +100,10 @@ function SceneContent() {
       {/* the cosmos around the venue — persistent through every room */}
       <Space />
 
-      <ambientLight intensity={0.16} color="#8fb5ae" />
-      <hemisphereLight intensity={0.12} color="#3fd6c8" groundColor="#0a1411" />
+      {/* natural fill: neutral-warm sky, deep earth ground — lets real
+          materials (metal, fur, concrete) read honestly, no cyan cast */}
+      <ambientLight intensity={0.2} color="#bab3a4" />
+      <hemisphereLight intensity={0.16} color="#caa678" groundColor="#0a0908" />
 
       {/* Scene 1–2: the venue + LED wall (kept alive through the dive) */}
       <Room from={0} to={0.34}>
