@@ -391,7 +391,10 @@ function StarLayer({
     }
     if (mat.current) {
       mat.current.uniforms.uTime.value = t;
-      mat.current.uniforms.uFade.value = powerFade(t);
+      // keep the starfield faint inside the enclosed opening venue, then let
+      // it swell as the camera dives toward the wall (matches GatedCosmos)
+      const enclose = THREE.MathUtils.clamp((signals.progress - 0.06) / 0.13, 0.1, 1);
+      mat.current.uniforms.uFade.value = powerFade(t) * enclose;
     }
   });
 
