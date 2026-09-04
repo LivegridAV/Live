@@ -2,10 +2,11 @@
 import { motion } from "motion/react";
 import SignalGrid from "./SignalGrid";
 
+// Truthful capability highlights — no unverified counts (content-truth rule).
 const STATS = [
-  { value: "10+", label: "years experience" },
-  { value: "500+", label: "events delivered" },
-  { value: "24/7", label: "technical team" },
+  { value: "4mm", label: "fine-pitch LED" },
+  { value: "360°", label: "immersive & anamorphic" },
+  { value: "One team", label: "designed & operated" },
 ];
 
 export default function Hero() {
