@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import "./v2.css";
+import "../v2.css";
 
 // Temporary acceptance/implementation surface (brief §2/§57) — not indexed,
 // not a permanent user-facing duplicate. Migrates to "/" once accepted.
