@@ -391,9 +391,9 @@ function StarLayer({
     }
     if (mat.current) {
       mat.current.uniforms.uTime.value = t;
-      // keep the starfield faint inside the enclosed opening venue, then let
-      // it swell as the camera dives toward the wall (matches GatedCosmos)
-      const enclose = THREE.MathUtils.clamp((signals.progress - 0.06) / 0.13, 0.1, 1);
+      // the opening is an enclosed venue — keep the sky almost black, then let
+      // the starfield swell as the camera dives toward/through the wall
+      const enclose = THREE.MathUtils.clamp((signals.progress - 0.08) / 0.11, 0.0, 1);
       mat.current.uniforms.uFade.value = powerFade(t) * enclose;
     }
   });
@@ -1284,10 +1284,10 @@ export default function Space() {
         brightFrac={0.12}
         spin={0.005}
       />
-      <DustMotes count={high ? 70 : 30} />
-      <MilkyDust quality={quality} />
-      <Nebulae quality={quality} />
       <GatedCosmos>
+        <DustMotes count={high ? 70 : 30} />
+        <MilkyDust quality={quality} />
+        <Nebulae quality={quality} />
         <Sun />
         <Planet />
         <Satellite />

@@ -30,7 +30,8 @@ const beamFragment = /* glsl */ `
     // soft edges around the cone seam
     float edge = sin(vUv.x * 3.14159);
     float a = len * (0.25 + 0.75 * edge) * uIntensity;
-    gl_FragColor = vec4(uColor, a * 0.35);
+    // restrained volumetrics — the LED content behind must read through
+    gl_FragColor = vec4(uColor, a * 0.22);
   }
 `;
 
@@ -247,7 +248,7 @@ export default function Beams() {
   const beamMat = useBeamMaterial(THEMES[theme].glow);
   const beamMatB = useBeamMaterial(THEMES[theme].accent);
   const quality = useExperience((s) => s.quality);
-  const headCount = quality === "high" ? 8 : 5;
+  const headCount = quality === "high" ? 6 : 4;
 
   useFrame(() => {
     const th = THEMES[useExperience.getState().theme];

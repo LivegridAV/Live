@@ -371,7 +371,11 @@ body {
 
 /* ── approved hero ── */
 .lg-hero { max-width: 640px; gap: 20px; }
-.lg-hero-title { font-size: clamp(34px, 5.4vw, 66px); line-height: 1.02; }
+.lg-hero-title {
+  font-size: clamp(34px, 5.4vw, 66px); line-height: 1.02;
+  /* layered shadow so the headline stays legible over bright LED content */
+  text-shadow: 0 2px 18px rgba(3, 6, 5, 0.95), 0 1px 40px rgba(3, 6, 5, 0.8);
+}
 .lg-accent {
   color: var(--glow);
   text-shadow: 0 0 42px color-mix(in srgb, var(--glow) 55%, transparent);

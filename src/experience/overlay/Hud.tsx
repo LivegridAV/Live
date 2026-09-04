@@ -31,10 +31,9 @@ function scrollToChapter(key: ChapterKey) {
 export default function Hud() {
   const s = useExperience();
   const [active, setActive] = useState<ChapterKey>("stage");
-  // collapsed by default on phones — the console would cover half the show
-  const [panelOpen, setPanelOpen] = useState(
-    () => typeof window === "undefined" || window.innerWidth > 768,
-  );
+  // collapsed by default everywhere — the hero installation is the star; the
+  // control console is opt-in so it never buries the show (brief §23/§24)
+  const [panelOpen, setPanelOpen] = useState(false);
   const logoClicks = useRef<number[]>([]);
 
   // track active chapter for the rail (rAF-poll of the signal — cheap)

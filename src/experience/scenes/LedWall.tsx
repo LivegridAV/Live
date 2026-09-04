@@ -69,40 +69,49 @@ const fragment = /* glsl */ `
       // content the tiger emerges from (brief §7/§12/§13). Natural greens and
       // earth, atmospheric depth, and layered wind (near layers sway more).
       float y = uv.y;
-      // atmospheric backdrop: cool canopy up top → warm ground haze below,
-      // with a soft shaft of daylight filtering deep between the trees. These
-      // are LED emission values, so they run bright — the wall is a light source.
-      vec3 backTop = vec3(0.14, 0.22, 0.20);
-      vec3 backLow = vec3(0.34, 0.30, 0.22);
-      col = mix(backLow, backTop, smoothstep(0.05, 0.98, y));
-      float shaft = exp(-pow((uv.x - 0.6) / 0.22, 2.0)) * smoothstep(0.02, 0.85, y);
-      col += uWarm * shaft * 0.55;
+      // atmospheric backdrop: hazy daylight filtering high in the canopy →
+      // shadowed forest floor below (aerial perspective sells the depth)
+      vec3 hazeHi = vec3(0.26, 0.30, 0.27);
+      vec3 hazeLo = vec3(0.06, 0.08, 0.06);
+      col = mix(hazeLo, hazeHi, smoothstep(-0.1, 1.05, y));
+      // a warm sun break in the canopy (light through the trees)
+      float sun = exp(-pow((uv.x - 0.60) / 0.17, 2.0));
+      col += vec3(1.0, 0.86, 0.62) * sun * smoothstep(0.35, 1.0, y) * 0.35;
+      // soft god-rays fanning down from the break
+      float ray = sin((uv.x - 0.60) * 26.0 + 1.7) * 0.5 + 0.5;
+      ray = pow(ray, 4.0) * smoothstep(1.0, 0.15, y) * sun;
+      col += vec3(1.0, 0.9, 0.7) * ray * 0.22;
 
-      // four depth layers of foliage silhouettes; near = darker + more sway
-      for (int L = 0; L < 4; L++) {
+      // five layers of tree silhouettes: far = pale/hazy, near = dark; rounded
+      // organic crowns (not uniform bars); each sways with its own wind
+      for (int L = 0; L < 5; L++) {
         float fl = float(L);
-        float depth = fl / 3.0;
-        float freq = mix(3.0, 11.0, depth);
-        float wind = sin(t * (0.35 + depth * 0.8) + fl * 2.1);
-        // undulating tree-line horizon for this layer
-        float ridge = 0.30 + depth * 0.15
-          + 0.06 * sin(uv.x * freq + fl * 3.0 + wind * (0.15 + depth * 0.5))
-          + 0.03 * sin(uv.x * freq * 2.7 + fl);
-        // sparse trunks poking below the ridge
-        float trunkId = floor((uv.x + wind * (0.004 + depth * 0.02)) * freq * 1.6);
-        float trunk = step(0.72, hash(vec2(trunkId, fl)))
-                    * step(y, ridge) * step(ridge - 0.5, y);
-        float canopy = smoothstep(ridge + 0.015, ridge - 0.015, y);
-        float mask = max(canopy, trunk);
-        // brighter greens far (catching light), deep shadow greens near
-        vec3 leaf = mix(vec3(0.20, 0.42, 0.22), vec3(0.05, 0.12, 0.07), depth);
+        float depth = fl / 4.0;                    // 0 far .. 1 near
+        float freq = mix(2.5, 9.0, depth);
+        float wind = sin(t * (0.3 + depth * 0.7) + fl * 2.1) * (0.006 + depth * 0.02);
+        float x = uv.x + wind;
+        // undulating canopy ridge with big rounded crowns + fine ripple
+        float crown = 0.34 + depth * 0.14
+          + 0.10 * (0.5 + 0.5 * sin(x * freq + fl * 4.0))
+          + 0.04 * sin(x * freq * 3.3 + fl * 2.0);
+        float below = smoothstep(crown + 0.02, crown - 0.02, y);
+        // narrow trunks descending from some crowns
+        float tid = floor(x * freq);
+        float trunkX = fract(x * freq);
+        float trunk = step(0.62, hash(vec2(tid, fl)))
+                    * smoothstep(0.12, 0.0, abs(trunkX - 0.5))
+                    * step(y, crown) * step(crown - 0.55, y);
+        float mask = max(below, trunk * 0.9);
+        // aerial perspective: distant foliage pale-green, near near-black
+        vec3 leaf = mix(vec3(0.16, 0.24, 0.16), vec3(0.02, 0.05, 0.03), depth);
+        leaf += vec3(0.9, 0.8, 0.55) * sun * (1.0 - depth) * 0.15; // sun-rimmed edge
         col = mix(col, leaf, mask);
       }
 
-      // low ground mist drifting sideways (very slow atmosphere)
-      float mist = smoothstep(0.26, 0.0, y) * (0.4 + 0.28 * sin(uv.x * 5.0 - t * 0.4));
-      col = mix(col, vec3(0.34, 0.36, 0.30), clamp(mist, 0.0, 0.55) * 0.6);
-      col *= 1.15;
+      // drifting ground mist glowing faintly between the trunks
+      float mist = smoothstep(0.22, 0.0, y) * (0.4 + 0.3 * sin(uv.x * 4.0 - t * 0.35));
+      col = mix(col, vec3(0.22, 0.25, 0.22), clamp(mist, 0.0, 0.5) * 0.6);
+      col *= 0.92; // moody, a lit surface — not a glowing grid
     } else if (prog < 1.5) {
       // ── program 1: live equalizer bars
       float bar = floor(uv.x * 24.0);
