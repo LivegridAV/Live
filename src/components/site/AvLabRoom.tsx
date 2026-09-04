@@ -126,8 +126,10 @@ function Rack({ active }: { active: boolean }) {
       {strips.map((y, i) => (
         <mesh key={i} position={[0, y, 0.31]}>
           <planeGeometry args={[0.58, 0.24]} />
-          <meshStandardMaterial color="#05100e" emissive="#3fd6c8"
-            emissiveIntensity={active ? 1.6 : 0.7} />
+          {/* rack status LEDs: dim neutral idle, cyan signal only when this
+              station is active (brief §24 — cyan = active state, not decor) */}
+          <meshStandardMaterial color="#05100e" emissive={active ? "#3fd6c8" : "#5a5348"}
+            emissiveIntensity={active ? 1.6 : 0.35} />
         </mesh>
       ))}
     </group>
@@ -194,12 +196,13 @@ function Projector({ active }: { active: boolean }) {
       {/* projected beam to the surface behind */}
       <mesh position={[0.08, -0.1, -1.1]} rotation={[Math.PI / 2, 0, 0.04]}>
         <coneGeometry args={[0.55, 1.9, 24, 1, true]} />
-        <meshBasicMaterial color="#3fd6c8" transparent opacity={active ? 0.16 : 0.07} side={THREE.DoubleSide} depthWrite={false} />
+        {/* projector throw reads as cool white light, not neon cyan */}
+        <meshBasicMaterial color="#cfe0e6" transparent opacity={active ? 0.14 : 0.05} side={THREE.DoubleSide} depthWrite={false} />
       </mesh>
-      {/* the mapped surface */}
+      {/* the mapped surface — warm-neutral content, cyan tint only when active */}
       <mesh position={[0.2, -0.15, -2.05]} rotation={[0, -0.5, 0]}>
         <planeGeometry args={[1.3, 1.0]} />
-        <meshStandardMaterial color="#0a1614" emissive="#1fa093" emissiveIntensity={active ? 0.9 : 0.4} />
+        <meshStandardMaterial color="#0e120f" emissive={active ? "#3fd6c8" : "#c8a878"} emissiveIntensity={active ? 0.9 : 0.28} />
       </mesh>
     </group>
   );
@@ -298,12 +301,13 @@ export default function AvLabRoom() {
               onPointerMissed={() => setActive(null)}
             >
               <PerformanceMonitor onDecline={() => { /* drei lowers dpr via AdaptiveDpr if added */ }} />
-              <color attach="background" args={["#060b0a"]} />
-              <fog attach="fog" args={["#060b0a", 7, 16]} />
-              <ambientLight intensity={0.5} color="#9fb4ae" />
-              <hemisphereLight intensity={0.35} color="#3fd6c8" groundColor="#0a1411" />
+              <color attach="background" args={["#080706"]} />
+              <fog attach="fog" args={["#080706", 7, 16]} />
+              {/* neutral-warm practical lighting — no cyan cast (brief §24) */}
+              <ambientLight intensity={0.5} color="#b3aa9c" />
+              <hemisphereLight intensity={0.35} color="#c8a878" groundColor="#0a0908" />
               <spotLight position={[2, 5, 3]} angle={0.7} penumbra={0.8} intensity={40} color="#ffe6c4" distance={20} />
-              <pointLight position={[-3, 3, 1]} intensity={12} color="#bfe9e2" distance={12} />
+              <pointLight position={[-3, 3, 1]} intensity={12} color="#e6d8c2" distance={12} />
               <Suspense fallback={null}>
                 <Room active={active} onPick={setActive} />
               </Suspense>
