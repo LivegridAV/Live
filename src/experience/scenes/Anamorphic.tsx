@@ -81,13 +81,16 @@ export default function Anamorphic() {
     // of the wall to breathe, then eases back into the scene. A smootherstep
     // ping-pong means both ends decelerate — there is no reset the eye can
     // catch. Period ~26s so it never reads as a short game loop.
+    const calm = signals.reducedMotion;
     const PERIOD = 26;
     const phase = (t % PERIOD) / PERIOD;
     const pingpong = 1 - Math.abs(phase * 2 - 1); // 0→1→0
-    const emerge = smoother(pingpong); // eased approach/retreat 0..1
+    // reduced motion: hold the tiger emerged and mostly still (still present,
+    // just not travelling) — content stays understandable (brief §42)
+    const emerge = calm ? 0.82 : smoother(pingpong);
 
     // gentle breathing only — no scale "pop"
-    const breathe = 1 + Math.sin(t * 1.15) * 0.018;
+    const breathe = 1 + Math.sin(t * 1.15) * (calm ? 0.008 : 0.018);
     group.current.scale.setScalar(shown.current * breathe * BASE_SCALE);
 
     // stays on the right half of the wall (clear of the headline); depth is

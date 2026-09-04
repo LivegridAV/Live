@@ -161,6 +161,8 @@ export const signals = {
   poweredAt: 0,
   /** A scene prop (cylinder, lab device…) owns the current drag. */
   sceneGrab: false,
+  /** Visitor asked for calmer motion (prefers-reduced-motion). Set by Experience. */
+  reducedMotion: false,
 };
 
 if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {

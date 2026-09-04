@@ -189,13 +189,14 @@ export default function CameraRig() {
       a.look[2] + (b.look[2] - a.look[2]) * t,
     );
 
-    // pointer parallax — smaller once we're travelling
+    // pointer parallax — smaller once we're travelling; calmed for reduced motion
+    const parallax = signals.reducedMotion ? 0.3 : 1;
     const px = signals.pointerSmooth.x;
     const py = signals.pointerSmooth.y;
-    pos.current.x += px * 1.4;
-    pos.current.y += py * 0.7;
-    look.current.x += px * 2.2;
-    look.current.y += py * 1.1;
+    pos.current.x += px * 1.4 * parallax;
+    pos.current.y += py * 0.7 * parallax;
+    look.current.x += px * 2.2 * parallax;
+    look.current.y += py * 1.1 * parallax;
 
     // ── mobile/portrait recomposition (brief §26): a tall frame shows too much
     // dark void and shrinks the wall, so dolly the OPENING closer and raise it
@@ -208,8 +209,8 @@ export default function CameraRig() {
       pos.current.y += stageAmt * portrait * 1.4;
     }
 
-    // gentle breathing before boot so the dark room isn't static
-    if (!booted) {
+    // gentle breathing before boot so the dark room isn't static (skip if calm)
+    if (!booted && !signals.reducedMotion) {
       pos.current.y += Math.sin(state.clock.elapsedTime * 0.5) * 0.08;
     }
 

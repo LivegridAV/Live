@@ -170,6 +170,16 @@ export default function Experience() {
     }
   }, [setQuality]);
 
+  // honour prefers-reduced-motion inside the venue: continuous motion (tiger
+  // prowl, camera breathing/parallax) is calmed via signals.reducedMotion.
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => { signals.reducedMotion = mq.matches; };
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
   useEffect(() => audio.setMusic(musicOn), [musicOn]);
   useEffect(() => audio.setEnabled(audioOn), [audioOn]);
 
