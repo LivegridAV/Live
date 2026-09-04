@@ -34,15 +34,15 @@ export function slugify(name: string): string {
  * Keyed by project name so it stays stable if the array order changes.
  */
 const CATEGORIES: Record<string, WorkCategory[]> = {
-  "Skyline Music Fest": ["Live Events", "LED", "Show Control"],
-  "Nova Auto Launch": ["Corporate", "Anamorphic", "LED", "Content"],
-  "Summit ONE Keynote": ["Corporate", "LED", "Show Control"],
-  "Neon City EDM Night": ["Live Events", "LED", "Show Control"],
-  "Heritage Gala": ["Live Events", "Projection", "LED"],
-  "Hybrid Product Expo": ["Hybrid", "Corporate", "LED"],
-  "Championship Finals": ["Live Events", "LED", "Show Control"],
-  "Royal Wedding Show": ["Live Events", "LED"],
-  "Brand World Tour": ["Corporate", "LED", "Live Events"],
+  "Stadium Festival Wall": ["Live Events", "LED", "Show Control"],
+  "Anamorphic Vehicle Reveal": ["Corporate", "Anamorphic", "LED", "Content"],
+  "Panoramic Keynote Ribbon": ["Corporate", "LED", "Show Control"],
+  "Arena EDM Floor + Ring": ["Live Events", "LED", "Show Control"],
+  "Heritage Projection Mapping": ["Live Events", "Projection", "LED"],
+  "Hybrid Expo Backbone": ["Hybrid", "Corporate", "LED"],
+  "Sports Ribbon + Replay": ["Live Events", "LED", "Show Control"],
+  "Seamless Event Backdrop": ["Live Events", "LED"],
+  "Touring LED System": ["Corporate", "LED", "Live Events"],
 };
 
 export const WORK: WorkItem[] = PROJECTS.map((p) => ({
@@ -67,12 +67,12 @@ export function getProject(slug: string): WorkItem | undefined {
   return WORK_BY_SLUG[slug];
 }
 
-/** A truthful one-line overview built only from known fields. */
+/** A truthful one-line overview — a capability demonstration, not a client claim. */
 export function projectSummary(w: WorkItem): string {
-  return `${w.led} for ${w.client} at ${w.location}, ${w.year}. Delivered and operated with ${w.gear}.`;
+  return `A ${w.client.toLowerCase()} capability demonstration — ${w.led}, built and operated with ${w.gear}.`;
 }
 
-/** Soft card background tinted with the project's signature accent (matches the classic Work section). */
+/** Soft card background: natural graphite with the project's accent (charcoal, not teal). */
 export function vibeBg(vibe: string): string {
-  return `radial-gradient(120% 120% at 20% 10%, ${vibe}33, transparent 55%), linear-gradient(160deg, #17403a, #13201e)`;
+  return `radial-gradient(120% 120% at 20% 10%, ${vibe}2e, transparent 58%), linear-gradient(160deg, #1c1c1f, #121214)`;
 }

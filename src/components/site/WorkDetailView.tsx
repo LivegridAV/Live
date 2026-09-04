@@ -100,9 +100,9 @@ export default function WorkDetailView({ project }: { project: WorkItem }) {
             </div>
             <ul className="mt-7 space-y-3">
               {[
-                "Engineered the signal path and screen mapping for the venue.",
-                "Prepared and tested the content pipeline ahead of doors.",
-                "Operated playback and cues live through the show.",
+                "How we engineer the signal path and screen mapping for the venue.",
+                "How the content pipeline is prepared and tested ahead of doors.",
+                "How playback and cues are operated live through the show.",
               ].map((line) => (
                 <li key={line} className="flex gap-3 leading-relaxed text-text">
                   <span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-aqua" />
@@ -111,7 +111,7 @@ export default function WorkDetailView({ project }: { project: WorkItem }) {
               ))}
             </ul>
             <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.14em] text-faint">
-              Full photo set &amp; technical breakdown available on request.
+              Capability demonstration — technical breakdown available for your event.
             </p>
           </Reveal>
         </div>

@@ -214,9 +214,9 @@ export default function ServiceDetailView({ service }: { service: ServiceDetail 
       <section className="bg-white py-20 md:py-28">
         <div className="mx-auto max-w-[1180px] px-6 md:px-12">
           <Reveal>
-            <SectionEyebrow>Recent work</SectionEyebrow>
+            <SectionEyebrow>Capability demonstrations</SectionEyebrow>
             <h2 className="mt-4 text-3xl font-semibold tracking-[-0.02em] text-text md:text-4xl">
-              Where we&rsquo;ve done this
+              Where this shows up
             </h2>
           </Reveal>
           <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

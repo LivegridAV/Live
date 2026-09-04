@@ -6,13 +6,13 @@ import { journeyScroll } from "../ScrollRig";
 import { PROJECTS } from "../scenes/ProjectsCity";
 import { CHAPTERS, useExperience } from "../store";
 
-/** Hero stats — from the approved reference. Owner-supplied marketing figures. */
+/** Capability strip — truthful highlights of what we build (no unverified metrics). */
 const HERO_STATS: [string, string][] = [
-  ["500+", "Projects"],
-  ["150+", "Clients"],
-  ["25+", "Cities"],
-  ["10M+", "Audience"],
-  ["24/7", "Support"],
+  ["LED", "Indoor · outdoor · floor"],
+  ["3D", "Naked-eye anamorphic"],
+  ["Servers", "Show control · media"],
+  ["Live", "Switch · stream"],
+  ["One team", "Designed & operated"],
 ];
 
 /** The approved hero: spatial headline, three CTAs, trust strip. */
@@ -228,14 +228,14 @@ export default function Journey() {
         </p>
       </Block>
 
-      <Block at={0.48} align="right" eyebrow="WHAT WE DO" title={<>Nine services.<br />Grab and spin.</>}>
+      <Block at={0.48} align="right" eyebrow="WHAT WE DO" title={<>Every service.<br />Grab and spin.</>}>
         <p className="lg-block-copy">
           Drag the glass cylinder — it has real momentum. Click a panel to
           watch that service demonstrate itself.
         </p>
       </Block>
 
-      <Block at={0.59} eyebrow="TRACK RECORD" title={<>Numbers that<br />hold a stage.</>} />
+      <Block at={0.59} eyebrow="CAPABILITY" title={<>Built to<br />hold a stage.</>} />
 
       <Block at={0.69} align="right" eyebrow="EQUIPMENT LAB" title={<>The signal chain,<br />in anti-gravity.</>}>
         <p className="lg-block-copy">
@@ -244,10 +244,10 @@ export default function Journey() {
         </p>
       </Block>
 
-      <Block at={0.79} eyebrow="PROJECTS" title={<>A city of shows.</>}>
+      <Block at={0.79} eyebrow="WHAT WE BUILD" title={<>A city of shows.</>}>
         <p className="lg-block-copy">
-          Every cube is a delivered event. Hover to open one; click to step
-          inside.
+          Every cube is a capability demonstration — the kinds of shows we
+          build. Hover to open one; click to step inside.
         </p>
       </Block>
 

@@ -92,7 +92,7 @@ export default function WorkGallery() {
                 {p.location} · {p.led}
               </p>
               <span className="mt-4 inline-block font-mono text-[10px] uppercase tracking-[0.16em] text-glow opacity-0 transition-opacity group-hover:opacity-100">
-                View case study →
+                See the system →
               </span>
             </div>
           </Link>

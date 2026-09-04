@@ -23,7 +23,7 @@ export default function Services() {
             What we do
           </p>
           <h2 className="mt-4 max-w-[18ch] text-4xl font-semibold tracking-[-0.02em] text-text md:text-5xl">
-            Nine services. One production team.
+            Every service. One production team.
           </h2>
           <p className="mt-5 max-w-[52ch] leading-relaxed text-muted">
             From the LED wall to the media server to the operator at front of

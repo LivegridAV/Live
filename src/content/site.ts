@@ -44,11 +44,13 @@ export interface Stat {
   story: string;
 }
 
+// Capability statements — no unverified track-record numbers (see art-direction
+// rule: never fabricate stats). Each is a truthful description of what we build.
 export const STATS: Stat[] = [
-  { value: 10, suffix: "+", label: "Years Experience", story: "A decade of shows — from ballroom launches to stadium stages." },
-  { value: 500, suffix: "+", label: "Events Delivered", story: "Concerts, summits, weddings, product reveals. All on time, all on cue." },
-  { value: 100, suffix: "%", label: "Nationwide Operations", story: "Crew, trucking and gear that reach every corner of the country." },
-  { value: 24, suffix: "/7", label: "Technical Team", story: "Engineers on comms before doors, during show, and after strike." },
+  { value: 4, suffix: " mm", label: "Fine-pitch LED", story: "Down to fine indoor pixel pitch — planned to the audience and confirmed per venue." },
+  { value: 360, suffix: "°", label: "Immersive & anamorphic", story: "Naked-eye 3D, projection mapping and full-surround environments." },
+  { value: 24, suffix: "/7", label: "Show support", story: "Engineers on comms before doors, through the show, and after strike." },
+  { value: 1, suffix: " team", label: "For the whole show", story: "AV, content, LED and show control — designed and operated as one." },
 ];
 
 /* ── Projects (mirrors the 3D projects city) ─────────── */
@@ -63,16 +65,20 @@ export interface Project {
   vibe: string;
 }
 
+// Capability demonstrations — the KINDS of shows LiveGridAV builds, not client
+// case studies. No fabricated clients, named venues or delivery dates. `client`
+// is the sector/context, `location` the venue scale, `year` the concept label.
+// Natural accent tones (not cyan) reinforce the material palette.
 export const PROJECTS: Project[] = [
-  { name: "Skyline Music Fest", client: "Pulse Live", location: "National Stadium", year: "2025", led: "220 m² main + wings", gear: "Watchout · NovaStar · 24 movers", vibe: "#3fd6c8" },
-  { name: "Nova Auto Launch", client: "Nova Motors", location: "Convention Centre", year: "2025", led: "Naked-eye 3D corner wall", gear: "Anamorphic content · media server", vibe: "#e8b84a" },
-  { name: "Summit ONE Keynote", client: "GovTech Forum", location: "Grand Ballroom", year: "2024", led: "60 m panoramic ribbon", gear: "3-server Watchout · live relay", vibe: "#7fb8ff" },
-  { name: "Neon City EDM Night", client: "Bassline Events", location: "Waterfront Arena", year: "2024", led: "LED floor + 360° ring", gear: "VJ rig · lasers · 40k lumens", vibe: "#e84ad4" },
-  { name: "Heritage Gala", client: "National Museum", location: "Open-air Courtyard", year: "2024", led: "Projection + LED hybrid", gear: "Mapping · fine-pitch wall", vibe: "#ffb35c" },
-  { name: "Hybrid Product Expo", client: "TechBridge", location: "Expo Hall 3", year: "2023", led: "12 booth walls, one control", gear: "NDI backbone · streaming", vibe: "#69e0a0" },
-  { name: "Championship Finals", client: "ProLeague", location: "Indoor Arena", year: "2023", led: "Scoreboard + ribbon boards", gear: "Live replay · slow-mo", vibe: "#ff7a6a" },
-  { name: "Royal Wedding Show", client: "Private Client", location: "Palace Gardens", year: "2023", led: "Invisible-seam backdrop", gear: "Fine pitch · silent ops", vibe: "#cfa9ff" },
-  { name: "Brand World Tour", client: "Meridian Group", location: "6 Cities", year: "2022", led: "Touring 80 m² system", gear: "Flight-cased full chain", vibe: "#3fd6c8" },
+  { name: "Stadium Festival Wall", client: "Concert & festival", location: "Stadium-scale", year: "Concept", led: "220 m² main + side walls", gear: "Media server · LED processing · movers", vibe: "#d98a3a" },
+  { name: "Anamorphic Vehicle Reveal", client: "Product reveal", location: "Corner LED", year: "Concept", led: "Naked-eye 3D corner wall", gear: "Anamorphic content · media server", vibe: "#e0a94a" },
+  { name: "Panoramic Keynote Ribbon", client: "Conference & keynote", location: "Ballroom-scale", year: "Concept", led: "60 m panoramic ribbon", gear: "Multi-server show control · live relay", vibe: "#9aa0ae" },
+  { name: "Arena EDM Floor + Ring", client: "Club & touring", location: "Arena-scale", year: "Concept", led: "LED floor + 360° ring", gear: "VJ rig · lasers · high-output", vibe: "#b0684a" },
+  { name: "Heritage Projection Mapping", client: "Cultural & gala", location: "Open-air courtyard", year: "Concept", led: "Projection + LED hybrid", gear: "Warp & blend · fine-pitch wall", vibe: "#c98a4a" },
+  { name: "Hybrid Expo Backbone", client: "Exhibition & hybrid", location: "Expo-scale", year: "Concept", led: "Multiple booth walls, one control", gear: "Video-over-IP · streaming", vibe: "#6f8f7a" },
+  { name: "Sports Ribbon + Replay", client: "Sports & live", location: "Indoor arena", year: "Concept", led: "Scoreboard + ribbon boards", gear: "Live replay · slow-motion", vibe: "#a8683a" },
+  { name: "Seamless Event Backdrop", client: "Ceremony & private", location: "Private venue", year: "Concept", led: "Invisible-seam backdrop", gear: "Fine pitch · quiet operation", vibe: "#9a7a5a" },
+  { name: "Touring LED System", client: "Multi-city tour", location: "Multi-venue", year: "Concept", led: "Flight-cased 80 m² system", gear: "Full chain, repeatable build", vibe: "#7f8a6a" },
 ];
 
 /* ── Equipment / signal chain (mirrors the 3D lab) ────── */
