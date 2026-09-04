@@ -4,6 +4,7 @@ import PageShell from "@/components/site/PageShell";
 import Reveal from "@/components/Reveal";
 import SignalGrid from "@/components/SignalGrid";
 import AvLabExplorer from "@/components/site/AvLabExplorer";
+import AvLabRoomSection from "@/components/site/AvLabRoomSection";
 import HeroVisual from "@/components/site/HeroVisual";
 import { contactLinks } from "@/experience/contact";
 
@@ -47,6 +48,16 @@ export default function AvLab() {
         <div className="mx-auto max-w-[1180px] px-6 md:px-12">
           <Reveal>
             <AvLabExplorer />
+          </Reveal>
+        </div>
+      </section>
+
+      {/* interactive 3D control room — click a station to focus + trace its path */}
+      <section className="border-t border-ink-soft bg-ink pb-16 text-text-inv md:pb-24">
+        <div className="mx-auto max-w-[1180px] px-6 md:px-12">
+          <Reveal>
+            <p className="mb-6 font-mono text-xs uppercase tracking-[0.2em] text-glow">The room</p>
+            <AvLabRoomSection />
           </Reveal>
         </div>
       </section>
