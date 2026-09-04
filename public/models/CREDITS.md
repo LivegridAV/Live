@@ -12,3 +12,6 @@ Third-party 3D assets used on the LiveGridAV site, with their licenses.
 
 ## led-panel.glb / led-panel.webp — LED cabinet (equipment page)
 - Original asset created in-house (Blender) for LiveGridAV. No third-party license.
+
+## av-rack.webp — AV equipment rack (AV Lab page)
+- Original asset modelled + rendered in-house (Blender) for LiveGridAV. No third-party license.

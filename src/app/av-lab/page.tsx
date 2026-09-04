@@ -52,17 +52,34 @@ export default function AvLab() {
       </section>
 
       <section className="bg-white py-16 md:py-24">
-        <div className="mx-auto max-w-[1180px] px-6 md:px-12">
+        <div className="mx-auto grid max-w-[1180px] items-center gap-12 px-6 md:grid-cols-[0.95fr_1.05fr] md:px-12">
           <Reveal>
+            <div className="overflow-hidden rounded-[24px] border border-line bg-ink p-6">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/models/av-rack.webp"
+                width={715}
+                height={1100}
+                loading="lazy"
+                alt="Custom render of an AV equipment rack — media server, LED processor, switcher and patch, stacked in one enclosure"
+                className="mx-auto block w-full max-w-[300px]"
+              />
+            </div>
+          </Reveal>
+          <Reveal delay={0.08}>
             <p className="font-mono text-xs uppercase tracking-[0.2em] text-aqua">Why it matters</p>
             <h2 className="mt-4 max-w-[24ch] text-3xl font-semibold tracking-[-0.02em] text-text md:text-4xl">
               Understanding the whole path is what keeps a show up.
             </h2>
-            <p className="mt-5 max-w-[62ch] leading-relaxed text-muted">
-              When you know every step a signal takes, you can plan redundancy, catch
-              problems before they reach the screen, and keep the program clean under
-              pressure. That&rsquo;s the difference between renting equipment and
-              running a production.
+            <p className="mt-5 max-w-[56ch] leading-relaxed text-muted">
+              Behind every screen is a rack like this — media server, processing,
+              switching and patch, stacked in one enclosure. When you know every step a
+              signal takes, you can plan redundancy, catch problems before they reach the
+              screen, and keep the program clean under pressure. That&rsquo;s the
+              difference between renting equipment and running a production.
+            </p>
+            <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.14em] text-faint">
+              In-house 3D visualization
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link

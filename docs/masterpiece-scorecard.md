@@ -28,7 +28,7 @@ fidelity · **Nat** natural visual realism · **ID** LiveGridAV identity ·
 | Sound | 8 | Coverage stage landed: pick PA/sub/monitor/front/delay, see the zone on a neutral venue plan (cyan overlay only). |
 | Lighting | 8 | Fixture-swap stage landed: beam/wash/profile/strobe/blinder/spot transform a neutral-steel stage; glow only on the emissive beam. |
 | Equipment | 8.5 | Icon directory + living hero + a "down to the pixel" band featuring a custom in-house Blender LED-cabinet render (real pixel pitch, dark metal frame). |
-| AV Lab | 7.5 | Interactive signal-path explorer works; wants a 3D control-room + camera moves. |
+| AV Lab | 8.5 | Interactive signal-path explorer + a custom in-house Blender **AV rack** render (media server / processor / switcher / patch, flush-stacked, cyan status LEDs) anchoring the "why it matters" band. |
 | Contact | 8.5 | Guided brief, real submit + WhatsApp, dark, clear. Effortless. |
 | Insights (+articles) | 8 | Clean, crawlable, internally linked. |
 | 404 | 8 | Branded, on-system. |
