@@ -5,6 +5,9 @@ import { MeshReflectorMaterial } from "@react-three/drei";
 import * as THREE from "three";
 import { forestVertex, forestFragment } from "./forest";
 import AnamorphicCorner, { SWEET_POS, SWEET_TARGET, SWEET_FOV } from "./AnamorphicCorner";
+import { HeroContent } from "./content";
+
+type Mode = "hero" | "forest" | "atest";
 
 /**
  * V2 hero (brief Gates 2–5). A real graphite room: reflective floor, an
@@ -40,42 +43,34 @@ function ForestWall({ side }: { side: 1 | -1 }) {
   );
 }
 
-/** Gate 3 test content: a ground grid (depth reference) + a primitive box
- *  sitting in the corner volume. Proves the projection, then the animal
- *  replaces the box at Gate 4. */
-function buildTestContent(scene: THREE.Scene) {
-  scene.background = new THREE.Color("#060807");
-  scene.add(new THREE.AmbientLight("#9fb0c0", 0.7));
-  const key = new THREE.PointLight("#ffe6c4", 90, 44, 1.6);
-  key.position.set(3, 6, -1); scene.add(key);
-  const fill = new THREE.PointLight("#bfe6d6", 30, 30, 1.7);
-  fill.position.set(-3, 3, -3); scene.add(fill);
-
-  const ground = new THREE.Mesh(
-    new THREE.PlaneGeometry(80, 80),
-    new THREE.MeshStandardMaterial({ color: "#0b0d0b", roughness: 0.95, metalness: 0.05 }),
+/** Gate 3 test content (JSX into the corner's content scene): a ground grid +
+ *  a primitive box + a depth pole. Proves the projection. */
+function TestContent() {
+  const box = useRef<THREE.Mesh>(null);
+  useFrame((s) => { if (box.current) box.current.rotation.y = s.clock.elapsedTime * 0.35; });
+  return (
+    <>
+      <ambientLight intensity={0.7} color="#9fb0c0" />
+      <pointLight position={[3, 6, -1]} color="#ffe6c4" intensity={90} distance={44} decay={1.6} />
+      <pointLight position={[-3, 3, -3]} color="#bfe6d6" intensity={30} distance={30} decay={1.7} />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, -6]}>
+        <planeGeometry args={[80, 80]} />
+        <meshStandardMaterial color="#0b0d0b" roughness={0.95} metalness={0.05} />
+      </mesh>
+      <gridHelper args={[50, 50, 0x2a3a2c, 0x18211a]} position={[0, 0.01, -6]} />
+      <mesh ref={box} position={[0, 0.9, -4.6]}>
+        <boxGeometry args={[1.8, 1.8, 1.8]} />
+        <meshStandardMaterial color="#e0a94a" emissive="#3a1f08" emissiveIntensity={0.4} metalness={0.2} roughness={0.45} />
+      </mesh>
+      <mesh position={[-2.6, 1.5, -7.5]}>
+        <cylinderGeometry args={[0.12, 0.12, 3, 12]} />
+        <meshStandardMaterial color="#46d8ca" emissive="#0d3f39" emissiveIntensity={0.6} />
+      </mesh>
+    </>
   );
-  ground.rotation.x = -Math.PI / 2; scene.add(ground);
-  const grid = new THREE.GridHelper(50, 50, 0x2a3a2c, 0x18211a);
-  (grid.material as THREE.Material).transparent = true;
-  (grid.material as THREE.Material).opacity = 0.6;
-  scene.add(grid);
-
-  const box = new THREE.Mesh(
-    new THREE.BoxGeometry(1.8, 1.8, 1.8),
-    new THREE.MeshStandardMaterial({ color: "#e0a94a", emissive: "#3a1f08", emissiveIntensity: 0.4, metalness: 0.2, roughness: 0.45 }),
-  );
-  box.position.set(0, 0.9, -4.6); box.name = "subject"; scene.add(box);
-
-  // a slim pole further back for depth continuity reference
-  const pole = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.12, 0.12, 3, 12),
-    new THREE.MeshStandardMaterial({ color: "#46d8ca", emissive: "#0d3f39", emissiveIntensity: 0.6 }),
-  );
-  pole.position.set(-2.6, 1.5, -7.5); scene.add(pole);
 }
 
-function Scene({ mode, view }: { mode: "forest" | "atest"; view: "sweet" | "off" }) {
+function Scene({ mode, view }: { mode: Mode; view: "sweet" | "off" }) {
   const camApplied = useRef(false);
   useFrame(({ camera }) => {
     if (camApplied.current) return;
@@ -103,10 +98,9 @@ function Scene({ mode, view }: { mode: "forest" | "atest"; view: "sweet" | "off"
           color="#0a0908" metalness={0.55} mirror={0} />
       </mesh>
 
-      {mode === "atest"
-        ? <AnamorphicCorner buildContent={buildTestContent}
-            onFrame={(s, t) => { const b = s.getObjectByName("subject"); if (b) b.rotation.y = t * 0.35; }} />
-        : (<><ForestWall side={1} /><ForestWall side={-1} /></>)}
+      {mode === "atest" && <AnamorphicCorner><TestContent /></AnamorphicCorner>}
+      {mode === "hero" && <AnamorphicCorner><HeroContent /></AnamorphicCorner>}
+      {mode === "forest" && (<><ForestWall side={1} /><ForestWall side={-1} /></>)}
 
       <mesh position={[0, 0.06, 2.4]}>
         <boxGeometry args={[26, 0.12, 0.4]} />
@@ -116,7 +110,7 @@ function Scene({ mode, view }: { mode: "forest" | "atest"; view: "sweet" | "off"
   );
 }
 
-export default function HeroScene({ mode = "forest", view = "sweet" }: { mode?: "forest" | "atest"; view?: "sweet" | "off" }) {
+export default function HeroScene({ mode = "hero", view = "sweet" }: { mode?: Mode; view?: "sweet" | "off" }) {
   return (
     <Canvas
       dpr={[1, 1.75]}

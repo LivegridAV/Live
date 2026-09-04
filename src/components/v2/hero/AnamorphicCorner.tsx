@@ -1,35 +1,29 @@
 "use client";
-import { useMemo, useRef, useEffect } from "react";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useMemo, useEffect, type ReactNode } from "react";
+import { createPortal, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { anamorphicVertex, anamorphicFragment } from "./anamorphic";
 
 const WALL_W = 9, WALL_H = 5, CORNER_Z = -6, SPLAY = 0.56;
 
 // The fixed sweet spot — MUST match the Canvas camera's default (§18).
-export const SWEET_POS = new THREE.Vector3(0, 2.35, 9.2);
-export const SWEET_TARGET = new THREE.Vector3(0, 2.35, -3);
-export const SWEET_FOV = 40;
+export const SWEET_POS = new THREE.Vector3(0, 1.7, 8.4);
+export const SWEET_TARGET = new THREE.Vector3(0, 1.15, -3);
+export const SWEET_FOV = 43;
 
 /**
- * The anamorphic LED corner. Renders `buildContent` (a THREE scene of the
- * virtual world — ground + subject) from the sweet-spot camera into a texture,
- * then projective-maps it onto the two physical LED panels. Correct at the
- * sweet spot, distorted off-axis.
+ * The anamorphic LED corner. `children` are rendered (via a portal) into a
+ * virtual content scene — the world the LED pretends to be a window onto. That
+ * scene is rendered from the FIXED sweet-spot camera into a texture, then
+ * projective-mapped onto the two physical LED panels. Correct at the sweet
+ * spot, distorted off-axis (brief §19/§20).
  */
-export default function AnamorphicCorner({
-  buildContent,
-  onFrame,
-}: {
-  buildContent: (scene: THREE.Scene) => void;
-  onFrame?: (scene: THREE.Scene, t: number) => void;
-}) {
+export default function AnamorphicCorner({ children }: { children: ReactNode }) {
   const { gl, size } = useThree();
 
   const rt = useMemo(
     () => new THREE.WebGLRenderTarget(1280, 1280, {
-      minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter,
-      type: THREE.HalfFloatType,
+      minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, type: THREE.HalfFloatType,
     }),
     [],
   );
@@ -43,9 +37,9 @@ export default function AnamorphicCorner({
 
   const content = useMemo(() => {
     const s = new THREE.Scene();
-    buildContent(s);
+    s.background = new THREE.Color("#060807");
     return s;
-  }, [buildContent]);
+  }, []);
 
   const mat = useMemo(
     () => new THREE.ShaderMaterial({
@@ -61,23 +55,14 @@ export default function AnamorphicCorner({
     [rt],
   );
 
-  // sweet-spot aspect must match the render-target (square), not the viewport,
-  // so the projection is stable regardless of window size.
-  useEffect(() => {
-    sweetCam.aspect = 1;
-    sweetCam.updateProjectionMatrix();
-  }, [sweetCam, size]);
+  useEffect(() => { sweetCam.aspect = 1; sweetCam.updateProjectionMatrix(); }, [sweetCam, size]);
 
   const vp = useMemo(() => new THREE.Matrix4(), []);
-  useFrame(({ clock }) => {
-    onFrame?.(content, clock.elapsedTime);
+  useFrame(() => {
     sweetCam.updateMatrixWorld();
     vp.multiplyMatrices(sweetCam.projectionMatrix, sweetCam.matrixWorldInverse);
     (mat.uniforms.uSweetVP.value as THREE.Matrix4).copy(vp);
-
-    // priority 0 (no arg): this runs BEFORE R3F's automatic main render, so the
-    // render target is ready when the walls sample it — without taking over the
-    // render loop (a non-zero priority would disable the main render).
+    // default priority: runs before R3F's automatic main render (don't disable it)
     const prevRT = gl.getRenderTarget();
     gl.setRenderTarget(rt);
     gl.clear();
@@ -89,6 +74,7 @@ export default function AnamorphicCorner({
 
   return (
     <group>
+      {createPortal(children, content)}
       {[1, -1].map((side) => (
         <group key={side} position={[0, 0, CORNER_Z]} rotation={[0, side * SPLAY, 0]}>
           <group position={[side * (WALL_W / 2), WALL_H / 2, 0]}>
