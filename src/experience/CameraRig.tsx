@@ -197,6 +197,17 @@ export default function CameraRig() {
     look.current.x += px * 2.2;
     look.current.y += py * 1.1;
 
+    // ── mobile/portrait recomposition (brief §26): a tall frame shows too much
+    // dark void and shrinks the wall, so dolly the OPENING closer and raise it
+    // a touch — an intentional mobile camera, not the desktop shot letterboxed.
+    const aspect = camera.aspect;
+    if (aspect < 0.85 && p < 0.14) {
+      const stageAmt = 1 - smooth(THREE.MathUtils.clamp(p / 0.14, 0, 1));
+      const portrait = 0.85 - aspect; // 0 at 0.85 → ~0.39 at 9:19.5
+      pos.current.z -= stageAmt * portrait * 30;
+      pos.current.y += stageAmt * portrait * 1.4;
+    }
+
     // gentle breathing before boot so the dark room isn't static
     if (!booted) {
       pos.current.y += Math.sin(state.clock.elapsedTime * 0.5) * 0.08;

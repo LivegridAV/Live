@@ -164,7 +164,9 @@ body {
 @media (max-width: 767px) {
   .lg-hud-top { padding: 12px 16px; }
   .lg-chip { padding: 6px 10px; font-size: 9px; white-space: nowrap; }
-  .lg-console { width: 168px; right: 10px; }
+  /* keep only the CTA in the top bar — SOUND/MUSIC live in the console
+     and were overflowing the 390px width (clipping GET A QUOTE) */
+  .lg-hud-actions .lg-chip:not(.lg-chip-cta) { display: none; }
 }
 
 /* chapter rail */
@@ -205,6 +207,12 @@ body {
   transition: opacity 0.5s ease, transform 0.5s ease;
 }
 .lg-console.is-visible { opacity: 1; transform: translateY(-50%); pointer-events: auto; }
+/* mobile: dock the collapsed console under the nav (defined AFTER the base
+   rule so it wins on source order) — never over the centred headline */
+@media (max-width: 767px) {
+  .lg-console { width: 172px; right: 10px; top: 60px; transform: none; }
+  .lg-console.is-visible { transform: none; }
+}
 .lg-console-head {
   width: 100%; display: flex; justify-content: space-between; align-items: center;
   font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.22em;
