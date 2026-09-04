@@ -152,8 +152,8 @@
 .v2-hero-scrim {
   position: absolute; inset: 0; z-index: 1; pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(10,9,8,0.55) 0%, transparent 22%, transparent 55%, rgba(10,9,8,0.75) 100%),
-    linear-gradient(92deg, rgba(10,9,8,0.85) 0%, rgba(10,9,8,0.45) 42%, transparent 72%);
+    linear-gradient(180deg, rgba(10,9,8,0.28) 0%, transparent 30%, transparent 52%, rgba(10,9,8,0.82) 100%),
+    linear-gradient(92deg, rgba(10,9,8,0.82) 0%, rgba(10,9,8,0.40) 44%, transparent 74%);
 }
 .v2-hero-inner { position: relative; z-index: 2; width: 100%; }
 .v2-hero-title { margin-top: 18px; max-width: 15ch; }

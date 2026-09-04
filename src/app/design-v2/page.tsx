@@ -1,4 +1,5 @@
 import NavV2 from "@/components/v2/NavV2";
+import HeroStage from "@/components/v2/hero/HeroStage";
 import Reveal2 from "@/components/v2/Reveal2";
 import ContactV2 from "@/components/v2/ContactV2";
 import Motif, { type MotifKey } from "@/components/v2/motifs";
@@ -20,10 +21,7 @@ export default function DesignV2Home() {
 
       {/* ── 01 · HERO (Gate 1: CSS stage; 3D wired in Gate 2) ── */}
       <section className="v2-hero">
-        <div className="v2-hero-stage" aria-hidden>
-          <div className="v2-stage-fallback" />
-          <div className="v2-stage-floor" />
-        </div>
+        <HeroStage />
         <div className="v2-hero-scrim" aria-hidden />
         <div className="v2-hero-inner">
           <div className="v2-wrap">
