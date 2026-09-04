@@ -16,12 +16,17 @@ const HeroScene = dynamic(() => import("./HeroScene"), {
 export default function HeroStage() {
   const [webgl, setWebgl] = useState(false);
   const [ready, setReady] = useState(false);
+  const [mode, setMode] = useState<"forest" | "atest">("forest");
+  const [view, setView] = useState<"sweet" | "off">("sweet");
 
   useEffect(() => {
     try {
       const c = document.createElement("canvas");
       if (c.getContext("webgl2") || c.getContext("webgl")) setWebgl(true);
     } catch { /* keep CSS fallback */ }
+    const q = new URLSearchParams(window.location.search);
+    if (q.has("atest")) setMode("atest");
+    if (q.get("view") === "off") setView("off");
   }, []);
 
   return (
@@ -34,18 +39,18 @@ export default function HeroStage() {
           style={{ position: "absolute", inset: 0, opacity: ready ? 1 : 0, transition: "opacity 1.1s ease" }}
           onTransitionEnd={() => { /* noop */ }}
         >
-          <SceneMount onReady={() => setReady(true)} />
+          <SceneMount onReady={() => setReady(true)} mode={mode} view={view} />
         </div>
       )}
     </div>
   );
 }
 
-function SceneMount({ onReady }: { onReady: () => void }) {
+function SceneMount({ onReady, mode, view }: { onReady: () => void; mode: "forest" | "atest"; view: "sweet" | "off" }) {
   useEffect(() => {
     // give the canvas a beat to compile shaders before we fade it in
     const t = setTimeout(onReady, 220);
     return () => clearTimeout(t);
   }, [onReady]);
-  return <HeroScene />;
+  return <HeroScene mode={mode} view={view} />;
 }
