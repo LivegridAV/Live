@@ -116,12 +116,15 @@ export function Tiger({ shadowRef }: { shadowRef: React.RefObject<THREE.Mesh | n
   // slide; fade at the ends so the loop reset is invisible.
   const TZ = -3.9;           // fixed depth in the corner mouth, on the floor
   const START_X = 5.0, END_X = -1.6;  // head-first (the model faces -X)
-  const PERIOD = 16;         // ~0.41 m/s lateral
+  // slow, heavy prowl (brief §16). Gait and lateral speed are scaled together
+  // (0.45 / 22s) from the tuned baseline so the foot match is preserved while
+  // the whole thing reads calmer and more controlled — less "run".
+  const PERIOD = 22;         // ~0.30 m/s lateral
   useFrame((s) => {
     if (!group.current || !fit) return;
     const t = s.clock.elapsedTime;
     // live gait speed: near-frozen under reduced motion
-    if (act.current) act.current.timeScale = reduced ? 0.06 : 0.62;
+    if (act.current) act.current.timeScale = reduced ? 0.06 : 0.45;
     // reduced motion: hold the tiger still at a visible spot, fully opaque
     if (reduced) {
       group.current.position.set(1.4, 0, TZ);
