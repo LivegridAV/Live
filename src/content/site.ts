@@ -44,12 +44,12 @@ export interface Stat {
   story: string;
 }
 
-// Capability statements — no unverified track-record numbers (see art-direction
-// rule: never fabricate stats). Each is a truthful description of what we build.
+// Technical capability parameters (NOT track-record counts) — each is a truthful
+// range/mode of what we build, confirmed per project. No unverified company
+// metrics (no fabricated years/events/uptime claims).
 export const STATS: Stat[] = [
   { value: 4, suffix: " mm", label: "Fine-pitch LED", story: "Down to fine indoor pixel pitch — planned to the audience and confirmed per venue." },
   { value: 360, suffix: "°", label: "Immersive & anamorphic", story: "Naked-eye 3D, projection mapping and full-surround environments." },
-  { value: 24, suffix: "/7", label: "Show support", story: "Engineers on comms before doors, through the show, and after strike." },
   { value: 1, suffix: " team", label: "For the whole show", story: "AV, content, LED and show control — designed and operated as one." },
 ];
 
@@ -103,5 +103,5 @@ export const PROCESS = [
   { n: "01", title: "Discover", body: "We map your venue, audience, run of show, and the content you want on screen." },
   { n: "02", title: "Engineer", body: "Pixel pitch, rigging, power, signal chain and redundancy — spec'd to the venue." },
   { n: "03", title: "Show", body: "Clean build, color-calibrated, programmed in Watchout and operated live on the day." },
-  { n: "04", title: "Wrap", body: "Aftermovie, content archive, strike, and 24/7 support for the next one." },
+  { n: "04", title: "Wrap", body: "Aftermovie, content archive, clean strike, and support for the next one." },
 ] as const;

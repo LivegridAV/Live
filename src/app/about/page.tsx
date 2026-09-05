@@ -128,11 +128,16 @@ export default function About() {
         </div>
       </section>
 
-      {/* Track record (existing company figures) */}
+      {/* Technical capabilities — capability parameters, confirmed per project.
+          Not a track record of verified counts (none are claimed). */}
       <section className="bg-white py-20 md:py-28">
         <div className="mx-auto max-w-[1180px] px-6 md:px-12">
           <Reveal>
-            <p className="font-mono text-xs uppercase tracking-[0.2em] text-aqua">Track record</p>
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-aqua">Technical capabilities</p>
+            <p className="mt-3 max-w-[52ch] text-sm leading-relaxed text-muted">
+              Capability parameters — the range of what we design and operate,
+              scoped and confirmed per project.
+            </p>
           </Reveal>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {STATS.map((s, i) => (
