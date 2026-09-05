@@ -26,7 +26,7 @@ export const V2_CATEGORIES: V2Category[] = [
     blurb: "Engineering the signal path and everything that plays across it.",
     services: [
       { name: "AV Engineering", desc: "The signal path — sources, processing, switching and screens — designed so the whole visual system stays up all show.", motif: "signal", tags: ["Signal design", "Processing", "Redundancy"], href: "/services/av-engineering" },
-      { name: "LED Systems", desc: "Indoor, outdoor and floor walls — planned to pixel pitch, built to the room, installed and operated.", motif: "led", tags: ["Fine pitch", "Install", "Operate"], href: "/services/led-systems" },
+      { name: "LED Systems", desc: "Indoor, outdoor and floor walls — planned to pixel pitch, built to the room, installed and operated.", motif: "led", tags: ["Fine pitch", "Install", "Operate"], href: "/services/led-display-rental" },
       { name: "3D / Anamorphic", desc: "Naked-eye illusions built from the real viewing geometry, so content appears to leave the wall.", motif: "anamorphic", tags: ["Corner LED", "Perspective"], href: "/services/3d-anamorphic" },
       { name: "Projection Mapping", desc: "Projectors as light — warped and blended onto architecture and set.", motif: "projection", tags: ["Warp & blend", "Architecture"], href: "/services/projection-mapping" },
       { name: "Show Control / Media Server", desc: "Frame-accurate playback and cue stacks — one clean output, operated live.", motif: "cue", tags: ["Cue stack", "Media server"], href: "/services/show-control-media-server" },
@@ -50,8 +50,8 @@ export const V2_CATEGORIES: V2Category[] = [
     title: "Collaborative Systems",
     blurb: "The rest of the technical stage, coordinated with the picture.",
     services: [
-      { name: "Sound", desc: "System design and operation that stays clean from soundcheck to strike.", href: "/services/sound" },
-      { name: "Lighting", desc: "Rig design and operation, motivated and cued with the screens.", href: "/services/lighting" },
+      { name: "Sound", desc: "System design and operation that stays clean from soundcheck to strike.", href: "/services/professional-sound" },
+      { name: "Lighting", desc: "Rig design and operation, motivated and cued with the screens.", href: "/services/professional-lighting" },
     ],
   },
   {
