@@ -1,4 +1,7 @@
 "use client";
+/* eslint-disable react-hooks/set-state-in-effect -- the WebGL/mode gates are
+   read once from the URL + capability check on mount; a single sync setState
+   in that effect is intentional. */
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 

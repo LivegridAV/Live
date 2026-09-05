@@ -1,3 +1,4 @@
+import Link from "next/link";
 import NavV2 from "@/components/v2/NavV2";
 import HeroStage from "@/components/v2/hero/HeroStage";
 import Reveal2 from "@/components/v2/Reveal2";
@@ -102,7 +103,7 @@ export default function V2Home() {
                             {s.tags.map((t) => <span className="v2-tag" key={t}>{t}</span>)}
                           </div>
                         )}
-                        <a className="v2-svc-more" href={s.href}>Explore {s.name} <span aria-hidden>→</span></a>
+                        <Link className="v2-svc-more" href={s.href}>Explore {s.name} <span aria-hidden>→</span></Link>
                       </div>
                       <div className="v2-svc-media">
                         <Motif name={s.motif as MotifKey} />
@@ -115,10 +116,10 @@ export default function V2Home() {
                   <Reveal2>
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: 18, marginTop: 28 }}>
                       {rest.map((s) => (
-                        <a key={s.name} href={s.href} style={{ textDecoration: "none", color: "inherit", borderTop: "1px solid var(--v2-line)", paddingTop: 16 }}>
+                        <Link key={s.name} href={s.href} style={{ textDecoration: "none", color: "inherit", borderTop: "1px solid var(--v2-line)", paddingTop: 16 }}>
                           <h4 className="v2-h3" style={{ fontSize: 19 }}>{s.name}</h4>
                           <p className="v2-body" style={{ marginTop: 8, fontSize: 14.5 }}>{s.desc}</p>
-                        </a>
+                        </Link>
                       ))}
                     </div>
                   </Reveal2>
@@ -143,12 +144,12 @@ export default function V2Home() {
           <Reveal2 style={{ marginTop: 34 }}>
             <div className="v2-work-grid">
               {V2_WORK.map((w) => (
-                <a className={`v2-work-item ${w.span}`} href="/work" key={w.name}>
+                <Link className={`v2-work-item ${w.span}`} href="/work" key={w.name}>
                   <div className="glow"><Motif name={w.motif as MotifKey} /></div>
                   <p className="v2-work-meta">{w.meta}</p>
                   <h3 className="v2-h3" style={{ fontSize: 22 }}>{w.name}</h3>
                   <p className="v2-work-sub">{w.sub}</p>
-                </a>
+                </Link>
               ))}
             </div>
           </Reveal2>
@@ -195,11 +196,11 @@ export default function V2Home() {
             </div>
             <div>
               <h4>Explore</h4>
-              <a href="#work">Work</a><a href="#services">Services</a><a href="/av-lab">AV Lab</a><a href="/led">LED</a>
+              <a href="#work">Work</a><a href="#services">Services</a><Link href="/av-lab">AV Lab</Link><Link href="/led">LED</Link>
             </div>
             <div>
               <h4>Company</h4>
-              <a href="/about">About</a><a href="/insights">Insights</a><a href="#contact">Contact</a>
+              <Link href="/about">About</Link><Link href="/insights">Insights</Link><a href="#contact">Contact</a>
             </div>
             <div>
               <h4>Contact</h4>

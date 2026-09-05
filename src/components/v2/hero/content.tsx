@@ -1,4 +1,8 @@
 "use client";
+/* eslint-disable react-hooks/immutability, react-hooks/set-state-in-effect --
+   imperative three.js / R3F: we mutate three objects, refs and materials each
+   frame and build offscreen canvases in useMemo. The React-Compiler rules
+   misfire on these standard WebGL patterns. */
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useGLTF, useAnimations } from "@react-three/drei";

@@ -1,71 +1,78 @@
 # Visual Redesign — Handoff / Continuation
 
-_Last updated: 2026-09-05. Read this first, then continue from "Next actions".
-Content-truth work is settled — do NOT reopen it._
+_Last updated: 2026-09-05. The rejected v1 experience was replaced by a new V2
+homepage built from a clean foundation. Content-truth work is settled — do NOT
+reopen it._
 
 ## Repository state
 
 - Branch: `feat/multipage-site` (Cloudflare Pages auto-builds on push).
-- HEAD at handoff: `3438c76` (see `git log --oneline`). Key redesign commits:
-  - `3438c76` Hero legibility scrim + reduced-motion pass
-  - `adeab0b` Global de-cyan: natural graphite dark theme + AV Lab material pass
-  - `b194668` Mobile hero: recompose camera, fix nav overflow + console collision
-  - `75c64f6` Hero art-direction pass: enclose venue, unbury it, calm the beams
-  - `33a919b` Dim the opening starfield
-  - `d761794` **Hero: de-cyan to a natural cinematic grade + real anamorphic tiger**
-  - `7b23488` Content truth (accepted baseline — do NOT reopen)
+- Checkpoint before V2: tag `v1-rejected-checkpoint` (commit `68bb134`).
+- Key V2 commits: Gate 1 `a2b2033`, Gate 2 `ddff311`, Gate 3 `3e19868`,
+  Gate 4/5 `f916667`, migration `9e3fb18`.
 - Public acceptance URL: <https://feat-multipage-site.live-2st.pages.dev/>
-- Tiger Blender source: `Tiger.blend` at repo root (untracked, ~2.1 MB).
-  Runtime asset `public/models/tiger.glb`. Credits: `public/models/CREDITS.md`.
+- **Deployment note:** the branch alias above serves the current redesign.
+  Production root `live-2st.pages.dev` serves `main` (~30 commits behind) — the
+  OLD site with fabricated content. `main` must be updated (merge this branch)
+  before the two URLs stop contradicting. Source at HEAD has ZERO fabricated
+  strings (verified).
 
-## Done this phase (verified in the rendered page, not source)
+## The V2 architecture (what "/" now is)
 
-- **Flagship hero** — public-verified at 1440/1920. Natural warm-graphite grade
-  (was cyan cyberpunk); enclosed dark venue (cosmos + starfield gated out of the
-  opening); Stage Control panel collapsed by default (was a dashboard slab that
-  buried + occluded the tiger); tiger shown by default, emerging across the LED
-  plane on one long seamless prowl; LED shows a misty forest (aerial perspective,
-  god-rays, wind); warm calmed beams; legibility scrim behind the headline.
-- **Mobile hero** (390px) — nav overflow fixed, console no longer overlaps the
-  headline, portrait camera dollies in so the wall fills the frame.
-- **Global de-cyan** — `.lg-dark` tokens re-pointed to natural graphite; feature
-  icons neutral steel (cyan only on hover); teal near-black literals neutralised.
-  Verified on /services, /work, /av-lab, /services/live-production.
-- **AV Lab 3D room** — already existed (d7643b2) and works; re-lit neutral-warm,
-  rack/projector de-cyaned, red program tally preserved, cyan = active station.
-- **Reduced-motion** — `signals.reducedMotion` calms tiger + camera motion.
-- Build green (`npm run build`), 0 console errors on the routes checked.
+- `/` → `<div class="v2root"><V2Home/></div>` (`src/app/page.tsx`), styled by
+  `src/app/v2.css` (material graphite design system, cyan/red semantic only).
+- `V2Home` (`src/components/v2/V2Home.tsx`) is shared by `/` and the noindex
+  preview `/design-v2`. Sections: hero → brand statement → grouped service
+  story → capability-study work → contact → footer. No rotating cards.
+- Hero 3D (`src/components/v2/hero/`):
+  - `HeroStage` — WebGL guard + CSS-stage first paint / no-WebGL fallback.
+  - `HeroScene` — room, reflective floor, warm lighting; camera = sweet spot.
+  - `AnamorphicCorner` — renders a virtual content scene from the FIXED
+    sweet-spot camera into a texture, projective-maps it onto the two LED
+    panels. True anamorphic (proven: `/design-v2?atest=1` vs `&view=off`).
+  - `content.tsx` — forest backdrop + ground + **grounded tiger** (foot-locked
+    broadside prowl, contact shadow, fade-loop). `anamorphic.ts`/`forest.ts` =
+    shaders. Service motifs in `motifs.tsx`; grouped services in `data.ts`.
+- The previous immersive venue is PRESERVED at `/experience` (noindex); nothing
+  was deleted.
 
-## Colour law (keep)
+## Gate status (VISUALLY VERIFIED unless noted)
 
-- Environment = natural graphite/warm. **Cyan is semantic only**: signal path,
-  LED content, active/selected/focus, the brand 5×5 signal-grid mark. **Red =
-  live/program/tally only.** Never re-introduce cyan as an environmental tint.
-- `THEMES.signal` (3D) and `.lg-dark` tokens (DOM) are the two levers; changing
-  either recolours broadly. `SIGNAL_CYAN`/`PROGRAM_RED` constants in store.ts.
+1. 2D foundation — premium without WebGL. ✓
+2. Physical L-corner LED environment (no animal). ✓
+3. Anamorphic primitive test — coherent at sweet spot, splits off-axis. ✓
+4/5. Grounded tiger in the corner + final hero. ✓ (see refinement below)
+6. Grouped service story (rotating cards removed). ✓
+7. Mobile hero + 2D. ✓ (tiger sweep can be centered more on narrow widths)
 
-## Next actions (priority order)
+## Next actions
 
-1. **LED forest realism** — the shader reads as misty layers but not photoreal.
-   If higher realism is wanted, render a seamless forest loop in Blender and map
-   it as a video texture onto the LED (hybrid, brief §3/§50). Shader is in
-   `LedWall.tsx` program 0.
-2. **Card-reduction pass** on service/work pages (brief §20) — several sections
-   still use bordered rounded cards; convert to editorial/spatial layouts.
-3. **Ultrawide (2560)** fine-tune + full **responsive matrix** screenshots.
-4. **Full route console/CTA crawl** (Playwright) across every route + service
-   detail; **keyboard** and deeper **reduced-motion** verification.
-5. **Home scroll sections** after the hero — confirm each cinematic scene reads
-   under the new palette (LED dive, universe, services cylinder, lab, projects).
+1. **Verify public `/`** once the migration build lands; screenshot 1440/1920/
+   390; QA the routes (Services, Work, AV Lab, Contact, LED, About, Insights).
+2. **Tiger refinement (§28/§64):** the model ships only a "Run" clip, so the
+   prowl is foot-locked-by-tuning, not perfect. A Blender-authored walk/stalk
+   with real root motion would remove residual slide and allow a face-forward
+   emerge. Hero works without it.
+3. **Forest realism (§29):** shader forest reads as misty hills; a Blender
+   video-texture loop mapped into the content scene would push photoreal.
+4. **`main` → production:** merge `feat/multipage-site` into `main` so the root
+   production URL stops serving the stale fabricated site.
+5. Full QA sweep (§72): typecheck, lint, route + CTA crawl, console, network,
+   reduced-motion, keyboard, responsive matrix.
 
 ## Verification notes
 
-- The in-app Browser pane can be hidden (WebGL won't render there). Use
-  **Playwright MCP** — headless, renders WebGL regardless. Power on via
-  `page.locator('.lg-intro').click()`, wait ~6s, then screenshot.
-- Dev-server CSS HMR is unreliable here; after a CSS edit, restart the dev
-  server (or check `out/**.css` from a fresh `npm run build`) before trusting a
-  local CSS screenshot. JS/HMR is fine.
-- `fullPage` screenshots show big empty bands because Reveal uses
-  IntersectionObserver (opacity:0 until scrolled in). Scroll the section into
-  view and shoot the viewport instead — it is NOT a layout bug.
+- Use Playwright MCP (headless, renders WebGL) — the in-app Browser pane can be
+  hidden. V2 hero auto-loads (no power-on); wait ~8s for the tiger/anamorphic.
+- Dev-server CSS HMR is unreliable here; after a CSS edit restart the dev server
+  or check `out/**.css` from a fresh `npm run build`.
+- `build-info.json` is generated by `npm run build`; if the Cloudflare build
+  command is `next build` directly it won't appear — verify deploys by content.
+
+## Guardrails (do not regress)
+
+- No rotating service cards; no "nine services"; grouped architecture only.
+- Natural material palette; cyan = signal/active/preview, red = program/tally.
+- No fabricated clients/metrics/venues. Capability studies labelled truthfully.
+- No air-running / floating animal; grounded with contact shadow.
+- Preserve `/experience` and the checkpoint tag (reversibility).

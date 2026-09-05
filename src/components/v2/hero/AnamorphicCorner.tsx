@@ -1,4 +1,6 @@
 "use client";
+/* eslint-disable react-hooks/immutability -- imperative three.js: the content
+   scene and render target are built/mutated in useMemo and each frame. */
 import { useMemo, useEffect, type ReactNode } from "react";
 import { createPortal, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
