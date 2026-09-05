@@ -17,12 +17,29 @@ function smoother(x: number) {
   return x * x * x * (x * (x * 6 - 15) + 10);
 }
 
+/** prefers-reduced-motion (read once, live-updates). */
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => setReduced(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+  return reduced;
+}
+
 /** Forest environment shown as the LED backdrop, behind the subject. A large
  *  emissive plane far back in the virtual world. */
 export function ForestBackdrop() {
   const mat = useRef<THREE.ShaderMaterial>(null);
+  const reduced = usePrefersReducedMotion();
   const uniforms = useMemo(() => ({ uTime: { value: 0 }, uFlip: { value: 1 }, uAmp: { value: 1.9 } }), []);
-  useFrame((s) => { if (mat.current) mat.current.uniforms.uTime.value = s.clock.elapsedTime; });
+  useFrame((s) => {
+    // reduced motion: near-freeze the wind/atmosphere (content stays visible)
+    if (mat.current) mat.current.uniforms.uTime.value = s.clock.elapsedTime * (reduced ? 0.12 : 1);
+  });
   return (
     <mesh position={[0, 4, -16]}>
       <planeGeometry args={[46, 20]} />
@@ -69,6 +86,8 @@ export function Tiger({ shadowRef }: { shadowRef: React.RefObject<THREE.Mesh | n
   const group = useRef<THREE.Group>(null);
   const [fit, setFit] = useState<{ scale: number; y: number } | null>(null);
   const meshes = useRef<THREE.Mesh[]>([]);
+  const act = useRef<THREE.AnimationAction | null>(null);
+  const reduced = usePrefersReducedMotion();
 
   useEffect(() => {
     const box = new THREE.Box3().setFromObject(scene);
@@ -79,7 +98,7 @@ export function Tiger({ shadowRef }: { shadowRef: React.RefObject<THREE.Mesh | n
     setFit({ scale, y: -box.min.y * scale });
 
     const n = names[0]; const a = n ? actions[n] : null;
-    if (a) { a.reset().setLoop(THREE.LoopRepeat, Infinity).play(); a.timeScale = 0.62; }
+    if (a) { a.reset().setLoop(THREE.LoopRepeat, Infinity).play(); a.timeScale = 0.62; act.current = a; }
     meshes.current = [];
     scene.traverse((o) => {
       const m = o as THREE.Mesh;
@@ -101,6 +120,18 @@ export function Tiger({ shadowRef }: { shadowRef: React.RefObject<THREE.Mesh | n
   useFrame((s) => {
     if (!group.current || !fit) return;
     const t = s.clock.elapsedTime;
+    // live gait speed: near-frozen under reduced motion
+    if (act.current) act.current.timeScale = reduced ? 0.06 : 0.62;
+    // reduced motion: hold the tiger still at a visible spot, fully opaque
+    if (reduced) {
+      group.current.position.set(1.4, 0, TZ);
+      for (const m of meshes.current) (m.material as THREE.MeshStandardMaterial).opacity = 1;
+      if (shadowRef.current) {
+        shadowRef.current.position.set(1.4, 0.02, TZ);
+        (shadowRef.current.material as THREE.MeshBasicMaterial).opacity = 0.8;
+      }
+      return;
+    }
     const ph = (t % PERIOD) / PERIOD;
     const x = START_X + (END_X - START_X) * ph;
     group.current.position.set(x, 0, TZ);
