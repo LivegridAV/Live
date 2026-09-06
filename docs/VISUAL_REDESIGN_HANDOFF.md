@@ -1,78 +1,59 @@
 # Visual Redesign — Handoff / Continuation
 
-_Last updated: 2026-09-05. The rejected v1 experience was replaced by a new V2
-homepage built from a clean foundation. Content-truth work is settled — do NOT
-reopen it._
+_Last updated: 2026-09-06. Reflects repository truth at packaging time._
 
-## Repository state
+## Repository truth
+- Branch: `feat/multipage-site` (the accepted line of development; Cloudflare
+  Pages auto-builds it to the acceptance preview on every push).
+- HEAD: `9cd45cc` — `feat(hero): slow the tiger to a calmer, heavier prowl`.
+- `main` is the production branch and is **stale** (~35 commits behind); the
+  redesign has NOT been merged to it yet (held — see Known issues).
+- Checkpoint tag `v1-rejected-checkpoint` = `68bb134` (the rejected v1 state,
+  before the V2 rebuild).
+- Acceptance preview: <https://feat-multipage-site.live-2st.pages.dev/>
+- Production root: <https://live-2st.pages.dev/> (serves `main` — still the old
+  site until the branch is merged).
+- Deployed-commit proof: `/build-info.json` (commit/branch/builtAt).
 
-- Branch: `feat/multipage-site` (Cloudflare Pages auto-builds on push).
-- Checkpoint before V2: tag `v1-rejected-checkpoint` (commit `68bb134`).
-- Key V2 commits: Gate 1 `a2b2033`, Gate 2 `ddff311`, Gate 3 `3e19868`,
-  Gate 4/5 `f916667`, migration `9e3fb18`.
-- Public acceptance URL: <https://feat-multipage-site.live-2st.pages.dev/>
-- **Deployment note:** the branch alias above serves the current redesign.
-  Production root `live-2st.pages.dev` serves `main` (~30 commits behind) — the
-  OLD site with fabricated content. `main` must be updated (merge this branch)
-  before the two URLs stop contradicting. Source at HEAD has ZERO fabricated
-  strings (verified).
+## What the site is now (V2)
+- `/` renders `V2Home` (`src/components/v2/V2Home.tsx`) inside `.v2root`
+  (`src/app/v2.css`). Editorial 2D foundation + a physical anamorphic LED-corner
+  hero (`src/components/v2/hero/*`) with a grounded tiger. Reads premium with or
+  without WebGL. No power-on gate, no starfield, no rotating cards, no cyan wash.
+- `/design-v2` is a noindex preview of the same `V2Home`.
+- The previous immersive scroll venue was REMOVED as a route (was `/experience`)
+  so no old nine-service homepage is reachable. Its components still exist under
+  `src/experience/*` and `src/components/*` (classic) as unrendered code, kept
+  for reference/reuse; recover the old home from tag `v1-rejected-checkpoint`.
+- Authoritative service architecture lives in `src/content/services.ts`
+  (AV & Visual / Live Production / Collaborative / Digital). Homepage grouping in
+  `src/components/v2/data.ts`. `src/content/site.ts` holds STATS/PROCESS/PROJECTS
+  (truthful; the old flat SERVICES list there is unused now).
 
-## The V2 architecture (what "/" now is)
+## Hero mechanism (src/components/v2/hero/)
+- `HeroStage` — WebGL guard + CSS-stage first paint / no-WebGL fallback.
+- `HeroScene` — room, reflective floor, warm lighting, fixed sweet-spot camera.
+- `AnamorphicCorner` — renders a virtual content scene from the sweet-spot camera
+  into a texture, projective-maps it onto the two LED panels. TRUE anamorphic
+  (proven at `/design-v2?atest=1` vs `&view=off`).
+- `content.tsx` — forest backdrop + ground + grounded tiger; `forest.ts` /
+  `anamorphic.ts` shaders; `motifs.tsx` per-service diagrams; `data.ts` services.
 
-- `/` → `<div class="v2root"><V2Home/></div>` (`src/app/page.tsx`), styled by
-  `src/app/v2.css` (material graphite design system, cyan/red semantic only).
-- `V2Home` (`src/components/v2/V2Home.tsx`) is shared by `/` and the noindex
-  preview `/design-v2`. Sections: hero → brand statement → grouped service
-  story → capability-study work → contact → footer. No rotating cards.
-- Hero 3D (`src/components/v2/hero/`):
-  - `HeroStage` — WebGL guard + CSS-stage first paint / no-WebGL fallback.
-  - `HeroScene` — room, reflective floor, warm lighting; camera = sweet spot.
-  - `AnamorphicCorner` — renders a virtual content scene from the FIXED
-    sweet-spot camera into a texture, projective-maps it onto the two LED
-    panels. True anamorphic (proven: `/design-v2?atest=1` vs `&view=off`).
-  - `content.tsx` — forest backdrop + ground + **grounded tiger** (foot-locked
-    broadside prowl, contact shadow, fade-loop). `anamorphic.ts`/`forest.ts` =
-    shaders. Service motifs in `motifs.tsx`; grouped services in `data.ts`.
-- The previous immersive venue is PRESERVED at `/experience` (noindex); nothing
-  was deleted.
+## Done (verified)
+Unify (one architecture, old nine-service removed, no fabricated content/metrics,
+`/experience` 404); global de-cyan; reduced-motion; responsive 390–2560 no
+overflow; lint + build green; route crawl 21/21; anamorphic proof; contact shadow.
 
-## Gate status (VISUALLY VERIFIED unless noted)
-
-1. 2D foundation — premium without WebGL. ✓
-2. Physical L-corner LED environment (no animal). ✓
-3. Anamorphic primitive test — coherent at sweet spot, splits off-axis. ✓
-4/5. Grounded tiger in the corner + final hero. ✓ (see refinement below)
-6. Grouped service story (rotating cards removed). ✓
-7. Mobile hero + 2D. ✓ (tiger sweep can be centered more on narrow widths)
-
-## Next actions
-
-1. **Verify public `/`** once the migration build lands; screenshot 1440/1920/
-   390; QA the routes (Services, Work, AV Lab, Contact, LED, About, Insights).
-2. **Tiger refinement (§28/§64):** the model ships only a "Run" clip, so the
-   prowl is foot-locked-by-tuning, not perfect. A Blender-authored walk/stalk
-   with real root motion would remove residual slide and allow a face-forward
-   emerge. Hero works without it.
-3. **Forest realism (§29):** shader forest reads as misty hills; a Blender
-   video-texture loop mapped into the content scene would push photoreal.
-4. **`main` → production:** merge `feat/multipage-site` into `main` so the root
-   production URL stops serving the stale fabricated site.
-5. Full QA sweep (§72): typecheck, lint, route + CTA crawl, console, network,
-   reduced-motion, keyboard, responsive matrix.
-
-## Verification notes
-
-- Use Playwright MCP (headless, renders WebGL) — the in-app Browser pane can be
-  hidden. V2 hero auto-loads (no power-on); wait ~8s for the tiger/anamorphic.
-- Dev-server CSS HMR is unreliable here; after a CSS edit restart the dev server
-  or check `out/**.css` from a fresh `npm run build`.
-- `build-info.json` is generated by `npm run build`; if the Cloudflare build
-  command is `next build` directly it won't appear — verify deploys by content.
+## Known issues / not done
+1. **Tiger walk/stalk** — the model ships only a "Run" clip; current motion is a
+   slowed foot-matched prowl, NOT a bespoke Blender walk with real root motion.
+2. **Forest photoreal** — still the shader; a Blender-rendered loop is the target.
+   Both (1) and (2) need Blender MCP reconnected (see AGENTS.md / toolchain doc;
+   NB `read_factory_settings` inside Blender kills the MCP socket).
+3. **`main` → production merge** — held until (1) and (2) pass the pre-merge QA.
 
 ## Guardrails (do not regress)
-
-- No rotating service cards; no "nine services"; grouped architecture only.
-- Natural material palette; cyan = signal/active/preview, red = program/tally.
-- No fabricated clients/metrics/venues. Capability studies labelled truthfully.
-- No air-running / floating animal; grounded with contact shadow.
-- Preserve `/experience` and the checkpoint tag (reversibility).
+Natural material palette; cyan = signal/active/preview only; red = program/tally.
+No rotating service cards; grouped architecture only. No fabricated
+clients/metrics/venues. Grounded animal with contact shadow (no air-running).
+2D must work without WebGL. Verify visual work in the rendered page, not source.
