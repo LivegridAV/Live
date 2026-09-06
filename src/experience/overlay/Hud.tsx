@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { audio } from "../audio";
 import { journeyScroll } from "../ScrollRig";
-import { CHAPTERS, ChapterKey, signals, useExperience } from "../store";
+import { CHAPTERS, ChapterKey, PRESETS, PresetKey, signals, useExperience } from "../store";
 
 /**
  * Fixed chrome over the 3D world:
@@ -31,10 +31,9 @@ function scrollToChapter(key: ChapterKey) {
 export default function Hud() {
   const s = useExperience();
   const [active, setActive] = useState<ChapterKey>("stage");
-  // collapsed by default on phones — the console would cover half the show
-  const [panelOpen, setPanelOpen] = useState(
-    () => typeof window === "undefined" || window.innerWidth > 768,
-  );
+  // collapsed by default everywhere — the hero installation is the star; the
+  // control console is opt-in so it never buries the show (brief §23/§24)
+  const [panelOpen, setPanelOpen] = useState(false);
   const logoClicks = useRef<number[]>([]);
 
   // track active chapter for the rail (rAF-poll of the signal — cheap)
@@ -115,28 +114,50 @@ export default function Hud() {
         </button>
         {panelOpen && (
           <div className="lg-console-body">
+            <button className="lg-toggle" onClick={() => { s.cycleLedContent(); audio.blip(1.2); }}>
+              <span className="lg-toggle-led is-on" aria-hidden />
+              LED CONTENT · {["FOREST", "AUDIO", "WAVES", "WARP"][s.ledContent]}
+            </button>
             {(
               [
+                ["projection", "PROJECTION", s.projection],
+                ["visual3d", "3D VISUAL", s.visual3d],
+                ["stageLights", "LIGHTING", s.stageLights],
                 ["lasers", "LASERS", s.lasers],
-                ["smoke", "SMOKE", s.smoke],
-                ["stageLights", "STAGE LIGHTS", s.stageLights],
+                ["atmosphere", "ATMOSPHERE", s.atmosphere],
                 ["audienceLights", "AUDIENCE", s.audienceLights],
+                ["audioOn", "SOUND", s.audioOn],
               ] as const
             ).map(([key, label, on]) => (
               <button
                 key={key}
                 className={`lg-toggle ${on ? "is-on" : ""}`}
-                onClick={() => { s.toggle(key); audio.click(undefined, on ? 0.8 : 1.3); }}
+                onClick={() => {
+                  s.toggle(key);
+                  if (key === "audioOn") audio.blip(1);
+                  else audio.click(undefined, on ? 0.8 : 1.3);
+                }}
                 aria-pressed={on}
               >
                 <span className="lg-toggle-led" aria-hidden />
                 {label}
               </button>
             ))}
-            <button className="lg-toggle" onClick={() => { s.cycleLedContent(); audio.blip(1.2); }}>
-              <span className="lg-toggle-led is-on" aria-hidden />
-              LED CONTENT · {["LOGO", "AUDIO", "WAVES", "WARP"][s.ledContent]}
-            </button>
+
+            <p className="lg-console-sub">SCENE PRESETS</p>
+            <div className="lg-preset-grid">
+              {(Object.keys(PRESETS) as PresetKey[]).map((k) => (
+                <button
+                  key={k}
+                  className={`lg-preset ${s.preset === k ? "is-active" : ""}`}
+                  onClick={() => { s.applyPreset(k); audio.blip(1.3); }}
+                  aria-pressed={s.preset === k}
+                >
+                  {PRESETS[k].label}
+                </button>
+              ))}
+            </div>
+
             <div className="lg-console-themes">
               {(["signal", "cyber", "ember"] as const).map((t) => (
                 <button

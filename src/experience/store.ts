@@ -16,6 +16,25 @@ import { create } from "zustand";
 
 export type ColorTheme = "signal" | "cyber" | "ember";
 
+export type PresetKey = "corporate" | "liveshow" | "immersive" | "anamorphic" | "cinematic";
+
+/** Scene presets (brief §9) — each crossfades the whole rig to a mood. */
+export const PRESETS: Record<
+  PresetKey,
+  {
+    label: string;
+    lasers: boolean; smoke: boolean; stageLights: boolean; audienceLights: boolean;
+    projection: boolean; visual3d: boolean; atmosphere: boolean;
+    ledContent: number; theme: ColorTheme;
+  }
+> = {
+  corporate:  { label: "Corporate",  lasers: false, smoke: false, stageLights: true,  audienceLights: true,  projection: true,  visual3d: false, atmosphere: false, ledContent: 0, theme: "signal" },
+  liveshow:   { label: "Live Show",  lasers: true,  smoke: true,  stageLights: true,  audienceLights: true,  projection: false, visual3d: false, atmosphere: true,  ledContent: 1, theme: "signal" },
+  immersive:  { label: "Immersive",  lasers: true,  smoke: true,  stageLights: true,  audienceLights: true,  projection: true,  visual3d: true,  atmosphere: true,  ledContent: 2, theme: "cyber" },
+  anamorphic: { label: "Anamorphic", lasers: false, smoke: true,  stageLights: true,  audienceLights: true,  projection: false, visual3d: true,  atmosphere: true,  ledContent: 3, theme: "signal" },
+  cinematic:  { label: "Cinematic",  lasers: true,  smoke: true,  stageLights: false, audienceLights: true,  projection: true,  visual3d: true,  atmosphere: true,  ledContent: 0, theme: "ember" },
+};
+
 export interface EquipmentInfo {
   id: string;
   name: string;
@@ -34,8 +53,12 @@ interface ExperienceState {
   smoke: boolean;
   stageLights: boolean;
   audienceLights: boolean;
+  projection: boolean; // projection-mapped light onto the stage
+  visual3d: boolean; // anamorphic subject breaks the LED plane
+  atmosphere: boolean; // extra haze / particle depth
   ledContent: number; // cycles LED wall programs
   theme: ColorTheme;
+  preset: PresetKey | null;
 
   /* ── Interactions ───────────────────────────────────── */
   specCard: EquipmentInfo | null;
@@ -53,7 +76,13 @@ interface ExperienceState {
 
   powerOn: () => void;
   finishBoot: () => void;
-  toggle: (key: "lasers" | "smoke" | "stageLights" | "audienceLights" | "audioOn" | "musicOn") => void;
+  toggle: (
+    key:
+      | "lasers" | "smoke" | "stageLights" | "audienceLights"
+      | "projection" | "visual3d" | "atmosphere"
+      | "audioOn" | "musicOn",
+  ) => void;
+  applyPreset: (key: PresetKey) => void;
   cycleLedContent: () => void;
   setTheme: (t: ColorTheme) => void;
   setSpecCard: (e: EquipmentInfo | null) => void;
@@ -70,12 +99,16 @@ export const useExperience = create<ExperienceState>((set) => ({
   powered: false,
   booted: false,
 
-  lasers: true,
+  lasers: false, // no neon laser fan in the opening (brief §18 — remove cyan lines)
   smoke: true,
   stageLights: true,
   audienceLights: true,
+  projection: false,
+  visual3d: true, // the anamorphic tiger IS the hero — visible on power-on (brief §8)
+  atmosphere: true, // cinematic haze depth from the first frame
   ledContent: 0,
   theme: "signal",
+  preset: null,
 
   specCard: null,
   activeService: null,
@@ -91,7 +124,17 @@ export const useExperience = create<ExperienceState>((set) => ({
 
   powerOn: () => set({ powered: true }),
   finishBoot: () => set({ booted: true }),
-  toggle: (key) => set((s) => ({ [key]: !s[key] }) as Partial<ExperienceState>),
+  toggle: (key) => set((s) => ({ [key]: !s[key], preset: null }) as Partial<ExperienceState>),
+  applyPreset: (key) =>
+    set(() => {
+      const p = PRESETS[key];
+      return {
+        lasers: p.lasers, smoke: p.smoke, stageLights: p.stageLights,
+        audienceLights: p.audienceLights, projection: p.projection,
+        visual3d: p.visual3d, atmosphere: p.atmosphere,
+        ledContent: p.ledContent, theme: p.theme, preset: key,
+      };
+    }),
   cycleLedContent: () => set((s) => ({ ledContent: (s.ledContent + 1) % 4 })),
   setTheme: (theme) => set({ theme }),
   setSpecCard: (specCard) => set({ specCard }),
@@ -118,6 +161,8 @@ export const signals = {
   poweredAt: 0,
   /** A scene prop (cylinder, lab device…) owns the current drag. */
   sceneGrab: false,
+  /** Visitor asked for calmer motion (prefers-reduced-motion). Set by Experience. */
+  reducedMotion: false,
 };
 
 if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
@@ -126,14 +171,26 @@ if (typeof window !== "undefined" && process.env.NODE_ENV === "development") {
   w.__lgStore = useExperience;
 }
 
-/* ── Theme palettes used by materials + shaders ── */
+/**
+ * Functional signal colours (brief §16/§17) — cyan means *signal / active /
+ * connected*, red means *live / on-air / tally*. They are UI/instrumentation
+ * accents, NOT environmental tints, so they live outside the theme palettes.
+ */
+export const SIGNAL_CYAN = "#3fd6c8";
+export const PROGRAM_RED = "#ff3b30";
+
+/* ── Theme palettes used by materials + shaders ──
+ * Default `signal` is a NATURAL cinematic grade (brief §16): warm graphite
+ * blacks, motivated amber/tungsten light, muted gold — no environmental cyan.
+ * Cyan survives only as the functional SIGNAL_CYAN accent above. `cyber` and
+ * `ember` remain as optional mood toggles in Stage Control. */
 export const THEMES: Record<
   ColorTheme,
   { accent: string; glow: string; deep: string; warm: string }
 > = {
-  signal: { accent: "#1fa093", glow: "#3fd6c8", deep: "#0a1411", warm: "#e8b84a" },
+  signal: { accent: "#a9642c", glow: "#f2a63a", deep: "#0b0a08", warm: "#ffd6a0" },
   cyber: { accent: "#a04ae8", glow: "#e84ad4", deep: "#120a18", warm: "#4ad4e8" },
-  ember: { accent: "#e86a2a", glow: "#ffb35c", deep: "#181008", warm: "#3fd6c8" },
+  ember: { accent: "#e86a2a", glow: "#ffb35c", deep: "#181008", warm: "#ffd0a0" },
 };
 
 /* ── Chapter map: where each scene lives in scroll space ── */

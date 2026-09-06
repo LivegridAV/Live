@@ -1,9 +1,78 @@
 "use client";
 import { FormEvent, useState } from "react";
 import { audio } from "../audio";
-import { CONTACT, contactLinks } from "../contact";
+import { CONTACT, contactLinks, LEAD_WEBHOOK_URL } from "../contact";
+import { journeyScroll } from "../ScrollRig";
 import { PROJECTS } from "../scenes/ProjectsCity";
-import { useExperience } from "../store";
+import { CHAPTERS, useExperience } from "../store";
+
+/** Capability strip — truthful highlights of what we build (no unverified metrics). */
+const HERO_STATS: [string, string][] = [
+  ["LED", "Indoor · outdoor · floor"],
+  ["3D", "Naked-eye anamorphic"],
+  ["Servers", "Show control · media"],
+  ["Live", "Switch · stream"],
+  ["One team", "Designed & operated"],
+];
+
+/** The approved hero: spatial headline, three CTAs, trust strip. */
+function Hero() {
+  const [showreel, setShowreel] = useState(false);
+  const go = (band: readonly [number, number]) => journeyScroll((band[0] + band[1]) / 2);
+
+  return (
+    <section className="lg-block lg-hero" style={bandStyle(0.02)}>
+      <p className="lg-eyebrow">LIVEGRIDAV · EXPERIENCE ENGINEERING</p>
+      <h1 className="lg-block-title lg-hero-title">
+        WE TURN IDEAS INTO<br />
+        <span className="lg-accent">UNFORGETTABLE EXPERIENCES</span>
+      </h1>
+      <p className="lg-block-copy">
+        AV engineering, content, LED, projection and show technology —
+        designed, programmed and operated as one.
+      </p>
+
+      <div className="lg-hero-ctas">
+        <button
+          className="lg-btn lg-btn-primary"
+          onClick={() => { go(CHAPTERS.projects); audio.blip(1.2); }}
+        >
+          EXPLORE OUR WORK
+        </button>
+        <button
+          className="lg-btn"
+          onClick={() => { go(CHAPTERS.finale); audio.blip(1.1); }}
+        >
+          START A PROJECT →
+        </button>
+        <button
+          className="lg-btn lg-btn-ghost"
+          onClick={() => { setShowreel(true); audio.blip(1.4); }}
+        >
+          ▶ WATCH SHOWREEL
+        </button>
+      </div>
+
+      <dl className="lg-hero-stats">
+        {HERO_STATS.map(([value, label]) => (
+          <div key={label}>
+            <dt>{value}</dt>
+            <dd>{label}</dd>
+          </div>
+        ))}
+      </dl>
+
+      {showreel && (
+        <div className="lg-modal" role="dialog" aria-label="Showreel" onClick={() => setShowreel(false)}>
+          <div className="lg-modal-card lg-showreel" onClick={(e) => e.stopPropagation()}>
+            <video src="/brand/hero-dark.mp4" autoPlay loop playsInline controls poster="/brand/profile-1024.png" />
+            <button className="lg-btn" onClick={() => setShowreel(false)}>Close</button>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
 
 /**
  * The scrollable DOM behind the canvas: 1000vh of journey.
@@ -35,24 +104,56 @@ function Block({
   );
 }
 
-/** Holographic contact console — typing lights up the frame. */
+/** Holographic contact console — typing lights up the frame. Submits straight to the
+ * marketing lead-capture pipeline (n8n → backend agent → sales handoff); falls back to
+ * opening the visitor's mail client if the transmission itself fails, so an enquiry is
+ * never silently lost. */
 function ContactConsole() {
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [typing, setTyping] = useState(false);
 
-  const submit = (e: FormEvent<HTMLFormElement>) => {
+  const submit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    const body = [
-      `Name: ${data.get("name")}`,
-      `Event: ${data.get("event")}`,
-      "",
-      `${data.get("brief")}`,
-    ].join("\n");
-    window.location.href = `${contactLinks.email("Quote request — livegridav.com")}&body=${encodeURIComponent(body)}`;
-    setSent(true);
-    audio.click(undefined, 1.5);
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    const message = [
+      data.get("event") ? `Event / date: ${data.get("event")}` : null,
+      data.get("brief"),
+    ]
+      .filter(Boolean)
+      .join("\n\n");
+
+    setStatus("sending");
+    try {
+      const res = await fetch(LEAD_WEBHOOK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.get("name"),
+          email: data.get("email"),
+          phone: data.get("phone") || null,
+          company: data.get("company") || null,
+          message,
+        }),
+      });
+      if (!res.ok) throw new Error(`webhook responded ${res.status}`);
+      setStatus("sent");
+      audio.click(undefined, 1.5);
+      form.reset();
+    } catch {
+      // n8n/webhook unreachable — fall back to the old mailto behaviour so the brief still arrives.
+      const body = [`Name: ${data.get("name")}`, `Email: ${data.get("email")}`, `Event: ${data.get("event")}`, "", `${data.get("brief")}`].join("\n");
+      window.location.href = `${contactLinks.email("Quote request — livegridav.com")}&body=${encodeURIComponent(body)}`;
+      setStatus("error");
+    }
   };
+
+  const label = {
+    idle: "TRANSMIT BRIEF",
+    sending: "TRANSMITTING…",
+    sent: "TRANSMISSION OPENED ▮",
+    error: "SENT VIA EMAIL INSTEAD ▮",
+  }[status];
 
   return (
     <form
@@ -71,6 +172,18 @@ function ContactConsole() {
         <input name="name" required autoComplete="name" placeholder="_" />
       </label>
       <label>
+        <span>EMAIL</span>
+        <input name="email" type="email" required autoComplete="email" placeholder="you@company.com" />
+      </label>
+      <label>
+        <span>PHONE (OPTIONAL)</span>
+        <input name="phone" type="tel" autoComplete="tel" placeholder="_" />
+      </label>
+      <label>
+        <span>COMPANY (OPTIONAL)</span>
+        <input name="company" autoComplete="organization" placeholder="_" />
+      </label>
+      <label>
         <span>EVENT / DATE</span>
         <input name="event" placeholder="Product launch · March" />
       </label>
@@ -78,11 +191,11 @@ function ContactConsole() {
         <span>THE BRIEF</span>
         <textarea name="brief" rows={4} required placeholder="Tell us about the show…" />
       </label>
-      <button type="submit" className="lg-btn lg-btn-primary">
-        {sent ? "TRANSMISSION OPENED ▮" : "TRANSMIT BRIEF"}
+      <button type="submit" className="lg-btn lg-btn-primary" disabled={status === "sending"}>
+        {label}
       </button>
       <p className="lg-contact-foot">
-        Opens your mail client → {CONTACT.email}
+        {status === "error" ? `Delivered to ${CONTACT.email}` : "Goes straight to our team"}
       </p>
     </form>
   );
@@ -95,12 +208,7 @@ export default function Journey() {
 
   return (
     <div className="lg-journey" style={{ height: "1000vh" }}>
-      <Block at={0.02} eyebrow="LIVEGRIDAV · LIVE PRODUCTION" title={<>You&apos;re standing<br />in our venue.</>}>
-        <p className="lg-block-copy">
-          LED walls, lighting, lasers, sound — everything on this stage is
-          real gear we deploy. Move your mouse: the rig is watching.
-        </p>
-      </Block>
+      <Hero />
 
       <Block at={0.15} align="right" eyebrow="THE CANVAS" title={<>19.2 metres of<br />living pixels.</>}>
         <p className="lg-block-copy">
@@ -120,14 +228,14 @@ export default function Journey() {
         </p>
       </Block>
 
-      <Block at={0.48} align="right" eyebrow="WHAT WE DO" title={<>Nine services.<br />Grab and spin.</>}>
+      <Block at={0.48} align="right" eyebrow="WHAT WE DO" title={<>Every service.<br />Grab and spin.</>}>
         <p className="lg-block-copy">
           Drag the glass cylinder — it has real momentum. Click a panel to
           watch that service demonstrate itself.
         </p>
       </Block>
 
-      <Block at={0.59} eyebrow="TRACK RECORD" title={<>Numbers that<br />hold a stage.</>} />
+      <Block at={0.59} eyebrow="CAPABILITY" title={<>Built to<br />hold a stage.</>} />
 
       <Block at={0.69} align="right" eyebrow="EQUIPMENT LAB" title={<>The signal chain,<br />in anti-gravity.</>}>
         <p className="lg-block-copy">
@@ -136,10 +244,10 @@ export default function Journey() {
         </p>
       </Block>
 
-      <Block at={0.79} eyebrow="PROJECTS" title={<>A city of shows.</>}>
+      <Block at={0.79} eyebrow="WHAT WE BUILD" title={<>A city of shows.</>}>
         <p className="lg-block-copy">
-          Every cube is a delivered event. Hover to open one; click to step
-          inside.
+          Every cube is a capability demonstration — the kinds of shows we
+          build. Hover to open one; click to step inside.
         </p>
       </Block>
 
