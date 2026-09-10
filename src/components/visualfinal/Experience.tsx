@@ -6,15 +6,34 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useWorld, detectQuality, type Quality } from "./store";
 import Chrome from "./ui/Chrome";
+import CinematicHero from "./CinematicHero";
 
 const Stage = dynamic(() => import("./Stage"), { ssr: false, loading: () => null });
+
+// Baked cinematic per world (drop Unreal renders here to override the real-time scene).
+const CINEMATICS: Record<number, string> = { 0: "/videos/anamorphic-hero" };
 
 export default function Experience() {
   const [webgl, setWebgl] = useState<boolean | null>(null);
   const [quality, setQ] = useState<Quality>("high");
   const loaded = useWorld((s) => s.loaded);
+  const world = useWorld((s) => s.world);
   const setQuality = useWorld((s) => s.setQuality);
   const setReduced = useWorld((s) => s.setReducedMotion);
+  const [cineAvail, setCineAvail] = useState<Record<number, boolean>>({});
+  const cine = CINEMATICS[world];
+  const showCine = !!cine && cineAvail[world] === true;
+
+  // Only mount the cinematic once its footage actually exists (auto-activates when
+  // the Unreal render is dropped at the path). Avoids covering the R3F fallback.
+  useEffect(() => {
+    if (!cine || cineAvail[world] !== undefined) return;
+    let ok = true;
+    fetch(`${cine}.mp4`, { method: "HEAD" })
+      .then((r) => { if (ok) setCineAvail((m) => ({ ...m, [world]: r.ok })); })
+      .catch(() => { if (ok) setCineAvail((m) => ({ ...m, [world]: false })); });
+    return () => { ok = false; };
+  }, [cine, world, cineAvail]);
 
   useEffect(() => {
     let ok = false;
@@ -30,6 +49,9 @@ export default function Experience() {
       {/* CSS venue (first paint + no-WebGL fallback, brief §9/§32) */}
       <div className="vf-fallback" aria-hidden />
       {webgl && <Stage quality={quality} />}
+      {showCine && (
+        <CinematicHero base={cine} onUnavailable={() => setCineAvail((m) => ({ ...m, [world]: false }))} />
+      )}
       {webgl === false && <NoWebGL />}
 
       {/* loading show (brief §23) */}

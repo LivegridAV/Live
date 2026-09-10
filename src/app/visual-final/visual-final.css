@@ -14,6 +14,10 @@
 }
 .vf-accent, .vf-accent-text { color: var(--vf-accent); }
 
+/* baked cinematic hero (Unreal render) — sits above the canvas, below the chrome */
+.vf-cine { position: absolute; inset: 0; z-index: 2; background: #04060a; transition: filter .4s ease; }
+.vf-cine-video { width: 100%; height: 100%; object-fit: cover; display: block; }
+
 /* ---------- overlay: transparent to pointer except controls ---------- */
 .vf-ui { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
 .vf-ui a, .vf-ui button, .vf-ui input { pointer-events: auto; }
