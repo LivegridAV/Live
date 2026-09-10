@@ -1,36 +1,15 @@
-import ExperienceGate from "@/experience/ExperienceGate";
-import SiteNav from "@/components/SiteNav";
-import Hero from "@/components/Hero";
-import Services from "@/components/Services";
-import Work from "@/components/Work";
-import Stats from "@/components/Stats";
-import Process from "@/components/Process";
-import CTA from "@/components/CTA";
-import SiteFooter from "@/components/SiteFooter";
+import "./v2.css";
+import V2Home from "@/components/v2/V2Home";
 
 /**
- * The homepage IS the experience: a scroll-driven 3D journey through a
- * LiveGridAV venue. The classic site below is server-rendered as the
- * accessible / SEO / low-power fallback — ExperienceGate upgrades to
- * WebGL on capable devices (append ?classic to stay here).
+ * The LivegridAV homepage — the V2 design: an editorial 2D foundation with a
+ * physical anamorphic LED-corner hero (grounded tiger) that reads premium with
+ * or without WebGL. The previous immersive venue is preserved at /experience.
  */
 export default function Home() {
   return (
-    <ExperienceGate
-      classic={
-        <>
-          <SiteNav />
-          <main className="flex-1">
-            <Hero />
-            <Services />
-            <Work />
-            <Stats />
-            <Process />
-            <CTA />
-          </main>
-          <SiteFooter />
-        </>
-      }
-    />
+    <div className="v2root" id="top">
+      <V2Home />
+    </div>
   );
 }

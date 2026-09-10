@@ -13,6 +13,9 @@
 # testing
 /coverage
 
+# browser-automation MCP output (Playwright MCP / Chrome DevTools MCP session artifacts)
+/.playwright-mcp/
+
 # next.js
 /.next/
 /out/
@@ -39,3 +42,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# scratch screenshots / playwright output (never commit)
+/*.png
+.playwright-mcp/

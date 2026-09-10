@@ -20,13 +20,6 @@ const COLS = [
       { label: "Get a quote", href: "#contact" },
     ],
   },
-  {
-    heading: "Social",
-    links: [
-      { label: "Instagram", href: "#" },
-      { label: "LinkedIn", href: "#" },
-    ],
-  },
 ];
 
 export default function SiteFooter() {

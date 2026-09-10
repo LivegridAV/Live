@@ -65,15 +65,53 @@ const fragment = /* glsl */ `
     vec3 col = vec3(0.0);
 
     if (prog < 0.5) {
-      // ── program 0: signal-grid logo on dark, faint scan sweep
-      vec2 cell = floor((c + vec2(0.30, 0.30)) / 0.12);
-      float lg = logoCell(cell, t);
-      col = uGlow * lg * 1.6;
-      // ambient drift behind the logo
-      float bg = 0.04 + 0.03 * sin(uv.x * 8.0 + t * 0.6) * sin(uv.y * 6.0 - t * 0.4);
-      col += uAccent * bg;
-      float sweep = smoothstep(0.02, 0.0, abs(fract(t * 0.11) - uv.x)) * 0.25;
-      col += uGlow * sweep;
+      // ── program 0: a living FOREST inside the wall — the anamorphic hero
+      // content the tiger emerges from (brief §7/§12/§13). Natural greens and
+      // earth, atmospheric depth, and layered wind (near layers sway more).
+      float y = uv.y;
+      // atmospheric backdrop: hazy daylight filtering high in the canopy →
+      // shadowed forest floor below (aerial perspective sells the depth)
+      vec3 hazeHi = vec3(0.26, 0.30, 0.27);
+      vec3 hazeLo = vec3(0.06, 0.08, 0.06);
+      col = mix(hazeLo, hazeHi, smoothstep(-0.1, 1.05, y));
+      // a warm sun break in the canopy (light through the trees)
+      float sun = exp(-pow((uv.x - 0.60) / 0.17, 2.0));
+      col += vec3(1.0, 0.86, 0.62) * sun * smoothstep(0.35, 1.0, y) * 0.35;
+      // soft god-rays fanning down from the break
+      float ray = sin((uv.x - 0.60) * 26.0 + 1.7) * 0.5 + 0.5;
+      ray = pow(ray, 4.0) * smoothstep(1.0, 0.15, y) * sun;
+      col += vec3(1.0, 0.9, 0.7) * ray * 0.22;
+
+      // five layers of tree silhouettes: far = pale/hazy, near = dark; rounded
+      // organic crowns (not uniform bars); each sways with its own wind
+      for (int L = 0; L < 5; L++) {
+        float fl = float(L);
+        float depth = fl / 4.0;                    // 0 far .. 1 near
+        float freq = mix(2.5, 9.0, depth);
+        float wind = sin(t * (0.3 + depth * 0.7) + fl * 2.1) * (0.006 + depth * 0.02);
+        float x = uv.x + wind;
+        // undulating canopy ridge with big rounded crowns + fine ripple
+        float crown = 0.34 + depth * 0.14
+          + 0.10 * (0.5 + 0.5 * sin(x * freq + fl * 4.0))
+          + 0.04 * sin(x * freq * 3.3 + fl * 2.0);
+        float below = smoothstep(crown + 0.02, crown - 0.02, y);
+        // narrow trunks descending from some crowns
+        float tid = floor(x * freq);
+        float trunkX = fract(x * freq);
+        float trunk = step(0.62, hash(vec2(tid, fl)))
+                    * smoothstep(0.12, 0.0, abs(trunkX - 0.5))
+                    * step(y, crown) * step(crown - 0.55, y);
+        float mask = max(below, trunk * 0.9);
+        // aerial perspective: distant foliage pale-green, near near-black
+        vec3 leaf = mix(vec3(0.16, 0.24, 0.16), vec3(0.02, 0.05, 0.03), depth);
+        leaf += vec3(0.9, 0.8, 0.55) * sun * (1.0 - depth) * 0.15; // sun-rimmed edge
+        col = mix(col, leaf, mask);
+      }
+
+      // drifting ground mist glowing faintly between the trunks
+      float mist = smoothstep(0.22, 0.0, y) * (0.4 + 0.3 * sin(uv.x * 4.0 - t * 0.35));
+      col = mix(col, vec3(0.22, 0.25, 0.22), clamp(mist, 0.0, 0.5) * 0.6);
+      col *= 0.92; // moody, a lit surface — not a glowing grid
     } else if (prog < 1.5) {
       // ── program 1: live equalizer bars
       float bar = floor(uv.x * 24.0);

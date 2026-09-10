@@ -18,11 +18,11 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://livegridav.com"),
   title: "livegridAV — LED Displays, AV Technology & Live Event Production",
   description:
-    "Step inside a live LiveGridAV production: LED display rental, Watchout programming, naked-eye 3D, live streaming and full show technology — an interactive 3D experience.",
+    "LivegridAV designs, builds and operates LED displays, naked-eye 3D, projection mapping, content and show control — AV engineering, content and live production as one team.",
   openGraph: {
-    title: "livegridAV — Powering events with brilliant visual experiences",
+    title: "livegridAV — We turn ideas into unforgettable experiences",
     description:
-      "LED walls, show control and live event technology, presented as a real-time interactive 3D venue.",
+      "AV engineering, content, LED, projection and show technology — designed, programmed and operated as one.",
     url: "https://livegridav.com",
     siteName: "livegridAV",
   },
