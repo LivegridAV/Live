@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
 import { useWorld, WORLDS } from "../store";
 
 const LEFT_NAV = ["Home", "Services", "Work", "About", "Contact"];
@@ -26,16 +27,16 @@ export default function Chrome() {
     <div className="vf-ui">
       {/* top bar */}
       <header className="vf-top">
-        <a href="/" className="vf-logo" aria-label="livegridAV home">
+        <Link href="/" className="vf-logo" aria-label="livegridAV home">
           <span>LIVEGRID<span className="vf-accent">AV</span></span>
           <em>IDEAS · CONTENT · EXPERIENCES</em>
-        </a>
+        </Link>
         <nav className="vf-topnav" aria-label="Primary">
-          <a href="/services">SERVICES</a>
-          <a href="/work">WORK</a>
-          <a href="/about">ABOUT</a>
-          <a href="/contact">CONTACT</a>
-          <a href="/contact" className="vf-cta-pill">START A PROJECT</a>
+          <Link href="/services">SERVICES</Link>
+          <Link href="/work">WORK</Link>
+          <Link href="/about">ABOUT</Link>
+          <Link href="/contact">CONTACT</Link>
+          <Link href="/contact" className="vf-cta-pill">START A PROJECT</Link>
         </nav>
       </header>
 
@@ -62,7 +63,7 @@ export default function Chrome() {
             <span key={i} className={i === w.heroLines.length - 1 ? "vf-accent-text" : ""}>{l}<br /></span>
           ))}
         </h1>
-        <a href="/contact" className="vf-cta"> {w.cta} <span aria-hidden>→</span></a>
+        <Link href="/contact" className="vf-cta"> {w.cta} <span aria-hidden>→</span></Link>
       </div>
 
       {/* bottom bar */}

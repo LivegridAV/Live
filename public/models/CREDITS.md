@@ -19,6 +19,18 @@ Third-party 3D assets used on the LiveGridAV site, with their licenses.
   The original "Run" animation remains available from the Sketchfab source above
   under the same CC-BY licence. Working source file: `Tiger.blend` (tracked in-repo).
 
+## lion.glb — anamorphic hero (visual-final World 01, staging)
+- **Title:** "Realistic Lion 3D model"
+- **Author:** mohamed.salaah880
+- **Source:** https://sketchfab.com/3d-models/1826fce5708d42388f6a750e6e7e3d06
+- **License:** CC Attribution (CC-BY 4.0) — https://creativecommons.org/licenses/by/4.0/
+- **Use:** maned male lion as the anamorphic subject emerging from the LED corner on
+  the /visual-final staging route. Re-scaled/normalized and re-exported as GLB for R3F.
+- **Note:** the user's preferred subject is a *photoreal lioness* ("Lion walk cycle",
+  creatureanimator, Sketchfab **Free Standard** license). That model must be
+  license-cleared (Free Standard restricts redistribution of the raw asset) or
+  replaced before it ships to production; this CC-BY maned lion is the safe interim.
+
 ## led-panel.glb / led-panel.webp — LED cabinet (equipment page)
 - Original asset created in-house (Blender) for LiveGridAV. No third-party license.
 

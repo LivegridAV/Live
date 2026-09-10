@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import "./visual-final.css";
 import Experience from "@/components/visualfinal/Experience";
 
@@ -43,7 +44,7 @@ export default function VisualFinalPage() {
           <li>Virtual and hybrid events</li>
           <li>Fixed AV installations for clubs, pubs and venues</li>
         </ul>
-        <p><a href="/contact">Start a project</a> · <a href="/services">Services</a> · <a href="/work">Work</a></p>
+        <p><Link href="/contact">Start a project</Link> · <Link href="/services">Services</Link> · <Link href="/work">Work</Link></p>
       </section>
     </>
   );

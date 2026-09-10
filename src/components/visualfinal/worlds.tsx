@@ -1,33 +1,69 @@
 "use client";
-import { useRef, useMemo } from "react";
+import { Suspense, Component, useRef, useMemo, useState, useEffect, type ReactNode } from "react";
 import { useFrame } from "@react-three/fiber";
+import { useGLTF, useAnimations } from "@react-three/drei";
 import * as THREE from "three";
 import { LedWall, VenueFloor, Truss, LightRig, Silhouette } from "./systems/stage";
 import { FRAGMENTS, contentVertex, oceanFragment } from "./systems/shaders";
 
+// Random layouts are computed once at module load (kept out of render for purity).
+const DRIFT_ROCKS = Array.from({ length: 6 }, () => ({
+  p: [3 + Math.random() * 8, 2 + Math.random() * 5, -5 - Math.random() * 3] as [number, number, number],
+  s: 0.35 + Math.random() * 0.6, r: Math.random() * Math.PI,
+}));
+const FESTIVAL_POS = (() => {
+  const n = 400; const arr = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) { arr[i * 3] = (Math.random() - 0.5) * 24; arr[i * 3 + 1] = Math.random() * 10; arr[i * 3 + 2] = -8 + Math.random() * 12; }
+  return arr;
+})();
+
+/** Renders children; if a child throws (e.g. missing GLB) it renders nothing
+ *  instead of crashing the whole canvas. */
+class SafeModel extends Component<{ children: ReactNode }, { failed: boolean }> {
+  state = { failed: false };
+  static getDerivedStateFromError() { return { failed: true }; }
+  render() { return this.state.failed ? null : this.props.children; }
+}
+
+/** Flagship anamorphic subject: a lion emerging from the LED corner toward the
+ *  viewer (naked-eye 3D). Loads /models/lion.glb when present; plays its first
+ *  clip (walk) if the model is animated. Safe if the asset isn't there yet. */
+function LionSubject() {
+  const group = useRef<THREE.Group>(null);
+  const gltf = useGLTF("/models/lion.glb?v=3");
+  const { actions, names } = useAnimations(gltf.animations, group);
+  useMemo(() => { if (names.length && actions[names[0]]) actions[names[0]]!.reset().play(); }, [actions, names]);
+  return (
+    <group ref={group} position={[0, 0, 1]} rotation={[0, 0, 0]} scale={1.9}>
+      <primitive object={gltf.scene} />
+    </group>
+  );
+}
+
 /* ---------- 01 Anamorphic lion stage ---------- */
 export function WorldAnamorphic() {
+  // defer the heavy lion so the stage paints + loader clears first (brief §22/§23)
+  const [ready, setReady] = useState(false);
+  useEffect(() => { const id = requestAnimationFrame(() => setReady(true)); return () => cancelAnimationFrame(id); }, []);
   return (
     <group>
       <LedWall fragment={FRAGMENTS.anamorphic} panels={6} width={30} height={9} radius={24} y={4.6} z={-11} />
       <Truss width={32} z={-9.5} y={9.2} />
       <LightRig colorA="#bfe0ff" colorB="#dfeeff" intensity={110} />
       <VenueFloor tint="#0a0b0e" />
-      <Silhouette z={7} x={0.5} />
+      <Silhouette z={7} x={2.4} />
       {/* debris rocks drifting near the LED boundary (anamorphic 'break-out') */}
       <DriftRocks />
+      {/* warm key on the emerging lion */}
+      <spotLight position={[4, 7, 6]} angle={0.5} penumbra={0.8} intensity={80} color="#fff0d8" distance={30} />
+      {ready && <Suspense fallback={null}><SafeModel><LionSubject /></SafeModel></Suspense>}
     </group>
   );
 }
 
 function DriftRocks() {
   const g = useRef<THREE.Group>(null);
-  // biased to the right so they don't sit under the left-side hero copy
-  const rocks = useMemo(() =>
-    Array.from({ length: 6 }, (_, i) => ({
-      p: [3 + Math.random() * 8, 2 + Math.random() * 5, -5 - Math.random() * 3] as [number, number, number],
-      s: 0.35 + Math.random() * 0.6, r: Math.random() * Math.PI,
-    })), []);
+  const rocks = DRIFT_ROCKS;
   useFrame((s) => { if (g.current) g.current.children.forEach((c, i) => { c.rotation.y = s.clock.elapsedTime * 0.1 + i; c.position.y += Math.sin(s.clock.elapsedTime * 0.3 + i) * 0.002; }); });
   return (
     <group ref={g}>
@@ -84,9 +120,7 @@ function FestivalParticles() {
   const pts = useRef<THREE.Points>(null);
   const geo = useMemo(() => {
     const g = new THREE.BufferGeometry();
-    const n = 400; const arr = new Float32Array(n * 3);
-    for (let i = 0; i < n; i++) { arr[i * 3] = (Math.random() - 0.5) * 24; arr[i * 3 + 1] = Math.random() * 10; arr[i * 3 + 2] = -8 + Math.random() * 12; }
-    g.setAttribute("position", new THREE.BufferAttribute(arr, 3));
+    g.setAttribute("position", new THREE.BufferAttribute(FESTIVAL_POS, 3));
     return g;
   }, []);
   useFrame((s) => { if (pts.current) pts.current.rotation.y = s.clock.elapsedTime * 0.03; });

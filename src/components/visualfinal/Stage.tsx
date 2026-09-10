@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useWorld, QUALITY_DPR, type Quality } from "./store";
 import { WORLD_SCENES } from "./worlds";
@@ -19,7 +19,6 @@ function Rig() {
   const explore = useWorld((s) => s.explore);
   const reduced = useWorld((s) => s.reducedMotion);
   const setLoaded = useWorld((s) => s.setLoaded);
-  const { camera, scene } = useThree();
   const mouse = useRef({ x: 0, y: 0 });
   const target = useRef(new THREE.Vector3());
   const firstFrame = useRef(true);
@@ -33,8 +32,9 @@ function Rig() {
     return () => window.removeEventListener("pointermove", onMove);
   }, []);
 
-  useFrame((_, dt) => {
-    const c = camera as THREE.PerspectiveCamera;
+  useFrame((state, dt) => {
+    const c = state.camera as THREE.PerspectiveCamera;
+    const scene = state.scene;
     const pre = CAMS[world];
     const k = reduced ? 1 : Math.min(1, dt * 2.2);
     // explore drag pans horizontally across the ~100ft stage

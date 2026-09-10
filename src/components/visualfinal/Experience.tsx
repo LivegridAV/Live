@@ -3,6 +3,7 @@
    once on mount; a single sync setState there is intentional. */
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { useWorld, detectQuality, type Quality } from "./store";
 import Chrome from "./ui/Chrome";
 
@@ -49,7 +50,7 @@ function NoWebGL() {
     <div className="vf-nowebgl">
       <h1>WE TURN IDEAS INTO<br /><span className="vf-accent-text">UNFORGETTABLE EXPERIENCES</span></h1>
       <p>Immersive LED, anamorphic content, live production and 360° installations.</p>
-      <a href="/contact" className="vf-cta">START A PROJECT <span aria-hidden>→</span></a>
+      <Link href="/contact" className="vf-cta">START A PROJECT <span aria-hidden>→</span></Link>
     </div>
   );
 }
