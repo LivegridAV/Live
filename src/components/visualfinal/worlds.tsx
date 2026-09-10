@@ -5,6 +5,14 @@ import { useGLTF, useAnimations } from "@react-three/drei";
 import * as THREE from "three";
 import { LedWall, VenueFloor, Truss, LightRig, Silhouette } from "./systems/stage";
 import { FRAGMENTS, contentVertex, oceanFragment } from "./systems/shaders";
+import { useWorld } from "./store";
+
+// light-control moods (brief interaction: LIGHT CONTROL — change mood)
+const MOODS = [
+  { a: "#2f6bff", b: "#a9d4ff", mul: 1 },     // 0 cool
+  { a: "#ff9a4d", b: "#ffd9a0", mul: 1 },     // 1 warm
+  { a: "#66e0ff", b: "#ffffff", mul: 1.7 },   // 2 intense
+];
 
 // Random layouts are computed once at module load (kept out of render for purity).
 // Rock-burst: a broken platform under the lion + debris breaking forward (anamorphic).
@@ -94,29 +102,31 @@ function RockBurst() {
 }
 
 /** Fake-volumetric moving-head beams: a spotlight + an additive cone you can see. */
-function Beam({ x, color = "#3f8bff", tiltPhase = 0 }: { x: number; color?: string; tiltPhase?: number }) {
+function Beam({ x, color, tiltPhase, mul }: { x: number; color: string; tiltPhase: number; mul: number }) {
   const grp = useRef<THREE.Group>(null);
   useFrame((s) => { if (grp.current) grp.current.rotation.z = Math.sin(s.clock.elapsedTime * 0.35 + tiltPhase) * 0.18; });
   return (
     <group position={[x, 11, -3]}>
       <group ref={grp}>
-        <spotLight position={[0, 0, 0]} target-position={[x * 0.3, 0, 2]} angle={0.16} penumbra={0.9} intensity={140} color={color} distance={40} />
+        <spotLight position={[0, 0, 0]} target-position={[x * 0.3, 0, 2]} angle={0.16} penumbra={0.9} intensity={140 * mul} color={color} distance={40} />
         <mesh position={[0, -5.5, 0]}>
           <coneGeometry args={[1.9, 11, 24, 1, true]} />
-          <meshBasicMaterial color={color} transparent opacity={0.06} side={THREE.DoubleSide} depthWrite={false} blending={THREE.AdditiveBlending} />
+          <meshBasicMaterial color={color} transparent opacity={0.06 * mul} side={THREE.DoubleSide} depthWrite={false} blending={THREE.AdditiveBlending} />
         </mesh>
       </group>
     </group>
   );
 }
 function BlueBeams() {
+  const mood = useWorld((s) => s.mood);
+  const m = MOODS[mood];
   return (
     <>
-      <Beam x={-10} color="#2f6bff" tiltPhase={0} />
-      <Beam x={-5} color="#5aa0ff" tiltPhase={1.1} />
-      <Beam x={0} color="#a9d4ff" tiltPhase={2.0} />
-      <Beam x={5} color="#5aa0ff" tiltPhase={3.0} />
-      <Beam x={10} color="#2f6bff" tiltPhase={4.2} />
+      <Beam x={-10} color={m.a} tiltPhase={0} mul={m.mul} />
+      <Beam x={-5} color={m.b} tiltPhase={1.1} mul={m.mul} />
+      <Beam x={0} color={m.b} tiltPhase={2.0} mul={m.mul} />
+      <Beam x={5} color={m.b} tiltPhase={3.0} mul={m.mul} />
+      <Beam x={10} color={m.a} tiltPhase={4.2} mul={m.mul} />
     </>
   );
 }

@@ -29,7 +29,16 @@ function Rig() {
       mouse.current.y = (e.clientY / window.innerHeight) * 2 - 1;
     };
     window.addEventListener("pointermove", onMove);
-    return () => window.removeEventListener("pointermove", onMove);
+    // scroll to navigate between worlds (debounced)
+    let last = 0;
+    const onWheel = (e: WheelEvent) => {
+      const now = performance.now();
+      if (now - last < 850 || Math.abs(e.deltaY) < 12) return;
+      last = now;
+      if (e.deltaY > 0) useWorld.getState().next(); else useWorld.getState().prev();
+    };
+    window.addEventListener("wheel", onWheel, { passive: true });
+    return () => { window.removeEventListener("pointermove", onMove); window.removeEventListener("wheel", onWheel); };
   }, []);
 
   useFrame((state, dt) => {
@@ -37,14 +46,18 @@ function Rig() {
     const scene = state.scene;
     const pre = CAMS[world];
     const k = reduced ? 1 : Math.min(1, dt * 2.2);
+    // intro push-in on first load (storyboard 12-18s hero moment)
+    const intro = reduced ? 1 : THREE.MathUtils.smoothstep(state.clock.elapsedTime, 1.2, 9.5);
+    const dolly = (1 - intro) * 9;
+    const lift = (1 - intro) * 3.5;
     // explore drag pans horizontally across the ~100ft stage
     const panX = (explore - 0.5) * 8;
     const par = reduced ? 0 : 1;
     const wantX = pre.pos[0] + panX + mouse.current.x * 1.6 * par;
-    const wantY = pre.pos[1] - mouse.current.y * 0.6 * par;
+    const wantY = pre.pos[1] + lift - mouse.current.y * 0.6 * par;
     c.position.x += (wantX - c.position.x) * k;
     c.position.y += (wantY - c.position.y) * k;
-    c.position.z += (pre.pos[2] - c.position.z) * k;
+    c.position.z += (pre.pos[2] + dolly - c.position.z) * k;
     target.current.set(pre.tgt[0] + panX * 0.5, pre.tgt[1], pre.tgt[2]);
     c.lookAt(target.current);
     if (Math.abs(c.fov - pre.fov) > 0.01) { c.fov += (pre.fov - c.fov) * k; c.updateProjectionMatrix(); }

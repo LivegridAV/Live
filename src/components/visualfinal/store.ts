@@ -36,6 +36,8 @@ type State = {
   loaded: boolean;            // asset/first-frame ready
   explore: number;           // 0..1 drag-explore position within a world
   reducedMotion: boolean;
+  mood: number;              // 0 cool · 1 warm · 2 intense (light control)
+  hotspot: number | null;    // open hotspot index
   setWorld: (i: number) => void;
   next: () => void;
   prev: () => void;
@@ -44,6 +46,8 @@ type State = {
   setLoaded: (b: boolean) => void;
   setExplore: (v: number) => void;
   setReducedMotion: (b: boolean) => void;
+  cycleMood: () => void;
+  setHotspot: (i: number | null) => void;
 };
 
 export const useWorld = create<State>((set, get) => ({
@@ -54,6 +58,8 @@ export const useWorld = create<State>((set, get) => ({
   loaded: false,
   explore: 0.5,
   reducedMotion: false,
+  mood: 0,
+  hotspot: null,
   setWorld: (i) => {
     const n = Math.max(0, Math.min(WORLDS.length - 1, i));
     if (n === get().world) return;
@@ -67,6 +73,8 @@ export const useWorld = create<State>((set, get) => ({
   setLoaded: (b) => set({ loaded: b }),
   setExplore: (v) => set({ explore: Math.max(0, Math.min(1, v)) }),
   setReducedMotion: (b) => set({ reducedMotion: b }),
+  cycleMood: () => set((s) => ({ mood: (s.mood + 1) % 3 })),
+  setHotspot: (i) => set({ hotspot: i }),
 }));
 
 /** Pick a render quality tier from device signals (brief §21). */

@@ -5,6 +5,14 @@ import { useWorld, WORLDS } from "../store";
 
 const LEFT_NAV = ["Home", "Services", "Work", "About", "Contact"];
 
+// Hotspots for World 01 (brief interaction: CLICK reveal hotspots)
+const HOTSPOTS = [
+  { label: "Anamorphic Content", text: "Naked-eye 3D that breaks the LED plane.", href: "/services/3d-anamorphic", style: { left: "44%", top: "50%" } },
+  { label: "LED Stage Solutions", text: "Large-format LED walls, corners and floors.", href: "/services/led-display-rental", style: { left: "20%", top: "72%" } },
+  { label: "Live Production", text: "Show control, media servers and switching.", href: "/services/live-production", style: { left: "70%", top: "44%" } },
+  { label: "3D / Immersive Content", text: "360° environments and installations.", href: "/services/immersive-experiences", style: { left: "62%", top: "74%" } },
+] as const;
+
 export default function Chrome() {
   const world = useWorld((s) => s.world);
   const setWorld = useWorld((s) => s.setWorld);
@@ -14,6 +22,9 @@ export default function Chrome() {
   const setExplore = useWorld((s) => s.setExplore);
   const muted = useWorld((s) => s.muted);
   const setMuted = useWorld((s) => s.setMuted);
+  const cycleMood = useWorld((s) => s.cycleMood);
+  const hotspot = useWorld((s) => s.hotspot);
+  const setHotspot = useWorld((s) => s.setHotspot);
   const w = WORLDS[world];
   const [fs, setFs] = useState(false);
 
@@ -43,6 +54,24 @@ export default function Chrome() {
           <Link href="/contact" className="vf-cta-pill">START A PROJECT</Link>
         </div>
       </header>
+
+      {/* hotspots (World 01) */}
+      {world === 0 && (
+        <div className="vf-hotspots">
+          {HOTSPOTS.map((h, i) => (
+            <button key={h.label} className={`vf-hotspot ${hotspot === i ? "is-open" : ""}`} style={h.style}
+              aria-label={`Hotspot: ${h.label}`} onClick={() => setHotspot(hotspot === i ? null : i)}>
+              <span className="vf-hotspot-dot">+</span>
+              {hotspot === i && (
+                <span className="vf-hotspot-card" role="dialog">
+                  <strong>{h.label}</strong><span>{h.text}</span>
+                  <Link href={h.href}>Explore →</Link>
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* left world index */}
       <nav className="vf-left" aria-label="Worlds">
@@ -86,6 +115,7 @@ export default function Chrome() {
           <button aria-label="Next world" onClick={next} className="vf-arrow">›</button>
         </div>
         <div className="vf-controls">
+          <button aria-label="Light control — change mood" onClick={cycleMood} className="vf-ctrl">☀</button>
           <button aria-label={muted ? "Unmute" : "Mute"} onClick={() => setMuted(!muted)} className="vf-ctrl">
             {muted ? "♪̸" : "♪"}
           </button>

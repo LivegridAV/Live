@@ -82,6 +82,20 @@
   cursor: pointer; font-size: 15px; transition: border-color .2s, color .2s; }
 .vf-ctrl:hover { border-color: var(--vf-accent); color: var(--vf-accent); }
 
+/* ---------- hotspots ---------- */
+.vf-hotspots { position: absolute; inset: 0; pointer-events: none; }
+.vf-hotspot { position: absolute; pointer-events: auto; background: none; border: none; cursor: pointer; transform: translate(-50%, -50%); }
+.vf-hotspot-dot { display: flex; width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--vf-accent);
+  color: var(--vf-accent); align-items: center; justify-content: center; font-size: 16px; background: rgba(4,10,14,.5); animation: vfPulse 2.4s infinite; }
+@keyframes vfPulse { 0% { box-shadow: 0 0 0 0 rgba(63,214,200,.45); } 70% { box-shadow: 0 0 0 12px rgba(63,214,200,0); } 100% { box-shadow: 0 0 0 0 rgba(63,214,200,0); } }
+.vf-hotspot.is-open .vf-hotspot-dot { background: var(--vf-accent); color: #04121a; }
+.vf-hotspot-card { position: absolute; left: 38px; top: -8px; width: 210px; background: rgba(6,12,18,.94);
+  border: 1px solid rgba(63,214,200,.35); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px;
+  text-align: left; box-shadow: 0 12px 40px rgba(0,0,0,.5); }
+.vf-hotspot-card strong { font-size: 13px; letter-spacing: .03em; color: #fff; }
+.vf-hotspot-card span { font-size: 12px; color: #c3ccd3; line-height: 1.45; }
+.vf-hotspot-card a { font-size: 12px; color: var(--vf-accent); text-decoration: none; }
+
 /* ---------- loader ---------- */
 .vf-loader { position: absolute; inset: 0; z-index: 20; display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 22px; background: #04060a; }
