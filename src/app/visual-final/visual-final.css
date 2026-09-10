@@ -25,9 +25,15 @@
 .vf-logo span { font-weight: 700; font-size: 22px; letter-spacing: 0.04em; }
 .vf-logo em { display: block; margin-top: 6px; font-style: normal; font-family: var(--font-mono, "Space Mono", monospace);
   font-size: 9px; letter-spacing: 0.32em; color: var(--vf-faint); }
-.vf-topnav { display: flex; align-items: center; gap: 26px; }
-.vf-topnav a { color: #d7dde3; text-decoration: none; font-size: 12px; letter-spacing: 0.14em; font-weight: 500; transition: color .2s; }
-.vf-topnav a:hover { color: #fff; }
+.vf-centertitle { position: absolute; left: 50%; top: 20px; transform: translateX(-50%); text-align: center; pointer-events: none; }
+.vf-centertitle h2 { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: 0.22em; color: #fff; }
+.vf-centertitle p { margin: 5px 0 0; font-family: var(--font-mono, monospace); font-size: 10px; letter-spacing: 0.22em; color: #b7c0c8; }
+.vf-topright { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }
+.vf-exp { text-align: right; line-height: 1.5; }
+.vf-exp span { font-size: 11px; letter-spacing: 0.16em; color: #cfd6dc; }
+.vf-exp strong { color: var(--vf-accent); }
+.vf-exp em { display: block; font-style: normal; font-family: var(--font-mono, monospace); font-size: 9px; letter-spacing: 0.24em; color: var(--vf-faint); margin-top: 2px; }
+.vf-navhint { font-family: var(--font-mono, monospace); font-size: 9px; letter-spacing: 0.2em; color: var(--vf-faint); text-align: right; line-height: 1.4; align-self: center; }
 .vf-cta-pill { border: 1px solid rgba(63,214,200,.5); border-radius: 999px; padding: 9px 18px !important;
   color: var(--vf-accent) !important; box-shadow: 0 0 18px rgba(63,214,200,.18) inset; }
 .vf-cta-pill:hover { box-shadow: 0 0 22px rgba(63,214,200,.4); }
@@ -92,9 +98,8 @@
 
 /* ---------- responsive ---------- */
 @media (max-width: 900px) {
-  .vf-left, .vf-right { display: none; }
+  .vf-left, .vf-right, .vf-centertitle, .vf-exp, .vf-navhint { display: none; }
   .vf-hero { left: 24px; max-width: 82vw; top: 24%; }
-  .vf-topnav a:not(.vf-cta-pill) { display: none; }
   .vf-bottom { grid-template-columns: 1fr; gap: 12px; justify-items: center; text-align: center; }
   .vf-scene-label, .vf-controls { justify-content: center; }
   .vf-track { width: 70vw; }

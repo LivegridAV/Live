@@ -7,10 +7,17 @@ import { LedWall, VenueFloor, Truss, LightRig, Silhouette } from "./systems/stag
 import { FRAGMENTS, contentVertex, oceanFragment } from "./systems/shaders";
 
 // Random layouts are computed once at module load (kept out of render for purity).
-const DRIFT_ROCKS = Array.from({ length: 6 }, () => ({
-  p: [3 + Math.random() * 8, 2 + Math.random() * 5, -5 - Math.random() * 3] as [number, number, number],
-  s: 0.35 + Math.random() * 0.6, r: Math.random() * Math.PI,
-}));
+// Rock-burst: a broken platform under the lion + debris breaking forward (anamorphic).
+const ROCK_BURST = [
+  ...Array.from({ length: 9 }, () => ({
+    p: [(Math.random() - 0.5) * 6, Math.random() * 1.5, 0.3 + Math.random() * 2.6] as [number, number, number],
+    s: 0.55 + Math.random() * 1.15, r: Math.random() * Math.PI, spin: 0,
+  })),
+  ...Array.from({ length: 10 }, () => ({
+    p: [(Math.random() - 0.5) * 11, 1.6 + Math.random() * 4.4, 1 + Math.random() * 4.5] as [number, number, number],
+    s: 0.3 + Math.random() * 0.7, r: Math.random() * Math.PI, spin: 0.08 + Math.random() * 0.18,
+  })),
+];
 const FESTIVAL_POS = (() => {
   const n = 400; const arr = new Float32Array(n * 3);
   for (let i = 0; i < n; i++) { arr[i * 3] = (Math.random() - 0.5) * 24; arr[i * 3 + 1] = Math.random() * 10; arr[i * 3 + 2] = -8 + Math.random() * 12; }
@@ -33,8 +40,9 @@ function LionSubject() {
   const gltf = useGLTF("/models/lion.glb?v=3");
   const { actions, names } = useAnimations(gltf.animations, group);
   useMemo(() => { if (names.length && actions[names[0]]) actions[names[0]]!.reset().play(); }, [actions, names]);
+  // the lion bursts out of the centre screen, standing on the breaking rocks
   return (
-    <group ref={group} position={[0, 0, 1]} rotation={[0, 0, 0]} scale={1.9}>
+    <group ref={group} position={[0, 1.15, 1.8]} rotation={[0, 0, 0]} scale={2.4}>
       <primitive object={gltf.scene} />
     </group>
   );
@@ -47,33 +55,84 @@ export function WorldAnamorphic() {
   useEffect(() => { const id = requestAnimationFrame(() => setReady(true)); return () => cancelAnimationFrame(id); }, []);
   return (
     <group>
-      <LedWall fragment={FRAGMENTS.anamorphic} panels={6} width={30} height={9} radius={24} y={4.6} z={-11} />
-      <Truss width={32} z={-9.5} y={9.2} />
-      <LightRig colorA="#bfe0ff" colorB="#dfeeff" intensity={110} />
-      <VenueFloor tint="#0a0b0e" />
-      <Silhouette z={7} x={2.4} />
-      {/* debris rocks drifting near the LED boundary (anamorphic 'break-out') */}
-      <DriftRocks />
-      {/* warm key on the emerging lion */}
-      <spotLight position={[4, 7, 6]} angle={0.5} penumbra={0.8} intensity={80} color="#fff0d8" distance={30} />
+      <LedWall fragment={FRAGMENTS.anamorphic} panels={5} width={34} height={12} radius={28} y={6} z={-12.5} />
+      <Truss width={38} z={-10.5} y={11.6} />
+      <RiggingTowers />
+      <BlueBeams />
+      <LightRig colorA="#2f7bff" colorB="#9fd0ff" intensity={80} />
+      <VenueFloor tint="#0a0c11" />
+      <Silhouette z={8} x={0} h={1.9} />
+      <RockBurst />
+      {/* neutral key so the lion + rocks read against the blue beams */}
+      <spotLight position={[3, 9, 8]} angle={0.55} penumbra={0.85} intensity={90} color="#eaf1ff" distance={40} />
+      <pointLight position={[0, 3, 5]} intensity={30} distance={18} color="#fff2df" />
       {ready && <Suspense fallback={null}><SafeModel><LionSubject /></SafeModel></Suspense>}
     </group>
   );
 }
 
-function DriftRocks() {
+/** Broken rock platform under the lion + debris breaking forward (anamorphic). */
+function RockBurst() {
   const g = useRef<THREE.Group>(null);
-  const rocks = DRIFT_ROCKS;
-  useFrame((s) => { if (g.current) g.current.children.forEach((c, i) => { c.rotation.y = s.clock.elapsedTime * 0.1 + i; c.position.y += Math.sin(s.clock.elapsedTime * 0.3 + i) * 0.002; }); });
+  useFrame((s) => {
+    if (!g.current) return;
+    g.current.children.forEach((c, i) => {
+      const spin = ROCK_BURST[i]?.spin ?? 0;
+      if (spin) { c.rotation.y += spin * 0.01; c.position.y += Math.sin(s.clock.elapsedTime * 0.4 + i) * 0.003; }
+    });
+  });
   return (
-    <group ref={g}>
-      {rocks.map((r, i) => (
-        <mesh key={i} position={r.p} rotation={[r.r, r.r, 0]} scale={r.s}>
+    <group ref={g} position={[0, 0, 0]}>
+      {ROCK_BURST.map((r, i) => (
+        <mesh key={i} position={r.p} rotation={[r.r, r.r * 1.3, r.r * 0.5]} scale={r.s}>
           <dodecahedronGeometry args={[0.6, 0]} />
-          <meshStandardMaterial color="#3b414c" roughness={0.85} metalness={0.15} emissive="#0a1420" emissiveIntensity={0.4} />
+          <meshStandardMaterial color="#6b6153" roughness={0.92} metalness={0.05} flatShading />
         </mesh>
       ))}
     </group>
+  );
+}
+
+/** Fake-volumetric moving-head beams: a spotlight + an additive cone you can see. */
+function Beam({ x, color = "#3f8bff", tiltPhase = 0 }: { x: number; color?: string; tiltPhase?: number }) {
+  const grp = useRef<THREE.Group>(null);
+  useFrame((s) => { if (grp.current) grp.current.rotation.z = Math.sin(s.clock.elapsedTime * 0.35 + tiltPhase) * 0.18; });
+  return (
+    <group position={[x, 11, -3]}>
+      <group ref={grp}>
+        <spotLight position={[0, 0, 0]} target-position={[x * 0.3, 0, 2]} angle={0.16} penumbra={0.9} intensity={140} color={color} distance={40} />
+        <mesh position={[0, -5.5, 0]}>
+          <coneGeometry args={[1.9, 11, 24, 1, true]} />
+          <meshBasicMaterial color={color} transparent opacity={0.06} side={THREE.DoubleSide} depthWrite={false} blending={THREE.AdditiveBlending} />
+        </mesh>
+      </group>
+    </group>
+  );
+}
+function BlueBeams() {
+  return (
+    <>
+      <Beam x={-10} color="#2f6bff" tiltPhase={0} />
+      <Beam x={-5} color="#5aa0ff" tiltPhase={1.1} />
+      <Beam x={0} color="#a9d4ff" tiltPhase={2.0} />
+      <Beam x={5} color="#5aa0ff" tiltPhase={3.0} />
+      <Beam x={10} color="#2f6bff" tiltPhase={4.2} />
+    </>
+  );
+}
+
+/** Vertical truss towers flanking the stage. */
+function RiggingTowers() {
+  const xs = [-17, 17];
+  return (
+    <>{xs.map((x, i) => (
+      <group key={i} position={[x, 0, -9]}>
+        <mesh position={[0, 6, 0]}><boxGeometry args={[0.4, 12, 0.4]} /><meshStandardMaterial color="#0e1116" metalness={1} roughness={0.5} /></mesh>
+        {[2, 5, 8, 11].map((y, j) => (
+          <mesh key={j} position={[0, y, 0.5]}><sphereGeometry args={[0.1, 8, 8]} /><meshBasicMaterial color="#6fd0ff" /></mesh>
+        ))}
+      </group>
+    ))}</>
   );
 }
 

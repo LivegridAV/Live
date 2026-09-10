@@ -31,13 +31,17 @@ export default function Chrome() {
           <span>LIVEGRID<span className="vf-accent">AV</span></span>
           <em>IDEAS · CONTENT · EXPERIENCES</em>
         </Link>
-        <nav className="vf-topnav" aria-label="Primary">
-          <Link href="/services">SERVICES</Link>
-          <Link href="/work">WORK</Link>
-          <Link href="/about">ABOUT</Link>
-          <Link href="/contact">CONTACT</Link>
+        <div className="vf-centertitle">
+          <h2>{w.title.toUpperCase()}</h2>
+          <p>WE TURN IDEAS INTO UNFORGETTABLE EXPERIENCES</p>
+        </div>
+        <div className="vf-topright">
+          <div className="vf-exp">
+            <span>WEBSITE HERO EXPERIENCE <strong>{w.index} / 0{WORLDS.length}</strong></span>
+            <em>INTERACTIVE. IMMERSIVE. REAL-TIME.</em>
+          </div>
           <Link href="/contact" className="vf-cta-pill">START A PROJECT</Link>
-        </nav>
+        </div>
       </header>
 
       {/* left world index */}
@@ -86,6 +90,7 @@ export default function Chrome() {
             {muted ? "♪̸" : "♪"}
           </button>
           <button aria-label="Fullscreen" onClick={toggleFs} className="vf-ctrl">{fs ? "⤢" : "⛶"}</button>
+          <span className="vf-navhint">SCROLL OR DRAG<br />TO NAVIGATE</span>
         </div>
       </footer>
     </div>

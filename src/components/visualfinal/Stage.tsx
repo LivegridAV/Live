@@ -7,7 +7,7 @@ import { WORLD_SCENES } from "./worlds";
 
 /** Per-world cinematic camera presets (position, look target, fov). */
 const CAMS: { pos: [number, number, number]; tgt: [number, number, number]; fov: number; bg: string }[] = [
-  { pos: [0, 2.6, 12], tgt: [0, 3.6, -6], fov: 42, bg: "#05070b" },   // 01 anamorphic
+  { pos: [0, 3.4, 16], tgt: [0, 4.2, -6], fov: 46, bg: "#05070b" },   // 01 anamorphic
   { pos: [0, 2.4, 12], tgt: [0, 3.2, -6], fov: 40, bg: "#04080a" },   // 02 corporate
   { pos: [0, 2.6, 11.5], tgt: [0, 3.8, -6], fov: 46, bg: "#070510" }, // 03 festival
   { pos: [0, 2.4, 12], tgt: [0, 3.4, -6], fov: 40, bg: "#0a0705" },   // 04 social
