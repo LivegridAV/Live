@@ -1,6 +1,7 @@
 import type { ShaderProgramId } from "../media/programs";
 import type { PainterId } from "../media/painters";
 import { PAVILIONS, PARTNER_BAY } from "./pavilions";
+import { SERVICES } from "@/content/services";
 
 /**
  * The media configuration system.
@@ -54,8 +55,8 @@ export interface CanvasMedia {
   accent?: string;
   res?: [number, number];
   fps?: number;
-  /** copy for painters that render text (pavilion headers, wayfinding) */
-  text?: { title: string; sub: string };
+  /** copy for painters that render text (pavilion headers, wayfinding, kiosks) */
+  text?: { title: string; sub: string; lines?: string[] };
 }
 
 export interface VideoMedia {
@@ -71,29 +72,35 @@ export type MediaDesc = ShaderMedia | CanvasMedia | VideoMedia;
 
 export const MEDIA: Record<string, MediaDesc> = {
   /* ── Arrival ──────────────────────────────────────────── */
-  "entry-brand": { kind: "shader", program: "signalGrid", accent: ACCENT.brand, res: [576, 96], fps: 30 },
+  "entry-brand": { kind: "shader", program: "brandType", accent: ACCENT.brand, res: [1024, 160], fps: 30 },
   "entry-sign": { kind: "canvas", painter: "signWelcome", accent: ACCENT.brand, res: [512, 128], fps: 8 },
   "entry-blade": { kind: "shader", program: "pixelRain", accent: ACCENT.teal, variant: 0.3, res: [128, 384], fps: 24 },
 
-  /* ── Tunnel: one texture, four surfaces, perfectly in sync ─ */
-  "tunnel": { kind: "shader", program: "tunnelFlow", accent: ACCENT.teal, res: [192, 1024], fps: 60 },
+  /* ── Tunnel ───────────────────────────────────────────────
+     The four-sided tunnel has no media id: it is not showing a texture at
+     all. Its surfaces generate a shared virtual world from world-space
+     position (see three/immersive.ts), which is what makes them continuous
+     across every corner. */
+
+  /* ── Vestibule, where the tunnel opens into the hall ──── */
+  "vestibule-blade": { kind: "shader", program: "signalGrid", accent: ACCENT.brand, variant: 0.42, res: [128, 640], fps: 30 },
 
   /* ── Hall + wayfinding ────────────────────────────────── */
   "sign-gallery": { kind: "canvas", painter: "signGallery", accent: ACCENT.brand, res: [512, 128], fps: 8 },
   "sign-services": { kind: "canvas", painter: "signServices", accent: ACCENT.brand, res: [512, 128], fps: 8 },
   "sign-arena": { kind: "canvas", painter: "signArena", accent: ACCENT.amber, res: [512, 128], fps: 8 },
-  "hall-wordmark": { kind: "canvas", painter: "wordmark", accent: ACCENT.brand, res: [640, 176], fps: 12 },
+  "hall-wordmark": { kind: "canvas", painter: "wordmark", accent: ACCENT.brand, res: [1024, 288], fps: 12 },
 
   /* ── Creative LED gallery ─────────────────────────────── */
-  "pillar-flow": { kind: "shader", program: "volumetric", accent: ACCENT.teal, variant: 0.1, res: [192, 448], fps: 30 },
-  "pillar-metal": { kind: "shader", program: "liquidMetal", accent: ACCENT.copper, variant: 0.6, res: [192, 448], fps: 30 },
+  "pillar-flow": { kind: "shader", program: "volumetric", accent: ACCENT.teal, variant: 0.1, res: [320, 768], fps: 30 },
+  "pillar-metal": { kind: "shader", program: "liquidMetal", accent: ACCENT.copper, variant: 0.6, res: [320, 768], fps: 30 },
   "blade-rain": { kind: "shader", program: "pixelRain", accent: ACCENT.brand, variant: 0.8, res: [512, 448], fps: 30 },
-  "cylinder-ribbon": { kind: "shader", program: "plasmaRibbon", accent: ACCENT.amber, res: [512, 192], fps: 30 },
-  "ring-waves": { kind: "shader", program: "spatialWaves", accent: ACCENT.teal, res: [768, 96], fps: 30 },
-  "bar-brand": { kind: "shader", program: "signalGrid", accent: ACCENT.brand, variant: 0.45, res: [640, 80], fps: 30 },
-  "curve-natural": { kind: "shader", program: "naturalFlow", accent: ACCENT.moss, res: [512, 288], fps: 24 },
-  "mosaic-arch": { kind: "shader", program: "architecture", accent: ACCENT.steel, res: [256, 256], fps: 20 },
-  "anamorphic": { kind: "shader", program: "anamorphicVoid", accent: ACCENT.bone, res: [320, 320], fps: 24 },
+  "cylinder-ribbon": { kind: "shader", program: "plasmaRibbon", accent: ACCENT.amber, res: [1024, 384], fps: 30 },
+  "ring-waves": { kind: "shader", program: "spatialWaves", accent: ACCENT.teal, res: [1536, 192], fps: 30 },
+  "bar-brand": { kind: "shader", program: "signalGrid", accent: ACCENT.brand, variant: 0.45, res: [1024, 128], fps: 30 },
+  "curve-natural": { kind: "shader", program: "naturalFlow", accent: ACCENT.moss, res: [704, 384], fps: 24 },
+  "mosaic-arch": { kind: "shader", program: "architecture", accent: ACCENT.steel, res: [640, 448], fps: 20 },
+  "anamorphic": { kind: "shader", program: "anamorphicVoid", accent: ACCENT.bone, res: [768, 576], fps: 24 },
 
   /* ── 01 · AV engineering ──────────────────────────────── */
   "av-signal-diagram": { kind: "canvas", painter: "avSignalDiagram", accent: ACCENT.teal, res: [512, 288], fps: 15 },
@@ -150,7 +157,7 @@ export const MEDIA: Record<string, MediaDesc> = {
     festival: "festivalMonument",
     accent: ACCENT.steel,
     festivalAccent: "#8f5ad6",
-    res: [576, 248],
+    res: [896, 384],
     fps: 60,
   },
   // Side screens run the same content family as the main wall — that is what a
@@ -162,17 +169,22 @@ export const MEDIA: Record<string, MediaDesc> = {
     accent: ACCENT.steel,
     festivalAccent: ACCENT.ember,
     variant: 0.62,
-    res: [224, 416],
+    res: [384, 704],
     fps: 30,
   },
+  // The blades carry a *slice each* of the same render as the main wall, so
+  // the ten of them read as one composition continued above it rather than as
+  // ten small screens doing their own thing. That is what a real show does
+  // with a blade array, and it is why the mode switch transforms the whole
+  // rig instead of one rectangle.
   "stage-blade": {
     kind: "shader",
-    program: "brandType",
-    festival: "pixelRain",
+    program: "corporatePremium",
+    festival: "festivalMonument",
     accent: ACCENT.bone,
-    festivalAccent: "#c96a9e",
+    festivalAccent: "#a86ad6",
     variant: 0.55,
-    res: [640, 448],
+    res: [1024, 352],
     fps: 30,
   },
   "stage-floor": {
@@ -182,7 +194,7 @@ export const MEDIA: Record<string, MediaDesc> = {
     accent: ACCENT.steel,
     festivalAccent: ACCENT.ember,
     variant: 0.7,
-    res: [320, 320],
+    res: [672, 320],
     fps: 24,
   },
   "stage-wing": {
@@ -192,13 +204,14 @@ export const MEDIA: Record<string, MediaDesc> = {
     accent: ACCENT.bone,
     festivalAccent: "#a54fb0",
     variant: 0.85,
-    res: [256, 256],
+    res: [448, 448],
     fps: 24,
   },
 
   /* ── Finale ───────────────────────────────────────────── */
-  "finale": { kind: "shader", program: "finaleBrand", accent: ACCENT.brand, res: [576, 248], fps: 30 },
-  "finale-word": { kind: "canvas", painter: "wordmark", accent: ACCENT.brand, res: [640, 176], fps: 12 },
+  "finale": { kind: "shader", program: "finaleBrand", accent: ACCENT.brand, res: [896, 384], fps: 30 },
+  "finale-word": { kind: "canvas", painter: "wordmark", accent: ACCENT.brand, res: [768, 192], fps: 12 },
+  "finale-cta": { kind: "canvas", painter: "signFinaleCta", accent: ACCENT.brand, res: [768, 176], fps: 8 },
 };
 
 /**
@@ -215,6 +228,25 @@ for (const p of PAVILIONS) {
     text: { title: p.headline, sub: `Pavilion ${p.no}` },
   };
 }
+/** And the kiosk each pavilion explains itself from, in the room. */
+for (const [p, sub] of [
+  ...PAVILIONS.map((p) => [p, `Pavilion ${p.no}`] as const),
+  [PARTNER_BAY, "Partner bay"] as const,
+]) {
+  MEDIA[`kiosk-${p.id}`] = {
+    kind: "canvas",
+    painter: "kioskInfo",
+    accent: p.accent,
+    res: [384, 512],
+    fps: 6,
+    text: {
+      title: p.headline,
+      sub,
+      lines: p.services.map((slug) => SERVICES.find((x) => x.slug === slug)?.title ?? slug),
+    },
+  };
+}
+
 MEDIA[`sign-${PARTNER_BAY.id}`] = {
   kind: "canvas",
   painter: "pavilionHeader",
@@ -224,7 +256,32 @@ MEDIA[`sign-${PARTNER_BAY.id}`] = {
   text: { title: PARTNER_BAY.headline, sub: "Partner bay" },
 };
 
+/**
+ * Stand headers in the creative gallery. Generated the same way the pavilion
+ * signs are, so a new installation needs one line rather than two files.
+ */
+const STAND_LABELS: [string, string, string, string][] = [
+  ["pillars", "LED Pillars", "Four-sided columns", ACCENT.teal],
+  ["blades", "Vertical Blades", "One image, six panels", ACCENT.brand],
+  ["cylinder", "Cylindrical LED", "Seamless 360 degree wrap", ACCENT.amber],
+  ["ring", "Suspended Ring", "Continuous angular mapping", ACCENT.teal],
+  ["bar", "LED Bar", "Fine-pitch fascia", ACCENT.brand],
+  ["curved", "Curved LED", "Architectural radius", ACCENT.moss],
+  ["mosaic", "Creative Shapes", "Modules cut to a silhouette", ACCENT.steel],
+  ["anamorphic", "Anamorphic Corner", "Depth beyond the screen plane", ACCENT.bone],
+];
+for (const [id, title, sub, accent] of STAND_LABELS) {
+  MEDIA[`stand-${id}`] = {
+    kind: "canvas",
+    painter: "pavilionHeader",
+    accent,
+    res: [576, 96],
+    fps: 8,
+    text: { title, sub },
+  };
+}
+
 export type MediaId = keyof typeof MEDIA;
 
 /** Screens that must be live before the visitor is allowed in. */
-export const CRITICAL_MEDIA = ["entry-brand", "entry-sign", "entry-blade", "tunnel"];
+export const CRITICAL_MEDIA = ["entry-brand", "entry-sign", "entry-blade", "vestibule-blade"];

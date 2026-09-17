@@ -16,8 +16,8 @@ export interface PaintCtx {
   t: number;
   accent: string;
   variant: number;
-  /** copy supplied by the media descriptor, for signs and headers */
-  text?: { title: string; sub: string };
+  /** copy supplied by the media descriptor, for signs, headers and kiosks */
+  text?: { title: string; sub: string; lines?: string[] };
 }
 
 const MONO = '"SFMono-Regular", "DejaVu Sans Mono", "Courier New", monospace';
@@ -632,10 +632,84 @@ const pavilionHeader = (p: PaintCtx) => {
   if (sub) label(p, sub, w * 0.1, h * 0.62, h * 0.12, accent);
 };
 
+/* ── pavilion kiosk ────────────────────────────────────── */
+
+/**
+ * The information panel that belongs to the stand rather than to the browser.
+ *
+ * A pavilion used to explain itself through a rectangular card floating beside
+ * the 3D view, which is the exact "web page with a render behind it" feeling
+ * the venue exists to avoid. The same copy painted onto a physical kiosk in
+ * the room reads as signage — and the HTML panel can then be what it should
+ * be: the accessible, selectable, linkable version of what is already on the
+ * wall, opened on demand.
+ */
+const kioskInfo = (p: PaintCtx) => {
+  const { ctx, w, h, t, accent } = p;
+  const title = p.text?.title ?? "livegridAV";
+  const sub = p.text?.sub ?? "";
+  const lines = p.text?.lines ?? [];
+
+  bg(p);
+  ctx.fillStyle = accent;
+  ctx.fillRect(w * 0.08, h * 0.12, w * 0.055, h * 0.012);
+
+  label(p, sub, w * 0.08, h * 0.17, h * 0.042, accent);
+
+  // Title, wrapped rather than clipped — headlines vary a lot in length.
+  let size = h * 0.115;
+  ctx.font = `600 ${size}px ${SANS}`;
+  const words = title.split(" ");
+  const rows: string[] = [];
+  let row = "";
+  for (const word of words) {
+    const next = row ? `${row} ${word}` : word;
+    if (ctx.measureText(next).width > w * 0.84 && row) {
+      rows.push(row);
+      row = word;
+    } else {
+      row = next;
+    }
+  }
+  if (row) rows.push(row);
+  while (rows.length > 3 && size > h * 0.06) {
+    size *= 0.92;
+    ctx.font = `600 ${size}px ${SANS}`;
+    rows.length = 3;
+  }
+  ctx.fillStyle = BRIGHT;
+  ctx.textBaseline = "top";
+  rows.forEach((r, i) => ctx.fillText(r, w * 0.08, h * 0.25 + i * size * 1.14));
+
+  // The services this pavilion covers, as a ruled list.
+  const top = h * 0.25 + rows.length * size * 1.14 + h * 0.06;
+  ctx.font = `${h * 0.05}px ${SANS}`;
+  lines.slice(0, 4).forEach((line, i) => {
+    const y = top + i * h * 0.095;
+    ctx.strokeStyle = LINE;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(w * 0.08, y - h * 0.018);
+    ctx.lineTo(w * 0.92, y - h * 0.018);
+    ctx.stroke();
+    ctx.fillStyle = accent;
+    ctx.fillRect(w * 0.08, y + h * 0.018, h * 0.02, h * 0.02);
+    ctx.fillStyle = DIM;
+    ctx.fillText(line, w * 0.13, y);
+  });
+
+  // A quietly pulsing prompt, so the kiosk reads as interactive.
+  const pulse = 0.45 + 0.55 * (0.5 + 0.5 * Math.sin(t * 1.6));
+  ctx.globalAlpha = pulse;
+  label(p, "Touch for detail", w * 0.08, h * 0.88, h * 0.042, accent);
+  ctx.globalAlpha = 1;
+};
+
 /* ── registry ──────────────────────────────────────────── */
 
 export const PAINTERS = {
   pavilionHeader,
+  kioskInfo,
   avSignalDiagram,
   avLedPlan,
   avRackStatus,
@@ -659,6 +733,7 @@ export const PAINTERS = {
   signArena: makeSign("Main arena", "This way"),
   signGallery: makeSign("Creative LED", "Gallery"),
   signWelcome: makeSign("Welcome", "livegridAV"),
+  signFinaleCta: makeSign("Let’s build your next experience", "Talk to livegridAV"),
 } as const;
 
 export type PainterId = keyof typeof PAINTERS;

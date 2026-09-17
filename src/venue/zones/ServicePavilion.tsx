@@ -109,6 +109,65 @@ function CabinetStack({ position, cols = 3, rows = 2 }: { position: [number, num
   );
 }
 
+/**
+ * The counter every stand at a real exhibition has: the thing you walk up to.
+ * It also gives the pavilion a front edge, which is what was missing when the
+ * stalls read as alcoves rather than as stands.
+ */
+function Counter({ width = 3.6, z = 1.0, accent }: { width?: number; z?: number; accent: string }) {
+  return (
+    <group position={[0, 0, z]}>
+      <mesh position={[0, 0.52, 0]} material={M.graphite}>
+        <boxGeometry args={[width, 1.04, 0.62]} />
+      </mesh>
+      <mesh position={[0, 1.07, 0]} material={M.aluminium}>
+        <boxGeometry args={[width + 0.14, 0.06, 0.76]} />
+      </mesh>
+      {/* a lit reveal under the worktop — the detail that makes joinery read */}
+      <mesh position={[0, 0.9, 0.32]}>
+        <planeGeometry args={[width - 0.2, 0.05]} />
+        <meshBasicMaterial color={accent} toneMapped />
+      </mesh>
+    </group>
+  );
+}
+
+/**
+ * The stand's own information panel, on a pedestal, angled to the aisle. The
+ * HTML detail panel is still there for accessibility and for real links, but
+ * the copy now exists in the room first.
+ */
+function Kiosk({ id, x, accent }: { id: string; x: number; accent: string }) {
+  return (
+    <group position={[x, 0, 1.2]} rotation={[0, x > 0 ? -0.6 : 0.6, 0]}>
+      <mesh position={[0, 0.55, 0]} material={M.charcoal}>
+        <boxGeometry args={[0.92, 1.1, 0.42]} />
+      </mesh>
+      <mesh position={[0, 0.06, 0]} material={M.anodised}>
+        <boxGeometry args={[1.02, 0.12, 0.52]} />
+      </mesh>
+      <mesh position={[0, 1.44, -0.12]} rotation={[-0.26, 0, 0]} material={M.anodised}>
+        <boxGeometry args={[0.96, 1.26, 0.06]} />
+      </mesh>
+      <Screen
+        media={`kiosk-${id}`}
+        width={0.84}
+        height={1.12}
+        position={[0, 1.44, -0.06]}
+        rotation={[-0.26, 0, 0]}
+        pitch={1.2}
+        brightness={1.25}
+        range={30}
+        frame={false}
+      />
+      <mesh position={[0, 0.14, 0.27]}>
+        <planeGeometry args={[0.8, 0.04]} />
+        <meshBasicMaterial color={accent} toneMapped />
+      </mesh>
+    </group>
+  );
+}
+
 /** A small architectural maquette for the projection-mapping demonstration. */
 function Maquette({ position }: { position: [number, number, number] }) {
   const blocks: [number, number, number, number, number][] = [
@@ -137,8 +196,8 @@ function Form({ p }: { p: Pavilion }) {
     case "console":
       return (
         <>
-          <Screen media={s[0]} width={5.2} height={2.9} position={[-1.3, 2.7, -5.0]} pitch={3.9} brightness={1.4} range={38} />
-          <Screen media={s[1]} width={2.6} height={1.5} position={[2.8, 2.6, -5.0]} pitch={2.9} range={38} />
+          <Screen media={s[0]} width={5.2} height={2.9} position={[-1.3, 2.7, -5.0]} pitch={1.5} brightness={1.4} range={38} />
+          <Screen media={s[1]} width={2.6} height={1.5} position={[2.8, 2.6, -5.0]} pitch={1.5} range={38} />
           <Screen
             media={s[2]}
             width={1.3}
@@ -192,7 +251,7 @@ function Form({ p }: { p: Pavilion }) {
     case "rack":
       return (
         <>
-          <Screen media={s[0]} width={5.0} height={2.8} position={[-1.4, 2.8, -5.0]} pitch={3.9} brightness={1.4} range={38} />
+          <Screen media={s[0]} width={5.0} height={2.8} position={[-1.4, 2.8, -5.0]} pitch={1.5} brightness={1.4} range={38} />
           <Screen media={s[1]} width={2.3} height={1.5} position={[2.9, 3.3, -5.0]} pitch={2.6} range={38} />
           <Screen
             media={s[2]}
@@ -251,7 +310,7 @@ function Form({ p }: { p: Pavilion }) {
               height={3.0}
               position={[0, 0.02, 0]}
               rotation={[-Math.PI / 2, 0, 0]}
-              pitch={3.9}
+              pitch={1.5}
               brightness={0.8}
               range={34}
               frame={false}
@@ -294,7 +353,7 @@ function Form({ p }: { p: Pavilion }) {
     case "broadcast":
       return (
         <>
-          <Screen media={s[0]} width={5.4} height={3.0} position={[-1.1, 2.8, -5.0]} pitch={2.9} brightness={1.4} range={38} />
+          <Screen media={s[0]} width={5.4} height={3.0} position={[-1.1, 2.8, -5.0]} pitch={1.5} brightness={1.4} range={38} />
           <Screen media={s[1]} width={2.3} height={1.35} position={[3.2, 3.6, -5.0]} pitch={2.6} range={38} />
           <Screen media={s[2]} width={2.3} height={1.5} position={[3.2, 2.0, -5.0]} pitch={2.6} range={38} />
           <Desk width={4.2} z={-1.9} />
@@ -332,7 +391,7 @@ function Form({ p }: { p: Pavilion }) {
     case "link":
       return (
         <>
-          <Screen media={s[0]} width={4.6} height={2.6} position={[-1.8, 2.8, -5.0]} pitch={2.9} brightness={1.4} range={38} />
+          <Screen media={s[0]} width={4.6} height={2.6} position={[-1.8, 2.8, -5.0]} pitch={1.5} brightness={1.4} range={38} />
           <Screen media={s[1]} width={3.0} height={1.9} position={[2.9, 3.3, -4.9]} rotation={[0, -0.18, 0]} pitch={2.6} range={38} />
           <Screen media={s[2]} width={2.2} height={1.5} position={[-4.68, 2.4, -2.6]} rotation={[0, Math.PI / 2, 0]} pitch={2.6} range={34} />
           {/* a small physical stage and lectern — the "here" half of hybrid */}
@@ -396,15 +455,25 @@ export function ServicePavilion({ p }: { p: Pavilion }) {
 
   return (
     <group position={[p.side * 9.2, 0, p.z]} rotation={[0, rotY, 0]}>
-      {/* plinth */}
+      {/* the footprint: matte deck against the hall's polished floor, with a
+          lit edge all the way round, so the stand has a boundary */}
       <mesh position={[0, 0.07, -D / 2 + 1]} material={M.deck} receiveShadow>
         <boxGeometry args={[W, 0.14, D]} />
       </mesh>
-      {/* plinth edge light line */}
-      <mesh position={[0, 0.07, 1.52]} rotation={[0, 0, 0]}>
-        <planeGeometry args={[W, 0.05]} />
+      <mesh position={[0, 0.145, 1.52]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[W, 0.07]} />
         <meshBasicMaterial ref={trim} color={p.accent} transparent opacity={0.6} toneMapped />
       </mesh>
+      {[-1, 1].map((side) => (
+        <mesh
+          key={`edge${side}`}
+          position={[side * (W / 2 - 0.04), 0.145, -D / 2 + 1]}
+          rotation={[-Math.PI / 2, 0, 0]}
+        >
+          <planeGeometry args={[0.07, D]} />
+          <meshBasicMaterial color={p.accent} toneMapped />
+        </mesh>
+      ))}
 
       {/* back wall + side fins */}
       <mesh position={[0, H / 2, -5.3]} material={M.graphite}>
@@ -415,20 +484,49 @@ export function ServicePavilion({ p }: { p: Pavilion }) {
       <LightPool
         position={[0, H / 2 - 0.4, -5.12]}
         rotation={[0, 0, 0]}
-        size={[W * 1.2, H * 1.5]}
+        size={[W * 1.25, H * 1.6]}
         color={p.accent}
-        opacity={0.1}
+        opacity={0.26}
         pulse={0.3}
       />
+      {/* a graze down the back wall and a pool on the deck */}
+      <mesh position={[0, H - 0.22, -5.1]} rotation={[0, 0, 0]}>
+        <planeGeometry args={[W - 0.8, 0.08]} />
+        <meshBasicMaterial color={p.accent} toneMapped />
+      </mesh>
+      <LightPool position={[0, 0.16, -2.4]} size={[W * 0.95, 7]} color={p.accent} opacity={0.14} />
       <mesh position={[0, H - 0.08, -2.4]} rotation={[Math.PI / 2, 0, 0]}>
         <planeGeometry args={[W - 1.4, 0.12]} />
         <meshBasicMaterial color={p.accent} toneMapped />
       </mesh>
       {[-1, 1].map((side) => (
-        <mesh key={side} position={[side * (W / 2 - 0.15), H / 2, -2.2]} material={M.charcoal}>
-          <boxGeometry args={[0.3, H, 6.4]} />
-        </mesh>
+        <group key={side}>
+          <mesh position={[side * (W / 2 - 0.15), H / 2, -2.2]} material={M.charcoal}>
+            <boxGeometry args={[0.3, H, 6.4]} />
+          </mesh>
+          {/* a light line down the inside face of each fin */}
+          <mesh
+            position={[side * (W / 2 - 0.31), H / 2, -2.2]}
+            rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
+          >
+            <planeGeometry args={[6.0, 0.07]} />
+            <meshBasicMaterial color={p.accent} toneMapped />
+          </mesh>
+        </group>
       ))}
+
+      {/* soffit over the stand, and the downlights rigged into it */}
+      <mesh position={[0, H + 0.02, -2.2]} rotation={[Math.PI / 2, 0, 0]} material={M.charcoal}>
+        <planeGeometry args={[W, 6.6]} />
+      </mesh>
+      {[-3.6, -1.2, 1.2, 3.6].map((x) =>
+        [-0.6, -3.2].map((z) => (
+          <mesh key={`dl${x}${z}`} position={[x, H - 0.05, z]} rotation={[Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[0.34, 0.34]} />
+            <meshBasicMaterial color="#e2e9ea" toneMapped />
+          </mesh>
+        )),
+      )}
 
       {/* fascia beam + the pavilion's own name */}
       <mesh position={[0, H + 0.42, -1.6]} material={M.charcoal}>
@@ -439,8 +537,8 @@ export function ServicePavilion({ p }: { p: Pavilion }) {
         width={6.6}
         height={1.1}
         position={[0, H + 0.42, -1.05]}
-        pitch={3.9}
-        brightness={1.0}
+        pitch={1.5}
+        brightness={1.05}
         range={46}
         frame={false}
       />
@@ -449,6 +547,14 @@ export function ServicePavilion({ p }: { p: Pavilion }) {
         <planeGeometry args={[0.5, 0.06]} />
         <meshBasicMaterial color={p.accent} toneMapped />
       </mesh>
+
+      {/* the things that make it a stand rather than a set: something to walk
+          up to, and something to read from */}
+      <Counter width={3.4} z={1.1} accent={p.accent} />
+      {/* The stand is rotated to face the aisle, so which way "downstream"
+          points in local space flips with the side. Putting the kiosk on the
+          wrong one parks it against the camera as it arrives. */}
+      <Kiosk id={p.id} x={-p.side * 3.2} accent={p.accent} />
 
       <Form p={p} />
 
@@ -505,18 +611,46 @@ export function PartnerBay() {
         width={5.6}
         height={0.95}
         position={[0, 5.55, -1.6]}
-        pitch={3.9}
+        pitch={1.5}
         range={46}
         frame={false}
       />
-      <Screen media="partner-bay" width={3.4} height={2.4} position={[3.0, 2.6, -4.6]} pitch={2.6} range={38} />
+      <Screen media="partner-bay" width={3.4} height={2.4} position={[3.0, 2.6, -4.6]} pitch={1.5} range={38} frame={false} />
+      <Kiosk id={p.id} x={-3.4} accent={p.accent} />
 
-      {/* representative PA and lighting — silhouettes, no brands */}
+      {/* representative PA and lighting — silhouettes, no brands, and nothing
+          claimed as owned stock: this is what a partner brings to site */}
       <LineArray position={[-3.6, 6.1, -2.4]} boxes={7} />
+      <LineArray position={[3.6, 6.1, -2.4]} boxes={5} />
       <SubStack position={[-4.2, 0.14, -4.6]} count={3} />
+      {/* stage monitors, angled back toward the performer position */}
+      {[-1.6, 0.2, 2.0].map((x) => (
+        <mesh key={`wedge${x}`} position={[x, 0.36, -3.4]} rotation={[0.42, 0, 0]} material={M.anodised}>
+          <boxGeometry args={[0.78, 0.42, 0.56]} />
+        </mesh>
+      ))}
+      {/* a floor package on bases as well as the flown rig */}
+      {[-3.0, 3.0].map((x) => (
+        <mesh key={`base${x}`} position={[x, 0.24, -0.6]} material={M.charcoal}>
+          <boxGeometry args={[0.6, 0.2, 0.6]} />
+        </mesh>
+      ))}
       {quality !== "low" &&
         [-2.4, -0.8, 0.8, 2.4].map((x, i) => (
           <MovingHead key={x} position={[x, 6.2, -2]} seed={i * 1.7} reach={7} color="#e3c08a" intensity={0.8} />
+        ))}
+      {quality === "high" &&
+        [-3.0, 3.0].map((x, i) => (
+          <MovingHead
+            key={`fl${x}`}
+            position={[x, 0.36, -0.6]}
+            seed={i * 2.9 + 5}
+            reach={6.5}
+            color="#d9b0e0"
+            intensity={0.7}
+            hanging={false}
+            beamAngle={0.07}
+          />
         ))}
       {/* lighting console on a small desk */}
       <mesh position={[1.6, 0.95, -0.4]} material={M.graphite}>

@@ -17,7 +17,7 @@ export const M = {
   /** matte deck / riser tops, non-reflective */
   deck: make({ color: "#0c0f10", roughness: 0.86, metalness: 0.08 }),
   /** graphite architectural surfaces */
-  graphite: make({ color: "#151a1c", roughness: 0.68, metalness: 0.22 }),
+  graphite: make({ color: "#1b2225", roughness: 0.66, metalness: 0.2 }),
   charcoal: make({ color: "#0b0f10", roughness: 0.8, metalness: 0.12 }),
   /** anodised black metal — equipment cases, frames */
   anodised: make({ color: "#0c0f10", roughness: 0.42, metalness: 0.85 }),
@@ -36,11 +36,13 @@ export const M = {
   }),
   /** pale stone for the exterior plaza */
   stone: make({ color: "#14161a", roughness: 0.94, metalness: 0.05 }),
-  concrete: make({ color: "#191b1a", roughness: 0.95, metalness: 0.02 }),
+  concrete: make({ color: "#1e211f", roughness: 0.94, metalness: 0.03 }),
   /** warm wood/composite accents in the bar + pavilions */
   composite: make({ color: "#241b14", roughness: 0.7, metalness: 0.1 }),
   /** matte black: light traps, ceiling voids */
   void: make({ color: "#040707", roughness: 1, metalness: 0 }),
+  /** hall ceilings — dark, but a surface rather than a hole */
+  ceiling: make({ color: "#0b1013", roughness: 0.92, metalness: 0.06 }),
 } as const;
 
 /** An unlit emissive strip — LED trim, edge lighting, wayfinding lines. */

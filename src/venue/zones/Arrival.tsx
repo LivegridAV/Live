@@ -5,7 +5,7 @@ import * as THREE from "three";
 import { M } from "../three/materials";
 import { Screen } from "../three/screens";
 import { Haze } from "../three/rig";
-import { LightPool } from "../three/environment";
+import { LightPool, getPoolTexture } from "../three/environment";
 import { ReflectionStreak } from "../three/Reflection";
 import { useVenue } from "../systems/store";
 
@@ -57,25 +57,75 @@ function SkyDome() {
   return <mesh geometry={geo} material={mat} renderOrder={-1} frustumCulled={false} />;
 }
 
-/** The warm glow leaking out of the doors — the reason to walk in. */
-function PortalGlow() {
+/**
+ * The entrance hall behind the doors.
+ *
+ * A flat additive plane across the opening was standing in for "light from
+ * inside", and from the plaza it read as exactly what it was: a brown
+ * rectangle. What the opening needs is a room — a short lit lobby between the
+ * façade and the tunnel mouth, so the visitor is looking into somewhere.
+ */
+function EntranceHall() {
   const ref = useRef<THREE.Mesh>(null);
   useFrame(({ clock }) => {
     const m = ref.current?.material as THREE.MeshBasicMaterial | undefined;
-    if (m) m.opacity = 0.5 + 0.16 * Math.sin(clock.elapsedTime * 0.55);
+    if (m) m.opacity = 0.2 + 0.05 * Math.sin(clock.elapsedTime * 0.55);
   });
+
+  const from = -1.0;
+  const to = -3.6;
+  const mid = (from + to) / 2;
+  const halfW = PORTAL_W / 2;
+
   return (
-    <mesh ref={ref} position={[0, PORTAL_H / 2, -1.2]} renderOrder={2}>
-      <planeGeometry args={[PORTAL_W, PORTAL_H]} />
-      <meshBasicMaterial
-        color="#7c6a45"
-        transparent
-        opacity={0.55}
-        depthWrite={false}
-        blending={THREE.AdditiveBlending}
-        toneMapped={false}
-      />
-    </mesh>
+    <group>
+      {/* lobby walls, splayed in toward the tunnel mouth */}
+      {[-1, 1].map((side) => (
+        <group key={side}>
+          <mesh
+            position={[side * halfW, PORTAL_H / 2, mid]}
+            rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
+            material={M.graphite}
+          >
+            <planeGeometry args={[Math.abs(to - from), PORTAL_H]} />
+          </mesh>
+          <mesh
+            position={[side * (halfW - 0.04), PORTAL_H / 2, mid]}
+            rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
+          >
+            <planeGeometry args={[Math.abs(to - from) - 0.5, 0.1]} />
+            <meshBasicMaterial color="#c2a068" toneMapped />
+          </mesh>
+        </group>
+      ))}
+      {/* soffit and its cove */}
+      <mesh position={[0, PORTAL_H, mid]} rotation={[Math.PI / 2, 0, 0]} material={M.charcoal}>
+        <planeGeometry args={[PORTAL_W, Math.abs(to - from)]} />
+      </mesh>
+      <mesh position={[0, PORTAL_H - 0.05, mid]} rotation={[Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[PORTAL_W - 1.4, 0.16]} />
+        <meshBasicMaterial color="#d3b27a" toneMapped />
+      </mesh>
+      {/* the lobby floor reads warm against the cool plaza outside */}
+      <mesh position={[0, 0.01, mid]} rotation={[-Math.PI / 2, 0, 0]} material={M.deck}>
+        <planeGeometry args={[PORTAL_W, Math.abs(to - from)]} />
+      </mesh>
+      <pointLight position={[0, PORTAL_H * 0.7, mid]} intensity={22} distance={16} decay={2} color="#d7b47e" />
+
+      {/* a soft bloom in the opening — now a glow rather than a panel */}
+      <mesh ref={ref} position={[0, PORTAL_H / 2, -0.9]} renderOrder={2}>
+        <planeGeometry args={[PORTAL_W * 1.25, PORTAL_H * 1.3]} />
+        <meshBasicMaterial
+          map={getPoolTexture()}
+          color="#9b8354"
+          transparent
+          opacity={0.22}
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+          toneMapped={false}
+        />
+      </mesh>
+    </group>
   );
 }
 
@@ -126,16 +176,43 @@ export function Arrival() {
           <meshBasicMaterial color="#6e5a3a" toneMapped />
         </mesh>
 
-        {/* vertical façade fins — architecture, not decoration */}
+        {/* Vertical façade fins, each with a light line washing the wall
+            behind it. A building at night is legible because of how it is lit,
+            not because of its geometry — unlit, this whole elevation was a
+            black rectangle with a door in it. */}
         {Array.from({ length: 10 }, (_, i) => {
           const x = (i - 4.5) * 3.9;
           if (Math.abs(x) < PORTAL_W / 2 + 1.6) return null;
           return (
-            <mesh key={`fin${i}`} position={[x, FACADE_H / 2, 0.35]} material={M.charcoal}>
-              <boxGeometry args={[0.35, FACADE_H - 0.6, 0.7]} />
-            </mesh>
+            <group key={`fin${i}`}>
+              <mesh position={[x, FACADE_H / 2, 0.35]} material={M.charcoal}>
+                <boxGeometry args={[0.35, FACADE_H - 0.6, 0.7]} />
+              </mesh>
+              <mesh position={[x, FACADE_H / 2 - 0.6, 0.72]}>
+                <planeGeometry args={[0.07, FACADE_H - 3.2]} />
+                <meshBasicMaterial color="#5c7f84" toneMapped />
+              </mesh>
+              {/* an uplight at the base, grazing the wall */}
+              <mesh position={[x, 0.08, 1.3]} rotation={[-Math.PI / 2, 0, 0]}>
+                <planeGeometry args={[0.5, 0.18]} />
+                <meshBasicMaterial color="#b89a66" toneMapped />
+              </mesh>
+              <LightPool
+                position={[x, FACADE_H * 0.42, 0.78]}
+                rotation={[0, 0, 0]}
+                size={[3.4, FACADE_H * 0.9]}
+                color="#8f9e8a"
+                opacity={0.09}
+              />
+            </group>
           );
         })}
+
+        {/* a continuous cove along the top of the elevation */}
+        <mesh position={[0, FACADE_H - 0.5, 0.55]}>
+          <planeGeometry args={[FACADE_W - 1.2, 0.12]} />
+          <meshBasicMaterial color="#7c8f94" toneMapped />
+        </mesh>
       </group>
 
       {/* ── brand band above the doors ── */}
@@ -144,9 +221,10 @@ export function Arrival() {
         width={12.6}
         height={2.1}
         position={[0, PORTAL_H + 2.6, 0.1]}
-        pitch={5.2}
-        brightness={1.15}
+        pitch={1.9}
+        brightness={1.05}
         range={70}
+        frame={false}
       />
       <LightPool position={[0, 0.03, 4]} size={[16, 12]} color="#5fb8ad" opacity={0.1} pulse={0.4} />
 
@@ -156,7 +234,7 @@ export function Arrival() {
         width={4.2}
         height={1.05}
         position={[-9.2, 2.6, 0.3]}
-        pitch={3.9}
+        pitch={1.5}
         brightness={0.9}
         range={45}
       />
@@ -172,7 +250,7 @@ export function Arrival() {
             width={1.15}
             height={6.4}
             position={[0, 3.5, 0.12]}
-            pitch={3.9}
+            pitch={1.5}
             brightness={1.0}
             range={50}
           />
@@ -186,7 +264,7 @@ export function Arrival() {
         </group>
       ))}
 
-      <PortalGlow />
+      <EntranceHall />
 
       {/* ── plaza ── */}
       {strips.map((z, i) => (

@@ -45,35 +45,28 @@ export function PavilionPrompt() {
   }, [progress]);
 
   const visible = entered && near && !activePavilion && !pastVenue;
-  const services = near ? pavilionServices(near) : [];
 
   if (!near) return null;
 
   return (
     <aside
       className="v-prompt"
-      /* opposite side to the stall, so the panel never covers what it is
-         describing */
-      data-side={-near.side}
+      /* A control strip, not a content card. The stand explains itself on its
+         own kiosk in the room (see data/media.ts, painter `kioskInfo`); what
+         is left for the DOM is the thing HTML is actually better at — a real
+         button, reachable by keyboard, that opens the full accessible panel. */
+      data-side={near.side}
       style={{
         opacity: visible ? 1 : 0,
         pointerEvents: visible ? "auto" : "none",
-        transform: `translateY(-50%) translateX(${visible ? 0 : near.side * 14}px)`,
+        transform: `translateY(${visible ? 0 : 14}px)`,
       }}
     >
       <span className="v-prompt-no">
         {"no" in near ? `Pavilion ${near.no}` : "Partner bay"}
       </span>
       <h2>{near.headline}</h2>
-      <p>{near.support}</p>
-      <div className="v-prompt-tags">
-        {services.map((s) => (
-          <span key={s.slug} className="v-tag">
-            {s.title}
-          </span>
-        ))}
-      </div>
-      <div>
+      <div className="v-prompt-act">
         <button type="button" className="v-btn v-btn--primary" onClick={() => open(near.id)}>
           Explore this pavilion
         </button>

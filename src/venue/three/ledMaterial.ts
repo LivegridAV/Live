@@ -4,11 +4,20 @@ import * as THREE from "three";
  * The LED surface material.
  *
  * Content textures carry the *picture*; this material makes it read as a real
- * LED product — discrete emitters on black glass, visible module seams, the
- * off-axis brightness falloff every physical panel has, and a dot structure
- * that dissolves as the wall recedes (so a 3.9 mm wall doesn't turn into moiré
- * at fifty metres). Getting this right is what separates "video on a plane"
- * from "screen in a room".
+ * LED product. The product we are simulating is premium ultra-fine-pitch — the
+ * class of panel where, at any normal viewing distance, you see an image and
+ * not a grid of diodes. So the rules here are deliberately strict:
+ *
+ *  - There are NO cabinet seams. A fine-pitch wall is commissioned until the
+ *    joins cannot be found; drawing them would be drawing a fault. The seam
+ *    term exists only for the one technical exhibit that demonstrates module
+ *    construction, and is off everywhere else.
+ *  - The emitter structure dissolves early and softly. `fwidth` tells us how
+ *    many LED cells fall inside a screen pixel; past a few tenths of a cell the
+ *    structure is gone, long before it could alias into moiré or shimmer.
+ *  - Off-axis falloff is gentle. Real panels lose output at grazing angles, but
+ *    a strong falloff would make two surfaces meeting at a corner differ in
+ *    brightness — which is exactly the discontinuity we are trying to avoid.
  */
 
 const vertex = /* glsl */ `
@@ -25,9 +34,11 @@ const vertex = /* glsl */ `
 `;
 
 const fragment = /* glsl */ `
+  precision highp float;
+
   uniform sampler2D uMap;
   uniform vec2  uPitch;    // emitters across / down
-  uniform vec2  uModule;   // cabinet count across / down
+  uniform vec2  uModule;   // cabinet count across / down (technical exhibit only)
   uniform vec2  uRepeat;
   uniform vec2  uOffset;
   uniform float uSwap;     // 1 = sample the content with u/v exchanged
@@ -35,7 +46,8 @@ const fragment = /* glsl */ `
   uniform vec3  uTint;
   uniform float uBright;
   uniform float uOn;       // 0 = dark panel, 1 = full output
-  uniform float uDot;      // 0 = no visible pixel structure, 1 = full
+  uniform float uDot;      // emitter structure, only ever visible very close
+  uniform float uSeam;     // 0 everywhere except the module-construction exhibit
 
   varying vec2 vUv;
   varying vec3 vViewDir;
@@ -49,25 +61,35 @@ const fragment = /* glsl */ `
     vec2 uv = src * uRepeat + uOffset;
     vec3 content = texture2D(uMap, uv).rgb;
 
-    // Emitter grid. fwidth tells us how many LED cells fall inside one screen
-    // pixel — once that passes ~1 the structure is dissolved away instead of
-    // aliasing into moiré.
+    // How much of one LED cell lands inside one screen pixel. Below ~0.1 we
+    // are close enough to resolve individual emitters; by ~0.34 the structure
+    // is fully dissolved. On a 1.2 mm wall that threshold is reached with your
+    // face almost against the panel, which is the intent.
     vec2 g = vUv * uPitch;
-    vec2 f = fract(g) - 0.5;
-    float d = length(f);
     float px = max(fwidth(g.x), fwidth(g.y));
-    float structure = (1.0 - smoothstep(0.30, 0.80, px)) * uDot;
-    float emitter = mix(1.0, smoothstep(0.54, 0.26, d), structure * 0.85);
+    float structure = (1.0 - smoothstep(0.10, 0.34, px)) * uDot;
 
-    // Cabinet seams — a hairline of unlit frame between modules.
-    vec2 m = fract(vUv * uModule);
-    float seamD = min(min(m.x, 1.0 - m.x), min(m.y, 1.0 - m.y));
-    float seam = mix(1.0, smoothstep(0.0, 0.010, seamD), structure * 0.6);
+    float emitter = 1.0;
+    if (structure > 0.001) {
+      vec2 f = fract(g) - 0.5;
+      float d = length(f);
+      // A soft, shallow well rather than a hard dot: even at maximum visibility
+      // this reads as fine texture on a bright surface, never as pixelation.
+      emitter = mix(1.0, smoothstep(0.62, 0.24, d), structure * 0.5);
+    }
 
-    // Real panels lose output off-axis; this also stops grazing surfaces from
-    // blowing out the frame.
+    // Module construction. Off by default — see the note at the top.
+    float seam = 1.0;
+    if (uSeam > 0.001) {
+      vec2 m = fract(vUv * uModule);
+      float seamD = min(min(m.x, 1.0 - m.x), min(m.y, 1.0 - m.y));
+      seam = mix(1.0, smoothstep(0.0, 0.006, seamD), uSeam * structure);
+    }
+
+    // Gentle off-axis falloff. Deliberately shallow so adjacent surfaces of an
+    // enveloping installation keep the same apparent brightness.
     float axis = clamp(dot(normalize(vNormalV), normalize(vViewDir)), 0.0, 1.0);
-    float offAxis = mix(0.42, 1.0, pow(axis, 0.6));
+    float offAxis = mix(0.74, 1.0, pow(axis, 0.45));
 
     vec3 col = content * uTint * uBright * emitter * seam * offAxis * uOn;
 
@@ -84,9 +106,13 @@ export interface LEDOptions {
   /** physical size in metres, used to derive a believable emitter count */
   width: number;
   height: number;
-  /** pixel pitch in millimetres (2.6 fine · 3.9 indoor · 6.9 stage · 10 outdoor) */
+  /**
+   * pixel pitch in millimetres. The venue is specified as premium fine pitch
+   * throughout: 1.2–1.9 mm for anything the visitor gets close to, 2.6–3.9 mm
+   * for large-format surfaces seen from across a room.
+   */
   pitch?: number;
-  /** cabinet size in metres — drives the seam grid */
+  /** cabinet size in metres — only used when `seam` is non-zero */
   cabinet?: number;
   brightness?: number;
   tint?: string;
@@ -96,17 +122,22 @@ export interface LEDOptions {
   swap?: boolean;
   /** mirror the content on [u, v] */
   flip?: [boolean, boolean];
-  /** 0 disables the emitter/seam structure (use for projection surfaces) */
+  /** 0 disables the emitter structure (use for projection surfaces) */
   dot?: number;
+  /** module joins — reserved for the LED-construction exhibit, 0 everywhere else */
+  seam?: number;
   /** curved and ring products are seen from both sides */
   doubleSided?: boolean;
 }
 
-/** Emitter counts are capped: beyond this the structure is invisible anyway. */
-const MAX_EMITTERS = 420;
+/**
+ * Emitter counts are capped well above anything that can be resolved on screen;
+ * the cap exists to keep `fract()` precise, not to limit the apparent pitch.
+ */
+const MAX_EMITTERS = 900;
 
 export function createLEDMaterial(texture: THREE.Texture, o: LEDOptions) {
-  const pitch = o.pitch ?? 3.9;
+  const pitch = o.pitch ?? 1.9;
   const cabinet = o.cabinet ?? 0.5;
   const across = Math.min(MAX_EMITTERS, Math.max(8, Math.round((o.width * 1000) / pitch)));
   const down = Math.min(MAX_EMITTERS, Math.max(8, Math.round((o.height * 1000) / pitch)));
@@ -131,6 +162,7 @@ export function createLEDMaterial(texture: THREE.Texture, o: LEDOptions) {
       uBright: { value: o.brightness ?? 1 },
       uOn: { value: 1 },
       uDot: { value: o.dot ?? 1 },
+      uSeam: { value: o.seam ?? 0 },
     },
     side: o.doubleSided ? THREE.DoubleSide : THREE.FrontSide,
     toneMapped: true,

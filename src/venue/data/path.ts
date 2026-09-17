@@ -22,65 +22,110 @@ export interface Keyframe {
 }
 
 export const KEYFRAMES: Keyframe[] = [
-  /* ── Arrival: outside the venue ─────────────────────── */
-  { p: 0.0, pos: [0, 2.35, 21], look: [0, 4.1, -1], fov: 50 },
-  { p: 0.045, pos: [0, 2.05, 13], look: [0, 3.5, -5], fov: 49 },
-  { p: 0.085, pos: [0, 1.8, 6.2], look: [0, 2.8, -11], fov: 48 },
+  /* ── Arrival ─────────────────────────────────────────────
+     Establish the building wide, then break the centre line: the camera
+     drifts left, swings right past the entrance blades and only lines up on
+     the portal at the last moment. Travelling straight down the middle from
+     the first frame is what made the old opening read as a fly-through. */
+  { p: 0.0, pos: [0, 2.45, 24], look: [0, 5.0, 0], fov: 48 },
+  { p: 0.03, pos: [-3.4, 2.25, 17.5], look: [1.6, 4.4, -2], fov: 50 },
+  { p: 0.062, pos: [2.8, 1.95, 10.6], look: [-1.2, 3.4, -6], fov: 52 },
+  { p: 0.095, pos: [0.2, 1.82, 4.6], look: [0, 2.7, -10], fov: 50 },
 
-  /* ── Entry portal ───────────────────────────────────── */
-  { p: 0.118, pos: [0, 1.7, 0.5], look: [0, 2.3, -14], fov: 47 },
+  /* Entry portal — the frame passes around the viewer. */
+  { p: 0.122, pos: [0, 1.74, -0.8], look: [0, 2.25, -14], fov: 52 },
 
-  /* ── Four-sided LED tunnel (-4 → -24) ───────────────── */
-  { p: 0.15, pos: [0, 1.74, -4.5], look: [0, 1.95, -20], fov: 62 },
-  { p: 0.19, pos: [-0.35, 1.8, -10], look: [0.2, 1.9, -26], fov: 66 },
-  { p: 0.228, pos: [0.4, 1.86, -16], look: [-0.25, 1.95, -31], fov: 67 },
-  { p: 0.265, pos: [0, 1.8, -22], look: [0, 2.2, -34], fov: 62 },
+  /* ── Four-sided LED tunnel (-3.4 → -28.4) ────────────────
+     Small lateral offsets only. Inside a projected environment the parallax
+     does the work; swinging the camera about would fight the illusion. */
+  { p: 0.15, pos: [0, 1.74, -4.6], look: [0, 2.0, -22], fov: 64 },
+  { p: 0.186, pos: [-0.52, 1.82, -10.5], look: [0.35, 1.95, -30], fov: 68 },
+  { p: 0.222, pos: [0.56, 1.88, -16.5], look: [-0.3, 2.0, -34], fov: 68 },
+  { p: 0.256, pos: [-0.26, 1.8, -22.5], look: [0.16, 2.1, -38], fov: 65 },
+  { p: 0.282, pos: [0, 1.82, -27.6], look: [0, 2.45, -40], fov: 60 },
 
-  /* ── Exhibition hall reveal ─────────────────────────── */
-  { p: 0.3, pos: [0, 2.2, -29], look: [0, 5.4, -46], fov: 55 },
-  { p: 0.33, pos: [0, 2.6, -36], look: [-6, 4.0, -50], fov: 52 },
+  /* ── Vestibule, then the hall reveal ────────────────────
+     The tilt up at -37 is the reveal: the ceiling leaves the frame and a
+     fifteen-metre hall arrives. */
+  { p: 0.3, pos: [0, 2.0, -31.5], look: [0, 3.3, -44], fov: 56 },
+  { p: 0.318, pos: [0, 2.4, -37], look: [-1.6, 6.8, -52], fov: 58 },
+  { p: 0.34, pos: [1.7, 2.5, -42.5], look: [-6.6, 4.6, -50], fov: 54 },
 
-  /* ── Creative LED gallery ───────────────────────────── */
-  { p: 0.362, pos: [-3.5, 2.2, -44], look: [-9.5, 3.2, -54], fov: 50 }, // pillars
-  { p: 0.392, pos: [1.5, 2.0, -53], look: [7.5, 2.8, -61], fov: 50 }, // blades
-  { p: 0.422, pos: [5.0, 2.1, -61], look: [8.6, 3.0, -70], fov: 50 }, // cylinder
-  { p: 0.452, pos: [0.5, 2.5, -69], look: [-3.2, 4.6, -77], fov: 53 }, // ring
-  { p: 0.482, pos: [-4.5, 1.9, -77], look: [-9.6, 2.0, -83], fov: 48 }, // bar
-  { p: 0.512, pos: [1.0, 2.0, -85], look: [6.6, 2.8, -91], fov: 48 }, // curved
-  { p: 0.54, pos: [-1.0, 2.05, -93.4], look: [-6.6, 2.5, -98.8], fov: 47 }, // anamorphic corner
-  { p: 0.566, pos: [0, 2.0, -101], look: [0, 2.9, -114], fov: 52 },
+  /* ── Creative LED gallery ────────────────────────────────
+     Each installation gets a shape: come at it, go through or beside it, then
+     turn out of it toward the next. The camera is inside the pillar cluster
+     at 0.376 and directly under the ring at 0.496 — those two moments are
+     what make the gallery feel walked rather than watched. */
+  { p: 0.36, pos: [-2.3, 2.2, -45.5], look: [-9.8, 3.4, -50.5], fov: 52 },
+  { p: 0.376, pos: [-6.6, 1.95, -49.5], look: [-11.6, 3.2, -55.5], fov: 55 },
+  { p: 0.392, pos: [-4.0, 2.15, -54.5], look: [3.2, 3.2, -59], fov: 52 },
+  { p: 0.41, pos: [1.2, 2.05, -57.5], look: [8.6, 3.0, -60.5], fov: 50 },
+  { p: 0.428, pos: [5.2, 2.0, -61.5], look: [9.8, 2.6, -66], fov: 52 },
+  { p: 0.446, pos: [6.7, 2.1, -66], look: [8.9, 3.1, -70.5], fov: 50 },
+  { p: 0.462, pos: [5.7, 2.25, -71.6], look: [9.4, 3.2, -69.8], fov: 55 },
+  { p: 0.48, pos: [1.4, 2.4, -75], look: [-3.2, 6.0, -78], fov: 56 },
+  { p: 0.496, pos: [-3.2, 2.5, -78.6], look: [-3.2, 7.6, -80.2], fov: 62 },
+  { p: 0.512, pos: [-4.2, 2.1, -82], look: [-9.6, 2.3, -85], fov: 50 },
+  { p: 0.528, pos: [-6.2, 1.88, -81.6], look: [-10.2, 1.7, -84.4], fov: 50 },
+  { p: 0.544, pos: [-2.6, 2.1, -88.5], look: [6.9, 2.9, -91], fov: 52 },
+  { p: 0.556, pos: [2.6, 2.05, -92], look: [-8.6, 2.7, -94], fov: 52 },
+  /* The anamorphic viewing point. The corner is rendered for exactly this
+     position, so the keyframe is not a composition choice — it is the mark. */
+  { p: 0.566, pos: [-1.7, 1.78, -94.1], look: [-6.6, 2.4, -99], fov: 50 },
 
-  /* ── Service boulevard: eight pavilions ─────────────── */
-  { p: 0.592, pos: [-3.4, 2.15, -108.5], look: [-9.6, 3.0, -113.0], fov: 52 },
-  { p: 0.617, pos: [3.4, 2.15, -123.5], look: [9.6, 3.0, -128.0], fov: 52 },
-  { p: 0.642, pos: [-3.4, 2.15, -138.5], look: [-9.6, 3.0, -143.0], fov: 52 },
-  { p: 0.667, pos: [3.4, 2.15, -153.5], look: [9.6, 3.0, -158.0], fov: 52 },
-  { p: 0.692, pos: [-3.4, 2.15, -168.5], look: [-9.6, 2.9, -173.0], fov: 52 },
-  { p: 0.717, pos: [3.4, 2.15, -183.5], look: [9.6, 2.9, -188.0], fov: 52 },
-  { p: 0.742, pos: [-3.4, 2.15, -198.5], look: [-9.6, 2.9, -203.0], fov: 52 },
-  { p: 0.767, pos: [3.4, 2.15, -213.5], look: [9.6, 2.9, -218.0], fov: 52 },
+  /* ── Service boulevard: eight pavilions ─────────────────
+     Alternating sides with a transition keyframe between each, so the camera
+     crosses the aisle instead of sliding along it. The `p` of each pavilion
+     keyframe matches its entry in data/pavilions.ts — that is what puts the
+     stall light, the prompt and the camera on the same beat. */
+  { p: 0.578, pos: [-1.1, 2.0, -100.5], look: [0, 3.1, -112], fov: 54 },
+  { p: 0.592, pos: [-2.8, 2.12, -109.5], look: [-9.5, 3.0, -113.5], fov: 52 },
+  { p: 0.605, pos: [-0.6, 2.16, -117], look: [2.4, 3.0, -124], fov: 54 },
+  { p: 0.617, pos: [2.8, 2.12, -124.5], look: [9.5, 3.0, -128.5], fov: 52 },
+  { p: 0.63, pos: [0.6, 2.16, -132], look: [-2.4, 3.0, -139], fov: 54 },
+  { p: 0.642, pos: [-2.8, 2.12, -139.5], look: [-9.5, 3.0, -143.5], fov: 52 },
+  { p: 0.655, pos: [-0.6, 2.16, -147], look: [2.4, 3.0, -154], fov: 54 },
+  { p: 0.667, pos: [2.8, 2.12, -154.5], look: [9.5, 3.0, -158.5], fov: 52 },
+  { p: 0.68, pos: [0.6, 2.16, -162], look: [-2.4, 3.0, -169], fov: 54 },
+  { p: 0.692, pos: [-2.8, 2.12, -169.5], look: [-9.5, 2.9, -173.5], fov: 52 },
+  { p: 0.705, pos: [-0.6, 2.16, -177], look: [2.4, 3.0, -184], fov: 54 },
+  { p: 0.717, pos: [2.8, 2.12, -184.5], look: [9.5, 2.9, -188.5], fov: 52 },
+  { p: 0.73, pos: [0.6, 2.16, -192], look: [-2.4, 3.0, -199], fov: 54 },
+  { p: 0.742, pos: [-2.8, 2.12, -199.5], look: [-9.5, 2.9, -203.5], fov: 52 },
+  { p: 0.755, pos: [-0.6, 2.16, -207], look: [2.4, 3.0, -214], fov: 54 },
+  { p: 0.767, pos: [2.8, 2.12, -214.5], look: [9.5, 2.9, -218.5], fov: 52 },
 
-  /* ── Sound & lighting partner bay ───────────────────── */
-  { p: 0.789, pos: [0.9, 2.0, -227], look: [7.5, 2.8, -232], fov: 50 },
+  /* ── Sound & lighting partner bay ───────────────────────── */
+  { p: 0.789, pos: [1.2, 2.05, -228], look: [8.2, 2.9, -232], fov: 50 },
 
-  /* ── Arena approach + portal ────────────────────────── */
-  { p: 0.812, pos: [0, 2.0, -239], look: [0, 4.4, -254], fov: 54 },
-  { p: 0.836, pos: [0, 2.5, -253], look: [0, 7.5, -272], fov: 59 },
+  /* ── Arena approach and portal ──────────────────────────
+     The portal is established from a distance, then the camera flies through
+     it; the reveal on the far side is a tilt up into a room three times the
+     height of the one just left. */
+  { p: 0.812, pos: [0, 2.05, -237], look: [0, 4.8, -252], fov: 54 },
+  { p: 0.83, pos: [0, 2.6, -248], look: [0, 8.5, -266], fov: 60 },
+  { p: 0.846, pos: [0, 3.2, -256], look: [0, 15.0, -282], fov: 64 },
 
-  /* ── Main arena ─────────────────────────────────────── */
-  { p: 0.864, pos: [0, 3.2, -268], look: [0, 10.5, -296], fov: 57 },
-  { p: 0.892, pos: [0, 2.7, -284], look: [0, 8.0, -310], fov: 53 },
+  /* ── Main arena: the stage grows until it owns the frame ── */
+  { p: 0.868, pos: [0, 3.4, -272], look: [0, 13.0, -330], fov: 58 },
+  { p: 0.892, pos: [-2.4, 3.0, -290], look: [0, 11.0, -344], fov: 54 },
+  { p: 0.912, pos: [1.8, 2.8, -304], look: [0, 10.0, -348], fov: 52 },
 
-  /* ── Main stage ─────────────────────────────────────── */
-  { p: 0.918, pos: [0, 2.5, -297], look: [0, 8.6, -322], fov: 50 },
-  { p: 0.942, pos: [0, 3.3, -305], look: [0, 9.6, -325], fov: 48 },
+  /* ── Main stage ─────────────────────────────────────────
+     Hero position is four metres off the barrier: from here the main wall is
+     twenty-two metres away and fills the frame, which is the whole argument
+     of the arena section. */
+  { p: 0.932, pos: [0, 2.7, -316], look: [0, 9.2, -350], fov: 50 },
+  { p: 0.95, pos: [0, 2.6, -326], look: [0, 8.6, -350], fov: 52 },
 
-  /* ── Finale ─────────────────────────────────────────── */
-  { p: 0.966, pos: [0, 6.4, -299], look: [0, 10.2, -326], fov: 46 },
-  { p: 0.986, pos: [0, 9.6, -290], look: [0, 11.2, -327], fov: 44 },
+  /* ── Finale ─────────────────────────────────────────────
+     The camera rises off the floor and moves in. Nothing else in the venue
+     leaves the ground, so the lift reads as the show ending. */
+  { p: 0.968, pos: [0, 4.6, -324], look: [0, 10.0, -350], fov: 48 },
+  { p: 0.986, pos: [0, 7.6, -320], look: [0, 11.0, -350], fov: 45 },
 
-  /* ── Contact settle ─────────────────────────────────── */
-  { p: 1.0, pos: [0, 5.4, -298], look: [0, 8.4, -326], fov: 43 },
+  /* ── Contact settle ─────────────────────────────────────── */
+  { p: 1.0, pos: [0, 5.6, -322], look: [0, 9.0, -350], fov: 44 },
 ];
 
 /* ── Hermite interpolation with Catmull-Rom tangents ───── */

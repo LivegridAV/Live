@@ -5,6 +5,7 @@ import * as THREE from "three";
 import { useScreenTexture } from "../media/MediaContext";
 import { createLEDMaterial, createProjectionMaterial, type LEDOptions } from "./ledMaterial";
 import { useVenue } from "../systems/store";
+import { show } from "../systems/journey";
 
 /**
  * The LED product range.
@@ -84,9 +85,13 @@ function usePowerState(
   const entered = useVenue((s) => s.entered);
   useFrame((_, dt) => {
     const o = typeof override === "function" ? override() : override;
-    const target = o ?? (entered ? 1 : 0.22);
+    // The house dip during a stage-mode cue. It is what hides the content
+    // swap: by the time the new package is loaded the panels are almost dark.
+    const dip = 1 - show.cue * 0.86;
+    const target = (o ?? (entered ? 1 : 0.22)) * dip;
     const u = material.uniforms.uOn;
-    u.value += (target - u.value) * Math.min(1, dt * 2.2);
+    // Falling fast and recovering slowly reads as a rig responding to a cue.
+    u.value += (target - u.value) * Math.min(1, dt * (target < u.value ? 7 : 2.4));
 
     if (hideRef?.current) {
       const visible = u.value > 0.015;

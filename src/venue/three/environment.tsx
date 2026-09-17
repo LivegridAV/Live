@@ -2,8 +2,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { journey } from "../systems/journey";
-import { venue } from "../systems/store";
+import { journey, show } from "../systems/journey";
 import { zoneAt } from "../data/zones";
 import { PAVILIONS, PARTNER_BAY } from "../data/pavilions";
 
@@ -65,7 +64,7 @@ export function VenueEnvironment() {
     pmrem.compileEquirectangularShader();
     const rt = pmrem.fromEquirectangular(src);
     scene.environment = rt.texture;
-    scene.environmentIntensity = 0.42;
+    scene.environmentIntensity = 0.62;
     src.dispose();
     pmrem.dispose();
     return () => {
@@ -93,16 +92,16 @@ interface ZoneLight {
 }
 
 const LOOKS: Record<string, ZoneLight> = {
-  arrival: { key: "#c8b391", fill: "#4e6e7c", keyI: 13, fillI: 9, amb: 0.085, fog: "#0a1013", fogDensity: 0.0075 },
-  tunnel: { key: "#7fd0c4", fill: "#3e6f78", keyI: 8, fillI: 6, amb: 0.1, fog: "#050b0c", fogDensity: 0.012 },
-  hall: { key: "#b7c3c6", fill: "#44646b", keyI: 22, fillI: 12, amb: 0.1, fog: "#070c0e", fogDensity: 0.008 },
-  gallery: { key: "#c4b69b", fill: "#476a72", keyI: 18, fillI: 11, amb: 0.09, fog: "#070c0e", fogDensity: 0.0085 },
-  boulevard: { key: "#b8c0c3", fill: "#4c6874", keyI: 17, fillI: 11, amb: 0.09, fog: "#060b0d", fogDensity: 0.009 },
-  approach: { key: "#e0b47e", fill: "#4a6a76", keyI: 22, fillI: 12, amb: 0.1, fog: "#060a0c", fogDensity: 0.0095 },
-  arena: { key: "#b9c6cc", fill: "#3f5f6a", keyI: 20, fillI: 14, amb: 0.09, fog: "#04080a", fogDensity: 0.0075 },
-  stage: { key: "#cbd6da", fill: "#44636e", keyI: 18, fillI: 12, amb: 0.085, fog: "#04080a", fogDensity: 0.007 },
-  finale: { key: "#9fb0b6", fill: "#2f4a53", keyI: 9, fillI: 7, amb: 0.05, fog: "#020607", fogDensity: 0.0085 },
-  contact: { key: "#8fa5ab", fill: "#2a444c", keyI: 8, fillI: 6, amb: 0.05, fog: "#020607", fogDensity: 0.0085 },
+  arrival: { key: "#c8b391", fill: "#5b7e8c", keyI: 24, fillI: 16, amb: 0.16, fog: "#0a1013", fogDensity: 0.0068 },
+  tunnel: { key: "#7fd0c4", fill: "#3e6f78", keyI: 7, fillI: 5, amb: 0.08, fog: "#050b0c", fogDensity: 0.010 },
+  hall: { key: "#b7c3c6", fill: "#44646b", keyI: 34, fillI: 20, amb: 0.2, fog: "#070c0e", fogDensity: 0.0068 },
+  gallery: { key: "#c4b69b", fill: "#476a72", keyI: 30, fillI: 19, amb: 0.19, fog: "#070c0e", fogDensity: 0.0072 },
+  boulevard: { key: "#b8c0c3", fill: "#4c6874", keyI: 28, fillI: 18, amb: 0.18, fog: "#060b0d", fogDensity: 0.0076 },
+  approach: { key: "#e0b47e", fill: "#4a6a76", keyI: 32, fillI: 18, amb: 0.17, fog: "#060a0c", fogDensity: 0.0082 },
+  arena: { key: "#b9c6cc", fill: "#3f5f6a", keyI: 28, fillI: 18, amb: 0.14, fog: "#04080a", fogDensity: 0.0068 },
+  stage: { key: "#cbd6da", fill: "#44636e", keyI: 24, fillI: 16, amb: 0.12, fog: "#04080a", fogDensity: 0.0064 },
+  finale: { key: "#9fb0b6", fill: "#2f4a53", keyI: 11, fillI: 8, amb: 0.06, fog: "#020607", fogDensity: 0.008 },
+  contact: { key: "#8fa5ab", fill: "#2a444c", keyI: 10, fillI: 7, amb: 0.06, fog: "#020607", fogDensity: 0.008 },
 };
 
 const FESTIVAL_OVERRIDE: Partial<ZoneLight> = {
@@ -126,6 +125,18 @@ const STALLS = [...PAVILIONS, PARTNER_BAY].map((p) => ({
   z: p.z,
   color: new THREE.Color(p.accent),
 }));
+
+const _blend: ZoneLight = { ...LOOKS.arena };
+function blendLook(base: ZoneLight, over: Partial<ZoneLight>, f: number): ZoneLight {
+  _blend.key = f > 0.5 ? (over.key ?? base.key) : base.key;
+  _blend.fill = f > 0.5 ? (over.fill ?? base.fill) : base.fill;
+  _blend.keyI = base.keyI + ((over.keyI ?? base.keyI) - base.keyI) * f;
+  _blend.fillI = base.fillI + ((over.fillI ?? base.fillI) - base.fillI) * f;
+  _blend.amb = base.amb + ((over.amb ?? base.amb) - base.amb) * f;
+  _blend.fog = f > 0.5 ? (over.fog ?? base.fog) : base.fog;
+  _blend.fogDensity = base.fogDensity + ((over.fogDensity ?? base.fogDensity) - base.fogDensity) * f;
+  return _blend;
+}
 
 export function LightRig() {
   const scene = useThree((s) => s.scene);
@@ -159,11 +170,13 @@ export function LightRig() {
 
   useFrame(({ camera, clock }, dt) => {
     const d = Math.min(0.1, dt);
-    const s = venue();
     const zone = zoneAt(journey.progress);
     const base = LOOKS[zone.id] ?? LOOKS.hall;
-    const festival = s.stageMode === "festival" && (zone.id === "stage" || zone.id === "arena" || zone.id === "finale");
-    const look = festival ? { ...base, ...FESTIVAL_OVERRIDE } : base;
+    // Blended, not switched: the room arrives at the festival look across the
+    // cue, in step with the screens and the fixtures.
+    const inRoom = zone.id === "stage" || zone.id === "arena" || zone.id === "finale";
+    const f = inRoom ? show.mode : 0;
+    const look = f > 0.001 ? blendLook(base, FESTIVAL_OVERRIDE, f) : base;
 
     // Finale dims the house — a real venue getting ready for the last cue.
     const finaleFade = zone.id === "finale" || zone.id === "contact" ? 1 : 0;
@@ -175,8 +188,10 @@ export function LightRig() {
     cur.current.key.lerp(targetKey, k);
     cur.current.fill.lerp(targetFill, k);
     cur.current.fog.lerp(targetFog, k);
-    cur.current.keyI += (look.keyI * (1 - finaleFade * 0.55) - cur.current.keyI) * k;
-    cur.current.fillI += (look.fillI * (1 - finaleFade * 0.6) - cur.current.fillI) * k;
+    // The house dips during a cue as well — the screens are not doing it alone.
+    const dip = 1 - show.cue * 0.6;
+    cur.current.keyI += (look.keyI * (1 - finaleFade * 0.55) * dip - cur.current.keyI) * k;
+    cur.current.fillI += (look.fillI * (1 - finaleFade * 0.6) * dip - cur.current.fillI) * k;
     cur.current.amb += (look.amb - cur.current.amb) * k;
     cur.current.fogDensity += (look.fogDensity - cur.current.fogDensity) * k;
 
@@ -223,13 +238,13 @@ export function LightRig() {
       const near = Math.max(0, 1 - bestD / 0.03);
       stallRef.current.position.set(best.x, 4.2, best.z);
       stallRef.current.color.copy(best.color);
-      stallRef.current.intensity = near * 34 * (0.9 + 0.1 * Math.sin(t * 0.8));
+      stallRef.current.intensity = near * 78 * (0.9 + 0.1 * Math.sin(t * 0.8));
       stallRef.current.visible = near > 0.01;
     }
 
     if (ambRef.current) ambRef.current.intensity = cur.current.amb;
     if (hemiRef.current) {
-      hemiRef.current.intensity = cur.current.amb * 1.7;
+      hemiRef.current.intensity = cur.current.amb * 2.1;
       hemiRef.current.color.copy(cur.current.fill);
     }
   });
@@ -237,11 +252,11 @@ export function LightRig() {
   return (
     <>
       <ambientLight ref={ambRef} intensity={0.14} color="#93a8ac" />
-      <hemisphereLight ref={hemiRef} args={["#4f6f78", "#0a0e0f", 0.25]} />
-      <pointLight ref={keyRef} distance={42} decay={2} intensity={26} />
-      <pointLight ref={fillRef} distance={30} decay={2} intensity={14} />
-      <pointLight ref={rimRef} distance={24} decay={2} intensity={8} />
-      <pointLight ref={stallRef} distance={26} decay={2} intensity={0} visible={false} />
+      <hemisphereLight ref={hemiRef} args={["#5b7d86", "#0c1113", 0.25]} />
+      <pointLight ref={keyRef} distance={58} decay={2} intensity={26} />
+      <pointLight ref={fillRef} distance={44} decay={2} intensity={14} />
+      <pointLight ref={rimRef} distance={34} decay={2} intensity={8} />
+      <pointLight ref={stallRef} distance={34} decay={2} intensity={0} visible={false} />
     </>
   );
 }
@@ -249,7 +264,7 @@ export function LightRig() {
 /* ── light pools ───────────────────────────────────────── */
 
 let poolTex: THREE.Texture | null = null;
-function getPoolTexture() {
+export function getPoolTexture() {
   if (poolTex) return poolTex;
   const s = 128;
   const c = document.createElement("canvas");

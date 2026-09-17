@@ -97,8 +97,11 @@ const signalGrid = wrap(/* glsl */ `
     vec2 uv = vUv;
     // Derive the matrix from the surface aspect: a 6:1 brand band and a 1:1
     // tile both get square cells, instead of stretched lozenges.
-    float rows = max(4.0, floor(7.0 * sqrt(uAspect.y / uAspect.x) + 3.0));
-    float cols = max(5.0, floor(rows * uAspect.x / uAspect.y));
+    // Density matters: a sparse matrix on an eighteen-metre band reads as
+    // half-metre diodes, which is the opposite of the fine-pitch product this
+    // venue is selling. Keep the cells small enough to read as a display.
+    float rows = max(8.0, floor(16.0 * sqrt(uAspect.y / uAspect.x) + 5.0));
+    float cols = max(10.0, floor(rows * uAspect.x / uAspect.y));
     vec2 g = vec2(uv.x * cols, uv.y * rows);
     vec2 cell = floor(g);
     vec2 f = fract(g);
@@ -114,7 +117,7 @@ const signalGrid = wrap(/* glsl */ `
     float pulse = smoothstep(0.0, 0.12, sweep) * smoothstep(0.30, 0.10, sweep);
 
     float d = length(f - 0.5);
-    float dot_ = smoothstep(0.42, 0.24, d);
+    float dot_ = smoothstep(0.40, 0.18, d);
 
     vec3 base = vec3(0.012, 0.028, 0.026);
     vec3 dim  = vec3(0.05, 0.10, 0.096);
@@ -632,46 +635,91 @@ const anamorphicVoid = wrap(/* glsl */ `
 
 /** Corporate: restrained, architectural, premium. Never PowerPoint blue. */
 const corporatePremium = wrap(/* glsl */ `
+  float rule(float x, float period, float sharp){
+    float f = abs(fract(x / period) * 2.0 - 1.0);
+    return pow(f, sharp);
+  }
+
+  /**
+   * Corporate: the wall as a window, not a picture.
+   *
+   * An earlier version was a field of sliding panels under a raking key, and
+   * on a forty-metre canvas seen from twenty metres it resolved into a beige
+   * wash — the exact "low-quality gradient screen" failure. This builds an
+   * architectural volume instead: a corridor of illuminated fins receding to a
+   * lit aperture, with suspended slabs catching the light on the way in. It
+   * has real depth, it holds up at scale, and it stays graphite.
+   */
   void main(){
     vec2 p = centred();
-    float t = uTime * 0.09 + uVariant * 7.0;
+    float t = uTime * 0.55 + uVariant * 9.0;
 
-    // Restrained architecture: a shallow field of planes sliding past each
-    // other, lit by one slow raking key. Corporate does not mean boring, but
-    // it does mean controlled — no blown highlights, no lava lamp.
-    float panels = 0.0;
-    float edges = 0.0;
-    for (int i = 0; i < 5; i++){
-      float fi = float(i);
-      vec2 q = p * rot(-0.14 - fi * 0.045);
-      q.x += t * (0.5 + fi * 0.22) + fi * 1.7;
-      float cell = fract(q.x * 0.22);
-      float id = floor(q.x * 0.22);
-      float wide = 0.2 + 0.24 * hash11(id + fi * 13.0);
-      float m = smoothstep(wide, wide - 0.012, abs(cell - 0.5));
-      float hgt = 0.35 + 0.5 * hash11(id * 1.7 + fi);
-      m *= smoothstep(hgt, hgt - 0.05, abs(q.y));
-      float depth = 1.0 / (1.0 + fi * 1.3);
-      panels += m * depth * 0.42;
-      edges += smoothstep(0.014, 0.0, abs(abs(cell - 0.5) - wide)) * depth * 1.5;
+    vec3 ro = vec3(0.0);
+    vec3 rd = normalize(vec3(p.x, p.y, 1.7));
+
+    const float HX = 1.45;
+    const float HY = 0.92;
+    const float ZF = 26.0;
+
+    float tX = 1e9, tY = 1e9;
+    if (abs(rd.x) > 1e-4) tX = (rd.x > 0.0 ? HX : -HX) / rd.x;
+    if (abs(rd.y) > 1e-4) tY = (rd.y > 0.0 ? HY : -HY) / rd.y;
+    float tZ = ZF / max(rd.z, 1e-4);
+    float tb = min(min(tX, tY), tZ);
+    vec3 hit = ro + rd * tb;
+
+    vec3 col = vec3(0.010, 0.013, 0.016);
+
+    if (tZ <= tX && tZ <= tY) {
+      // The aperture at the far end: the brightest thing in the composition,
+      // and the reason the eye goes to the centre of the wall.
+      float r = length(vec2(hit.x, hit.y * 1.25));
+      col += vec3(0.52, 0.60, 0.70) * exp(-r * r * 0.5) * 0.9;
+      col += uAccent * exp(-r * r * 1.4) * 0.4;
+    } else {
+      float axis = (tY < tX) ? 1.0 : 0.0;
+      float zf = hit.z + t;
+      float tr = mix(hit.y, hit.x, axis);
+      float ribs = rule(zf, 1.35, 70.0);
+      float fine = rule(zf, 0.3375, 150.0) * 0.28;
+      float cross = rule(tr, 0.42, 170.0) * 0.35;
+      float body = fbm(vec2(zf * 0.35, tr * 1.4));
+      float fade = exp(-hit.z * 0.11);
+      col += vec3(0.15, 0.18, 0.22) * (0.10 + body * 0.34) * fade;
+      col += vec3(0.70, 0.78, 0.88) * (ribs + fine + cross) * 0.68 * fade;
+      col += uAccent * ribs * 0.4 * fade;
+      col += vec3(0.38, 0.44, 0.54) * (1.0 - fade) * 0.18;
     }
 
-    // One raking key travelling across the wall.
-    float rake = smoothstep(2.0, -1.0, p.x - sin(t * 2.2) * 2.2);
+    // Suspended slabs between here and the aperture.
+    float trans = 1.0;
+    vec3 acc = vec3(0.0);
+    for (int i = 0; i < 7; i++){
+      float fi = float(i);
+      float zl = 1.6 + fi * 3.0 - mod(t, 3.0);
+      if (zl <= 0.25) continue;
+      float tl = zl / max(rd.z, 1e-4);
+      if (tl >= tb) continue;
+      vec3 pl = ro + rd * tl;
+      vec2 cell = floor(pl.xy / 0.5);
+      float occupied = step(0.58, hash21(cell + fi * 11.0));
+      vec2 f = abs(fract(pl.xy / 0.5) - 0.5);
+      float m = max(f.x, f.y);
+      float edge = clamp(smoothstep(0.5, 0.44, m) - smoothstep(0.42, 0.34, m), 0.0, 1.0);
+      float a = occupied * edge * smoothstep(0.35, 0.8, length(pl.xy)) * 0.45;
+      a *= smoothstep(0.0, 1.5, zl) * smoothstep(24.0, 12.0, zl);
+      vec3 slab = mix(vec3(0.52, 0.60, 0.70), uAccent, 0.22) * (0.5 + 0.5 * hash11(fi));
+      acc += trans * slab * a;
+      trans *= 1.0 - a;
+    }
+    col = acc + trans * col;
 
-    // A fine measured grid underneath — the "engineered" half of the identity.
-    vec2 g = abs(fract(p * 2.4) - 0.5);
-    float grid = smoothstep(0.487, 0.5, max(g.x, g.y)) * 0.35;
+    // One slow raking sweep. Restrained on purpose: corporate does not mean
+    // boring, but it does mean controlled.
+    float rake = exp(-pow((p.x - sin(uTime * 0.16) * 1.6) * 0.85, 2.0));
+    col *= 0.86 + 0.32 * rake;
 
-    vec3 graphite = vec3(0.012, 0.015, 0.018);
-    vec3 alu      = vec3(0.40, 0.43, 0.46);
-
-    vec3 col = graphite;
-    col += alu * panels * (0.22 + 0.78 * rake);
-    col += mix(alu * 1.9, uAccent, 0.45) * edges * (0.3 + 0.7 * rake) * 1.3;
-    col += uAccent * grid * (0.35 + 0.5 * rake);
-    col += vec3(0.9, 0.72, 0.5) * pow(rake, 3.0) * 0.22;
-    gl_FragColor = vec4(tone(col * 1.1), 1.0);
+    gl_FragColor = vec4(tone(col * 0.95), 1.0);
   }
 `);
 
@@ -681,42 +729,54 @@ const corporatePremium = wrap(/* glsl */ `
  * no reference to any existing festival's artwork or identity.
  */
 const festivalMonument = wrap(/* glsl */ `
-  float smin(float a, float b, float k){ float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0); return mix(b, a, h) - k * h * (1.0 - h); }
-
   /**
-   * A monumental faceted monolith turning inside a receding portal.
+   * A monumental faceted sculpture turning inside a receding portal.
    *
-   * Deliberately architectural rather than figurative: a face built from
-   * blended primitives reads as a cartoon at a glance, which is the one thing
-   * a festival wall must never do. Original geometry — no reference to any
-   * existing festival's identity or artwork.
+   * Deliberately architectural rather than figurative: a face or a creature
+   * built from blended primitives reads as a cartoon at a glance, which is the
+   * one thing a festival wall must never do. Three interlocking blades around
+   * a crystalline core, with shards in orbit — original geometry, with no
+   * reference to any existing festival's artwork or identity.
    */
+  float shard(vec3 p, vec3 s){
+    vec3 q = p / s;
+    // octahedron: hard facets and a sharp silhouette, scaled back to a
+    // conservative distance so the march stays stable under the anisotropy
+    return (abs(q.x) + abs(q.y) + abs(q.z) - 1.0) * 0.5774 * min(s.x, min(s.y, s.z));
+  }
+
   float monolith(vec3 p){
-    // twist the whole form so the facets sweep as it rotates
-    float a = p.y * 0.42 + uTime * 0.12;
-    p.xz *= rot(a);
-    vec3 q = p;
-    q.y *= 0.46;
-    // octahedron: hard facets, sharp silhouette
-    float oct = (abs(q.x) + abs(q.y) + abs(q.z) - 1.05) * 0.5774;
-    // carve a vertical slot through it
+    p.xz *= rot(uTime * 0.16);
+    float d = shard(p, vec3(0.52, 0.9, 0.52));
+
+    for (int i = 0; i < 3; i++){
+      vec3 q = p;
+      q.xz *= rot(float(i) * 2.0944);
+      q.x -= 0.4;
+      q.xy *= rot(0.2);
+      d = min(d, shard(q, vec3(0.44, 1.62, 0.21)));
+    }
+
+    // a slot cut through the core, so light passes through the form
     vec3 c = p; c.xz *= rot(0.7854);
-    float slot = max(abs(c.x) - 0.13, abs(c.z) - 1.6);
-    oct = max(oct, -slot);
-    // a second, smaller shard orbiting the first
-    vec3 r = p - vec3(sin(uTime * 0.4) * 1.25, cos(uTime * 0.33) * 0.55, cos(uTime * 0.4) * 0.6);
-    r.xy *= rot(uTime * 0.6);
-    r.y *= 0.5;
-    float shard = (abs(r.x) + abs(r.y) + abs(r.z) - 0.34) * 0.5774;
-    return smin(oct, shard, 0.12);
+    d = max(d, -max(abs(c.x) - 0.1, abs(c.z) - 1.4));
+
+    for (int i = 0; i < 4; i++){
+      float fi = float(i);
+      float a = fi * 1.5708 + uTime * 0.32;
+      vec3 r = p - vec3(cos(a) * 1.62, sin(uTime * 0.4 + fi * 1.7) * 0.62, sin(a) * 1.62);
+      r.xy *= rot(uTime * 0.6 + fi);
+      d = min(d, shard(r, vec3(0.2, 0.36, 0.2)));
+    }
+    return d;
   }
 
   float portal(vec3 p){
     float d = 1e9;
-    for (int i = 0; i < 4; i++){
+    for (int i = 0; i < 5; i++){
       float fi = float(i);
       float z = 1.1 + fi * 1.45 + mod(uTime * 0.55, 1.45);
-      float rad = 1.75 + fi * 0.5;
+      float rad = 1.9 + fi * 0.55;
       d = min(d, length(vec2(length(p.xy) - rad, p.z - z)) - 0.035);
     }
     return d;
@@ -731,16 +791,19 @@ const festivalMonument = wrap(/* glsl */ `
 
   void main(){
     vec2 p = centred();
-    vec3 ro = vec3(0.0, 0.0, -3.6);
-    vec3 rd = normalize(vec3(p * 1.0, 2.5));
+    vec3 ro = vec3(0.0, 0.0, -4.0);
+    vec3 rd = normalize(vec3(p, 2.5));
 
     float t = 0.0; bool hit = false; float m = 0.0, hm = 0.0; float glow = 0.0;
-    for (int i = 0; i < 58; i++){
+    for (int i = 0; i < 52; i++){
       vec3 pos = ro + rd * t;
       float d = map(pos, m);
       glow += 0.012 / (0.45 + d * d * 14.0);
-      if (d < 0.0035){ hit = true; hm = m; break; }
-      t += d * 0.9;
+      // Cone tracing: the hit threshold widens with distance, which keeps the
+      // silhouette from shimmering when the render is stretched across forty
+      // metres of wall.
+      if (d < 0.0016 + t * 0.0013){ hit = true; hm = m; break; }
+      t += d * 0.85;
       if (t > 20.0) break;
     }
 
@@ -748,26 +811,36 @@ const festivalMonument = wrap(/* glsl */ `
 
     if (hit){
       vec3 pos = ro + rd * t;
-      float e = 0.0035; float dm;
+      float e = 0.003; float dm;
       vec3 n = normalize(vec3(
         map(pos + vec3(e,0,0), dm) - map(pos - vec3(e,0,0), dm),
         map(pos + vec3(0,e,0), dm) - map(pos - vec3(0,e,0), dm),
         map(pos + vec3(0,0,e), dm) - map(pos - vec3(0,0,e), dm)));
       vec3 key = normalize(vec3(0.45, 0.8, -0.55));
       vec3 rim = normalize(vec3(-0.85, 0.15, -0.35));
+      vec3 back = normalize(vec3(0.1, -0.5, 0.85));
       float diff = max(dot(n, key), 0.0);
       float rimL = pow(max(dot(n, rim), 0.0), 2.0);
+      float backL = pow(max(dot(n, back), 0.0), 3.0);
       float fres = pow(1.0 - max(dot(n, -rd), 0.0), 2.6);
+      vec3 h = normalize(key - rd);
+      float spec = pow(max(dot(n, h), 0.0), 90.0);
 
       if (hm > 0.5){
         // the portal rings are pure light
         col = uAccent * 2.4 + vec3(1.0, 0.42, 0.26) * 0.7;
       } else {
-        vec3 stone = mix(vec3(0.045, 0.04, 0.055), vec3(0.26, 0.23, 0.28), diff);
+        // A cool stone that warms where it faces the key, so the facets read
+        // as material rather than as flat shading.
+        vec3 stone = mix(vec3(0.035, 0.032, 0.048), vec3(0.30, 0.26, 0.31), diff);
+        stone = mix(stone, stone * vec3(1.25, 1.02, 0.86), pow(diff, 1.6) * 0.7);
         col = stone;
-        col += vec3(1.0, 0.45, 0.2) * rimL * 1.15;
-        col += uAccent * fres * 1.5;
-        col += vec3(1.0, 0.92, 0.8) * pow(diff, 40.0) * 1.2;
+        col += vec3(1.0, 0.45, 0.2) * rimL * 1.2;
+        col += uAccent * fres * 1.45;
+        col += uAccent * backL * 0.5;
+        col += vec3(1.0, 0.95, 0.88) * spec * 1.6;
+        // a faint internal glow through the cut slot
+        col += uAccent * pow(max(0.0, 1.0 - abs(pos.x) * 2.4), 6.0) * 0.5;
       }
       col *= exp(-max(0.0, t - 3.2) * 0.1);
     }
@@ -841,26 +914,46 @@ const immersiveRoom = wrap(/* glsl */ `
 
 /** Finale — every surface resolving into one synchronized brand moment. */
 const finaleBrand = wrap(/* glsl */ `
+  /**
+   * The closing image.
+   *
+   * It used to be a twenty-two column dot matrix, which on a forty-metre wall
+   * resolved into half-metre ovals — a coarse pixel grid, which is the one
+   * thing this venue must never show. What replaces it is light itself: a slow
+   * convergence of fine filaments toward the centre, a bloom, and a horizon
+   * line that settles as the room goes quiet. Nothing in it has a pixel size.
+   */
   void main(){
     vec2 p = centred();
     float t = uTime;
-    // Light gathering to the centre, then a slow calm breath.
-    float r = length(p);
-    float gather = pow(smoothstep(1.7, 0.0, r), 2.0);
-    float pulse = 0.5 + 0.5 * sin(t * 0.5);
+    float r = length(p * vec2(0.62, 1.0));
 
-    float cols = 22.0, rows = 13.0;
-    vec2 g = vec2(vUv.x * cols, vUv.y * rows);
-    vec2 id = floor(g); vec2 f = fract(g);
-    float d = length(f - 0.5);
-    float dot_ = smoothstep(0.44, 0.22, d);
-    float wave = 0.5 + 0.5 * sin(t * 1.1 - (id.x * 0.22 + id.y * 0.3));
+    // Filaments drawn toward the centre, slowing as they arrive.
+    float a = atan(p.y, p.x);
+    float filaments = 0.0;
+    for (int i = 0; i < 3; i++){
+      float fi = float(i);
+      float freq = 14.0 + fi * 9.0;
+      float phase = t * (0.22 + fi * 0.09) + fi * 2.1;
+      float band = pow(0.5 + 0.5 * sin(a * freq + phase), 22.0 + fi * 16.0);
+      filaments += band * exp(-r * (0.9 + fi * 0.5)) * (1.0 - fi * 0.22);
+    }
 
-    vec3 col = vec3(0.008, 0.016, 0.016);
-    col += uAccent * dot_ * wave * gather * (0.5 + 0.5 * pulse);
-    col += vec3(0.95, 0.78, 0.5) * dot_ * gather * gather * 0.35;
-    col += uAccent * gather * 0.1;
-    gl_FragColor = vec4(tone(col * 1.25), 1.0);
+    // A calm breathing core, and the halo it throws.
+    float pulse = 0.5 + 0.5 * sin(t * 0.42);
+    float core = exp(-r * r * 3.2) * (0.72 + 0.28 * pulse);
+    float halo = exp(-r * 1.15) * 0.34;
+
+    // The horizon the room settles onto.
+    float horizon = exp(-abs(p.y) * 26.0) * smoothstep(1.9, 0.2, abs(p.x)) * (0.35 + 0.3 * pulse);
+
+    vec3 col = vec3(0.006, 0.013, 0.014);
+    col += uAccent * (filaments * 0.55 + core * 1.5 + halo);
+    col += vec3(0.96, 0.88, 0.74) * core * core * 0.9;
+    col += uAccent * horizon * 0.9;
+    col += vec3(0.9, 0.95, 0.96) * horizon * 0.35;
+
+    gl_FragColor = vec4(tone(col * 1.15), 1.0);
   }
 `);
 

@@ -4,6 +4,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { MediaProvider } from "./media/MediaContext";
 import { CameraRig } from "./systems/CameraRig";
 import { QualityGovernor } from "./systems/Quality";
+import { ShowCue } from "./systems/ShowCue";
 import { LightRig, VenueEnvironment } from "./three/environment";
 import { ArenaPortal, ArenaShell, Ground, HallShell } from "./zones/Architecture";
 import { Arrival } from "./zones/Arrival";
@@ -64,6 +65,7 @@ export function Scene() {
   return (
     <MediaProvider>
       <QualityGovernor />
+      <ShowCue />
       <VenueEnvironment />
       <LightRig />
       <CameraRig />
@@ -81,7 +83,7 @@ export function Scene() {
       <ZoneGroup from={60} to={-14} ahead={40} behind={46}>
         <Arrival />
       </ZoneGroup>
-      <ZoneGroup from={2} to={-26} ahead={60} behind={30}>
+      <ZoneGroup from={2} to={-30} ahead={64} behind={30}>
         <Tunnel />
       </ZoneGroup>
       <ZoneGroup from={-26} to={-102} ahead={70} behind={40}>

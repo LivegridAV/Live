@@ -15,6 +15,7 @@ import { LightPool } from "../three/environment";
 import { ReflectionStreak } from "../three/Reflection";
 import { useVenue } from "../systems/store";
 import { ZoneGroup } from "../three/ZoneGroup";
+import { Aisle, Gantry, Stand, Vestibule } from "./Exhibition";
 
 /**
  * The creative LED gallery.
@@ -24,6 +25,11 @@ import { ZoneGroup } from "../three/ZoneGroup";
  * a curved wall, a mosaic of modules cut into a shape, and a 90° corner running
  * a perspective-correct illusion — every geometry a client might ask for,
  * standing in a room at real scale.
+ *
+ * Each of them now stands on an exhibition stand rather than on bare floor:
+ * a footprint, a lit edge, a low backdrop, an overhead truss and a header. The
+ * installations did not change. What changed is that the hall around them
+ * finally reads as a designed exhibition instead of a dark warehouse.
  */
 
 /* ── A · LED pillars ───────────────────────────────────── */
@@ -40,6 +46,17 @@ const PILLARS: { x: number; z: number; h: number; media: string }[] = [
 function Pillars() {
   return (
     <group>
+      <Stand
+        position={[-9.6, 0, -50]}
+        size={[14, 20]}
+        accent="#4f9b93"
+        backdrop={false}
+        overhead={false}
+        label="stand-pillars"
+      />
+      {/* the pillars are tall, so their overhead rig spans the whole cluster */}
+      <Truss length={14} size={0.32} position={[-9.6, 10.2, -46]} braceEvery={0.9} />
+      <Truss length={14} size={0.32} position={[-9.6, 10.2, -55]} braceEvery={0.9} />
       {PILLARS.map((p, i) => (
         <group key={i}>
           <PillarScreen
@@ -48,12 +65,12 @@ function Pillars() {
             depth={0.72}
             height={p.h}
             position={[p.x, 0, p.z]}
-            pitch={4.8}
+            pitch={1.5}
             brightness={1.0}
             range={60}
           />
           <ReflectionStreak
-            position={[p.x, 0.02, p.z + 2.6]}
+            position={[p.x, 0.04, p.z + 2.6]}
             width={1.5}
             length={5.2}
             color={p.media === "pillar-metal" ? "#8d7b6b" : "#4f9b93"}
@@ -61,7 +78,7 @@ function Pillars() {
           />
         </group>
       ))}
-      <LightPool position={[-9.2, 0.03, -50]} size={[18, 22]} color="#4f9b93" opacity={0.08} pulse={0.5} />
+      <LightPool position={[-9.2, 0.05, -50]} size={[18, 22]} color="#4f9b93" opacity={0.08} pulse={0.5} />
     </group>
   );
 }
@@ -80,6 +97,7 @@ const BLADES: { x: number; z: number; y: number; h: number; rot: number }[] = [
 function Blades() {
   return (
     <group>
+      <Stand position={[7.8, 0, -59.6]} size={[12, 13]} accent="#4fc4b6" label="stand-blades" />
       {/* the truss the blades hang from */}
       <Truss length={12} size={0.3} position={[7.8, 7.2, -59.6]} rotation={[0, 0.18, 0]} braceEvery={0.7} />
       {BLADES.map((b, i) => (
@@ -91,15 +109,16 @@ function Blades() {
             height={b.h}
             position={[b.x, b.y + b.h / 2, b.z]}
             rotation={[0, b.rot, 0]}
-            pitch={3.1}
+            pitch={1.5}
             brightness={1.05}
             /* each blade shows its own vertical slice, so the content reads as
                one image cut across all six panels */
             uv={[1 / BLADES.length, 1, i / BLADES.length, 0]}
             range={55}
+            frame={false}
           />
           <ReflectionStreak
-            position={[b.x, 0.02, b.z + 2.2]}
+            position={[b.x, 0.04, b.z + 2.2]}
             width={1.1}
             length={4.4}
             color="#4fc4b6"
@@ -115,21 +134,24 @@ function Blades() {
 
 function Cylinder() {
   return (
-    <group position={[8.6, 0, -70]}>
-      <mesh position={[0, 0.06, 0]} material={M.anodised}>
-        <cylinderGeometry args={[2.5, 2.7, 0.12, 40]} />
-      </mesh>
-      <CylinderScreen
-        media="cylinder-ribbon"
-        radius={2.2}
-        height={4.6}
-        position={[0, 2.5, 0]}
-        pitch={6.9}
-        brightness={1.0}
-        range={60}
-      />
-      <HangPoint position={[0, 7.4, 0]} drop={2.5} />
-      <LightPool position={[0, 0.03, 0]} size={12} color="#c08a4e" opacity={0.16} pulse={0.35} />
+    <group>
+      <Stand position={[8.6, 0, -70]} size={[11, 11]} accent="#c08a4e" label="stand-cylinder" />
+      <group position={[8.6, 0, -70]}>
+        <mesh position={[0, 0.1, 0]} material={M.anodised}>
+          <cylinderGeometry args={[2.5, 2.7, 0.14, 40]} />
+        </mesh>
+        <CylinderScreen
+          media="cylinder-ribbon"
+          radius={2.2}
+          height={4.6}
+          position={[0, 2.6, 0]}
+          pitch={1.9}
+          brightness={1.0}
+          range={60}
+        />
+        <HangPoint position={[0, 7.4, 0]} drop={2.4} />
+        <LightPool position={[0, 0.06, 0]} size={12} color="#c08a4e" opacity={0.16} pulse={0.35} />
+      </group>
     </group>
   );
 }
@@ -144,7 +166,7 @@ function Ring() {
         radius={5.4}
         height={1.5}
         position={[0, 6.4, 0]}
-        pitch={8}
+        pitch={1.9}
         brightness={1.6}
         range={80}
       />
@@ -154,12 +176,21 @@ function Ring() {
         radius={3.0}
         height={0.9}
         position={[0, 7.9, 0]}
-        pitch={8}
+        pitch={1.9}
         brightness={1.35}
         inward
         range={80}
       />
-      <LightPool position={[0, 0.03, 0]} size={20} color="#4fa79c" opacity={0.13} pulse={0.45} />
+      {/* a floor medallion directly beneath, so the ring has a footprint the
+          camera can walk through rather than merely under */}
+      <mesh position={[0, 0.03, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[5.3, 5.5, 64]} />
+        <meshBasicMaterial color="#2f7a72" toneMapped />
+      </mesh>
+      <mesh position={[0, 0.026, 0]} rotation={[-Math.PI / 2, 0, 0]} material={M.deck}>
+        <circleGeometry args={[5.4, 48]} />
+      </mesh>
+      <LightPool position={[0, 0.05, 0]} size={20} color="#4fa79c" opacity={0.13} pulse={0.45} />
     </group>
   );
 }
@@ -168,30 +199,43 @@ function Ring() {
 
 function Bar() {
   return (
-    <group position={[-9.8, 0, -84]} rotation={[0, Math.PI / 2.3, 0]}>
-      <BarScreen media="bar-brand" width={7.6} height={1.08} depth={0.72} pitch={3.1} brightness={0.72} spill={0} />
-      {/* back bar + bottle shelf, lit by the fascia */}
-      <mesh position={[0, 1.4, -1.9]} material={M.composite}>
-        <boxGeometry args={[7.2, 2.8, 0.35]} />
-      </mesh>
-      {Array.from({ length: 14 }, (_, i) => (
-        <mesh key={i} position={[-3.2 + i * 0.49, 1.55 + (i % 2) * 0.55, -1.66]} material={M.smokedGlass}>
-          <cylinderGeometry args={[0.055, 0.055, 0.3, 7]} />
+    <group>
+      <Stand position={[-9.8, 0, -84]} size={[13, 10]} rotation={Math.PI / 2.3} accent="#4fc4b6" label="stand-bar" />
+      <group position={[-9.8, 0, -84]} rotation={[0, Math.PI / 2.3, 0]}>
+        <BarScreen media="bar-brand" width={7.6} height={1.08} depth={0.72} pitch={1.2} brightness={0.72} spill={0} />
+        {/* back bar + bottle shelf, lit by the fascia */}
+        <mesh position={[0, 1.4, -1.9]} material={M.composite}>
+          <boxGeometry args={[7.2, 2.8, 0.35]} />
         </mesh>
-      ))}
-      {/* stools */}
-      {Array.from({ length: 5 }, (_, i) => (
-        <group key={`s${i}`} position={[-2.9 + i * 1.45, 0, 1.25]}>
-          <mesh position={[0, 0.36, 0]} material={M.anodised}>
-            <cylinderGeometry args={[0.04, 0.05, 0.72, 8]} />
+        {Array.from({ length: 14 }, (_, i) => (
+          <mesh key={i} position={[-3.2 + i * 0.49, 1.55 + (i % 2) * 0.55, -1.66]} material={M.smokedGlass}>
+            <cylinderGeometry args={[0.055, 0.055, 0.3, 7]} />
           </mesh>
-          <mesh position={[0, 0.74, 0]} material={M.graphite}>
-            <cylinderGeometry args={[0.19, 0.19, 0.06, 14]} />
-          </mesh>
-        </group>
-      ))}
-      <ReflectionStreak position={[0, 0.02, 2.4]} width={8} length={4.6} color="#57cbbd" opacity={0.22} />
-      <LightPool position={[0, 0.03, 1.6]} size={[12, 8]} color="#4fc4b6" opacity={0.14} />
+        ))}
+        {/* a lit shelf line behind the bottles: the back bar has to glow or the
+            whole counter reads as furniture rather than as hospitality */}
+        <mesh position={[0, 1.36, -1.7]} rotation={[Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[7.0, 0.06]} />
+          <meshBasicMaterial color="#b9895a" toneMapped />
+        </mesh>
+        <mesh position={[0, 2.46, -1.7]} rotation={[Math.PI / 2, 0, 0]}>
+          <planeGeometry args={[7.0, 0.06]} />
+          <meshBasicMaterial color="#b9895a" toneMapped />
+        </mesh>
+        {/* stools */}
+        {Array.from({ length: 5 }, (_, i) => (
+          <group key={`s${i}`} position={[-2.9 + i * 1.45, 0, 1.25]}>
+            <mesh position={[0, 0.36, 0]} material={M.anodised}>
+              <cylinderGeometry args={[0.04, 0.05, 0.72, 8]} />
+            </mesh>
+            <mesh position={[0, 0.74, 0]} material={M.graphite}>
+              <cylinderGeometry args={[0.19, 0.19, 0.06, 14]} />
+            </mesh>
+          </group>
+        ))}
+        <ReflectionStreak position={[0, 0.04, 2.4]} width={8} length={4.6} color="#57cbbd" opacity={0.22} />
+        <LightPool position={[0, 0.05, 1.6]} size={[12, 8]} color="#4fc4b6" opacity={0.14} />
+      </group>
     </group>
   );
 }
@@ -200,22 +244,25 @@ function Bar() {
 
 function Curved() {
   return (
-    <group position={[8.4, 0, -90.5]} rotation={[0, -Math.PI / 2.6, 0]}>
-      <CurvedScreen
-        media="curve-natural"
-        radius={5.2}
-        arc={Math.PI * 0.62}
-        height={4.2}
-        position={[0, 2.3, 0]}
-        pitch={5.2}
-        brightness={1.0}
-        range={60}
-      />
-      {/* the curved sub-frame it is built on */}
-      <mesh position={[0, 0.08, 0]} material={M.anodised}>
-        <cylinderGeometry args={[5.4, 5.5, 0.16, 48, 1, true, -Math.PI * 0.31, Math.PI * 0.62]} />
-      </mesh>
-      <LightPool position={[0, 0.03, 0]} size={16} color="#7ea36a" opacity={0.1} pulse={0.4} />
+    <group>
+      <Stand position={[8.4, 0, -90.5]} size={[13, 12]} accent="#7ea36a" label="stand-curved" />
+      <group position={[8.4, 0, -90.5]} rotation={[0, -Math.PI / 2.6, 0]}>
+        <CurvedScreen
+          media="curve-natural"
+          radius={5.2}
+          arc={Math.PI * 0.62}
+          height={4.2}
+          position={[0, 2.4, 0]}
+          pitch={1.9}
+          brightness={1.0}
+          range={60}
+        />
+        {/* the curved sub-frame it is built on */}
+        <mesh position={[0, 0.12, 0]} material={M.anodised}>
+          <cylinderGeometry args={[5.4, 5.5, 0.16, 48, 1, true, -Math.PI * 0.31, Math.PI * 0.62]} />
+        </mesh>
+        <LightPool position={[0, 0.06, 0]} size={16} color="#7ea36a" opacity={0.1} pulse={0.4} />
+      </group>
     </group>
   );
 }
@@ -269,7 +316,7 @@ function Mosaic() {
           width={m.w}
           height={m.h}
           position={[m.x, m.y, 0]}
-          pitch={3.9}
+          pitch={1.5}
           brightness={1.0}
           frame={false}
           range={55}
@@ -281,7 +328,7 @@ function Mosaic() {
           ]}
         />
       ))}
-      <LightPool position={[0, -1.57, 1.4]} size={[12, 7]} color="#7f97ab" opacity={0.12} />
+      <LightPool position={[0, -1.55, 1.4]} size={[12, 7]} color="#7f97ab" opacity={0.12} />
     </group>
   );
 }
@@ -294,21 +341,33 @@ function AnamorphicCorner() {
     // so the camera path passes exactly through the point the content is
     // rendered for.
     <group position={[-6.6, 0, -99]} rotation={[0, 0, 0]}>
-      {/* the two building faces the LED is wrapped onto */}
-      <mesh position={[-3.2, 3.2, -0.35]} material={M.graphite}>
+      {/* The two building faces the LED is wrapped onto. Both are pulled clear
+          of the fold: at 0.35 m their front corners met exactly where the two
+          leaves meet, and the resulting sliver of structure read as a black
+          seam straight down the middle of the illusion. */}
+      <mesh position={[-3.45, 3.2, -0.5]} material={M.graphite}>
         <boxGeometry args={[6.4, 6.4, 0.6]} />
       </mesh>
-      {/* behind the leaf, not in front of it */}
-      <mesh position={[-0.35, 3.2, -3.2]} rotation={[0, Math.PI / 2, 0]} material={M.graphite}>
+      <mesh position={[-0.5, 3.2, -3.45]} rotation={[0, Math.PI / 2, 0]} material={M.graphite}>
         <boxGeometry args={[6.4, 6.4, 0.6]} />
       </mesh>
-      <CornerScreen media="anamorphic" width={6.2} height={4.4} position={[0, 0.7, 0]} pitch={2.6} />
+      <CornerScreen media="anamorphic" width={6.2} height={4.4} position={[0, 0.7, 0]} pitch={1.2} />
       {/* viewing mark on the floor — the point the illusion is built for */}
-      <mesh position={[4.9, 0.02, 4.9]} rotation={[-Math.PI / 2, 0, Math.PI / 4]}>
+      <mesh position={[4.9, 0.04, 4.9]} rotation={[-Math.PI / 2, 0, Math.PI / 4]}>
         <ringGeometry args={[0.45, 0.52, 28]} />
-        <meshBasicMaterial color="#5c6a5a" toneMapped />
+        <meshBasicMaterial color="#8c9a86" toneMapped />
       </mesh>
-      <LightPool position={[2.6, 0.03, 2.6]} size={16} color="#b9ab93" opacity={0.14} />
+      <Screen
+        media="stand-anamorphic"
+        width={3.4}
+        height={0.62}
+        position={[-3.2, 6.9, -0.05]}
+        pitch={1.5}
+        brightness={1.05}
+        range={52}
+        frame={false}
+      />
+      <LightPool position={[2.6, 0.05, 2.6]} size={16} color="#b9ab93" opacity={0.14} />
     </group>
   );
 }
@@ -318,31 +377,26 @@ function AnamorphicCorner() {
 function HallReveal() {
   return (
     <group>
-      {/* suspended wordmark banner — the first thing seen as the tunnel opens */}
+      {/* suspended wordmark banner — the first thing seen as the hall opens up */}
       <Screen
         media="hall-wordmark"
         width={17}
         height={4.6}
         position={[0, 10.4, -54]}
-        pitch={8}
+        pitch={2.6}
         brightness={1.0}
         range={120}
+        frame={false}
       />
       {[-7.4, 7.4].map((x) => (
         <HangPoint key={x} position={[x, 14.2, -54]} drop={1.5} />
       ))}
 
-      {/* wayfinding above the aisle */}
-      <Screen media="sign-gallery" width={3.6} height={0.9} position={[-4.8, 4.4, -40]} pitch={3.9} range={60} />
-      <Screen media="sign-services" width={3.6} height={0.9} position={[4.8, 4.4, -66]} pitch={3.9} range={60} />
-      <Screen
-        media="sign-arena"
-        width={3.6}
-        height={0.9}
-        position={[-4.8, 4.4, -96]}
-        pitch={3.9}
-        range={60}
-      />
+      {/* wayfinding gantries spanning the aisle, so the route is legible from
+          a distance the way it is in a real exhibition hall */}
+      <Gantry z={-47} media="sign-gallery" />
+      <Gantry z={-74} media="sign-services" />
+      <Gantry z={-101} media="sign-arena" />
     </group>
   );
 }
@@ -353,6 +407,10 @@ export function Gallery() {
   const quality = useVenue((s) => s.quality);
   return (
     <group>
+      <ZoneGroup from={-27} to={-45} ahead={70} behind={26}>
+        <Vestibule from={-29} to={-40} />
+      </ZoneGroup>
+      <Aisle from={-40} to={-106} />
       <HallReveal />
       <ZoneGroup from={-40} to={-60} ahead={50} behind={26}>
         <Pillars />
@@ -371,6 +429,7 @@ export function Gallery() {
       </ZoneGroup>
       <ZoneGroup from={-86} to={-95} ahead={40} behind={22}>
         <Curved />
+        <Stand position={[-9.6, 0, -93]} size={[11, 9]} rotation={Math.PI / 3.4} accent="#7f97ab" backdrop={false} label="stand-mosaic" />
         <Mosaic />
       </ZoneGroup>
       <ZoneGroup from={-92} to={-108} ahead={42} behind={28}>

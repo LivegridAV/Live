@@ -38,7 +38,11 @@ export function ContactPanel() {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
   const pastVenue = useVenue((s) => s.pastVenue);
-  const visible = entered && progress > 0.972 && !panelOpen && !pastVenue;
+  // Late on purpose. The finale runs its own cues on the wall between 0.952
+  // and 0.996 — brand, strapline, invitation — and putting a form over the top
+  // of them turns a show ending into a page with a modal on it. The panel
+  // arrives only once the invitation is up.
+  const visible = entered && progress > 0.9885 && !panelOpen && !pastVenue;
 
   const submit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

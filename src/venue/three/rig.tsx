@@ -2,7 +2,8 @@
 import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { useVenue, venue } from "../systems/store";
+import { useVenue } from "../systems/store";
+import { show } from "../systems/journey";
 
 /**
  * Production hardware: truss, movers, rigging, haze.
@@ -183,28 +184,32 @@ export function MovingHead({
 
   useFrame((state) => {
     const t = state.clock.elapsedTime;
-    const s = venue();
-    const festival = s.stageMode === "festival";
-    const sp = festival ? 1.55 : 0.4;
-    const spread = festival ? 1.0 : 0.34;
+    // `show.mode` is the animated blend the cue drives, not the raw switch —
+    // so the rig travels to its new position over the cue rather than snapping.
+    const f = show.mode;
+    const sp = 0.4 + f * 1.15;
+    const spread = 0.34 + f * 0.66;
+    // During the cue the fixtures move faster and further: a rig repositioning
+    // between looks is the most visible part of a real mode change.
+    const move = 1 + show.cue * 1.4;
 
     if (yoke.current) {
-      yoke.current.rotation.y = Math.sin(t * sp * 0.6 + seed * 1.7) * spread * 1.6;
+      yoke.current.rotation.y = Math.sin(t * sp * 0.6 * move + seed * 1.7) * spread * 1.6;
     }
     if (head.current) {
-      head.current.rotation.x = (hanging ? 0 : Math.PI) + Math.sin(t * sp * 0.44 + seed * 2.3) * spread * 0.5;
+      head.current.rotation.x =
+        (hanging ? 0 : Math.PI) + Math.sin(t * sp * 0.44 * move + seed * 2.3) * spread * 0.5;
     }
     if (beamMat.current) {
-      // Festival mode strobes and chases; corporate breathes.
-      const base = festival
-        ? 0.5 + 0.5 * Math.sin(t * 5.2 + seed * 1.1)
-        : 0.55 + 0.25 * Math.sin(t * 0.7 + seed);
-      const on = festival ? Math.pow(base, 1.6) : base * 0.6;
-      beamMat.current.opacity = on * 0.065 * intensity;
+      // Festival strobes and chases; corporate breathes.
+      const chase = Math.pow(0.5 + 0.5 * Math.sin(t * 5.2 + seed * 1.1), 1.6);
+      const breathe = (0.55 + 0.25 * Math.sin(t * 0.7 + seed)) * 0.6;
+      const on = breathe + (chase - breathe) * f;
+      beamMat.current.opacity = on * 0.065 * intensity * (1 - show.cue * 0.75);
 
-      if (festival) {
+      if (f > 0.02) {
         festivalCol.setHSL((seed * 0.11 + t * 0.035) % 1, 0.62, 0.62);
-        beamMat.current.color.copy(festivalCol);
+        beamMat.current.color.copy(col).lerp(festivalCol, f);
       } else {
         beamMat.current.color.copy(col);
       }

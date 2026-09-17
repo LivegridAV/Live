@@ -23,7 +23,6 @@ export function MediaProvider({ children }: { children: ReactNode }) {
   const gl = useThree((s) => s.gl);
   const quality = useVenue((s) => s.quality);
   const isMobile = useVenue((s) => s.isMobile);
-  const stageMode = useVenue((s) => s.stageMode);
 
   const engine = useMemo(() => new MediaEngine(gl), [gl]);
 
@@ -37,7 +36,9 @@ export function MediaProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => engine.setQuality(quality), [engine, quality]);
   useEffect(() => engine.setMobile(isMobile), [engine, isMobile]);
-  useEffect(() => engine.setMode(stageMode), [engine, stageMode]);
+  // The mode is *not* applied here. Switching creative direction is a cue with
+  // a dip in the middle, and `systems/ShowCue` is what decides when the content
+  // is allowed to change — see that file.
 
   useFrame((_, dt) => engine.update(Math.min(dt, 0.1)));
 

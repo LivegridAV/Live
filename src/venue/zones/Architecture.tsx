@@ -19,8 +19,8 @@ import { useVenue } from "../systems/store";
 
 /* ── venue dimensions (metres) ─────────────────────────── */
 export const V = {
-  hall: { x: 26, y: 15, from: -26, to: -238 },
-  arena: { x: 58, y: 32, from: -244, to: -356 },
+  hall: { x: 19, y: 15, from: -26, to: -238 },
+  arena: { x: 44, y: 34, from: -244, to: -380 },
   plaza: { from: 46, to: -1 },
 } as const;
 
@@ -96,6 +96,12 @@ function HallChunk({ from, to }: { from: number; to: number }) {
     return out;
   }, [from, to]);
 
+  const slots = useMemo(() => {
+    const out: number[] = [];
+    for (let z = from - 4; z > to; z -= 8) out.push(z);
+    return out;
+  }, [from, to]);
+
   return (
     <group>
       {/* side walls */}
@@ -111,32 +117,84 @@ function HallChunk({ from, to }: { from: number; to: number }) {
       ))}
 
       {/* ceiling */}
-      <mesh position={[0, V.hall.y, mid]} rotation={[Math.PI / 2, 0, 0]} material={M.void}>
+      <mesh position={[0, V.hall.y, mid]} rotation={[Math.PI / 2, 0, 0]} material={M.ceiling}>
         <planeGeometry args={[V.hall.x * 2, len]} />
       </mesh>
 
-      {/* skirting light line */}
+      {/* Skirting, coves and wall slots.
+          Point lights with physical falloff cannot light a hall this size —
+          at twenty metres a 20 W fixture contributes almost nothing — so the
+          architecture lights itself, the way a real exhibition hall does.
+          These are emissive strips: free to draw, and they are what stops the
+          room reading as a void. */}
       {[-1, 1].map((side) => (
-        <mesh
-          key={`sk${side}`}
-          position={[side * (V.hall.x - 0.05), 0.06, mid]}
-          rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
-        >
-          <planeGeometry args={[len, 0.05]} />
-          <meshBasicMaterial color="#1d3a39" toneMapped />
-        </mesh>
+        <group key={`lit${side}`}>
+          {/* skirting line */}
+          <mesh
+            position={[side * (V.hall.x - 0.05), 0.07, mid]}
+            rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
+          >
+            <planeGeometry args={[len, 0.06]} />
+            <meshBasicMaterial color="#2c5c58" toneMapped />
+          </mesh>
+          {/* continuous cove where the wall meets the ceiling */}
+          <mesh
+            position={[side * (V.hall.x - 0.06), V.hall.y - 0.9, mid]}
+            rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
+          >
+            <planeGeometry args={[len, 0.22]} />
+            <meshBasicMaterial color="#8d9ea4" toneMapped />
+          </mesh>
+          {/* a graded wash down the wall beneath the cove */}
+          <mesh
+            position={[side * (V.hall.x - 0.08), V.hall.y * 0.62, mid]}
+            rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
+          >
+            <planeGeometry args={[len, V.hall.y * 0.5]} />
+            <meshBasicMaterial color="#1d282c" toneMapped transparent opacity={0.85} />
+          </mesh>
+        </group>
       ))}
 
-      {/* structural columns with recessed light slots */}
+      {/* vertical light slots at regular bays: the strongest single cue that a
+          dark wall is a wall and not the absence of one */}
+      {slots.map((z) =>
+        [-1, 1].map((side) => (
+          <mesh
+            key={`sl${z}${side}`}
+            position={[side * (V.hall.x - 0.07), V.hall.y * 0.45, z]}
+            rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
+          >
+            <planeGeometry args={[0.1, V.hall.y * 0.72]} />
+            <meshBasicMaterial color="#6f8b92" toneMapped />
+          </mesh>
+        )),
+      )}
+      {slots.map((z) =>
+        [-1, 1].map((side) => (
+          <LightPool
+            key={`wp${z}${side}`}
+            position={[side * (V.hall.x - 2.6), 0.05, z]}
+            size={[7, 9]}
+            color="#5f7c84"
+            opacity={0.07}
+          />
+        )),
+      )}
+
+      {/* structural columns down each side, with a recessed light slot */}
       {columns.map((z) =>
         [-1, 1].map((side) => (
           <group key={`col${z}${side}`} position={[side * (V.hall.x - 0.6), 0, z]}>
             <mesh position={[0, V.hall.y / 2, 0]} material={M.charcoal}>
               <boxGeometry args={[1.2, V.hall.y, 1.2]} />
             </mesh>
-            <mesh position={[side * -0.62, V.hall.y / 2, 0]} rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}>
+            <mesh
+              position={[side * -0.62, V.hall.y / 2, 0]}
+              rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
+            >
               <planeGeometry args={[0.1, V.hall.y - 2.4]} />
-              <meshBasicMaterial color="#2c4a4a" toneMapped />
+              <meshBasicMaterial color="#4a7370" toneMapped />
             </mesh>
           </group>
         )),
@@ -151,10 +209,10 @@ function HallChunk({ from, to }: { from: number; to: number }) {
       {/* Architectural light bars rigged to the grid. Without them the hall has
           no ceiling to read against and the room loses its height. */}
       {trusses.map((z) =>
-        [-15, -5, 5, 15].map((x) => (
+        [-13, -4.5, 4.5, 13].map((x) => (
           <mesh key={`lb${z}${x}`} position={[x, V.hall.y - 1.45, z]} rotation={[Math.PI / 2, 0, 0]}>
-            <planeGeometry args={[6.4, 0.16]} />
-            <meshBasicMaterial color="#6d8288" toneMapped />
+            <planeGeometry args={[6.4, 0.2]} />
+            <meshBasicMaterial color="#9fb2b8" toneMapped />
           </mesh>
         )),
       )}
@@ -162,9 +220,9 @@ function HallChunk({ from, to }: { from: number; to: number }) {
         <LightPool
           key={`lp${z}`}
           position={[0, 0.04, z]}
-          size={[40, 26]}
-          color="#7d919a"
-          opacity={0.05}
+          size={[34, 24]}
+          color="#8497a0"
+          opacity={0.085}
         />
       ))}
 
@@ -245,18 +303,47 @@ export function ArenaShell() {
       {/* roof grid */}
       {quality !== "low" &&
         trusses.map((z) => (
-          <Truss key={`at${z}`} length={70} size={0.52} position={[0, V.arena.y - 2.4, z]} braceEvery={1.3} />
+          <Truss key={`at${z}`} length={V.arena.x * 2 - 6} size={0.52} position={[0, V.arena.y - 2.4, z]} braceEvery={1.4} />
         ))}
+
+      {/* high-level cove down each side wall, so a thirty-four metre room has
+          a top edge the eye can find */}
+      {wall.map((s, i) =>
+        [-1, 1].map((side) => (
+          <mesh
+            key={`ac${i}${side}`}
+            position={[side * (V.arena.x - 0.1), V.arena.y - 3.2, s.z]}
+            rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
+          >
+            <planeGeometry args={[s.len, 0.3]} />
+            <meshBasicMaterial color="#6e858c" toneMapped />
+          </mesh>
+        )),
+      )}
 
       {/* tiered seating banks either side — scale cues, not detail */}
       {[-1, 1].map((side) =>
-        Array.from({ length: 7 }, (_, i) => (
+        Array.from({ length: 9 }, (_, i) => (
           <mesh
             key={`seat${side}${i}`}
-            position={[side * (V.arena.x - 6 - i * 2.2), 0.9 + i * 1.05, -296]}
+            position={[side * (V.arena.x - 5 - i * 2.4), 1.0 + i * 1.2, -318]}
             material={M.charcoal}
           >
-            <boxGeometry args={[2.2, 1.05, 54]} />
+            <boxGeometry args={[2.4, 1.2, 66]} />
+          </mesh>
+        )),
+      )}
+      {/* a lit nosing on every tier: banked seating is invisible in the dark
+          without one, and it is the cue that says "this room holds people" */}
+      {[-1, 1].map((side) =>
+        Array.from({ length: 9 }, (_, i) => (
+          <mesh
+            key={`nose${side}${i}`}
+            position={[side * (V.arena.x - 6.2 - i * 2.4), 1.62 + i * 1.2, -318]}
+            rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
+          >
+            <planeGeometry args={[66, 0.05]} />
+            <meshBasicMaterial color="#3b5a5c" toneMapped />
           </mesh>
         )),
       )}
@@ -268,7 +355,7 @@ export function ArenaShell() {
 
 export function ArenaPortal({ z = -241 }: { z?: number }) {
   const h = 11;
-  const w = 13;
+  const w = 14;
   return (
     <group position={[0, 0, z]}>
       {/* the wall the portal is cut into */}

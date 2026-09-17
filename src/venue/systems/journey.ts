@@ -24,6 +24,27 @@ export const journey = {
   locked: false,
 };
 
+/**
+ * The show state of the main stage.
+ *
+ * Switching creative direction is not a texture swap, it is a cue: the rig
+ * dips, the content changes while nobody can see it change, the movers find
+ * new positions and the room comes back up in a different colour. Everything
+ * that has to move together during those two seconds reads `show` — the
+ * screens, the fixtures, the room wash and the lighting rig — so they stay on
+ * the same beat without any of them re-rendering React.
+ */
+export const show = {
+  /** animated 0 → 1, corporate → festival */
+  mode: 0,
+  /** where the cue is heading */
+  target: 0,
+  /** 0 settled, 1 at the bottom of the dip — the moment content is swapped */
+  cue: 0,
+  /** cue progress, 1 = finished */
+  t: 1,
+};
+
 export function resetJourney() {
   journey.progress = 0;
   journey.target = 0;
