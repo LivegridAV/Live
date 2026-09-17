@@ -120,7 +120,7 @@ export const MEDIA: Record<string, MediaDesc> = {
   /* ── 04 · Spatial experiences ─────────────────────────── */
   "mapping-facade": { kind: "shader", program: "mappingFacade", accent: ACCENT.amber, res: [448, 256], fps: 24 },
   "immersive-room": { kind: "shader", program: "immersiveRoom", accent: ACCENT.teal, res: [320, 320], fps: 24 },
-  "mapping-warp": { kind: "shader", program: "spatialWaves", accent: ACCENT.copper, variant: 0.9, res: [320, 224], fps: 24 },
+  "mapping-warp": { kind: "shader", program: "architecture", accent: ACCENT.copper, variant: 0.9, res: [448, 320], fps: 20 },
 
   /* ── 05 · Show control ────────────────────────────────── */
   "sc-cues": { kind: "canvas", painter: "scCues", accent: ACCENT.teal, res: [384, 320], fps: 10 },

@@ -336,9 +336,14 @@ const spatialWaves = wrap(/* glsl */ `
     }
     acc /= 3.2;
 
+    // Contour lines across the interference field. The field on its own was a
+    // set of soft blobs — pleasant at thumbnail size, mush on a six-metre
+    // cylinder. The contours are what give it structure to resolve.
+    float contour = pow(0.5 + 0.5 * sin(acc * 26.0 - t * 2.0), 26.0);
+
     // Sharp crests read at distance; a soft field does not.
-    float crest = pow(max(acc, 0.0), 2.0);
-    float trough = pow(max(-acc, 0.0), 2.4);
+    float crest = pow(max(acc, 0.0), 3.0);
+    float trough = pow(max(-acc, 0.0), 3.2);
     float ridge = smoothstep(0.1, 0.8, abs(acc));
 
     vec3 deep  = vec3(0.012, 0.028, 0.034);
@@ -348,8 +353,9 @@ const spatialWaves = wrap(/* glsl */ `
     vec3 col = mix(deep, body, ridge);
     col += uAccent * crest * 2.1;
     col += vec3(0.95, 0.99, 1.0) * pow(crest, 3.0) * 1.1;
-    col += warm * trough * 0.85;
-    gl_FragColor = vec4(tone(col * 1.25), 1.0);
+    col += warm * trough * 0.75;
+    col += mix(vec3(0.85, 0.94, 0.96), uAccent, 0.4) * contour * 0.9;
+    gl_FragColor = vec4(tone(col * 1.2), 1.0);
   }
 `);
 

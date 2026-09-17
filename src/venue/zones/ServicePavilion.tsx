@@ -11,6 +11,7 @@ import { journey } from "../systems/journey";
 import { useVenue } from "../systems/store";
 import { LineArray, SubStack, MovingHead, Truss } from "../three/rig";
 import { ZoneGroup } from "../three/ZoneGroup";
+import { ImmersiveVolume, type Surface } from "../three/ImmersiveVolume";
 
 /**
  * A service pavilion.
@@ -189,6 +190,19 @@ function Maquette({ position }: { position: [number, number, number] }) {
 
 /* ── the eight forms ───────────────────────────────────── */
 
+/**
+ * The immersive cube in the Spatial pavilion. Its surfaces are given in the
+ * pavilion's local space; the volume itself is told where that space sits in
+ * the venue so its virtual world lines up with the room the visitor sees.
+ */
+const roomOffset = { x: 3.2, z: 2.9 };
+const ROOM_SURFACES: Surface[] = [
+  { size: [3.0, 2.2], position: [2.9, 1.26, -4.7] },
+  { size: [3.0, 2.2], position: [1.4, 1.26, -3.2], rotation: [0, Math.PI / 2, 0] },
+  { size: [3.0, 2.2], position: [4.4, 1.26, -3.2], rotation: [0, -Math.PI / 2, 0] },
+  { size: [3.0, 3.0], position: [2.9, 0.18, -3.2], rotation: [-Math.PI / 2, 0, 0] },
+];
+
 function Form({ p }: { p: Pavilion }) {
   const s = p.screens;
   switch (p.form) {
@@ -281,41 +295,26 @@ function Form({ p }: { p: Pavilion }) {
           {/* projection onto the maquette's front faces */}
           <Maquette position={[-2.6, 0.16, -2.4]} />
           <ProjectionSurface media={s[0]} width={3.4} height={2.3} position={[-2.6, 1.3, -1.55]} range={36} />
-          {/* the immersive room: three surfaces plus the floor */}
-          <group position={[2.9, 0.16, -3.2]}>
-            <Screen media={s[1]} width={3.0} height={2.2} position={[0, 1.1, -1.5]} pitch={2.6} range={34} frame={false} />
-            <Screen
-              media={s[1]}
-              width={3.0}
-              height={2.2}
-              position={[-1.5, 1.1, 0]}
-              rotation={[0, Math.PI / 2, 0]}
-              pitch={2.6}
-              range={34}
-              frame={false}
-            />
-            <Screen
-              media={s[1]}
-              width={3.0}
-              height={2.2}
-              position={[1.5, 1.1, 0]}
-              rotation={[0, -Math.PI / 2, 0]}
-              pitch={2.6}
-              range={34}
-              frame={false}
-            />
-            <Screen
-              media={s[1]}
-              width={3.0}
-              height={3.0}
-              position={[0, 0.02, 0]}
-              rotation={[-Math.PI / 2, 0, 0]}
-              pitch={1.5}
-              brightness={0.8}
-              range={34}
-              frame={false}
-            />
-          </group>
+          {/* The immersive room: the entry tunnel, demonstrated at cube scale.
+              It runs the same world-projected surface as the tunnel does, on
+              the same shared virtual world, so the demonstration is literally
+              the product rather than a picture of it — three walls and a floor
+              that agree at every edge. */}
+          <ImmersiveVolume
+            surfaces={ROOM_SURFACES}
+            pitch={1.2}
+            brightness={1.0}
+            accent="#5fd0c2"
+            flow={4.2}
+            maxLayers={5}
+            boxMin={[-4.2, -1.6, -140]}
+            boxMax={[4.2, 5.4, 6]}
+            centreY={1.15}
+            centre={[p.side * 9.2 + roomOffset.x, 0.16, p.z + roomOffset.z]}
+            yaw={p.side === -1 ? Math.PI / 2 : -Math.PI / 2}
+            phase={() => 0.34}
+            portalZ={() => -52}
+          />
           <Screen media={s[2]} width={2.2} height={1.4} position={[-3.2, 3.6, -5.0]} pitch={2.6} range={38} />
           <LightPool position={[2.9, 0.18, -3.2]} size={7} color="#4fa79c" opacity={0.18} pulse={0.4} />
         </>

@@ -52,6 +52,8 @@ const fragment = /* glsl */ `
   uniform vec3  uBoxMin;     // the virtual volume, in world space
   uniform vec3  uBoxMax;
   uniform float uCentreY;    // the axis the virtual world is composed around
+  uniform vec3  uCentre;     // where the installation stands, in world space
+  uniform float uYaw;        // and which way it faces
   uniform float uCell;       // metres per emitter, for the fine-pitch treatment
   uniform float uDot;
 
@@ -75,6 +77,26 @@ const fragment = /* glsl */ `
     float v = 0.0, a = 0.5;
     for (int i = 0; i < 4; i++){ v += a * noise(p); p *= 1.93; a *= 0.5; }
     return v;
+  }
+
+  /**
+   * World space into the installation's own space.
+   *
+   * The tunnel runs along -Z, so for it this is the identity. A smaller
+   * enveloping room elsewhere in the venue — the immersive cube in the Spatial
+   * pavilion — is rotated to face the aisle, and without this its virtual
+   * corridor would run off sideways through the building. Everything below is
+   * written in the installation's space, which is also the space its surfaces
+   * are authored in.
+   */
+  vec3 toLocal(vec3 p){
+    vec3 q = p - uCentre;
+    float c = cos(uYaw), s = sin(uYaw);
+    return vec3(q.x * c - q.z * s, q.y, q.x * s + q.z * c);
+  }
+  vec3 dirToLocal(vec3 d){
+    float c = cos(uYaw), s = sin(uYaw);
+    return vec3(d.x * c - d.z * s, d.y, d.x * s + d.z * c);
   }
 
   /** A thin bright line at every multiple of period, measured in world metres. */
@@ -137,7 +159,7 @@ const fragment = /* glsl */ `
 
     // A real floor reads brighter because you are close to it and it catches
     // everything; a ceiling falls away.
-    float above = step(0.0, p.y - uEye.y);
+    float above = step(0.0, p.y - (uEye.y - uCentre.y));
     col *= mix(1.0, mix(1.12, 0.80, above), axisKind);
 
     return col * fade;
@@ -192,8 +214,8 @@ const fragment = /* glsl */ `
   }
 
   void main() {
-    vec3 ro = uEye;
-    vec3 rd = normalize(vWorld - ro);
+    vec3 ro = toLocal(uEye);
+    vec3 rd = normalize(dirToLocal(vWorld - uEye));
 
     // Morph weights, overlapping so the world is always changing and never
     // switches. By the exit it has become light.
@@ -300,6 +322,9 @@ export interface ImmersiveOptions {
   portalZ: number;
   /** the height the virtual world is composed around */
   centreY?: number;
+  /** where the installation stands in the venue, and which way it faces */
+  centre?: [number, number, number];
+  yaw?: number;
   /** metres per second the world travels toward the viewer */
   flow?: number;
   layers?: number;
@@ -326,6 +351,8 @@ export function createImmersiveMaterial(o: ImmersiveOptions) {
       uBoxMin: { value: new THREE.Vector3(...o.boxMin) },
       uBoxMax: { value: new THREE.Vector3(...o.boxMax) },
       uCentreY: { value: o.centreY ?? 2.4 },
+      uCentre: { value: new THREE.Vector3(...(o.centre ?? [0, 0, 0])) },
+      uYaw: { value: o.yaw ?? 0 },
       uCell: { value: pitch / 1000 },
       uDot: { value: o.dot ?? 1 },
     },
