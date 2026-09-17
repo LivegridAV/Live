@@ -115,13 +115,17 @@ export function zoneLocal(progress: number, zone: Zone) {
   return Math.min(1, Math.max(0, (progress - a) / (b - a)));
 }
 
-/** Handy jump targets for the navigation menu. */
+/**
+ * Jump targets for the progress rail and the mobile sheet. Labels deliberately
+ * avoid colliding with the route names in the nav — "Pavilions" and "Finale"
+ * are places inside the venue, "Services" and "Contact" are pages.
+ */
 export const NAV_STOPS: { id: string; label: string; p: number }[] = [
   { id: "arrival", label: "Entrance", p: 0.0 },
   { id: "tunnel", label: "LED Tunnel", p: 0.185 },
   { id: "gallery", label: "Creative LED", p: 0.375 },
-  { id: "boulevard", label: "Services", p: 0.59 },
+  { id: "boulevard", label: "Pavilions", p: 0.59 },
   { id: "arena", label: "Arena", p: 0.865 },
   { id: "stage", label: "Main Stage", p: 0.941 },
-  { id: "contact", label: "Contact", p: 1.0 },
+  { id: "contact", label: "Finale", p: 1.0 },
 ];
