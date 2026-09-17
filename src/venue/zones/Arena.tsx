@@ -61,7 +61,10 @@ function Approach() {
   const quality = useVenue((s) => s.quality);
   return (
     <group>
-      {/* giant LED pillars flanking the run-in */}
+      {/* Giant LED totems flanking the run-in. They start past the partner bay
+          at -231: an earlier arrangement began at -228 and the first pair stood
+          directly between the camera and the bay it was meant to be walking
+          past. */}
       {[-1, 1].map((side) =>
         [0, 1, 2].map((i) => (
           <PillarScreen
@@ -70,7 +73,7 @@ function Approach() {
             width={1.15}
             depth={1.15}
             height={9.5 - i * 1.1}
-            position={[side * (5.6 + i * 1.5), 0, -228 - i * 4.5]}
+            position={[side * (5.4 + i * 0.8), 0, -234 - i * 2.6]}
             pitch={2.6}
             brightness={1.0}
             range={70}
@@ -78,7 +81,8 @@ function Approach() {
         )),
       )}
 
-      {/* large portrait displays, the kind that line a real concourse */}
+      {/* large portrait displays, against the hall walls the way a real
+          concourse lines them */}
       {[-1, 1].map((side) =>
         [0, 1].map((i) => (
           <Screen
@@ -86,7 +90,7 @@ function Approach() {
             media="approach-portrait"
             width={1.9}
             height={4.6}
-            position={[side * 12.5, 3.0, -230 - i * 7]}
+            position={[side * 18.1, 3.0, -228 - i * 8]}
             rotation={[0, side === -1 ? Math.PI / 2 : -Math.PI / 2, 0]}
             pitch={1.9}
             range={60}
@@ -95,10 +99,10 @@ function Approach() {
         )),
       )}
 
-      <Truss length={22} size={0.44} position={[0, 12.2, -233]} braceEvery={0.9} />
+      <Truss length={22} size={0.44} position={[0, 12.2, -236]} braceEvery={0.9} />
       {quality !== "low" &&
         [-7, -2.4, 2.4, 7].map((x, i) => (
-          <MovingHead key={x} position={[x, 11.7, -233]} seed={i * 2.1} reach={12} color="#e0b784" intensity={0.9} />
+          <MovingHead key={x} position={[x, 11.7, -236]} seed={i * 2.1} reach={12} color="#e0b784" intensity={0.9} />
         ))}
 
       <LightPool position={[0, 0.04, -236]} size={[26, 30]} color="#c0925c" opacity={0.1} pulse={0.4} />

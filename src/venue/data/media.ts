@@ -147,8 +147,11 @@ export const MEDIA: Record<string, MediaDesc> = {
   "partner-bay": { kind: "canvas", painter: "partnerBay", accent: ACCENT.amber, res: [448, 320], fps: 10 },
 
   /* ── Arena approach ───────────────────────────────────── */
-  "approach-pillar": { kind: "shader", program: "brandType", accent: ACCENT.brand, res: [160, 448], fps: 30 },
-  "approach-portrait": { kind: "shader", program: "pixelRain", accent: ACCENT.amber, variant: 0.15, res: [128, 448], fps: 30 },
+  // The totems pass within a few metres of the camera, so whatever they play
+  // is inspected at close range. A matrix motif reads as a dot grid there,
+  // which is the one impression a fine-pitch venue cannot give.
+  "approach-pillar": { kind: "shader", program: "liquidMetal", accent: ACCENT.brand, variant: 0.18, res: [256, 768], fps: 30 },
+  "approach-portrait": { kind: "shader", program: "pixelRain", accent: ACCENT.amber, variant: 0.15, res: [192, 512], fps: 30 },
 
   /* ── Main stage: the mode switch lives here ───────────── */
   "stage-main": {
