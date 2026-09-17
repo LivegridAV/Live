@@ -97,7 +97,9 @@ export const MEDIA: Record<string, MediaDesc> = {
   "blade-rain": { kind: "shader", program: "pixelRain", accent: ACCENT.brand, variant: 0.8, res: [512, 448], fps: 30 },
   "cylinder-ribbon": { kind: "shader", program: "plasmaRibbon", accent: ACCENT.amber, res: [1024, 384], fps: 30 },
   "ring-waves": { kind: "shader", program: "spatialWaves", accent: ACCENT.teal, res: [1536, 192], fps: 30 },
-  "bar-brand": { kind: "shader", program: "signalGrid", accent: ACCENT.brand, variant: 0.45, res: [1024, 128], fps: 30 },
+  // The fascia is a metre from the camera and its own header calls it
+  // fine pitch. A matrix motif here contradicts the product in the same frame.
+  "bar-brand": { kind: "shader", program: "plasmaRibbon", accent: ACCENT.brand, variant: 0.45, res: [1024, 160], fps: 30 },
   "curve-natural": { kind: "shader", program: "naturalFlow", accent: ACCENT.moss, res: [704, 384], fps: 24 },
   "mosaic-arch": { kind: "shader", program: "architecture", accent: ACCENT.steel, res: [640, 448], fps: 20 },
   "anamorphic": { kind: "shader", program: "anamorphicVoid", accent: ACCENT.bone, res: [768, 576], fps: 24 },
