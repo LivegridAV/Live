@@ -426,14 +426,18 @@ const naturalFlow = wrap(/* glsl */ `
     vec3 leaf   = vec3(0.26, 0.34, 0.16);
     vec3 sun    = vec3(0.98, 0.72, 0.36);
 
-    vec3 col = mix(shadow, moss, smoothstep(0.25, 0.65, f));
-    col = mix(col, leaf, smoothstep(0.5, 0.85, f) * 0.8);
+    vec3 col = mix(shadow, moss, smoothstep(0.32, 0.6, f));
+    col = mix(col, leaf, smoothstep(0.54, 0.8, f));
 
-    float shaft = pow(max(0.0, sin(p.x * 1.6 + p.y * 2.4 + t * 0.7)), 8.0);
-    shaft *= smoothstep(0.2, 0.9, g);
-    col += sun * shaft * 0.5;
-    col += sun * pow(max(0.0, f - 0.72), 2.0) * 1.4;
-    col += uAccent * 0.05 * g;
+    // Hard-edged light shafts through the canopy give the surface structure;
+    // without them the whole panel reads as one flat green wash.
+    float shaft = pow(max(0.0, sin(p.x * 2.1 + p.y * 2.9 + t * 0.7)), 14.0);
+    shaft *= smoothstep(0.25, 0.85, g);
+    col += sun * shaft * 1.5;
+    col += sun * pow(max(0.0, f - 0.68), 1.6) * 2.2;
+    // deepen the shadows so the highlights have somewhere to read against
+    col *= 0.55 + 0.75 * smoothstep(0.15, 0.7, f);
+    col += uAccent * 0.04 * g;
 
     gl_FragColor = vec4(tone(col * 1.15), 1.0);
   }
@@ -469,7 +473,9 @@ const plasmaRibbon = wrap(/* glsl */ `
 const pixelRain = wrap(/* glsl */ `
   void main(){
     vec2 uv = vUv;
-    float cols = 5.0;
+    // One comet per blade: the column count follows the source aspect, so a
+    // wide texture sliced across eight blades still gives each one its own.
+    float cols = max(3.0, floor(4.5 * uAspect.x / uAspect.y));
     float x = floor(uv.x * cols);
     float fx = fract(uv.x * cols);
     float t = uTime * 0.5 + uVariant * 11.0;

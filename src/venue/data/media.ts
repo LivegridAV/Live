@@ -87,11 +87,11 @@ export const MEDIA: Record<string, MediaDesc> = {
   /* ── Creative LED gallery ─────────────────────────────── */
   "pillar-flow": { kind: "shader", program: "volumetric", accent: ACCENT.teal, variant: 0.1, res: [192, 448], fps: 30 },
   "pillar-metal": { kind: "shader", program: "liquidMetal", accent: ACCENT.copper, variant: 0.6, res: [192, 448], fps: 30 },
-  "blade-rain": { kind: "shader", program: "pixelRain", accent: ACCENT.brand, variant: 0.8, res: [128, 448], fps: 30 },
+  "blade-rain": { kind: "shader", program: "pixelRain", accent: ACCENT.brand, variant: 0.8, res: [512, 448], fps: 30 },
   "cylinder-ribbon": { kind: "shader", program: "plasmaRibbon", accent: ACCENT.amber, res: [512, 192], fps: 30 },
   "ring-waves": { kind: "shader", program: "spatialWaves", accent: ACCENT.teal, res: [768, 96], fps: 30 },
   "bar-brand": { kind: "shader", program: "signalGrid", accent: ACCENT.brand, variant: 0.45, res: [640, 80], fps: 30 },
-  "curve-natural": { kind: "shader", program: "naturalFlow", accent: ACCENT.moss, res: [448, 256], fps: 24 },
+  "curve-natural": { kind: "shader", program: "naturalFlow", accent: ACCENT.moss, res: [512, 288], fps: 24 },
   "mosaic-arch": { kind: "shader", program: "architecture", accent: ACCENT.steel, res: [256, 256], fps: 20 },
   "anamorphic": { kind: "shader", program: "anamorphicVoid", accent: ACCENT.bone, res: [320, 320], fps: 24 },
 
@@ -172,7 +172,7 @@ export const MEDIA: Record<string, MediaDesc> = {
     accent: ACCENT.bone,
     festivalAccent: "#c96a9e",
     variant: 0.55,
-    res: [128, 448],
+    res: [640, 448],
     fps: 30,
   },
   "stage-floor": {
