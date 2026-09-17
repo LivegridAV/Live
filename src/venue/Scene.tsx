@@ -13,7 +13,7 @@ import { Gallery } from "./zones/Gallery";
 import { Boulevard } from "./zones/ServicePavilion";
 import { Arena } from "./zones/Arena";
 import { useVenue } from "./systems/store";
-import { journey } from "./systems/journey";
+import { journey, show } from "./systems/journey";
 import { ZoneGroup } from "./three/ZoneGroup";
 
 /**
@@ -32,7 +32,7 @@ function Warmup() {
   // live scene inspection from the console without shipping a debug overlay.
   useEffect(() => {
     if (process.env.NODE_ENV === "production") return;
-    (window as unknown as Record<string, unknown>).__venue = { gl, scene, camera, journey, store: useVenue };
+    (window as unknown as Record<string, unknown>).__venue = { gl, scene, camera, journey, show, store: useVenue };
   }, [gl, scene, camera]);
 
   const frame = useRef(0);

@@ -288,6 +288,52 @@ export function ArenaShell() {
         )),
       )}
 
+      {/* Architectural lighting. The hall learned this lesson already: a room
+          this size cannot be lit by fixtures with physical falloff, so the
+          building carries its own light. Without it the arena reveal is a
+          stage floating in black. */}
+      {wall.map((seg, i) =>
+        [-1, 1].map((side) => (
+          <group key={`al${i}${side}`}>
+            {/* a full-height slot every bay */}
+            {[0.3, 0.7].map((f) => (
+              <mesh
+                key={f}
+                position={[side * (V.arena.x - 0.12), V.arena.y * 0.46, seg.z + (f - 0.5) * seg.len]}
+                rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
+              >
+                <planeGeometry args={[0.16, V.arena.y * 0.7]} />
+                <meshBasicMaterial color="#5f7d85" toneMapped />
+              </mesh>
+            ))}
+            {/* a low wash along the base of the wall */}
+            <mesh
+              position={[side * (V.arena.x - 0.1), 0.12, seg.z]}
+              rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
+            >
+              <planeGeometry args={[seg.len, 0.12]} />
+              <meshBasicMaterial color="#2c5651" toneMapped />
+            </mesh>
+            <LightPool
+              position={[side * (V.arena.x - 5), 0.05, seg.z]}
+              size={[12, seg.len * 0.8]}
+              color="#5c757e"
+              opacity={0.06}
+            />
+          </group>
+        )),
+      )}
+
+      {/* house lights in the roof, so the steel has something above it */}
+      {trusses.map((z) =>
+        [-24, -8, 8, 24].map((x) => (
+          <mesh key={`hl${z}${x}`} position={[x, V.arena.y - 3.0, z]} rotation={[Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[8, 0.26]} />
+            <meshBasicMaterial color="#8fa2a8" toneMapped />
+          </mesh>
+        )),
+      )}
+
       {/* back wall behind the stage */}
       <mesh position={[0, V.arena.y / 2, V.arena.to]} material={M.concrete}>
         <planeGeometry args={[V.arena.x * 2, V.arena.y]} />
