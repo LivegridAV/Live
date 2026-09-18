@@ -142,16 +142,26 @@ export interface LEDOptions {
 }
 
 /**
- * Emitter counts are capped well above anything that can be resolved on screen;
- * the cap exists to keep `fract()` precise, not to limit the apparent pitch.
+ * Ceiling on the emitter grid, to keep `fract()` precise in the fragment
+ * shader. It is deliberately high: at 1.9 mm, 900 emitters is 1.7 m of panel,
+ * so the old cap of 900 silently re-pitched every surface wider than that.
+ * A 13.8 m cylinder specified at 1.9 mm was being drawn at an effective
+ * 15 mm — a coarse, perfectly visible RGB grid on the one product whose
+ * whole claim is that you cannot see one. Values up to ~16k stay exact in
+ * a 24-bit mantissa, which covers every surface in the venue.
  */
-const MAX_EMITTERS = 900;
+const MAX_EMITTERS = 16384;
 
 export function createLEDMaterial(texture: THREE.Texture, o: LEDOptions) {
   const pitch = o.pitch ?? 1.9;
   const cabinet = o.cabinet ?? 0.5;
-  const across = Math.min(MAX_EMITTERS, Math.max(8, Math.round((o.width * 1000) / pitch)));
-  const down = Math.min(MAX_EMITTERS, Math.max(8, Math.round((o.height * 1000) / pitch)));
+  const wantAcross = (o.width * 1000) / pitch;
+  const wantDown = (o.height * 1000) / pitch;
+  const across = Math.min(MAX_EMITTERS, Math.max(8, Math.round(wantAcross)));
+  const down = Math.min(MAX_EMITTERS, Math.max(8, Math.round(wantDown)));
+  // If the real grid is finer than we can represent, there is no structure to
+  // draw: a made-up coarser one would be a fault, not a detail.
+  const structural = wantAcross <= MAX_EMITTERS && wantDown <= MAX_EMITTERS;
 
   return new THREE.ShaderMaterial({
     vertexShader: vertex,
@@ -172,7 +182,7 @@ export function createLEDMaterial(texture: THREE.Texture, o: LEDOptions) {
       uTint: { value: new THREE.Color(o.tint ?? "#ffffff").convertSRGBToLinear() },
       uBright: { value: o.brightness ?? 1 },
       uOn: { value: 1 },
-      uDot: { value: o.dot ?? 1 },
+      uDot: { value: structural ? o.dot ?? 1 : 0 },
       uSeam: { value: o.seam ?? 0 },
       uFlat: { value: o.flat ? 1 : 0 },
     },
