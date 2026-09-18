@@ -113,7 +113,14 @@ function HallChunk({ from, to }: { from: number; to: number }) {
    */
   const downs = useMemo(() => {
     const out: number[] = [];
-    for (let z = from - 3.5; z > to; z -= 7) out.push(z);
+    for (let z = from - 2.2; z > to; z -= 4.4) out.push(z);
+    return out;
+  }, [from, to]);
+
+  /** Ceiling bay ribs — see the note by the ceiling plane below. */
+  const ribs = useMemo(() => {
+    const out: number[] = [];
+    for (let z = from - 3; z > to; z -= 6) out.push(z);
     return out;
   }, [from, to]);
 
@@ -131,10 +138,29 @@ function HallChunk({ from, to }: { from: number; to: number }) {
         </mesh>
       ))}
 
-      {/* ceiling */}
+      {/* ── the ceiling ──
+          A flat dark plane fifteen metres up is indistinguishable from no
+          ceiling at all, and a room with no ceiling has no height. What makes
+          a real hall's roof readable is not brightness, it is *articulation*:
+          ribs crossing it at a regular pitch, catching enough light along one
+          edge to give the eye something receding to measure the room against.
+          It costs two thin boxes per bay and it is the difference between a
+          fifteen-metre hall and a black lid. */}
       <mesh position={[0, V.hall.y, mid]} rotation={[Math.PI / 2, 0, 0]} material={M.ceiling}>
         <planeGeometry args={[V.hall.x * 2, len]} />
       </mesh>
+      {quality !== "low" &&
+        ribs.map((z) => (
+          <group key={`rib${z}`}>
+            <mesh position={[0, V.hall.y - 0.22, z]} material={M.charcoal}>
+              <boxGeometry args={[V.hall.x * 2 - 0.4, 0.44, 0.34]} />
+            </mesh>
+            <mesh position={[0, V.hall.y - 0.45, z + 0.18]}>
+              <planeGeometry args={[V.hall.x * 2 - 1.2, 0.035]} />
+              <meshBasicMaterial color="#6f8288" toneMapped />
+            </mesh>
+          </group>
+        ))}
 
       {/* Skirting, coves and wall slots.
           Point lights with physical falloff cannot light a hall this size —
@@ -157,8 +183,8 @@ function HallChunk({ from, to }: { from: number; to: number }) {
             position={[side * (V.hall.x - 0.06), V.hall.y - 0.9, mid]}
             rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
           >
-            <planeGeometry args={[len, 0.22]} />
-            <meshBasicMaterial color="#8d9ea4" toneMapped />
+            <planeGeometry args={[len, 0.26]} />
+            <meshBasicMaterial color="#a8bcc2" toneMapped />
           </mesh>
           {/* a graded wash down the wall beneath the cove */}
           <mesh
@@ -243,8 +269,8 @@ function HallChunk({ from, to }: { from: number; to: number }) {
       {trusses.map((z) =>
         [-13, -4.5, 4.5, 13].map((x) => (
           <mesh key={`lb${z}${x}`} position={[x, V.hall.y - 1.45, z]} rotation={[Math.PI / 2, 0, 0]}>
-            <planeGeometry args={[6.4, 0.2]} />
-            <meshBasicMaterial color="#9fb2b8" toneMapped />
+            <planeGeometry args={[6.4, 0.22]} />
+            <meshBasicMaterial color="#b6c8ce" toneMapped />
           </mesh>
         )),
       )}
@@ -253,22 +279,24 @@ function HallChunk({ from, to }: { from: number; to: number }) {
           key={`lp${z}`}
           position={[0, 0.04, z]}
           size={[34, 24]}
-          color="#8497a0"
-          opacity={0.1}
+          color="#8fa4ad"
+          opacity={0.13}
         />
       ))}
 
       {/* ── warm architectural ambience ── */}
+      {/* Six across rather than four, at a 4.4 m pitch rather than 7 m.
+          The reference halls are lit by a *field* of small warm sources
+          receding into the distance — the density is the effect, and four
+          widely spaced fixtures per bay read as four fixtures. */}
       {downs.map((z) =>
-        [-15.5, -9, 9, 15.5].map((x) => (
+        [-16, -11.2, -5.6, 5.6, 11.2, 16].map((x) => (
           <group key={`dn${z}${x}`}>
             <mesh position={[x, V.hall.y - 0.55, z]} rotation={[Math.PI / 2, 0, 0]}>
-              <planeGeometry args={[1.5, 0.5]} />
-              <meshBasicMaterial color="#e6c08a" toneMapped />
+              <planeGeometry args={[1.35, 0.42]} />
+              <meshBasicMaterial color="#f2cf9c" toneMapped />
             </mesh>
-            {/* the pool it lays on the floor, well out toward the walls where
-                the hall was darkest */}
-            <LightPool position={[x * 0.92, 0.045, z]} size={[9, 8]} color="#a8814d" opacity={0.085} />
+            <LightPool position={[x * 0.92, 0.045, z]} size={[8, 7]} color="#b08a55" opacity={0.10} />
           </group>
         )),
       )}
@@ -281,15 +309,15 @@ function HallChunk({ from, to }: { from: number; to: number }) {
             position={[side * (V.hall.x - 0.07), 2.5, mid]}
             rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
           >
-            <planeGeometry args={[len, 0.09]} />
-            <meshBasicMaterial color="#9a7748" toneMapped />
+            <planeGeometry args={[len, 0.11]} />
+            <meshBasicMaterial color="#b28a52" toneMapped />
           </mesh>
           <LightPool
             position={[side * (V.hall.x - 0.35), 1.5, mid]}
             rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
             size={[len * 0.96, 5.2]}
-            color="#8a6a42"
-            opacity={0.1}
+            color="#9a7748"
+            opacity={0.13}
           />
         </group>
       ))}

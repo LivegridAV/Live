@@ -15,7 +15,7 @@ import { LightPool } from "../three/environment";
 import { ReflectionStreak } from "../three/Reflection";
 import { useVenue } from "../systems/store";
 import { ZoneGroup } from "../three/ZoneGroup";
-import { Aisle, Gantry, NameBoard, Stand, Vestibule } from "./Exhibition";
+import { Aisle, Counter, Gantry, Lounge, NameBoard, Planter, Poseur, Stand, Vestibule } from "./Exhibition";
 
 /**
  * The creative LED gallery.
@@ -34,16 +34,26 @@ import { Aisle, Gantry, NameBoard, Stand, Vestibule } from "./Exhibition";
 
 /* ── A · LED pillars ───────────────────────────────────── */
 
-const PILLARS: { x: number; z: number; h: number; media: string }[] = [
-  { x: -10.6, z: -42.5, h: 5.2, media: "pillar-flow" },
-  { x: -7.2, z: -46.5, h: 7.4, media: "pillar-metal" },
-  { x: -11.4, z: -50.5, h: 6.2, media: "pillar-metal" },
-  { x: -5.4, z: -54.0, h: 8.6, media: "pillar-flow" },
-  { x: -9.8, z: -57.5, h: 5.8, media: "pillar-flow" },
-  { x: -13.2, z: -53.0, h: 7.0, media: "pillar-metal" },
+/**
+ * The cluster of four-sided totems.
+ *
+ * Widths are deliberately heavier than they were. A 0.72 m column at six
+ * metres tall is a post; the reference installations are nearer a metre across
+ * and read as *architecture* carrying LED rather than as a screen on a stick.
+ * The heights are staggered so the group has a skyline, and no two neighbours
+ * share a width — a grid of identical columns reads as a product shot.
+ */
+const PILLARS: { x: number; z: number; h: number; w: number; media: string }[] = [
+  { x: -10.6, z: -42.5, h: 5.6, w: 0.95, media: "pillar-flow" },
+  { x: -7.2, z: -46.5, h: 7.8, w: 1.15, media: "pillar-metal" },
+  { x: -11.4, z: -50.5, h: 6.4, w: 1.0, media: "pillar-metal" },
+  { x: -5.4, z: -54.0, h: 9.0, w: 1.25, media: "pillar-flow" },
+  { x: -9.8, z: -57.5, h: 6.0, w: 0.9, media: "pillar-flow" },
+  { x: -13.2, z: -53.0, h: 7.2, w: 1.1, media: "pillar-metal" },
 ];
 
 function Pillars() {
+  const quality = useVenue((s) => s.quality);
   return (
     <group>
       <Stand
@@ -60,28 +70,40 @@ function Pillars() {
       {/* the pillars are tall, so their overhead rig spans the whole cluster */}
       <Truss length={14} size={0.32} position={[-9.6, 10.2, -46]} braceEvery={0.9} />
       <Truss length={14} size={0.32} position={[-9.6, 10.2, -55]} braceEvery={0.9} />
-      {PILLARS.map((p, i) => (
-        <group key={i}>
-          <PillarScreen
-            media={p.media}
-            width={0.72}
-            depth={0.72}
-            height={p.h}
-            position={[p.x, 0, p.z]}
-            pitch={1.5}
-            brightness={1.0}
-            range={60}
-          />
-          <ReflectionStreak
-            position={[p.x, 0.04, p.z + 2.6]}
-            width={1.5}
-            length={5.2}
-            color={p.media === "pillar-metal" ? "#8d7b6b" : "#4f9b93"}
-            opacity={0.11}
-          />
-        </group>
-      ))}
-      <LightPool position={[-9.2, 0.05, -50]} size={[18, 22]} color="#4f9b93" opacity={0.08} pulse={0.5} />
+      {PILLARS.map((p, i) => {
+        const warm = p.media === "pillar-metal";
+        const hue = warm ? "#c09a5a" : "#5fb6ab";
+        return (
+          <group key={i}>
+            <PillarScreen
+              media={p.media}
+              width={p.w}
+              depth={p.w}
+              height={p.h}
+              position={[p.x, 0, p.z]}
+              pitch={1.5}
+              brightness={1.12}
+              range={60}
+              spill={quality === "low" ? 0 : 9}
+              spillColor={hue}
+            />
+            {/* The column has to light the floor it stands on, or the whole
+                cluster looks like a render pasted over a photograph. */}
+            <ReflectionStreak
+              position={[p.x, 0.04, p.z + p.w * 3.4]}
+              width={p.w * 2.4}
+              length={p.h * 0.95}
+              color={hue}
+              opacity={0.18}
+            />
+            <LightPool position={[p.x, 0.05, p.z]} size={p.w * 7} color={hue} opacity={0.12} pulse={0.4} />
+          </group>
+        );
+      })}
+      <LightPool position={[-9.2, 0.05, -50]} size={[20, 24]} color="#4f9b93" opacity={0.09} pulse={0.5} />
+      {/* somewhere to stand and look at them */}
+      <Lounge position={[-16.0, 0, -45.5]} rotation={0.5} accent="#4f9b93" seed={1} />
+      <Lounge position={[-15.4, 0, -59]} rotation={-0.4} accent="#4f9b93" seed={5} />
     </group>
   );
 }
@@ -137,6 +159,9 @@ function Blades() {
           />
         </group>
       ))}
+      <Counter position={[14.2, 0, -57.5]} rotation={-0.5} width={3.6} accent="#4fc4b6" />
+      <Planter position={[13.0, 0, -61.6]} seed={11} />
+      <Planter position={[13.9, 0, -63.0]} scale={0.85} seed={14} />
     </group>
   );
 }
@@ -170,7 +195,12 @@ function Cylinder() {
         />
         <HangPoint position={[0, 7.4, 0]} drop={2.4} />
         <LightPool position={[0, 0.06, 0]} size={12} color="#c08a4e" opacity={0.16} pulse={0.35} />
+        <ReflectionStreak position={[0, 0.04, 3.4]} width={5.2} length={6.0} color="#c08a4e" opacity={0.2} />
       </group>
+      {/* The cylinder is the hospitality island in the reference, so it is
+          furnished as one: seating turned toward it and planting behind. */}
+      <Lounge position={[14.6, 0, -68.5]} rotation={-0.9} accent="#c08a4e" seed={7} />
+      <Planter position={[12.4, 0, -73.6]} seed={21} />
     </group>
   );
 }
@@ -180,14 +210,20 @@ function Cylinder() {
 function Ring() {
   return (
     <group position={[-3.2, 0, -78]}>
+      {/* The camera passes directly underneath, and from there you are looking
+          at the *inside* of an outward-facing ring — the dimmest view of it
+          there is. It carries the whole frame at that moment, so it is run
+          hot and given real spill. */}
       <RingScreen
         media="ring-waves"
         radius={5.4}
         height={1.5}
         position={[0, 6.4, 0]}
         pitch={1.9}
-        brightness={1.6}
+        brightness={2.3}
         range={80}
+        spill={26}
+        spillColor="#6fc2b6"
       />
       {/* a second, smaller ring inside it — the composition needs a counterpoint */}
       <RingScreen
@@ -196,7 +232,7 @@ function Ring() {
         height={0.9}
         position={[0, 7.9, 0]}
         pitch={1.9}
-        brightness={1.35}
+        brightness={1.95}
         inward
         range={80}
       />
@@ -209,11 +245,17 @@ function Ring() {
       <mesh position={[0, 0.026, 0]} rotation={[-Math.PI / 2, 0, 0]} material={M.deck}>
         <circleGeometry args={[5.4, 48]} />
       </mesh>
-      <LightPool position={[0, 0.05, 0]} size={20} color="#4fa79c" opacity={0.13} pulse={0.45} />
+      <LightPool position={[0, 0.05, 0]} size={20} color="#4fa79c" opacity={0.2} pulse={0.45} />
+      {/* a soft disc of light in the air under the ring, so the pass beneath it
+          is a lit moment rather than a dark ceiling */}
+      <LightPool position={[0, 5.5, 0]} size={16} color="#5fb8ac" opacity={0.1} pulse={0.4} />
       {/* The ring is flown over the walkway rather than standing on a stand,
           so its name board hangs clear to one side — directly under it is
           where the camera goes. */}
       <NameBoard position={[-5.6, 4.4, 0.6]} face={1.0} media="stand-ring" width={4.2} accent="#4fa79c" />
+      {[-1, 1].map((side) => (
+        <Planter key={side} position={[side * 6.6, 0, -3.4]} seed={side * 9 + 30} />
+      ))}
     </group>
   );
 }
@@ -267,7 +309,14 @@ function Bar() {
         ))}
         <ReflectionStreak position={[0, 0.04, 2.4]} width={8} length={4.6} color="#57cbbd" opacity={0.22} />
         <LightPool position={[0, 0.05, 1.6]} size={[12, 8]} color="#4fc4b6" opacity={0.14} />
+        {/* poseur tables in front of the bar — a counter with nothing in front
+            of it reads as a prop */}
+        {[-2.6, 0.4, 3.2].map((x) => (
+          <Poseur key={x} position={[x, 0, 3.0]} />
+        ))}
       </group>
+      <Planter position={[-15.4, 0, -80.5]} seed={41} />
+      <Planter position={[-16.1, 0, -82.0]} scale={0.82} seed={44} />
     </group>
   );
 }
@@ -303,6 +352,9 @@ function Curved() {
         </mesh>
         <LightPool position={[0, 0.06, 0]} size={16} color="#7ea36a" opacity={0.1} pulse={0.4} />
       </group>
+      <Lounge position={[15.2, 0, -87.5]} rotation={-1.2} accent="#7ea36a" seed={17} />
+      <Planter position={[13.2, 0, -94.5]} scale={1.15} seed={51} />
+      <Planter position={[14.6, 0, -96.2]} seed={55} />
     </group>
   );
 }

@@ -182,6 +182,50 @@ const fragment = /* glsl */ `
     return col;
   }
 
+  /**
+   * A monumental massif, drawn as a silhouette against whatever is behind it.
+   *
+   * The reference tunnel is not an abstract field — it is *country*: cliffs
+   * either side of the walkway with light falling down them, receding into a
+   * portal. A silhouette plus a lit rim plus falling veins of light is all
+   * that takes, and it is what gives the corridor a floor, a horizon and a
+   * sense of enormous scale that stars alone never produce.
+   */
+  vec4 massif(vec2 q, float seedOff, float t){
+    // the skyline
+    float ridge =
+        fbm(vec2(q.x * 0.35 + seedOff, seedOff)) * 1.5
+      + fbm(vec2(q.x * 1.1 + seedOff * 3.0, 2.0)) * 0.55
+      - 0.62;
+    float body = smoothstep(0.03, -0.03, q.y - ridge);
+    if (body < 0.001) return vec4(0.0);
+
+    // the lit rim along the skyline
+    float rim = smoothstep(0.18, 0.0, abs(q.y - ridge));
+
+    /* Veins of light running down the face — the reference's waterfalls.
+       They are a function of position *along* the cliff and not of height, so
+       each one paints a vertical band; at the width and level this first ran
+       at, a vein passing close to the camera filled a third of the frame with
+       a pale column and read as a light fixture standing in the corridor
+       rather than as water on a rock face. Narrow, dimmer, and fading out
+       before it reaches the foot of the cliff. */
+    float lane = hash21(vec2(floor(q.x * 5.5 + seedOff * 7.0), 0.0));
+    float drop = ridge - q.y;
+    float vein = smoothstep(0.035, 0.0, abs(fract(q.x * 5.5 + seedOff * 7.0) - 0.5))
+      * step(0.68, lane)
+      * smoothstep(0.02, 0.16, drop) * smoothstep(1.1, 0.35, drop)
+      * (0.55 + 0.45 * sin(q.y * 9.0 + t * 2.2 + lane * 20.0));
+
+    // strata across the face, so it is rock and not a cut-out
+    float strata = 0.5 + 0.5 * sin(q.y * 9.0 + fbm(q * 1.6) * 5.0);
+
+    vec3 col = vec3(0.014, 0.019, 0.030) * (0.5 + 0.9 * strata);
+    col += mix(uAccent, vec3(1.0, 0.86, 0.62), 0.35) * rim * 1.6;
+    col += mix(uAccent, vec3(0.80, 0.94, 1.0), 0.5) * vein * 0.65;
+    return vec4(col, body);
+  }
+
   /** Head height: the deep field, with nebula structure and dust. */
   vec3 wallBand(vec3 p, vec3 w, float fade){
     float zf = p.z - uTime * uFlow * 0.35;
@@ -218,42 +262,90 @@ const fragment = /* glsl */ `
     col += vec3(0.86, 0.92, 1.0) * (s1 + s2 * 0.72 + s3 * 0.5) * 1.15;
     col += vec3(0.80, 0.90, 1.0) * glint * 0.5;
     col += mix(grade(0.8, w), vec3(1.0, 0.86, 0.62), 0.4) * gal * 1.5;
+
+    /* Country, in two ranges. Composed in the same (depth, height) space the
+       field is, so it sits *in* the world rather than on top of it — and the
+       far range is deliberately fainter and lower, which is the whole of
+       aerial perspective. */
+    vec2 mq = vec2(p.z * 0.010 - uTime * 0.012, (p.y - uCentreY) * 0.048);
+    vec4 far = massif(mq + vec2(0.0, 0.34), 11.0, uTime);
+    vec4 near = massif(mq * vec2(0.62, 0.74), 3.0, uTime);
+    col = mix(col, far.rgb * 0.80, far.a * 0.95);
+    col = mix(col, near.rgb * 1.15, near.a);
+
     return col * fade;
   }
 
-  /** The floor: the galactic plane, passing underneath. Brightest surface. */
-  vec3 terrainBand(vec3 p, vec3 w, float fade){
-    float zf = p.z - uTime * uFlow * 0.5;
-    vec2 q = vec2(p.x, zf) * 0.06;
+  /**
+   * The floor.
+   *
+   * This is a *wet* surface. Everything on it is a reflection of what is
+   * overhead and ahead, stretched along the direction of travel — which is
+   * what a polished floor does to a light source, and what makes the corridor
+   * read as a real room rather than a lit ribbon you are walking on.
+   *
+   * It is composed in a **converging** coordinate rather than in world X,
+   * and that is the whole trick. The visible floor is only six metres wide but
+   * runs hundreds of metres away, so anything authored in world X has almost
+   * no variation across the near floor and all of its detail bunched at the
+   * horizon — a blurry sheet underfoot. Dividing X by the distance to the hit
+   * turns every feature into a line that converges on the vanishing point,
+   * which is both correct for a reflection and the single strongest depth cue
+   * the corridor has.
+   *
+   * 'dist' is the distance to the hit, not a world coordinate. An earlier
+   * version faded the destination's reflection in against a *drifting* depth
+   * term, which after a few seconds of flow saturated permanently — the whole
+   * floor went warm and stayed there, and with it the whole tunnel.
+   */
+  vec3 terrainBand(vec3 p, vec3 w, float fade, float dist){
+    // converging: constant across the frame at any depth, one line per feature
+    float conv = p.x / (0.9 + dist * 0.16);
+    // and a slow travel along the corridor, so the reflections move with you
+    float run = p.z * 0.045 + uTime * 0.14;
 
-    // The plane itself: a band of light running away down the tunnel, densest
-    // on the centre line. Keeping the brightness *banded* rather than even is
-    // what makes the floor read as something enormous seen edge-on, instead of
-    // as a lit floor.
-    float band = exp(-pow(q.x * 1.25, 2.0));
-    float core = exp(-pow(length(vec2(q.x * 0.9, (q.y + 6.0) * 0.16)), 2.0));
+    // brightness concentrated on the centre line
+    float band = exp(-pow(conv * 1.15, 2.0));
 
-    float n1 = fbm(q * 2.2 + vec2(0.0, uTime * 0.012));
-    float n2 = fbm(q * 5.0 - vec2(0.0, uTime * 0.020));
-    float rift = smoothstep(0.58, 0.30, n2);   // dark dust lanes across it
-    float haze = pow(max(0.0, n1), 1.7);
+    /* Specular lanes. Sampled with a long thin footprint — sharp across the
+       corridor, smeared away down it, which is what a reflection looks like. */
+    float streak = 0.0;
+    float spec = 0.0;
+    for (int i = 0; i < 5; i++){
+      float fi = float(i);
+      float x0 = (hash11(fi * 3.7) - 0.5) * 1.9;
+      float wob = sin(run * 0.6 + fi * 2.1) * 0.22 + sin(run * 0.23 - fi) * 0.12;
+      float wdt = 0.035 + 0.05 * hash11(fi * 9.1);
+      float dl = abs(conv - x0 - wob) / wdt;
+      float line = smoothstep(1.0, 0.0, dl);
+      // broken up along its length, so it is a reflection and not a stripe
+      float breaks = 0.45 + 0.55 * fbm(vec2(fi * 7.0, run * 1.6));
+      streak += line * breaks * (0.55 + 0.45 * hash11(fi * 5.3));
+      spec += line * pow(max(0.0, 1.0 - min(1.0, dl * dl)), 10.0) * breaks;
+    }
 
-    float s1 = starLayer(q, 17.0, 0.780, 61.0);
-    float s2 = starLayer(q, 34.0, 0.850, 71.0);
-    float s3 = starLayer(q, 62.0, 0.900, 83.0);
-    float cluster = pow(max(0.0, fbm(q * 1.1 + 4.0)), 3.0);
+    float grain = fbm(vec2(conv * 3.2, run * 2.2));
+    float s1 = starLayer(vec2(conv, run) * 0.9, 9.0, 0.880, 61.0);
 
-    vec3 col = vec3(0.004, 0.007, 0.012);
-    col += grade(0.72, w) * band * pow(haze, 2.2) * rift * 0.26;
-    // Teal is an accent in this brand, not a wash — at 0.35 the whole floor
-    // went green and the galactic plane read as a lit swimming pool.
-    col += mix(grade(0.95, w), uAccent, 0.16) * band * pow(haze, 3.0) * rift * 0.40;
-    col += vec3(1.0, 0.64, 0.30) * core * rift * 0.46;
-    // The stars carry the floor. That keeps it the most detailed surface in
-    // the room — the rule the tunnel reference set — without lighting it.
-    col += vec3(0.90, 0.95, 1.0) * (s1 * 1.35 + s2 * 0.9 + s3 * 0.6) * (0.55 + band);
-    col += uAccent * cluster * band * 0.16;
-    return col * fade * 1.15;
+    /* Reflections, not searchlights. The specular term first ran at a weight
+       that turned five lanes into five hard beams converging on the exit — a
+       striking image, and one that belongs to a laser rig rather than to a
+       floor. A reflection is a low, broad, broken sheen; what sells it is that
+       it *converges*, not that it is bright. It also fades out under the
+       camera, because a reflection you are standing on is seen at an angle too
+       steep to return anything. */
+    float nearFade = smoothstep(2.0, 11.0, dist);
+
+    vec3 col = vec3(0.003, 0.005, 0.009);
+    col += grade(0.62, w) * band * grain * 0.12;
+    col += mix(grade(0.92, w), uAccent, 0.30) * streak * nearFade * 0.15;
+    col += mix(uAccent, vec3(1.0, 0.94, 0.84), 0.72) * spec * nearFade * 0.13;
+    /* The destination's reflection, running back up the corridor toward the
+       viewer. Keyed off (1 - fade), which is small near the camera and large
+       at the horizon — an honest depth term that cannot drift. */
+    col += vec3(1.0, 0.64, 0.34) * pow(band, 2.6) * (1.0 - fade) * 0.34;
+    col += vec3(0.90, 0.95, 1.0) * s1 * (0.3 + band * 0.6) * 0.7;
+    return col * fade * 0.9;
   }
 
   /* The destination.
@@ -272,10 +364,13 @@ const fragment = /* glsl */ `
     float rings = pow(0.5 + 0.5 * sin(r * 1.5 - uTime * 0.9), 16.0) * exp(-r * 0.1);
 
     vec3 warm = vec3(1.0, 0.52, 0.26);
-    vec3 col = grade(1.0, w) * (core * 1.7 + rings * 0.5 + halo * 0.14);
-    col += warm * rim * 1.5;
-    col += warm * core * 0.45;
-    col += uAccent * (core * 0.5 + rings * 0.35) * 0.55;
+    vec3 col = grade(1.0, w) * (core * 2.0 + rings * 0.6 + halo * 0.18);
+    col += warm * rim * 2.2;
+    col += warm * core * 0.55;
+    col += uAccent * (core * 0.6 + rings * 0.45) * 0.65;
+    // a second, tighter aperture inside the first: the reference's portal has
+    // a defined mouth rather than a soft centre
+    col += mix(warm, vec3(1.0), 0.55) * exp(-pow((r - open * 0.42) * 3.4, 2.0)) * 0.55;
     return col;
   }
 
@@ -297,9 +392,18 @@ const fragment = /* glsl */ `
     // Keep the middle of the corridor clear so the portal is never blocked.
     float slabs = occupied * edge * smoothstep(2.4, 6.0, r);
 
-    // B - poured metal: broad ribbons turning slowly around the axis.
-    float ribbon = pow(0.5 + 0.5 * sin(a * 3.0 + r * 0.8 - uTime * 0.7 + idx), 9.0);
-    ribbon *= smoothstep(1.6, 4.2, r) * smoothstep(13.0, 7.0, r);
+    /* B - poured metal.
+       Broad ribbons turning around the corridor's axis, shaded across their
+       width so the highlight travels along them. The previous version was a
+       raised sine, which gives an evenly bright stripe — pleasant, and not
+       remotely metallic. The difference is entirely in the cross-section. */
+    float arm = sin(a * 2.0 + r * 0.42 - uTime * 0.5 + idx * 2.3);
+    float across = arm / 0.78;
+    float ribbon = smoothstep(1.0, 0.0, abs(across));
+    float rn = sqrt(max(0.0, 1.0 - min(1.0, across * across)));
+    float rspec = ribbon * pow(rn, 18.0);
+    ribbon *= smoothstep(1.6, 4.4, r) * smoothstep(14.0, 7.0, r);
+    rspec *= smoothstep(1.6, 4.4, r) * smoothstep(14.0, 7.0, r);
 
     // C - energy: a fine field of motes plus an expanding shockwave ring.
     vec2 g = q * 0.85;
@@ -307,12 +411,15 @@ const fragment = /* glsl */ `
     motes *= smoothstep(0.42, 0.10, length(fract(g) - 0.5));
     float wave = pow(0.5 + 0.5 * sin(r * 0.9 - uTime * 2.1 + idx * 1.7), 30.0) * smoothstep(0.5, 3.0, r);
 
-    float alpha = slabs * 0.22 * w.x + ribbon * 0.16 * w.y + (motes * 2.0 + wave * 0.4) * w.z;
+    float alpha = slabs * 0.22 * w.x + ribbon * 0.34 * w.y + (motes * 2.0 + wave * 0.4) * w.z;
     alpha *= smoothstep(0.0, 14.0, dist) * smoothstep(250.0, 90.0, dist);
     alpha = clamp(alpha, 0.0, 1.0);
 
     float lum = 0.45 + 0.4 * hash11(idx * 7.13);
     vec3 col = grade(lum, w) * (0.6 + 1.3 * w.z);
+    col += mix(vec3(1.0, 0.86, 0.60), vec3(0.86, 0.94, 1.0), hash11(idx * 3.1))
+         * ribbon * w.y * 0.5;
+    col += vec3(1.0, 0.97, 0.92) * rspec * w.y * 3.4;   // the travelling highlight
     col += uAccent * (wave * w.z * 1.2 + edge * occupied * w.x * 0.45);
     return vec4(col, alpha);
   }
@@ -362,7 +469,7 @@ const fragment = /* glsl */ `
     } else if (tY < tX) {
       // The sky is the backdrop, so it takes no airlight — adding it there
       // would lift the one band whose darkness the composition depends on.
-      bg = rd.y > 0.0 ? skyBand(pBg, w) : terrainBand(pBg, w, fade) + air;
+      bg = rd.y > 0.0 ? skyBand(pBg, w) : terrainBand(pBg, w, fade, tBg) + air;
     } else {
       bg = wallBand(pBg, w, fade) + air;
     }
@@ -406,7 +513,7 @@ const fragment = /* glsl */ `
       emitter = mix(1.0, smoothstep(0.62, 0.24, length(fv)), structure * 0.5);
     }
 
-    col = max(vec3(0.0), col) * 0.62;   // exposure: rich blacks, controlled glow
+    col = max(vec3(0.0), col) * 0.64;   // exposure: rich blacks, controlled glow
     col = col / (1.0 + col * 0.26);
     col *= uBright * uOn * emitter;
     col += vec3(0.004, 0.0075, 0.008) * (1.0 - emitter) * (0.25 + 0.75 * uOn);

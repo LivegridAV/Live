@@ -167,7 +167,16 @@ export function Tunnel() {
         portalZ={(p) => TUNNEL.to - 210 + p * 120}
       />
 
-      {/* protective glass deck over the floor LED — the floor is walked on */}
+      {/* Protective glass deck over the floor LED — the floor is walked on.
+          `envMapIntensity` is not a detail here. At roughness 0.05 this pane is
+          effectively a mirror, and a mirror lying flat under the camera returns
+          the environment at grazing incidence across the entire lower half of
+          the frame. With a room environment bound for the metalwork, that put a
+          flat sheet of warm studio light over the one surface in the venue
+          whose whole job is to disappear — the tunnel floor stopped being a
+          window onto the world and became a lit tabletop. The deck is glass
+          over a light source: it should carry a whisper of reflection and
+          nothing else. */}
       <mesh position={[0, 0.05, MID_Z]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={2}>
         <planeGeometry args={[WIDTH, DEPTH]} />
         <meshPhysicalMaterial
@@ -176,6 +185,7 @@ export function Tunnel() {
           metalness={0}
           transparent
           opacity={0.08}
+          envMapIntensity={0.06}
           depthWrite={false}
         />
       </mesh>
@@ -187,13 +197,17 @@ export function Tunnel() {
       {/* the tunnel's own atmosphere — light leaving the surfaces needs
           something to land on, and it is what stops the air reading as vacuum */}
       {quality !== "low" && (
+        /* Eight billboards nearly four metres across, inside a six-metre
+           tunnel, put the camera *inside* two or three of them at all times —
+           so instead of air you saw a pair of soft pale cones filling the
+           frame. Air in a tunnel this tight has to be small and numerous. */
         <Haze
-          count={8}
-          area={[4.0, 3.0, DEPTH * 0.85]}
+          count={16}
+          area={[5.0, 3.4, DEPTH * 0.9]}
           position={[0, CROWN * 0.5, MID_Z]}
           color="#9fc8c4"
-          opacity={0.014}
-          scale={3.8}
+          opacity={0.009}
+          scale={1.5}
           seed={3}
         />
       )}

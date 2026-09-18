@@ -553,19 +553,48 @@ const ledFormats = wrap(/* glsl */ `
  * the LED rather than a picture on it.
  */
 const anamorphicVoid = wrap(/* glsl */ `
+  float smin(float a, float b, float k){
+    float h = clamp(0.5 + 0.5 * (b - a) / k, 0.0, 1.0);
+    return mix(b, a, h) - k * h * (1.0 - h);
+  }
   float box(vec3 p, vec3 b){ vec3 q = abs(p) - b; return length(max(q, 0.0)) + min(max(q.x, max(q.y, q.z)), 0.0); }
+  float torus(vec3 p, vec2 t){ return length(vec2(length(p.xz) - t.x, p.y)) - t.y; }
 
-  /** The suspended sculpture inside the void — this is all the marcher does. */
+  /**
+   * The monument inside the void.
+   *
+   * It has to be *large* — it fills most of the aperture — and it has to be a
+   * single legible form rather than a cluster of primitives, because a corner
+   * illusion works by convincing you that one object is standing in a hole in
+   * the building. A hollow shell with rings around it, which is what used to
+   * be here, reads as a technical demo of a signed distance field: small,
+   * fiddly, and unmistakably computer graphics.
+   *
+   * So: one blended mass, an ovoid fused into two crossing bands, slowly
+   * turning. Deliberately non-figurative. A face or a creature would be both
+   * off-brand and a licence risk, and abstract monumental sculpture is what a
+   * premium anamorphic corner actually carries.
+   */
   float sculpt(vec3 p){
-    vec3 q = p - vec3(0.0, sin(uTime * 0.35) * 0.10, 2.30);
-    q.xz *= rot(uTime * 0.30);
-    q.yz *= rot(sin(uTime * 0.21) * 0.45);
-    float shell = box(q, vec3(0.40)) - 0.055;
-    shell = max(shell, -(box(q, vec3(0.30)) - 0.055));      // hollow it out
-    float ring = length(vec2(length(q.xz) - 0.74, q.y)) - 0.042;
-    vec3 r = q; r.yz *= rot(1.5707963);
-    float ring2 = length(vec2(length(r.xz) - 0.74, r.y)) - 0.042;
-    return min(shell, min(ring, ring2));
+    vec3 q = p - vec3(0.0, sin(uTime * 0.28) * 0.06, 2.45);
+    q.xz *= rot(uTime * 0.22);
+    q.yz *= rot(sin(uTime * 0.17) * 0.28);
+
+    // the core mass
+    vec3 e = q / vec3(1.0, 1.22, 1.0);
+    float core = (length(e) - 0.66) * 0.82;
+
+    // two bands wrapping it, fused rather than stacked
+    vec3 r1 = q; r1.yz *= rot(0.5);
+    float band1 = torus(r1, vec2(0.86, 0.10));
+    vec3 r2 = q; r2.xy *= rot(1.1); r2.yz *= rot(0.9);
+    float band2 = torus(r2, vec2(0.95, 0.075));
+
+    float d = smin(core, band1, 0.22);
+    d = smin(d, band2, 0.18);
+    // a slot cut through, so light passes through the mass
+    d = max(d, -(box(q, vec3(0.10, 1.6, 1.6))));
+    return d;
   }
 
   void main(){
@@ -575,12 +604,16 @@ const anamorphicVoid = wrap(/* glsl */ `
     vec3 ro = vec3(0.0, 0.0, -2.6);
     vec3 rd = normalize(vec3(p * 1.25, 2.6));
 
-    // ── the room behind the wall ──
-    // Solved analytically rather than marched: a signed box is negative at the
-    // ray origin, so a marcher started outside it registers an instant hit and
-    // the whole void renders as flat shading.
+    /* ── the room behind the wall ──
+       Solved analytically rather than marched: a signed box is negative at the
+       ray origin, so a marcher started outside it registers an instant hit.
+
+       Its surfaces used to carry a perspective *grid*, which sold the depth
+       and gave the whole illusion the look of a wireframe demo. Real depth in
+       a dark shaft comes from light falling off along it, and from a few
+       architectural ribs — so that is what is there now. */
     vec3 bmin = vec3(-1.35, -1.05, 0.0);
-    vec3 bmax = vec3( 1.35,  1.05, 5.6);
+    vec3 bmax = vec3( 1.35,  1.05, 6.4);
     vec3 inv = 1.0 / rd;
     vec3 t1 = (bmin - ro) * inv;
     vec3 t2 = (bmax - ro) * inv;
@@ -588,30 +621,30 @@ const anamorphicVoid = wrap(/* glsl */ `
     float tWall = min(min(tmaxv.x, tmaxv.y), tmaxv.z);
 
     vec3 wp = ro + rd * tWall;
-    // which wall did we land on?
-    vec3 dmin = abs(wp - bmin);
-    vec3 dmax = abs(wp - bmax);
-    bool isBack = dmax.z < 0.01;
-    // A perspective grid on every surface: the thing that actually sells depth.
-    vec2 gv = isBack ? wp.xy : (abs(wp.x) > 1.3 ? wp.zy : wp.xz);
-    vec2 gf = abs(fract(gv * 2.2) - 0.5);
-    float grid = smoothstep(0.46, 0.5, max(gf.x, gf.y));
-    float depthFade = exp(-wp.z * 0.34);
+    bool isBack = abs(wp.z - bmax.z) < 0.02;
+    float depthFade = exp(-wp.z * 0.42);
 
-    vec3 col = vec3(0.004, 0.007, 0.009);
-    col += mix(vec3(0.05, 0.055, 0.06), uAccent * 0.5, 0.35) * grid * depthFade * 1.6;
-    col += vec3(0.02, 0.03, 0.034) * depthFade;
-    // a light source deep in the void
-    col += vec3(1.0, 0.72, 0.4) * pow(max(0.0, 1.0 - length(wp.xy) * 0.8), 6.0) * 0.6;
+    vec3 col = vec3(0.004, 0.006, 0.009);
+    // the shaft's own surfaces: graded, not gridded
+    col += vec3(0.020, 0.026, 0.032) * depthFade * 1.4;
+    // ribs crossing the shaft at a regular pitch — the one depth cue kept,
+    // as lit architecture rather than as a line drawing
+    if (!isBack) {
+      float rib = smoothstep(0.86, 1.0, abs(fract(wp.z * 0.75) * 2.0 - 1.0));
+      col += mix(uAccent, vec3(1.0, 0.9, 0.74), 0.35) * rib * depthFade * 0.55;
+    }
+    // the source deep in the shaft, which is what the sculpture is lit by
+    float endGlow = pow(max(0.0, 1.0 - length(wp.xy) * 0.72), 5.0);
+    col += mix(vec3(1.0, 0.76, 0.46), uAccent, 0.25) * endGlow * (isBack ? 1.5 : 0.35);
 
-    // ── the sculpture ──
+    /* ── the monument ── */
     float t = 0.0;
     bool hit = false;
-    for (int i = 0; i < 56; i++){
+    for (int i = 0; i < 64; i++){
       vec3 pos = ro + rd * t;
       float d = sculpt(pos);
-      if (d < 0.0025){ hit = true; break; }
-      t += d * 0.92;
+      if (d < 0.0022 + t * 0.0009){ hit = true; break; }
+      t += d * 0.88;
       if (t > tWall) break;
     }
 
@@ -622,19 +655,39 @@ const anamorphicVoid = wrap(/* glsl */ `
         sculpt(pos + vec3(e,0,0)) - sculpt(pos - vec3(e,0,0)),
         sculpt(pos + vec3(0,e,0)) - sculpt(pos - vec3(0,e,0)),
         sculpt(pos + vec3(0,0,e)) - sculpt(pos - vec3(0,0,e))));
-      vec3 key = normalize(vec3(0.55, 0.75, -0.35));
+
+      // Lit from deep in the shaft, so the form is modelled *into* the hole —
+      // which is the whole reason the illusion reads as a volume.
+      vec3 key = normalize(vec3(0.15, 0.35, 1.0));
+      vec3 rim = normalize(vec3(-0.85, 0.3, -0.3));
       float diff = max(dot(n, key), 0.0);
-      float fres = pow(1.0 - max(dot(n, -rd), 0.0), 3.5);
-      vec3 mat = vec3(0.10, 0.105, 0.115);
-      col = mat * (0.1 + diff * 0.9);
-      col += vec3(1.0, 0.9, 0.74) * pow(diff, 28.0) * 1.5;
-      col += uAccent * fres * 1.0;
+      float rimL = pow(max(dot(n, rim), 0.0), 2.2);
+      float fres = pow(1.0 - max(dot(n, -rd), 0.0), 3.0);
+      vec3 h = normalize(key - rd);
+      float spec = pow(max(dot(n, h), 0.0), 120.0);
+
+      /* Polished stone with a metallic sheen: a dark body that takes a very
+         tight highlight. The reflection is faked from the normal — a vertical
+         gradient plus a horizon line, which is all an environment reads as on
+         a curved surface and is indistinguishable at this size. */
+      float horizon = smoothstep(-0.12, 0.12, n.y);
+      vec3 env = mix(vec3(0.05, 0.06, 0.085), vec3(0.48, 0.55, 0.66), horizon);
+      env = mix(env, vec3(1.0, 0.82, 0.58), pow(max(0.0, n.y), 3.0) * 0.55);
+
+      vec3 body = vec3(0.045, 0.048, 0.058);
+      col = body * (0.12 + diff * 0.95);
+      col += env * (0.35 + fres * 0.9);
+      col += mix(vec3(1.0, 0.86, 0.62), uAccent, 0.3) * rimL * 1.05;
+      col += vec3(1.0, 0.96, 0.9) * spec * 2.6;
+      // the light passing through the slot
+      col += mix(uAccent, vec3(1.0, 0.8, 0.5), 0.4)
+           * pow(max(0.0, 1.0 - abs(pos.x) * 3.2), 5.0) * 0.6;
     }
 
     // The frame of the opening: a hard edge is what makes it a hole, not a poster.
-    float vig = smoothstep(1.45, 0.7, length(p));
-    col *= 0.2 + 0.8 * vig;
-    gl_FragColor = vec4(tone(col * 1.08), 1.0);
+    float vig = smoothstep(1.5, 0.72, length(p));
+    col *= 0.22 + 0.78 * vig;
+    gl_FragColor = vec4(tone(col * 1.35), 1.0);
   }
 `);
 
@@ -980,73 +1033,6 @@ const finaleBrand = wrap(/* glsl */ `
    Modern content
    ══════════════════════════════════════════════════════════ */
 
-/**
- * Built for a four-sided LED column, and that is the whole point of it.
- *
- * A box in three.js gives every face its own 0..1 UV, so content does not wrap
- * continuously around a totem — each face shows the same image. Wrapping a
- * general-purpose abstract loop onto that reads as exactly what it is: a
- * texture someone put on a pillar. This is composed the other way round, for
- * the surface it is going on:
- *
- *  - It is mirrored about the centre line of each face, so the two edges of
- *    every face carry identical values and four faces meet at four corners
- *    with nothing visible at the join.
- *  - It has a vertical *axis* — a luminous spine — because a column is read
- *    top to bottom, not left to right.
- *  - It has a top and a base, so the installation is a finite object rather
- *    than an endless strip of pattern.
- *  - Its motion travels up the column, which is the one direction that reads
- *    as deliberate on a vertical surface.
- */
-const pillarTotem = wrap(/* glsl */ `
-  void main(){
-    // 0 on the centre line of the face, 1 at both corners.
-    float u = abs(vUv.x - 0.5) * 2.0;
-    float v = vUv.y;
-    float t = uTime * 0.3 + uVariant * 5.0;
-
-    // The spine: a luminous core running the full height of the column.
-    float spine = exp(-pow(u * 3.2, 2.0));
-    float breathe = 0.74 + 0.26 * sin(t * 1.9 + v * 2.6);
-
-    // Bands travelling up the column. Each narrows toward the corners, so the
-    // form tapers and the column reads as a volume rather than a flat wrap.
-    float bands = 0.0;
-    for (int i = 0; i < 5; i++){
-      float fi = float(i);
-      float pos = fract(v * 0.75 - t * (0.14 + fi * 0.05) + fi * 0.37);
-      float wdt = 0.013 + 0.032 * hash11(fi + 3.0);
-      float b = smoothstep(wdt, 0.0, abs(pos - 0.5));
-      bands += b * mix(1.0, 0.3, u) * (0.55 + 0.45 * hash11(fi * 7.0));
-    }
-
-    // Fine ticks either side of the spine — the detail that says this is a
-    // designed graphic and not a gradient.
-    float tick = step(0.62, hash21(vec2(floor(u * 8.0), floor(v * 44.0 - t * 2.4))));
-    tick *= smoothstep(0.88, 0.34, u) * smoothstep(0.03, 0.12, u);
-
-    // A head and a foot, so the totem is a finite object.
-    float cap = smoothstep(0.0, 0.085, v) * smoothstep(1.0, 0.915, v);
-    float capGlow = 1.0 - cap;
-
-    // Palette: the screen accent, drifting through a full-spectrum complement.
-    vec3 sweep = pal(v * 0.45 + t * 0.07, vec3(0.5), vec3(0.5), vec3(1.0), vec3(0.0, 0.33, 0.67));
-    vec3 tint = mix(uAccent, sweep, 0.42 + 0.32 * sin(t * 0.45 + v * 1.9));
-
-    vec3 col = vec3(0.004, 0.006, 0.009);
-    col += tint * spine * breathe * 1.05;
-    col += mix(tint, vec3(1.0), 0.45) * bands * 0.8;
-    col += tint * tick * 0.26;
-    col += mix(tint, vec3(1.0, 0.94, 0.84), 0.45) * capGlow * 0.42;
-
-    // Cylindrical relief. Identical on both edges of every face, so it shades
-    // the column without ever drawing a line at a corner.
-    col *= mix(1.0, 0.62, pow(u, 2.0));
-
-    gl_FragColor = vec4(tone(col * 1.0), 1.0);
-  }
-`);
 
 /**
  * Light through glass.
@@ -1122,41 +1108,411 @@ const auroraSilk = wrap(/* glsl */ `
   }
 `);
 
+
+/* ══════════════════════════════════════════════════════════
+   Installation-specific content
+   ------------------------------------------------------------------
+   These are not general-purpose loops that happen to be pointed at a
+   surface. Each one is composed for the geometry it plays on, which is
+   the difference between an LED installation and a texture on an object.
+   ══════════════════════════════════════════════════════════ */
+
 /**
- * A lattice running away into depth, composited front to back.
+ * A four-sided LED totem, authored as ONE unwrapped canvas.
  *
- * Fourteen planes, each rotating a little more than the last, so the structure
- * twists as it recedes and the eye gets real parallax instead of a zoom. It is
- * the cheapest honest way to put a hundred metres of depth on a flat panel.
+ * u runs once around the column — FRONT | RIGHT | BACK | LEFT, a quarter of
+ * the image each — and v runs from base to head. `PillarScreen` hands each
+ * face its own slice of this render, so what is drawn here as a continuous
+ * strip arrives on the column as content that travels around the corners.
+ *
+ * Everything horizontal is therefore written as a function of the *angle*,
+ * th = TAU * u, rather than of u itself, and every ribbon winds an integer
+ * number of times per revolution. That makes the image periodic by
+ * construction: the value at u = 1 is literally the value at u = 0, so a
+ * ribbon leaving the left face arrives on the front face at exactly the
+ * height, width and brightness it left with. There is no seam to hide,
+ * because there is no seam.
+ *
+ * What it draws is metal. Ribbons are given a curvature across their width,
+ * and the highlight is derived from that curvature — a narrow specular racing
+ * along a body that turns slowly is what the eye reads as polished metal, and
+ * it is the one thing a flat coloured stripe can never do.
  */
-const depthLattice = wrap(/* glsl */ `
+const pillarWrap = wrap(/* glsl */ `
+  void main(){
+    float th = vUv.x * TAU;           // once around the column
+    float v  = vUv.y;                 // base to head
+    float t  = uTime * 0.16 + uVariant * 7.0;
+
+    /* ── the field the metal travels through ──
+       Never flat black. A totem whose dark areas are pure black reads as a
+       cut-out; a deep graded field reads as a lit object standing in a room,
+       which is the whole difference between the two. */
+    vec3 col = mix(vec3(0.009, 0.013, 0.026), vec3(0.003, 0.004, 0.010), v);
+    col += mix(uAccent, vec3(0.45, 0.58, 1.0), 0.55)
+         * pow(max(0.0, 1.0 - abs(v * 2.0 - 1.0)), 3.0) * 0.05;
+
+    /* ── sparkle ──
+       Cells are indexed by (angle, height) with an INTEGER number of cells per
+       revolution, so the field wraps for the same reason the ribbons do. */
+    for (int i = 0; i < 3; i++){
+      float fi = float(i);
+      float cols = 26.0 + fi * 20.0;
+      vec2 g = vec2(vUv.x * cols, (v - t * (0.05 + fi * 0.03)) * cols * 2.4);
+      vec2 id = floor(g);
+      float live = step(0.978 - fi * 0.006, hash21(id + fi * 7.0));
+      float sp = live * smoothstep(0.11, 0.0,
+        length(fract(g) - 0.5 - (hash22(id + fi * 31.0) - 0.5) * 0.7));
+      col += mix(vec3(1.0, 0.93, 0.76), uAccent, 0.35) * sp
+           * (0.30 + 0.70 * sin(t * 2.6 + hash21(id) * TAU)) * 0.55;
+    }
+
+    /* ── three ribbons of polished metal ──
+       Each is shaded as a real cylindrical section: a normal is built across
+       the ribbon's width, a light is moved around it, and the highlight falls
+       out of the geometry. That is what separates metal from a coloured
+       stripe — the highlight races while the body turns slowly, which is what
+       a polished surface actually does and what a gradient can never fake.
+
+       They are composited front to back, so ribbons genuinely pass over one
+       another instead of adding into white. */
+    for (int i = 0; i < 3; i++){
+      float fi = float(i);
+      // 1, 1, 2 turns per revolution. Integer, therefore seamless at u = 0/1.
+      float turns = fi < 1.5 ? 1.0 : 2.0;
+      float ph = th * turns + t * (0.50 + fi * 0.15) + fi * 2.4;
+
+      float centre = 0.5
+        + (0.25 - fi * 0.045) * sin(ph)
+        + 0.065 * sin(ph * 2.0 + fi * 1.4)
+        + (fi - 1.0) * 0.135;
+      float w = 0.145 + 0.055 * sin(ph * 0.5 + fi * 2.0);
+
+      float d = (v - centre) / max(w, 1e-4);
+      if (abs(d) > 1.0) continue;
+
+      float n = sqrt(max(0.0, 1.0 - d * d));
+      vec2 N = normalize(vec2(d, n + 0.001));
+      vec2 L = normalize(vec2(cos(ph * 0.45 + t * 0.9) * 0.9, 0.75));
+      vec2 H = normalize(L + vec2(0.0, 1.0));
+
+      float diff = max(dot(N, L), 0.0);
+      float spec = pow(max(dot(N, H), 0.0), 64.0);
+      float fres = pow(1.0 - n, 3.0);
+      // a brushed grain along the length of the ribbon
+      float brush = 0.86 + 0.28 * noise(vec2(ph * 8.0, d * 2.6));
+
+      /* The palette shift is a *seasoning*. At an even mix the cosine palette
+         won and every column came out the same iridescent pastel, which is
+         both off-brand and the reason two totems specified as gold and silver
+         looked identical. At 0.28 the accent leads and the shift gives it
+         life. */
+      vec3 tint = mix(uAccent,
+        pal(fi * 0.22 + ph * 0.028 + t * 0.02,
+            vec3(0.5), vec3(0.5), vec3(1.0), vec3(0.0, 0.25, 0.55)), 0.28);
+
+      /* A real metal is never black where it faces away from the light — it
+         is showing you the room instead. Without that ambient term the
+         ribbons read as a thin bright line on an unlit column, which is the
+         opposite of the heavy, luminous installations in the reference. */
+      vec3 metal = vec3(0.010, 0.013, 0.021);
+      metal += tint * 0.22;                                  // the room, in the metal
+      metal += tint * pow(diff, 1.5) * brush * 1.35;
+      metal += vec3(1.0, 0.97, 0.92) * spec * brush * 2.6;
+      metal += mix(tint, vec3(1.0), 0.45) * fres * 0.34;
+
+      col = mix(col, metal, smoothstep(1.0, 0.82, abs(d)));
+    }
+
+    /* ── the installation is a finite object ── */
+    float foot = smoothstep(0.0, 0.030, v);
+    float head = smoothstep(1.0, 0.970, v);
+    col *= foot * head * 0.94 + 0.06;
+    col += mix(uAccent, vec3(1.0, 0.94, 0.82), 0.5)
+         * ((1.0 - foot) + (1.0 - head)) * 0.22;
+
+    gl_FragColor = vec4(tone(col * 1.55), 1.0);
+  }
+`);
+
+/**
+ * Liquid metal in flow — the gallery's material language.
+ *
+ * Six ribbons at different depths, each with a curvature across its width and
+ * a specular derived from that curvature. The reason it reads as metal rather
+ * than as a coloured gradient is the *rate*: the highlight races while the
+ * body turns slowly, which is exactly what happens on a real polished surface
+ * and exactly what a gradient cannot fake.
+ */
+const chromeFlow = wrap(/* glsl */ `
   void main(){
     vec2 p = centred();
-    float t = uTime * 0.5 + uVariant * 8.0;
-    vec3 rd = normalize(vec3(p, 1.5));
+    float t = uTime * 0.14 + uVariant * 6.0;
+
+    vec3  sheen = vec3(0.0);
+    float spec = 0.0;
+    float rim = 0.0;
+
+    for (int i = 0; i < 8; i++){
+      float fi = float(i);
+      float depth = 1.0 + fi * 0.38;
+      vec2 q = p / depth;
+      q *= rot(sin(t * 0.3 + fi) * 0.45 + fi * 0.5);
+
+      float wave =
+          sin(q.x * (1.1 + fi * 0.2) + t * (1.0 + fi * 0.18) + fi * 2.3) * 0.40
+        + sin(q.x * (2.3 - fi * 0.15) - t * 1.35) * 0.15
+        + fbm(vec2(q.x * 0.6 + t * 0.2, fi * 4.0)) * 0.5 - 0.25;
+
+      float w = 0.075 + 0.05 * sin(t * 0.8 + fi * 1.7);
+      float d = (q.y - wave) / max(w, 1e-4);
+      float band = smoothstep(1.0, 0.0, abs(d));
+      float n = sqrt(max(0.0, 1.0 - min(1.0, d * d)));
+
+      /* A brushed grain running along the ribbon.
+         Without it these are perfectly smooth tubes, and a perfectly smooth
+         tube has no detail to resolve — so on the cylinder, which the camera
+         passes within a few metres of, the content read as soft whatever
+         resolution it was rendered at. Sharpness is high-frequency *content*,
+         not pixels. */
+      float brush = 0.82 + 0.34 * noise(vec2(q.x * 9.0 + fi * 13.0, d * 2.2));
+
+      spec += band * pow(n, 44.0) * brush / depth;
+      rim  += band * pow(1.0 - n, 3.0) * 0.6 / depth;
+      vec3 tint = mix(uAccent,
+        pal(fi * 0.15 + q.x * 0.06 + t * 0.05,
+            vec3(0.5), vec3(0.5), vec3(1.0), vec3(0.0, 0.30, 0.62)), 0.5);
+      sheen += tint * band * n * brush * 0.55 / depth;
+    }
+
+    // motes carried along in the flow
+    vec2 g = vec2(p.x * 7.0 - t * 2.2, p.y * 7.0);
+    vec2 id = floor(g);
+    float mote = step(0.90, hash21(id))
+      * smoothstep(0.11, 0.0, length(fract(g) - 0.5 - (hash22(id) - 0.5) * 0.7));
 
     vec3 col = vec3(0.004, 0.006, 0.010);
-    float trans = 1.0;
-    for (int i = 0; i < 14; i++){
+    col += sheen * 1.10;
+    col += vec3(1.0, 0.98, 0.94) * spec * 1.25;
+    col += mix(uAccent, vec3(1.0), 0.3) * rim * 0.45;
+    col += mix(uAccent, vec3(1.0), 0.6) * mote * 0.55;
+    gl_FragColor = vec4(tone(col * 1.08), 1.0);
+  }
+`);
+
+/**
+ * The festival landscape — a portal receding into monumental country.
+ *
+ * Composed for a very wide canvas and, crucially, around a *fixed horizon*
+ * rather than around the centre of whatever panel happens to be showing it.
+ * That is what lets the centre wall, the outer clusters and the wings run the
+ * same package and still read as one continuous show rather than as seven
+ * screens playing seven copies of the same loop.
+ */
+const monumentPortal = wrap(/* glsl */ `
+  void main(){
+    vec2 p = centred();
+    float t = uTime * 0.09 + uVariant * 5.0;
+    float horizon = -0.18;
+    float sky = smoothstep(horizon - 0.02, horizon + 0.02, p.y);
+
+    vec3 col = vec3(0.004, 0.005, 0.010);
+
+    vec3 hi = pal(0.12 + t * 0.03, vec3(0.5), vec3(0.45), vec3(1.0), vec3(0.0, 0.22, 0.5));
+    col += mix(uAccent, hi, 0.55) * sky
+         * pow(max(0.0, 1.0 - (p.y - horizon) * 0.55), 2.4) * 0.30;
+
+    // a body sitting on the horizon, lit from one side
+    vec2 sp = vec2(p.x, p.y - horizon - 0.30);
+    float sr = length(sp);
+    float z = sqrt(max(0.0, 0.3844 - sr * sr));
+    float term = clamp(dot(normalize(vec3(sp, z)), normalize(vec3(-0.5, 0.35, 0.6))), 0.0, 1.0);
+    col += mix(uAccent, vec3(1.0, 0.86, 0.68), 0.5)
+         * smoothstep(0.62, 0.58, sr) * (0.08 + 0.92 * pow(term, 1.6)) * 0.6;
+    col += vec3(1.0, 0.72, 0.42)
+         * smoothstep(0.66, 0.615, sr) * smoothstep(0.56, 0.61, sr) * 1.3;
+
+    // the portal: arches receding to a point on the horizon
+    for (int i = 0; i < 7; i++){
       float fi = float(i);
-      float z = 1.2 + fi * 1.45 - mod(t, 1.45);
-      if (z <= 0.2) continue;
-      vec2 hit = rd.xy * (z / rd.z);
-      vec2 g = hit * 1.15;
-      g *= rot(z * 0.05 + t * 0.03);
-      vec2 f = abs(fract(g) - 0.5);
-      float line = 1.0 - smoothstep(0.0, 0.05, min(f.x, f.y));
-      float node = smoothstep(0.13, 0.0, length(f - vec2(0.5)));
-      float fade = smoothstep(21.0, 3.0, z) * smoothstep(0.0, 2.2, z);
-      float a = clamp((line * 0.45 + node * 0.95) * fade * 0.4, 0.0, 1.0);
-      vec3 hue = mix(uAccent,
-        pal(z * 0.055 + t * 0.05, vec3(0.5), vec3(0.5), vec3(1.0), vec3(0.0, 0.33, 0.67)), 0.42);
-      col += trans * hue * a * 1.7;
-      trans *= 1.0 - a;
+      float zz = fract((fi + 0.5) / 7.0 - t * 0.45);
+      float s = 0.16 + zz * 1.5;
+      vec2 q = vec2(p.x / s, (p.y - horizon) / s);
+      float r = length(q * vec2(1.0, 1.25));
+      float ring = smoothstep(0.045, 0.0, abs(r - 0.62))
+                 * smoothstep(0.0, 0.2, zz) * smoothstep(1.0, 0.68, zz);
+      col += mix(uAccent, vec3(1.0, 0.80, 0.52), 0.45) * ring * (1.4 / (1.0 + zz * 2.0));
     }
-    // the vanishing point everything is running toward
-    col += mix(uAccent, vec3(1.0), 0.5) * exp(-length(p) * 2.4) * 0.55;
-    gl_FragColor = vec4(tone(col * 1.35), 1.0);
+
+    // monumental country either side of it, in three depth planes
+    float mass = 0.0;
+    for (int i = 0; i < 3; i++){
+      float fi = float(i);
+      float dep = 1.0 + fi * 0.8;
+      float h = horizon
+        + (fbm(vec2(p.x / dep * 0.8 + fi * 9.0 + t * 0.05, fi * 3.0)) - 0.30) * (0.55 / dep);
+      float away = smoothstep(0.30, 0.85, abs(p.x));
+      mass = max(mass, smoothstep(h + 0.012, h - 0.012, p.y) * away * (1.0 - fi * 0.26));
+      col += mix(uAccent, vec3(0.95, 0.58, 0.32), 0.42)
+           * smoothstep(0.014, 0.0, abs(p.y - h)) * away * 0.85 / dep;
+    }
+    col *= mix(1.0, 0.20, mass);
+
+    // the reflective plain below it
+    float below = 1.0 - sky;
+    col += below * mix(uAccent, hi, 0.5) * exp(-abs(p.y - horizon) * 2.2) * 0.22;
+    col += below * vec3(1.0, 0.80, 0.55)
+         * pow(max(0.0, 1.0 - abs(p.x) * 1.1), 6.0) * exp(-abs(p.y - horizon) * 1.3) * 0.5;
+
+    vec2 g = vec2(p.x * 9.0, (p.y + t * 1.4) * 9.0);
+    vec2 id = floor(g);
+    col += vec3(1.0, 0.88, 0.70)
+      * step(0.945, hash21(id))
+      * smoothstep(0.10, 0.0, length(fract(g) - 0.5 - (hash22(id) - 0.5) * 0.6)) * 0.75;
+
+    gl_FragColor = vec4(tone(col * 1.22), 1.0);
+  }
+`);
+
+/**
+ * The corporate hero package.
+ *
+ * A single luminous body with a defined terminator, orbital rings turning
+ * around it, and a field of connected points — dimensional, clean, unhurried.
+ * The brief for a technology launch is the opposite of the festival brief:
+ * one idea, held still enough to read from row forty, with the movement in
+ * the light rather than in the subject.
+ */
+const premiumOrbit = wrap(/* glsl */ `
+  void main(){
+    vec2 p = centred();
+    float t = uTime * 0.11 + uVariant * 4.0;
+
+    vec3 col = vec3(0.004, 0.006, 0.010);
+
+    // A wide, quiet gradient so the panel is never black at the edges.
+    col += mix(uAccent, vec3(0.55, 0.68, 0.92), 0.5)
+         * pow(max(0.0, 1.0 - length(p * vec2(0.35, 0.75))), 3.0) * 0.16;
+
+    // the body
+    float R = 0.60;
+    vec2 sp = p - vec2(0.0, 0.02 + sin(t * 0.7) * 0.012);
+    float sr = length(sp);
+    float z = sqrt(max(0.0, R * R - sr * sr));
+    vec3 n = normalize(vec3(sp, z));
+    vec3 key = normalize(vec3(-0.46, 0.40, 0.79));
+    float term = clamp(dot(n, key), 0.0, 1.0);
+    float inside = smoothstep(R, R - 0.012, sr);
+
+    // surface: a slow banded structure, so it is a body and not a disc
+    float band = fbm(vec2(atan(sp.y, sp.x) * 1.3, z * 2.4 - t * 0.35));
+    vec3 surf = mix(vec3(0.05, 0.08, 0.13), mix(uAccent, vec3(1.0, 0.94, 0.86), 0.45), pow(term, 1.35));
+    surf *= 0.72 + 0.55 * band;
+    col += surf * inside * 1.05;
+    // the terminator's warm edge, and the atmosphere just outside it
+    col += vec3(1.0, 0.76, 0.48) * inside * pow(1.0 - term, 3.0) * term * 2.4;
+    col += mix(uAccent, vec3(0.8, 0.9, 1.0), 0.4)
+         * smoothstep(R + 0.13, R, sr) * smoothstep(R - 0.02, R + 0.02, sr) * 0.9;
+
+    // orbital rings, drawn as ellipses so they read as tilted circles
+    for (int i = 0; i < 3; i++){
+      float fi = float(i);
+      float a = 0.86 + fi * 0.26;
+      float tilt = 0.34 + fi * 0.12;
+      vec2 q = p * rot(sin(t * 0.4 + fi * 2.0) * 0.16 + fi * 0.5);
+      float e = length(vec2(q.x, q.y / max(tilt, 1e-3)));
+      float ring = smoothstep(0.016, 0.0, abs(e - a));
+      // the ring passes behind the body on the far side
+      float behind = step(0.0, q.y) * inside;
+      col += mix(uAccent, vec3(1.0), 0.35) * ring * (1.0 - behind * 0.92) * 0.85;
+      // a travelling node on each ring
+      float ang = t * (0.8 + fi * 0.3) + fi * 2.1;
+      vec2 node = vec2(cos(ang) * a, sin(ang) * a * tilt) * rot(-(sin(t * 0.4 + fi * 2.0) * 0.16 + fi * 0.5));
+      col += vec3(1.0, 0.95, 0.88) * smoothstep(0.030, 0.0, length(p - node)) * 1.6;
+    }
+
+    // a quiet field of points behind everything
+    for (int i = 0; i < 2; i++){
+      float fi = float(i);
+      vec2 g = (p + vec2(t * (0.05 + fi * 0.03), 0.0)) * (5.0 + fi * 6.0);
+      vec2 id = floor(g);
+      col += vec3(0.86, 0.93, 1.0)
+        * step(0.93, hash21(id + fi * 13.0))
+        * smoothstep(0.085, 0.0, length(fract(g) - 0.5 - (hash22(id) - 0.5) * 0.6))
+        * (0.35 + 0.35 * sin(t * 2.0 + hash21(id) * TAU)) * (1.0 - inside);
+    }
+
+    gl_FragColor = vec4(tone(col * 1.20), 1.0);
+  }
+`);
+
+/**
+ * Depth, built from solid architecture rather than from a wireframe.
+ *
+ * This replaces a lattice programme that drew a receding grid of lines. A grid
+ * running into depth is a genuinely good depth cue and an unmistakable
+ * *graphics demo* — it is the single most recognisable "this was made in a
+ * shader" image there is, and on a client's LED wall it reads as a screensaver.
+ *
+ * The same depth comes free from solid forms: a corridor of portal frames,
+ * each a filled slab with a lit inner edge, composited front to back with the
+ * near ones occluding the far ones. Because they are opaque, the occlusion
+ * itself carries the depth, and the eye is given an architecture to walk into
+ * instead of a mesh to look at.
+ */
+const portalDepth = wrap(/* glsl */ `
+  void main(){
+    vec2 p = centred();
+    float t = uTime * 0.16 + uVariant * 6.0;
+
+    vec3 col = vec3(0.004, 0.006, 0.011);
+    // the light at the end, which every frame below is cut against
+    float glow = exp(-length(p * vec2(1.0, 1.35)) * 1.9);
+    col += mix(uAccent, vec3(1.0, 0.92, 0.78), 0.45) * glow * 1.25;
+    col += mix(uAccent, vec3(1.0), 0.3) * exp(-length(p) * 0.55) * 0.14;
+
+    /* Frames, near to far. Front-to-back with a running transmittance, so a
+       near frame genuinely hides what is behind it. */
+    float trans = 1.0;
+    for (int i = 0; i < 9; i++){
+      float fi = float(i);
+      // depth cycles, so the corridor is endless without ever restarting
+      float z = fract((fi + 0.5) / 9.0 - t * 0.5);
+      float s = 0.22 + z * z * 3.4;                 // perspective scale
+      float lean = sin(t * 0.5 + fi * 1.3) * 0.055;
+
+      vec2 q = vec2(p.x, p.y) / s;
+      q *= rot(lean);
+      vec2 a = abs(q);
+      float inner = max(a.x - 0.62, a.y - 0.46);    // the aperture
+      float outer = max(a.x - 0.92, a.y - 0.72);    // the frame's outside edge
+      float solid = step(outer, 0.0) * step(0.0, inner);
+      if (solid < 0.5) continue;
+
+      float edge = smoothstep(0.075, 0.0, abs(inner));
+      float depth = 1.0 / (1.0 + z * 3.2);
+      vec3 face = mix(vec3(0.015, 0.019, 0.028), uAccent * 0.22, 0.4) * (0.4 + depth);
+      vec3 lit = mix(uAccent,
+        pal(z * 0.7 + t * 0.1, vec3(0.5), vec3(0.5), vec3(1.0), vec3(0.0, 0.3, 0.6)), 0.45);
+
+      vec3 frame = face + lit * edge * 2.4 * depth;
+      col = mix(col, frame, trans);
+      trans *= 0.06;                                 // opaque: it occludes
+      if (trans < 0.01) break;
+    }
+
+    // dust drifting toward the viewer, so the corridor has air in it
+    for (int i = 0; i < 2; i++){
+      float fi = float(i);
+      vec2 g = p * (3.2 + fi * 3.4) + vec2(0.0, t * (0.9 + fi * 0.5));
+      vec2 id = floor(g);
+      col += mix(vec3(1.0, 0.94, 0.82), uAccent, 0.4)
+        * step(0.945, hash21(id + fi * 21.0))
+        * smoothstep(0.095, 0.0, length(fract(g) - 0.5 - (hash22(id) - 0.5) * 0.6))
+        * 0.55;
+    }
+
+    gl_FragColor = vec4(tone(col * 1.22), 1.0);
   }
 `);
 
@@ -1182,10 +1538,13 @@ export const SHADER_PROGRAMS = {
   mappingFacade,
   immersiveRoom,
   finaleBrand,
-  pillarTotem,
   prismRefract,
   auroraSilk,
-  depthLattice,
+  pillarWrap,
+  portalDepth,
+  chromeFlow,
+  monumentPortal,
+  premiumOrbit,
 } as const;
 
 export type ShaderProgramId = keyof typeof SHADER_PROGRAMS;
@@ -1195,5 +1554,5 @@ export const HEAVY_PROGRAMS: ShaderProgramId[] = [
   "architecture",
   "anamorphicVoid",
   "festivalMonument",
-  "depthLattice",
+  "monumentPortal",
 ];

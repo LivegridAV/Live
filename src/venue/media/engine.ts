@@ -18,6 +18,7 @@ import type { QualityTier, StageMode } from "../systems/store";
 
 interface BaseEntry {
   id: string;
+  desc: MediaDesc;
   refs: number;
   /** highest importance any consumer reported this frame, 0 → 1 */
   importance: number;
@@ -50,7 +51,16 @@ interface VideoEntry extends BaseEntry {
 
 type Entry = ShaderEntry | CanvasEntry | VideoEntry;
 
-const QUALITY_SCALE: Record<QualityTier, number> = { low: 0.6, medium: 0.85, high: 1.25 };
+/**
+ * Quality scale.
+ *
+ * `high` was 1.25, which quietly multiplied every declared resolution by a
+ * quarter again — so a surface written down as 1024×1024 in the manifest was
+ * actually rendering 1280×1280, and nobody reading the manifest could tell.
+ * A manifest that does not mean what it says is not a manifest. High now
+ * renders exactly what is asked for, and the lower tiers scale down from it.
+ */
+const QUALITY_SCALE: Record<QualityTier, number> = { low: 0.55, medium: 0.8, high: 1.0 };
 
 /**
  * How every media texture is sampled.
@@ -74,7 +84,22 @@ function tuneSampling(t: THREE.Texture, maxAnisotropy: number, mip = true) {
   t.generateMipmaps = mip;
   t.anisotropy = Math.min(8, maxAnisotropy);
 }
-const FRAME_BUDGET: Record<QualityTier, number> = { low: 3, medium: 6, high: 10 };
+/**
+ * The per-frame refresh budget, in megapixels.
+ *
+ * This used to be a *count* of entries, which assumed every media entry costs
+ * about the same. They do not: a 384×96 pavilion sign and a 2048×704 cylinder
+ * wrap differ by a factor of forty, and a budget of "ten entries" happily
+ * spent twenty million pixel-shader invocations in a single frame if the ten
+ * that came due happened to be the big ones. Standing in the pillar cluster —
+ * two 1024×1024 totem renders, in one sync group, therefore always due on the
+ * same frame — that is exactly what happened, and the frame rate went to 17.
+ *
+ * Budgeting by area makes the cost of a decision visible at the point the
+ * decision is made: raising a surface's resolution now spends a proportionate
+ * share of the frame rather than the same share as a sign.
+ */
+const FRAME_BUDGET_MP: Record<QualityTier, number> = { low: 0.9, medium: 1.8, high: 3.4 };
 /** Idle media still refreshes this often so it never looks frozen on return. */
 const IDLE_INTERVAL = 0.5;
 
@@ -89,6 +114,18 @@ export class MediaEngine {
   private isMobile = false;
   private elapsed = 0;
   private fallback: THREE.Texture;
+  /**
+   * One clock per synchronised group.
+   *
+   * Media that carries a single composition across several panels — a blade
+   * array, a stage package, the finale taking every major surface — names a
+   * `syncGroup`. Every member is seeded from this map rather than from
+   * `Math.random()`, so the members of a group are at the same point in the
+   * same animation on the same frame. Without it, ten blades showing "one
+   * image cut across ten panels" would each be showing a different moment of
+   * it, which is the one failure that makes an array read as ten screens.
+   */
+  private groupSeed = new Map<string, number>();
 
   constructor(renderer: THREE.WebGLRenderer) {
     this.renderer = renderer;
@@ -141,6 +178,25 @@ export class MediaEngine {
 
   private programFor(d: ShaderMedia): ShaderProgramId {
     return this.mode === "festival" && d.festival ? d.festival : d.program;
+  }
+
+  /**
+   * A start offset for one media entry. Ungrouped media gets its own random
+   * phase so twin screens never look cloned; grouped media shares one.
+   */
+  private seedFor(group?: string) {
+    if (!group) return Math.random() * 100;
+    let seed = this.groupSeed.get(group);
+    if (seed === undefined) {
+      seed = Math.random() * 100;
+      this.groupSeed.set(group, seed);
+    }
+    return seed;
+  }
+
+  /** The manifest's per-surface output trim, for whoever builds the material. */
+  trim(id: string) {
+    return MEDIA[id]?.brightness ?? 1;
   }
 
   private accentFor(d: ShaderMedia) {
@@ -210,14 +266,16 @@ export class MediaEngine {
 
     const program = this.programFor(desc);
     const m = Math.min(w, h);
+    const seed = this.seedFor(desc.syncGroup);
+
     const material = new THREE.ShaderMaterial({
       vertexShader: VERT,
       fragmentShader: SHADER_PROGRAMS[program],
       depthTest: false,
       depthWrite: false,
       uniforms: {
-        uTime: { value: Math.random() * 40 },
-        uSeed: { value: Math.random() * 100 },
+        uTime: { value: seed },
+        uSeed: { value: seed },
         uMode: { value: this.mode === "festival" ? 1 : 0 },
         uVariant: { value: desc.variant ?? 0 },
         uAccent: { value: this.accentFor(desc) },
@@ -310,7 +368,26 @@ export class MediaEngine {
    */
   update(dt: number) {
     this.elapsed += dt;
-    const budget = FRAME_BUDGET[this.quality];
+    const budget = FRAME_BUDGET_MP[this.quality] * 1e6;
+
+    /* Groups refresh together. If one panel of a blade array is on camera and
+       its neighbour is at a grazing angle, they must still be repainted on the
+       same frame — otherwise the array shears, which is exactly the artefact
+       the group exists to prevent. So importance is pooled first, and every
+       member then competes for the frame budget at the group's importance
+       rather than at its own. */
+    const groupImportance = new Map<string, number>();
+    for (const e of this.entries.values()) {
+      const g = e.desc.syncGroup;
+      if (!g) continue;
+      groupImportance.set(g, Math.max(groupImportance.get(g) ?? 0, e.importance));
+    }
+    if (groupImportance.size) {
+      for (const e of this.entries.values()) {
+        const g = e.desc.syncGroup;
+        if (g) e.importance = groupImportance.get(g)!;
+      }
+    }
 
     // Collect shader/canvas entries that are due, most important first.
     const due: Entry[] = [];
@@ -327,12 +404,18 @@ export class MediaEngine {
 
     const prevTarget = this.renderer.getRenderTarget();
     let spent = 0;
+    let painted = 0;
     for (const e of due) {
-      if (spent >= budget && e.importance < 0.99) break;
+      const cost = this.costOf(e);
+      // The most important entry always refreshes, whatever it costs —
+      // otherwise a single surface larger than the whole budget would never
+      // update at all, which is worse than a dropped frame.
+      if (painted > 0 && spent + cost > budget) continue;
       if (e.kind === "shader") this.renderShader(e);
       else if (e.kind === "canvas") this.paintCanvas(e);
       e.since = 0;
-      spent++;
+      spent += cost;
+      painted++;
     }
     if (this.renderer.getRenderTarget() !== prevTarget) this.renderer.setRenderTarget(prevTarget);
 
@@ -340,7 +423,16 @@ export class MediaEngine {
     for (const e of this.entries.values()) e.importance = 0;
   }
 
+  /** What refreshing this entry costs, in pixels. */
+  private costOf(e: Entry) {
+    if (e.kind === "shader") return e.rt.width * e.rt.height;
+    if (e.kind === "canvas") return e.canvas.width * e.canvas.height * 0.6; // CPU, but cheaper per pixel
+    return 0;
+  }
+
   private renderShader(e: ShaderEntry) {
+    // Both terms are shared inside a group, so grouped surfaces are always on
+    // the same frame of the same animation.
     e.material.uniforms.uTime.value = this.elapsed + e.material.uniforms.uSeed.value;
     this.quad.material = e.material;
     this.renderer.setRenderTarget(e.rt);

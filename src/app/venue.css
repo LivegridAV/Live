@@ -41,7 +41,11 @@
   inset: 0;
   z-index: 2;
   pointer-events: none;
-  background: radial-gradient(ellipse at 50% 52%, transparent 48%, rgba(2, 5, 6, 0.62) 100%);
+  /* A vignette is a grading tool, not a dimmer. At 48%/0.62 this was taking a
+     stop and a half out of the outer half of every frame — which is most of
+     the architecture — and no amount of lighting inside the scene could win
+     it back. Pulled in to the outer quarter, and halved. */
+  background: radial-gradient(ellipse at 50% 52%, transparent 62%, rgba(2, 5, 6, 0.34) 100%);
 }
 
 /* ── shared atoms ───────────────────────────────────────── */
@@ -901,6 +905,21 @@
 .v-prompt {
   position: relative;
   isolation: isolate;
+}
+
+/* The sheen needs its host to be a positioned element, so the rule above sets
+   `position: relative` on every glass control. It is declared later in the
+   file than the components themselves, at equal specificity, so it also
+   *overrides* any component that positioned itself — which is how the mobile
+   menu's Close button lost its `position: absolute`, fell back into the grid
+   as a full-width row, and landed on top of the "In the venue" heading.
+
+   `absolute` establishes a containing block just as well as `relative` does,
+   so the sheen is unaffected. These are re-asserted here rather than at their
+   own declarations so that the exception lives next to the rule that caused
+   it: anything added to the list above needs checking against this one. */
+.v-nav-sheet-close {
+  position: absolute;
 }
 .v-btn::before,
 .v-nav-brand::before,
