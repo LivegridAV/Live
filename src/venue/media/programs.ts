@@ -634,7 +634,7 @@ const anamorphicVoid = wrap(/* glsl */ `
     // The frame of the opening: a hard edge is what makes it a hole, not a poster.
     float vig = smoothstep(1.45, 0.7, length(p));
     col *= 0.2 + 0.8 * vig;
-    gl_FragColor = vec4(tone(col * 1.35), 1.0);
+    gl_FragColor = vec4(tone(col * 1.08), 1.0);
   }
 `);
 
@@ -738,7 +738,7 @@ const corporatePremium = wrap(/* glsl */ `
     float rake = exp(-pow((p.x - sin(uTime * 0.16) * 1.6) * 0.85, 2.0));
     col *= 0.9 + 0.45 * rake;
 
-    gl_FragColor = vec4(tone(col * 1.68), 1.0);
+    gl_FragColor = vec4(tone(col * 1.34), 1.0);
   }
 `);
 
@@ -977,6 +977,190 @@ const finaleBrand = wrap(/* glsl */ `
 `);
 
 /* ══════════════════════════════════════════════════════════
+   Modern content
+   ══════════════════════════════════════════════════════════ */
+
+/**
+ * Built for a four-sided LED column, and that is the whole point of it.
+ *
+ * A box in three.js gives every face its own 0..1 UV, so content does not wrap
+ * continuously around a totem — each face shows the same image. Wrapping a
+ * general-purpose abstract loop onto that reads as exactly what it is: a
+ * texture someone put on a pillar. This is composed the other way round, for
+ * the surface it is going on:
+ *
+ *  - It is mirrored about the centre line of each face, so the two edges of
+ *    every face carry identical values and four faces meet at four corners
+ *    with nothing visible at the join.
+ *  - It has a vertical *axis* — a luminous spine — because a column is read
+ *    top to bottom, not left to right.
+ *  - It has a top and a base, so the installation is a finite object rather
+ *    than an endless strip of pattern.
+ *  - Its motion travels up the column, which is the one direction that reads
+ *    as deliberate on a vertical surface.
+ */
+const pillarTotem = wrap(/* glsl */ `
+  void main(){
+    // 0 on the centre line of the face, 1 at both corners.
+    float u = abs(vUv.x - 0.5) * 2.0;
+    float v = vUv.y;
+    float t = uTime * 0.3 + uVariant * 5.0;
+
+    // The spine: a luminous core running the full height of the column.
+    float spine = exp(-pow(u * 3.2, 2.0));
+    float breathe = 0.74 + 0.26 * sin(t * 1.9 + v * 2.6);
+
+    // Bands travelling up the column. Each narrows toward the corners, so the
+    // form tapers and the column reads as a volume rather than a flat wrap.
+    float bands = 0.0;
+    for (int i = 0; i < 5; i++){
+      float fi = float(i);
+      float pos = fract(v * 0.75 - t * (0.14 + fi * 0.05) + fi * 0.37);
+      float wdt = 0.013 + 0.032 * hash11(fi + 3.0);
+      float b = smoothstep(wdt, 0.0, abs(pos - 0.5));
+      bands += b * mix(1.0, 0.3, u) * (0.55 + 0.45 * hash11(fi * 7.0));
+    }
+
+    // Fine ticks either side of the spine — the detail that says this is a
+    // designed graphic and not a gradient.
+    float tick = step(0.62, hash21(vec2(floor(u * 8.0), floor(v * 44.0 - t * 2.4))));
+    tick *= smoothstep(0.88, 0.34, u) * smoothstep(0.03, 0.12, u);
+
+    // A head and a foot, so the totem is a finite object.
+    float cap = smoothstep(0.0, 0.085, v) * smoothstep(1.0, 0.915, v);
+    float capGlow = 1.0 - cap;
+
+    // Palette: the screen accent, drifting through a full-spectrum complement.
+    vec3 sweep = pal(v * 0.45 + t * 0.07, vec3(0.5), vec3(0.5), vec3(1.0), vec3(0.0, 0.33, 0.67));
+    vec3 tint = mix(uAccent, sweep, 0.42 + 0.32 * sin(t * 0.45 + v * 1.9));
+
+    vec3 col = vec3(0.004, 0.006, 0.009);
+    col += tint * spine * breathe * 1.05;
+    col += mix(tint, vec3(1.0), 0.45) * bands * 0.8;
+    col += tint * tick * 0.26;
+    col += mix(tint, vec3(1.0, 0.94, 0.84), 0.45) * capGlow * 0.42;
+
+    // Cylindrical relief. Identical on both edges of every face, so it shades
+    // the column without ever drawing a line at a corner.
+    col *= mix(1.0, 0.62, pow(u, 2.0));
+
+    gl_FragColor = vec4(tone(col * 1.0), 1.0);
+  }
+`);
+
+/**
+ * Light through glass.
+ *
+ * Six refracting slabs turning through each other, sampled three times at
+ * slightly different scales — once per channel. That dispersion is the whole
+ * trick: it is the difference between light through a prism and a coloured
+ * gradient, and it is what makes this read as a rendered material rather than
+ * as a filter.
+ */
+const prismRefract = wrap(/* glsl */ `
+  float slabField(vec2 q, float t){
+    float acc = 0.0;
+    for (int i = 0; i < 6; i++){
+      float fi = float(i);
+      float z = 1.0 + fi * 0.55;
+      vec2 r = q * z;
+      r *= rot(t * (0.2 + fi * 0.05) + fi * 0.9);
+      r.x += sin(t * 0.7 + fi * 2.1) * 0.6;
+      float d = abs(abs(r.x) - (0.2 + 0.13 * hash11(fi + 2.0)));
+      acc += smoothstep(0.32, 0.0, d) / z;
+    }
+    return acc;
+  }
+
+  void main(){
+    vec2 p = centred();
+    float t = uTime * 0.16 + uVariant * 6.0;
+
+    float R = slabField(p * 0.938, t);
+    float G = slabField(p, t);
+    float B = slabField(p * 1.062, t);
+    vec3 disp = vec3(R, G, B);
+    float body = (R + G + B) / 3.0;
+
+    vec3 col = vec3(0.005, 0.008, 0.012);
+    // Hold the mix well back from white: at 0.32 every crossing saturated and
+    // the dispersion — the entire point of the programme — became invisible.
+    col += disp * mix(uAccent, vec3(1.0), 0.16) * 0.52;
+    col += mix(uAccent, vec3(0.62, 0.80, 1.0), 0.5) * pow(body, 2.0) * 0.45;
+    col += vec3(1.0) * pow(body, 7.0) * 0.09;
+    gl_FragColor = vec4(tone(col * 0.92), 1.0);
+  }
+`);
+
+/**
+ * Iridescent sheets — the modern equivalent of a gradient wash, with the two
+ * things a gradient never has: overlap and hue travel. Four curtains at
+ * different depths, each shifting hue along its length, compositing where
+ * they cross.
+ */
+const auroraSilk = wrap(/* glsl */ `
+  void main(){
+    vec2 p = centred();
+    float t = uTime * 0.13 + uVariant * 4.0;
+
+    vec3 col = vec3(0.004, 0.007, 0.011);
+    for (int i = 0; i < 4; i++){
+      float fi = float(i);
+      float ph = fi * 1.7 + t;
+      float wave =
+        sin(p.x * (0.85 + fi * 0.32) + ph) * 0.34 +
+        sin(p.x * (1.9 - fi * 0.21) - ph * 1.3) * 0.16 +
+        noise(vec2(p.x * 0.5 + t * 0.4, fi * 3.0)) * 0.5 - 0.25;
+      float d = abs(p.y - wave - (fi - 1.5) * 0.36);
+      float sheet = smoothstep(0.32, 0.0, d);
+      vec3 hue = pal(fi * 0.2 + p.x * 0.1 + t * 0.16,
+                     vec3(0.5), vec3(0.5), vec3(1.0), vec3(0.0, 0.33, 0.67));
+      col += mix(hue, uAccent, 0.26) * sheet * (0.62 - fi * 0.07);
+      col += vec3(1.0) * pow(sheet, 7.0) * 0.14;
+    }
+    gl_FragColor = vec4(tone(col * 1.15), 1.0);
+  }
+`);
+
+/**
+ * A lattice running away into depth, composited front to back.
+ *
+ * Fourteen planes, each rotating a little more than the last, so the structure
+ * twists as it recedes and the eye gets real parallax instead of a zoom. It is
+ * the cheapest honest way to put a hundred metres of depth on a flat panel.
+ */
+const depthLattice = wrap(/* glsl */ `
+  void main(){
+    vec2 p = centred();
+    float t = uTime * 0.5 + uVariant * 8.0;
+    vec3 rd = normalize(vec3(p, 1.5));
+
+    vec3 col = vec3(0.004, 0.006, 0.010);
+    float trans = 1.0;
+    for (int i = 0; i < 14; i++){
+      float fi = float(i);
+      float z = 1.2 + fi * 1.45 - mod(t, 1.45);
+      if (z <= 0.2) continue;
+      vec2 hit = rd.xy * (z / rd.z);
+      vec2 g = hit * 1.15;
+      g *= rot(z * 0.05 + t * 0.03);
+      vec2 f = abs(fract(g) - 0.5);
+      float line = 1.0 - smoothstep(0.0, 0.05, min(f.x, f.y));
+      float node = smoothstep(0.13, 0.0, length(f - vec2(0.5)));
+      float fade = smoothstep(21.0, 3.0, z) * smoothstep(0.0, 2.2, z);
+      float a = clamp((line * 0.45 + node * 0.95) * fade * 0.4, 0.0, 1.0);
+      vec3 hue = mix(uAccent,
+        pal(z * 0.055 + t * 0.05, vec3(0.5), vec3(0.5), vec3(1.0), vec3(0.0, 0.33, 0.67)), 0.42);
+      col += trans * hue * a * 1.7;
+      trans *= 1.0 - a;
+    }
+    // the vanishing point everything is running toward
+    col += mix(uAccent, vec3(1.0), 0.5) * exp(-length(p) * 2.4) * 0.55;
+    gl_FragColor = vec4(tone(col * 1.35), 1.0);
+  }
+`);
+
+/* ══════════════════════════════════════════════════════════
    Registry
    ══════════════════════════════════════════════════════════ */
 
@@ -998,6 +1182,10 @@ export const SHADER_PROGRAMS = {
   mappingFacade,
   immersiveRoom,
   finaleBrand,
+  pillarTotem,
+  prismRefract,
+  auroraSilk,
+  depthLattice,
 } as const;
 
 export type ShaderProgramId = keyof typeof SHADER_PROGRAMS;
@@ -1007,4 +1195,5 @@ export const HEAVY_PROGRAMS: ShaderProgramId[] = [
   "architecture",
   "anamorphicVoid",
   "festivalMonument",
+  "depthLattice",
 ];

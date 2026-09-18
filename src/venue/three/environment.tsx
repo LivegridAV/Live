@@ -92,16 +92,16 @@ interface ZoneLight {
 }
 
 const LOOKS: Record<string, ZoneLight> = {
-  arrival: { key: "#c8b391", fill: "#5b7e8c", keyI: 34, fillI: 24, amb: 0.3, fog: "#0a1013", fogDensity: 0.005 },
-  tunnel: { key: "#7fd0c4", fill: "#3e6f78", keyI: 10, fillI: 7, amb: 0.13, fog: "#050b0c", fogDensity: 0.0085 },
-  hall: { key: "#b7c3c6", fill: "#44646b", keyI: 46, fillI: 30, amb: 0.36, fog: "#070c0e", fogDensity: 0.005 },
-  gallery: { key: "#c4b69b", fill: "#476a72", keyI: 42, fillI: 28, amb: 0.35, fog: "#070c0e", fogDensity: 0.0053 },
-  boulevard: { key: "#b8c0c3", fill: "#4c6874", keyI: 40, fillI: 27, amb: 0.34, fog: "#060b0d", fogDensity: 0.0056 },
-  approach: { key: "#e0b47e", fill: "#4a6a76", keyI: 44, fillI: 27, amb: 0.32, fog: "#060a0c", fogDensity: 0.006 },
-  arena: { key: "#b9c6cc", fill: "#3f5f6a", keyI: 38, fillI: 26, amb: 0.26, fog: "#04080a", fogDensity: 0.0052 },
-  stage: { key: "#cbd6da", fill: "#44636e", keyI: 32, fillI: 23, amb: 0.22, fog: "#04080a", fogDensity: 0.005 },
-  finale: { key: "#9fb0b6", fill: "#2f4a53", keyI: 16, fillI: 12, amb: 0.12, fog: "#020607", fogDensity: 0.0064 },
-  contact: { key: "#8fa5ab", fill: "#2a444c", keyI: 15, fillI: 11, amb: 0.11, fog: "#020607", fogDensity: 0.0064 },
+  arrival: { key: "#d8be95", fill: "#6a92a4", keyI: 40, fillI: 29, amb: 0.4, fog: "#0a1013", fogDensity: 0.0044 },
+  tunnel: { key: "#8fd8cc", fill: "#4a7f88", keyI: 12, fillI: 9, amb: 0.17, fog: "#050b0c", fogDensity: 0.0078 },
+  hall: { key: "#c6d2d4", fill: "#557880", keyI: 54, fillI: 36, amb: 0.46, fog: "#070c0e", fogDensity: 0.0042 },
+  gallery: { key: "#d2c4a8", fill: "#56787f", keyI: 50, fillI: 34, amb: 0.45, fog: "#070c0e", fogDensity: 0.0045 },
+  boulevard: { key: "#c6cdd0", fill: "#5a7884", keyI: 48, fillI: 33, amb: 0.44, fog: "#060b0d", fogDensity: 0.0048 },
+  approach: { key: "#e8c08c", fill: "#587a86", keyI: 52, fillI: 33, amb: 0.42, fog: "#060a0c", fogDensity: 0.0052 },
+  arena: { key: "#c6d2d8", fill: "#4c6f7a", keyI: 46, fillI: 32, amb: 0.34, fog: "#04080a", fogDensity: 0.0045 },
+  stage: { key: "#d6e0e4", fill: "#50727e", keyI: 40, fillI: 29, amb: 0.3, fog: "#04080a", fogDensity: 0.0044 },
+  finale: { key: "#aebec4", fill: "#3a5860", keyI: 22, fillI: 16, amb: 0.18, fog: "#020607", fogDensity: 0.0058 },
+  contact: { key: "#a0b4ba", fill: "#355058", keyI: 20, fillI: 15, amb: 0.17, fog: "#020607", fogDensity: 0.0058 },
 };
 
 const FESTIVAL_OVERRIDE: Partial<ZoneLight> = {
@@ -251,8 +251,8 @@ export function LightRig() {
 
   return (
     <>
-      <ambientLight ref={ambRef} intensity={0.14} color="#93a8ac" />
-      <hemisphereLight ref={hemiRef} args={["#7d9aa2", "#14100c", 0.45]} />
+      <ambientLight ref={ambRef} intensity={0.14} color="#a6bcc0" />
+      <hemisphereLight ref={hemiRef} args={["#93b2b8", "#1a1510", 0.62]} />
       <pointLight ref={keyRef} distance={58} decay={2} intensity={26} />
       <pointLight ref={fillRef} distance={44} decay={2} intensity={14} />
       <pointLight ref={rimRef} distance={34} decay={2} intensity={8} />

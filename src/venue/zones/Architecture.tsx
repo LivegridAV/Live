@@ -173,17 +173,34 @@ function HallChunk({ from, to }: { from: number; to: number }) {
 
       {/* vertical light slots at regular bays: the strongest single cue that a
           dark wall is a wall and not the absence of one */}
-      {slots.map((z) =>
-        [-1, 1].map((side) => (
-          <mesh
-            key={`sl${z}${side}`}
-            position={[side * (V.hall.x - 0.07), V.hall.y * 0.45, z]}
-            rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
-          >
-            <planeGeometry args={[0.1, V.hall.y * 0.72]} />
-            <meshBasicMaterial color="#6f8b92" toneMapped />
-          </mesh>
-        )),
+      {/* The bays alternate through a small, deliberate set of accent colours.
+          A venue lit in one hue is a corridor; a venue lit in six is a
+          nightclub. Four, cycling slowly along the length, is what reads as a
+          designed lighting scheme — you notice the richness before you notice
+          that it changes. */}
+      {slots.map((z, i) =>
+        [-1, 1].map((side) => {
+          const accents = ["#6f8b92", "#7f6fa8", "#4f9b93", "#a8825f"];
+          const hue = accents[(i + (side > 0 ? 2 : 0)) % accents.length];
+          return (
+            <group key={`sl${z}${side}`}>
+              <mesh
+                position={[side * (V.hall.x - 0.07), V.hall.y * 0.45, z]}
+                rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
+              >
+                <planeGeometry args={[0.12, V.hall.y * 0.72]} />
+                <meshBasicMaterial color={hue} toneMapped />
+              </mesh>
+              <LightPool
+                position={[side * (V.hall.x - 0.4), V.hall.y * 0.45, z]}
+                rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
+                size={[5.5, V.hall.y * 0.8]}
+                color={hue}
+                opacity={0.16}
+              />
+            </group>
+          );
+        }),
       )}
       {slots.map((z) =>
         [-1, 1].map((side) => (

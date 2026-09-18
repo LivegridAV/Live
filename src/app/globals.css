@@ -364,9 +364,20 @@ body {
 
 .lg-btn {
   font-family: var(--font-sans); font-size: 14px; font-weight: 500;
-  color: var(--text-inv); background: rgba(19, 32, 30, 0.6);
-  border: 1px solid var(--ink-soft); border-radius: 13px; padding: 12px 22px;
-  backdrop-filter: blur(8px); transition: all 0.2s ease; display: inline-block;
+  color: var(--text-inv);
+  background: var(--lg-glass-tint);
+  border: 1px solid var(--lg-glass-edge); border-radius: 13px; padding: 12px 22px;
+  -webkit-backdrop-filter: var(--lg-glass-blur);
+  backdrop-filter: var(--lg-glass-blur);
+  box-shadow: var(--lg-glass-lift);
+  text-shadow: var(--lg-glass-text);
+  transition: all 0.2s ease; display: inline-block;
+  position: relative; isolation: isolate;
+}
+.lg-btn::before {
+  content: ""; position: absolute; inset: 0 0 auto 0; height: 44%;
+  border-radius: inherit; pointer-events: none; z-index: -1;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0));
 }
 .lg-btn:hover { border-color: var(--glow); color: var(--glow); }
 .lg-btn-primary {
@@ -819,4 +830,77 @@ body {
 .lg-dark .rounded-\[20px\].border:hover,
 .lg-dark .rounded-\[24px\].border:hover {
   box-shadow: 0 0 34px -10px color-mix(in srgb, var(--glow) 45%, transparent);
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   Glass — classic pages
+   ------------------------------------------------------------------
+   The same material as the immersive homepage, so a visitor moving
+   from the venue to a service page does not cross a design boundary.
+   ══════════════════════════════════════════════════════════ */
+
+:root {
+  --lg-glass-tint: linear-gradient(170deg, rgba(22, 42, 40, 0.30) 0%, rgba(6, 13, 13, 0.44) 68%);
+  --lg-glass-blur: blur(24px) saturate(1.5);
+  --lg-glass-edge: rgba(178, 234, 226, 0.24);
+  --lg-glass-lift:
+    inset 0 1px 0 rgba(236, 255, 252, 0.16),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.30),
+    0 18px 46px rgba(0, 0, 0, 0.40);
+  --lg-glass-text: 0 1px 2px rgba(2, 8, 8, 0.6);
+}
+
+.lg-glass {
+  background: var(--lg-glass-tint);
+  -webkit-backdrop-filter: var(--lg-glass-blur);
+  backdrop-filter: var(--lg-glass-blur);
+  border: 1px solid var(--lg-glass-edge);
+  box-shadow: var(--lg-glass-lift);
+  text-shadow: var(--lg-glass-text);
+}
+
+/* the fixed page header, as one floating pane rather than a solid bar */
+.lg-glass-nav {
+  background: linear-gradient(170deg, rgba(20, 38, 37, 0.34) 0%, rgba(5, 11, 11, 0.5) 70%);
+  -webkit-backdrop-filter: var(--lg-glass-blur);
+  backdrop-filter: var(--lg-glass-blur);
+  border-bottom: 1px solid var(--lg-glass-edge);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.34);
+}
+.lg-glass-pill {
+  border-radius: 999px;
+  background: var(--lg-glass-tint);
+  -webkit-backdrop-filter: var(--lg-glass-blur);
+  backdrop-filter: var(--lg-glass-blur);
+  border: 1px solid var(--lg-glass-edge);
+  box-shadow: var(--lg-glass-lift);
+  text-shadow: var(--lg-glass-text);
+}
+
+/* The primary action stays a solid fill: one confident opaque element in a
+   translucent system is what tells the eye where to go. */
+.lg-btn-primary { text-shadow: none; box-shadow: none; }
+.lg-btn-primary::before { display: none; }
+
+/* ── weight and colour ──
+   The same correction as the venue: bring the weights down a step and let
+   size and colour carry the hierarchy. */
+.lg-hero-title,
+.lg-section-title,
+.lg-finale-title { font-weight: 600; letter-spacing: -0.02em; }
+.lg-btn { font-weight: 500; }
+.lg-btn-primary { font-weight: 600; }
+h1, h2, h3 { font-weight: 600; }
+h4, h5, h6 { font-weight: 500; }
+strong, b { font-weight: 600; }
+
+@media (pointer: coarse) {
+  :root { --lg-glass-blur: blur(14px); }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root { --lg-glass-tint: linear-gradient(170deg, rgba(14, 26, 25, 0.92), rgba(5, 11, 11, 0.95)); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  :root { --lg-glass-blur: none; --lg-glass-tint: rgba(6, 13, 13, 0.95); }
 }

@@ -441,16 +441,79 @@ export function Arrival() {
         />
       ))}
 
-      {/* wayfinding sign beside the entrance */}
-      <Screen
-        media="entry-sign"
-        width={4.2}
-        height={1.05}
-        position={[-9.2, 2.6, 0.3]}
-        pitch={1.5}
-        brightness={0.9}
-        range={45}
-      />
+      {/* ── the welcome ──
+          This used to be a 4.2 m plate flat against the facade at x = -9.2:
+          nine metres off the centre line, edge-on to the approach, twenty-four
+          metres away and behind the arch light. It was present and it was
+          invisible, which is the worst of both.
+
+          A welcome is a moment, so it is now an object you walk past: a
+          free-standing double-sided totem out on the plaza, turned to face the
+          path, lit from its own base, at the point where the camera has broken
+          left and is coming back toward the centre line. */}
+      <group position={[-5.0, 0, 12.5]} rotation={[0, 0.5, 0]}>
+        {/* base and stem */}
+        <mesh position={[0, 0.09, 0]} material={M.anodised}>
+          <boxGeometry args={[2.6, 0.18, 0.9]} />
+        </mesh>
+        <mesh position={[0, 0.3, 0]}>
+          <planeGeometry args={[2.4, 0.04]} />
+          <meshBasicMaterial color="#c2975d" toneMapped />
+        </mesh>
+        {[-1, 1].map((side) => (
+          <mesh key={side} position={[side * 1.5, 1.7, 0]} material={M.aluminium}>
+            <boxGeometry args={[0.13, 3.2, 0.34]} />
+          </mesh>
+        ))}
+        {/* the carcass, so the sign has a back as well as a front */}
+        <mesh position={[0, 2.25, -0.09]} material={M.charcoal}>
+          <boxGeometry args={[3.2, 1.5, 0.22]} />
+        </mesh>
+        <Screen
+          media="entry-sign"
+          width={2.96}
+          height={1.28}
+          position={[0, 2.25, 0.04]}
+          pitch={1.2}
+          brightness={1.18}
+          range={70}
+          frame={false}
+          edge="#2f7a72"
+          edgeWidth={0.05}
+        />
+        {/* and the same face on the reverse, for the walk back out */}
+        <Screen
+          media="entry-sign"
+          width={2.96}
+          height={1.28}
+          position={[0, 2.25, -0.22]}
+          rotation={[0, Math.PI, 0]}
+          pitch={1.2}
+          brightness={0.9}
+          range={70}
+          frame={false}
+        />
+        {/* the glass over it, and the light it stands in */}
+        <mesh position={[0, 2.25, 0.07]}>
+          <planeGeometry args={[3.24, 1.56]} />
+          <meshPhysicalMaterial
+            color="#cfe6e2"
+            transparent
+            opacity={0.07}
+            roughness={0.08}
+            metalness={0}
+            clearcoat={1}
+            clearcoatRoughness={0.05}
+            depthWrite={false}
+          />
+        </mesh>
+        <mesh position={[0, 3.04, 0.08]}>
+          <planeGeometry args={[3.24, 0.025]} />
+          <meshBasicMaterial color="#b8ded8" toneMapped />
+        </mesh>
+        <LightPool position={[0, 0.03, 0.6]} size={[6, 5]} color="#5fb0a6" opacity={0.22} pulse={0.3} />
+        <pointLight position={[0, 2.4, 1.1]} intensity={12} distance={9} decay={2} color="#7fd0c4" />
+      </group>
 
       {/* flanking LED blades */}
       {[-1, 1].map((side) => (

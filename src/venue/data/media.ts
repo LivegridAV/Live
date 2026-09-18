@@ -32,6 +32,15 @@ export const ACCENT = {
   bone: "#c8c2b4",
   violet: "#9d95c0",
   copper: "#b97f55",
+  /* Content-only hues. Architecture keeps the graphite/teal grade; screens do
+     not have to, and holding every loop inside one cool hue was most of why
+     the LED read as dated. */
+  magenta: "#d95fa8",
+  indigo: "#6f76d8",
+  lime: "#9fd15e",
+  coral: "#e8734f",
+  ice: "#8fd6e8",
+  gold: "#e0b054",
 } as const;
 
 export interface ShaderMedia {
@@ -75,8 +84,8 @@ export const MEDIA: Record<string, MediaDesc> = {
   // The arch fascia. This has to *say the name* — an abstract brand sweep was
   // playing here, which is a fine motif and a poor sign.
   "entry-brand": { kind: "canvas", painter: "brandFascia", accent: ACCENT.brand, res: [1024, 192], fps: 12 },
-  "entry-sign": { kind: "canvas", painter: "signWelcome", accent: ACCENT.brand, res: [512, 128], fps: 8 },
-  "entry-blade": { kind: "shader", program: "pixelRain", accent: ACCENT.teal, variant: 0.3, res: [128, 384], fps: 24 },
+  "entry-sign": { kind: "canvas", painter: "signWelcome", accent: ACCENT.brand, res: [768, 332], fps: 8 },
+  "entry-blade": { kind: "shader", program: "pillarTotem", accent: ACCENT.ice, variant: 0.3, res: [160, 512], fps: 24 },
 
   /* ── Tunnel ───────────────────────────────────────────────
      The four-sided tunnel has no media id: it is not showing a texture at
@@ -85,7 +94,7 @@ export const MEDIA: Record<string, MediaDesc> = {
      across every corner. */
 
   /* ── Vestibule, where the tunnel opens into the hall ──── */
-  "vestibule-blade": { kind: "shader", program: "signalGrid", accent: ACCENT.brand, variant: 0.42, res: [128, 640], fps: 30 },
+  "vestibule-blade": { kind: "shader", program: "pillarTotem", accent: ACCENT.brand, variant: 0.42, res: [160, 704], fps: 30 },
 
   /* ── Hall + wayfinding ────────────────────────────────── */
   "sign-gallery": { kind: "canvas", painter: "signGallery", accent: ACCENT.brand, res: [512, 128], fps: 8 },
@@ -94,19 +103,24 @@ export const MEDIA: Record<string, MediaDesc> = {
   "hall-wordmark": { kind: "canvas", painter: "wordmark", accent: ACCENT.brand, res: [1024, 288], fps: 12 },
 
   /* ── Creative LED gallery ─────────────────────────────── */
-  "pillar-flow": { kind: "shader", program: "volumetric", accent: ACCENT.teal, variant: 0.1, res: [320, 768], fps: 30 },
+  // The four-sided totems. Both run the same composed-for-a-column programme
+  // — that is the point: a visitor should read "this is a designed LED pillar
+  // installation", not "these are two different textures on two posts".
+  "pillar-flow": { kind: "shader", program: "pillarTotem", accent: ACCENT.ice, variant: 0.1, res: [384, 1024], fps: 30 },
   // A horizontal grain motif on a vertical column resolves into stacked
   // light and dark bands — zebra, not metal. A column wants depth, so it
   // gets the raymarched structure instead.
-  "pillar-metal": { kind: "shader", program: "architecture", accent: ACCENT.copper, variant: 0.6, res: [320, 768], fps: 30 },
-  "blade-rain": { kind: "shader", program: "pixelRain", accent: ACCENT.brand, variant: 0.8, res: [512, 448], fps: 30 },
-  "cylinder-ribbon": { kind: "shader", program: "plasmaRibbon", accent: ACCENT.amber, res: [1024, 384], fps: 30 },
-  "ring-waves": { kind: "shader", program: "spatialWaves", accent: ACCENT.teal, res: [1536, 192], fps: 30 },
+  "pillar-metal": { kind: "shader", program: "pillarTotem", accent: ACCENT.magenta, variant: 0.62, res: [384, 1024], fps: 30 },
+  "blade-rain": { kind: "shader", program: "pillarTotem", accent: ACCENT.indigo, variant: 0.8, res: [512, 640], fps: 30 },
+  "cylinder-ribbon": { kind: "shader", program: "auroraSilk", accent: ACCENT.coral, res: [1024, 384], fps: 30 },
+  "ring-waves": { kind: "shader", program: "prismRefract", accent: ACCENT.ice, res: [1536, 192], fps: 30 },
   // The fascia is a metre from the camera and its own header calls it
   // fine pitch. A matrix motif here contradicts the product in the same frame.
-  "bar-brand": { kind: "shader", program: "plasmaRibbon", accent: ACCENT.brand, variant: 0.45, res: [1024, 160], fps: 30 },
-  "curve-natural": { kind: "shader", program: "naturalFlow", accent: ACCENT.moss, res: [704, 384], fps: 24 },
-  "mosaic-arch": { kind: "shader", program: "architecture", accent: ACCENT.steel, res: [640, 448], fps: 20 },
+  "bar-brand": { kind: "shader", program: "auroraSilk", accent: ACCENT.magenta, variant: 0.45, res: [1024, 160], fps: 30 },
+  "curve-natural": { kind: "shader", program: "auroraSilk", accent: ACCENT.lime, res: [768, 448], fps: 24 },
+  // A flat slab field was reading as grey card. A lattice running into depth
+  // gives the cut silhouette something worth being cut around.
+  "mosaic-arch": { kind: "shader", program: "depthLattice", accent: ACCENT.indigo, res: [704, 512], fps: 24 },
   "anamorphic": { kind: "shader", program: "anamorphicVoid", accent: ACCENT.bone, res: [768, 576], fps: 24 },
 
   /* ── 01 · AV engineering ──────────────────────────────── */
@@ -115,7 +129,7 @@ export const MEDIA: Record<string, MediaDesc> = {
   "av-rack-status": { kind: "canvas", painter: "avRackStatus", accent: ACCENT.teal, res: [320, 384], fps: 8 },
 
   /* ── 02 · Content studio ──────────────────────────────── */
-  "content-motion": { kind: "shader", program: "liquidMetal", accent: ACCENT.amber, variant: 0.2, res: [448, 256], fps: 30 },
+  "content-motion": { kind: "shader", program: "prismRefract", accent: ACCENT.magenta, variant: 0.2, res: [512, 288], fps: 30 },
   "content-3d": { kind: "shader", program: "architecture", accent: ACCENT.copper, variant: 0.5, res: [256, 256], fps: 20 },
   "content-anamorphic": { kind: "shader", program: "anamorphicVoid", accent: ACCENT.amber, variant: 0.7, res: [288, 288], fps: 24 },
 
@@ -146,7 +160,7 @@ export const MEDIA: Record<string, MediaDesc> = {
   "ce-map": { kind: "canvas", painter: "ceMap", accent: ACCENT.teal, res: [384, 256], fps: 15 },
 
   /* ── 08 · Digital ─────────────────────────────────────── */
-  "web-showreel": { kind: "shader", program: "volumetric", accent: ACCENT.violet, variant: 0.35, res: [448, 256], fps: 30 },
+  "web-showreel": { kind: "shader", program: "auroraSilk", accent: ACCENT.violet, variant: 0.35, res: [512, 288], fps: 30 },
   "web-code": { kind: "canvas", painter: "webCode", accent: ACCENT.violet, res: [320, 320], fps: 12 },
   "web-devices": { kind: "canvas", painter: "webDevices", accent: ACCENT.violet, res: [448, 256], fps: 15 },
 
@@ -157,29 +171,29 @@ export const MEDIA: Record<string, MediaDesc> = {
   // The totems pass within a few metres of the camera, so whatever they play
   // is inspected at close range. A matrix motif reads as a dot grid there,
   // which is the one impression a fine-pitch venue cannot give.
-  "approach-pillar": { kind: "shader", program: "architecture", accent: ACCENT.brand, variant: 0.18, res: [256, 768], fps: 30 },
+  "approach-pillar": { kind: "shader", program: "pillarTotem", accent: ACCENT.gold, variant: 0.18, res: [320, 896], fps: 30 },
   "approach-portrait": { kind: "shader", program: "pixelRain", accent: ACCENT.amber, variant: 0.15, res: [192, 512], fps: 30 },
 
   /* ── Main stage: the mode switch lives here ───────────── */
   "stage-main": {
     kind: "shader",
-    program: "corporatePremium",
+    program: "prismRefract",
     festival: "festivalMonument",
-    accent: ACCENT.steel,
-    festivalAccent: "#8f5ad6",
-    res: [896, 384],
+    accent: ACCENT.ice,
+    festivalAccent: "#b05ad6",
+    res: [1024, 448],
     fps: 60,
   },
   // Side screens run the same content family as the main wall — that is what a
   // real show does, and it keeps the room reading as one design.
   "stage-side": {
     kind: "shader",
-    program: "corporatePremium",
+    program: "depthLattice",
     festival: "plasmaRibbon",
-    accent: ACCENT.steel,
+    accent: ACCENT.indigo,
     festivalAccent: ACCENT.ember,
     variant: 0.62,
-    res: [384, 704],
+    res: [704, 512],
     fps: 30,
   },
   // The blades carry a *slice each* of the same render as the main wall, so
@@ -192,55 +206,55 @@ export const MEDIA: Record<string, MediaDesc> = {
   // render would read as a random crop.
   "stage-strip": {
     kind: "shader",
-    program: "plasmaRibbon",
-    festival: "pixelRain",
-    accent: ACCENT.amber,
+    program: "pillarTotem",
+    festival: "pillarTotem",
+    accent: ACCENT.gold,
     festivalAccent: "#b464e0",
     variant: 0.55,
-    res: [96, 640],
+    res: [128, 768],
     fps: 30,
   },
   // Portrait fillers: two slices of one render, so a pair reads as one image
   // split by the gap between them.
   "stage-portrait": {
     kind: "shader",
-    program: "corporatePremium",
-    festival: "festivalMonument",
-    accent: ACCENT.bone,
+    program: "pillarTotem",
+    festival: "pillarTotem",
+    accent: ACCENT.magenta,
     festivalAccent: "#a86ad6",
     variant: 0.34,
-    res: [320, 704],
+    res: [384, 768],
     fps: 30,
   },
   // The canted outer clusters, upper and lower halves of one render.
   "stage-outer": {
     kind: "shader",
-    program: "corporatePremium",
+    program: "auroraSilk",
     festival: "festivalMonument",
-    accent: ACCENT.copper,
+    accent: ACCENT.coral,
     festivalAccent: "#9a5ad0",
     variant: 0.78,
-    res: [640, 448],
+    res: [704, 448],
     fps: 30,
   },
   "stage-floor": {
     kind: "shader",
-    program: "ledFormats",
+    program: "depthLattice",
     festival: "volumetric",
-    accent: ACCENT.steel,
+    accent: ACCENT.ice,
     festivalAccent: ACCENT.ember,
     variant: 0.7,
-    res: [672, 320],
+    res: [768, 384],
     fps: 24,
   },
   "stage-wing": {
     kind: "shader",
-    program: "liquidMetal",
+    program: "auroraSilk",
     festival: "immersiveRoom",
-    accent: ACCENT.bone,
+    accent: ACCENT.indigo,
     festivalAccent: "#a54fb0",
     variant: 0.85,
-    res: [448, 448],
+    res: [512, 512],
     fps: 24,
   },
 
@@ -261,13 +275,13 @@ for (const p of PAVILIONS) {
     accent: p.accent,
     res: [576, 96],
     fps: 8,
-    text: { title: p.headline, sub: `Pavilion ${p.no}` },
+    text: { title: p.doing, sub: "We Do" },
   };
 }
 /** And the kiosk each pavilion explains itself from, in the room. */
 for (const [p, sub] of [
-  ...PAVILIONS.map((p) => [p, `Pavilion ${p.no}`] as const),
-  [PARTNER_BAY, "Partner bay"] as const,
+  ...PAVILIONS.map((p) => [p, `We Do ${p.doing}`] as const),
+  [PARTNER_BAY, "With our partners"] as const,
 ]) {
   MEDIA[`kiosk-${p.id}`] = {
     kind: "canvas",
@@ -289,7 +303,9 @@ MEDIA[`sign-${PARTNER_BAY.id}`] = {
   accent: PARTNER_BAY.accent,
   res: [576, 96],
   fps: 8,
-  text: { title: PARTNER_BAY.headline, sub: "Partner bay" },
+  // Deliberately not "We Do": sound and lighting is delivered with partners,
+  // and the signage has to keep saying so.
+  text: { title: PARTNER_BAY.doing, sub: "With Partners" },
 };
 
 /**

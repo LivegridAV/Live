@@ -14,6 +14,13 @@ export interface Pavilion {
   /** boulevard number, "01" … "08" */
   no: string;
   headline: string;
+  /**
+   * The discipline itself, as a noun phrase, so the venue can say
+   * "We Do <doing>". The headline is free to be evocative — "Content without
+   * boundaries" — but "We Do Content without boundaries" is not a sentence,
+   * so the naming reads from here instead.
+   */
+  doing: string;
   support: string;
   /** slugs from src/content/services.ts, first is the primary */
   services: string[];
@@ -36,6 +43,7 @@ export const PAVILIONS: Pavilion[] = [
     id: "av-engineering",
     no: "01",
     headline: "AV Engineering",
+    doing: "AV Engineering",
     support: "From technical planning to show-ready systems.",
     services: ["av-engineering"],
     side: -1,
@@ -49,6 +57,7 @@ export const PAVILIONS: Pavilion[] = [
     id: "content-studio",
     no: "02",
     headline: "Content without boundaries",
+    doing: "Content & Visual Production",
     support: "Motion, 3D and anamorphic content built for the exact canvas.",
     services: ["content-design", "3d-anamorphic", "presentation-content"],
     side: 1,
@@ -62,6 +71,7 @@ export const PAVILIONS: Pavilion[] = [
     id: "led-solutions",
     no: "03",
     headline: "LED Display Solutions",
+    doing: "LED Display Solutions",
     support: "Screen technology, system engineering and creative application.",
     services: ["led-display-rental"],
     side: -1,
@@ -75,6 +85,7 @@ export const PAVILIONS: Pavilion[] = [
     id: "spatial",
     no: "04",
     headline: "Spatial Experiences",
+    doing: "Projection Mapping & Spatial",
     support: "Projection mapping and immersive rooms — architecture as the screen.",
     services: ["projection-mapping", "immersive-experiences"],
     side: 1,
@@ -88,6 +99,7 @@ export const PAVILIONS: Pavilion[] = [
     id: "show-control",
     no: "05",
     headline: "Show Control & Media Servers",
+    doing: "Show Control & Media Servers",
     support: "VJ, timeline and console operation — cued, previewed, programmed.",
     services: ["show-control-media-server"],
     side: -1,
@@ -101,6 +113,7 @@ export const PAVILIONS: Pavilion[] = [
     id: "live-production",
     no: "06",
     headline: "Live Production & Broadcast",
+    doing: "Live Production & Broadcast",
     support: "Multi-camera, multiview, program and stream — run as one.",
     services: ["live-production", "broadcast-streaming"],
     side: 1,
@@ -114,6 +127,7 @@ export const PAVILIONS: Pavilion[] = [
     id: "connected-events",
     no: "07",
     headline: "One event. Every audience.",
+    doing: "Connected & Hybrid Events",
     support: "Virtual and hybrid — the room and everyone outside it, together.",
     services: ["virtual-events", "hybrid-events"],
     side: -1,
@@ -127,6 +141,7 @@ export const PAVILIONS: Pavilion[] = [
     id: "digital",
     no: "08",
     headline: "Digital experiences beyond the venue",
+    doing: "Digital Experiences",
     support: "Immersive sites, microsites and web applications. Including this one.",
     services: ["web-development"],
     side: 1,
@@ -142,6 +157,7 @@ export const PAVILIONS: Pavilion[] = [
 export const PARTNER_BAY = {
   id: "partner-bay",
   headline: "Sound & Lighting",
+  doing: "Sound & Lighting",
   support: "Delivered with trusted production partners.",
   note: "Specified, coordinated and integrated into the show by us — supplied and operated by specialist partner vendors, not from owned inventory.",
   services: ["professional-sound", "professional-lighting"],

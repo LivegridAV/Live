@@ -63,7 +63,7 @@ export function PavilionPrompt() {
       }}
     >
       <span className="v-prompt-no">
-        {"no" in near ? `Pavilion ${near.no}` : "Partner bay"}
+        {"no" in near ? "We Do" : "With Partners"}
       </span>
       <h2>{near.headline}</h2>
       <div className="v-prompt-act">
@@ -117,7 +117,7 @@ export function PavilionPanel() {
       <div className="v-panel-body" ref={bodyRef}>
         <div className="v-panel-head">
           <span className="v-mono">
-            {"no" in pav ? `Pavilion ${pav.no}` : "Partner bay"}
+            {"no" in pav ? `We Do ${pav.doing}` : `With Partners — ${pav.doing}`}
           </span>
           <button type="button" className="v-btn" onClick={close} ref={closeRef}>
             Close

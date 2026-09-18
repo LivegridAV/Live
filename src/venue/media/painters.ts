@@ -582,11 +582,29 @@ const makeSign =
     ctx.globalAlpha = 0.35 + bar * 0.5;
     ctx.fillRect(0, h * 0.5 - h * 0.006, w * (0.25 + bar * 0.2), h * 0.012);
     ctx.globalAlpha = 1;
-    ctx.font = `700 ${h * 0.22}px ${SANS_OF()}`;
+    // Both lines are fitted rather than clipped. Signs take their copy from
+    // the media descriptor, so a longer line is a content change, not a bug —
+    // and a sign that runs off its own plate is worse than a smaller one.
+    let ts = h * 0.22;
+    ctx.font = `600 ${ts}px ${SANS_OF()}`;
+    while (ctx.measureText(title).width > w * 0.88 && ts > h * 0.1) {
+      ts *= 0.94;
+      ctx.font = `600 ${ts}px ${SANS_OF()}`;
+    }
     ctx.fillStyle = BRIGHT;
     ctx.textBaseline = "alphabetic";
     ctx.fillText(title, w * 0.06, h * 0.46);
-    label(p, sub, w * 0.06, h * 0.58, h * 0.115, accent, 700);
+
+    let ss = h * 0.115;
+    ctx.font = `600 ${ss}px ${MONO_OF()}`;
+    ctx.letterSpacing = `${(ss * 0.09).toFixed(2)}px`;
+    while (ctx.measureText(sub.toUpperCase()).width > w * 0.88 && ss > h * 0.05) {
+      ss *= 0.94;
+      ctx.font = `600 ${ss}px ${MONO_OF()}`;
+      ctx.letterSpacing = `${(ss * 0.09).toFixed(2)}px`;
+    }
+    ctx.letterSpacing = "0px";
+    label(p, sub, w * 0.06, h * 0.58, ss, accent, 600);
   };
 
 const wordmark = (p: PaintCtx) => {
@@ -821,10 +839,10 @@ export const PAINTERS = {
   partnerBay,
   wordmark,
   brandFascia,
-  signServices: makeSign("Services", "Pavilions 01 — 08"),
+  signServices: makeSign("What We Do", "Eight disciplines"),
   signArena: makeSign("Main arena", "This way"),
   signGallery: makeSign("Creative LED", "Gallery"),
-  signWelcome: makeSign("Welcome", "livegridAV"),
+  signWelcome: makeSign("Welcome", "You are entering a livegridAV venue"),
   signFinaleCta: makeSign("Let’s build your next experience", "Talk to livegridAV"),
 } as const;
 

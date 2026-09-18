@@ -77,7 +77,10 @@ export default function Venue() {
             camera={{ fov: 52, near: 0.1, far: 340, position: [0, 2.35, 21] }}
             onCreated={({ gl, scene }) => {
               gl.toneMapping = THREE.ACESFilmicToneMapping;
-              gl.toneMappingExposure = 1.38;
+              // Medium bright: the venue is a dark room with bright things in it, and the
+              // job is to keep it atmospheric without losing the architecture. 1.15
+              // was a black box; anything past ~1.6 flattens the LED into paper.
+              gl.toneMappingExposure = 1.52;
               gl.outputColorSpace = THREE.SRGBColorSpace;
               scene.background = new THREE.Color("#05090a");
             }}

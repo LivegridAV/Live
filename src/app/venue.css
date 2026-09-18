@@ -852,13 +852,21 @@
    ══════════════════════════════════════════════════════════ */
 
 :root {
-  --v-glass-tint: linear-gradient(170deg, rgba(24, 44, 42, 0.56) 0%, rgba(7, 15, 15, 0.68) 62%);
-  --v-glass-blur: blur(18px) saturate(1.35);
-  --v-glass-edge: rgba(156, 216, 208, 0.18);
+  /* Transparency is the point of the material, so the tint is deliberately
+     light — the venue stays visible through every control. What buys back the
+     legibility a thin tint costs is not opacity, it is the *blur*: a heavily
+     blurred backdrop has almost no local contrast, so white text sits on an
+     even field whatever is moving behind it. Text on glass also carries its
+     own shadow (see below), which is what makes this safe over a stage wall
+     running at full output. */
+  --v-glass-tint: linear-gradient(170deg, rgba(22, 42, 40, 0.30) 0%, rgba(6, 13, 13, 0.44) 68%);
+  --v-glass-blur: blur(24px) saturate(1.5);
+  --v-glass-edge: rgba(178, 234, 226, 0.24);
   --v-glass-lift:
-    inset 0 1px 0 rgba(233, 255, 251, 0.10),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.32),
-    0 16px 44px rgba(0, 0, 0, 0.42);
+    inset 0 1px 0 rgba(236, 255, 252, 0.16),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.30),
+    0 18px 46px rgba(0, 0, 0, 0.40);
+  --v-glass-text: 0 1px 2px rgba(2, 8, 8, 0.72), 0 0 14px rgba(2, 8, 8, 0.42);
 }
 
 .v-glass,
@@ -873,6 +881,7 @@
 .v-panel-inner,
 .v-contact-card,
 .v-guide {
+  text-shadow: var(--v-glass-text);
   background: var(--v-glass-tint);
   -webkit-backdrop-filter: var(--v-glass-blur);
   backdrop-filter: var(--v-glass-blur);
@@ -967,3 +976,60 @@
 @media (prefers-reduced-transparency: reduce) {
   :root { --v-glass-blur: none; --v-glass-tint: rgba(6, 13, 13, 0.94); }
 }
+
+
+/* ══════════════════════════════════════════════════════════
+   Type weight and colour
+   ------------------------------------------------------------------
+   Space Grotesk at 700 is a loud face. The venue was setting almost
+   everything at 600-700, which on a dark ground reads as shouting —
+   so the hierarchy is rebuilt out of *size and colour* instead, and
+   the weights come down a step. 500 for body and controls, 600 only
+   where something genuinely leads.
+
+   Colours are raised at the same time: --v-muted was doing double duty
+   as "secondary" and "barely there", and on glass it disappeared.
+   ══════════════════════════════════════════════════════════ */
+
+:root {
+  --v-text: #eef6f4;
+  --v-muted: #b9cbc8;
+  --v-faint: #8fa5a2;
+}
+
+.v-btn { font-weight: 500; letter-spacing: 0.005em; }
+.v-btn--primary { font-weight: 600; text-shadow: none; }
+.v-nav-brand { font-weight: 600; letter-spacing: -0.015em; }
+.v-nav-link { font-weight: 500; letter-spacing: 0.1em; color: var(--v-muted); }
+.v-nav-link:hover,
+.v-nav-link[aria-current="true"] { color: var(--v-text); }
+.v-hud-title { font-weight: 500; letter-spacing: -0.01em; color: var(--v-text); }
+.v-hud-line { color: var(--v-muted); }
+.v-rail-label,
+.v-nav-sheet-label { font-weight: 500; letter-spacing: 0.1em; color: var(--v-muted); }
+.v-prompt h2 { font-weight: 600; }
+.v-mono { color: var(--v-faint); }
+
+/* The primary action is the one element that is NOT glass.
+   It carries dark ink on a bright fill, so inheriting the translucent tint
+   put dark text on a dark panel and the button read as an empty pill — the
+   exact readability failure glass is prone to. One confident opaque element
+   in a translucent system is also what tells the eye where to go. */
+.v-btn--primary {
+  background: var(--v-glow);
+  border-color: var(--v-glow);
+  color: #06100f;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.34);
+}
+.v-btn--primary::before { display: none; }
+.v-btn--primary:hover { color: #06100f; filter: brightness(1.08); }
+.v-btn--primary,
+.v-btn--primary * { text-shadow: none; }
+
+/* Anything that sits on glass and is not itself a glass panel still needs
+   the shadow — the HUD caption is bare type over the live scene. */
+.v-hud-title,
+.v-hud-line,
+.v-hud-zone { text-shadow: var(--v-glass-text); }
