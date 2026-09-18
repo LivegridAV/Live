@@ -17,10 +17,14 @@ import { useVenue } from "../systems/store";
  */
 
 export interface Surface {
-  /** panel size in metres */
+  /** a flat panel, or an arched vault springing from the floor either side */
+  kind?: "plane" | "vault";
+  /** plane: width and height. vault: springing radius and length. */
   size: [number, number];
   position: [number, number, number];
   rotation?: [number, number, number];
+  /** vault only: crown height as a multiple of the radius */
+  rise?: number;
 }
 
 const LAYERS = { low: 4, medium: 7, high: 11 } as const;
@@ -72,16 +76,36 @@ export function ImmersiveVolume({
 
   return (
     <group>
-      {surfaces.map((s, i) => (
-        <mesh
-          key={i}
-          material={material}
-          position={s.position}
-          rotation={s.rotation ?? [0, 0, 0]}
-        >
-          <planeGeometry args={[s.size[0], s.size[1]]} />
-        </mesh>
-      ))}
+      {surfaces.map((s, i) =>
+        s.kind === "vault" ? (
+          /* A half-cylinder lying along Z, scaled vertically into an ellipse.
+             Real immersive tunnels are vaulted rather than boxed, and the
+             difference is not decorative: an arch has no corner for the eye to
+             find, so the room stops having a shape at all. The projection does
+             not care what surface it is drawn on, so the vault costs nothing
+             in continuity. */
+          <mesh
+            key={i}
+            material={material}
+            position={s.position}
+            rotation={s.rotation ?? [Math.PI / 2, 0, 0]}
+            scale={[1, 1, s.rise ?? 1.5]}
+          >
+            <cylinderGeometry
+              args={[s.size[0], s.size[0], s.size[1], 48, 1, true, Math.PI / 2, Math.PI]}
+            />
+          </mesh>
+        ) : (
+          <mesh
+            key={i}
+            material={material}
+            position={s.position}
+            rotation={s.rotation ?? [0, 0, 0]}
+          >
+            <planeGeometry args={[s.size[0], s.size[1]]} />
+          </mesh>
+        ),
+      )}
     </group>
   );
 }

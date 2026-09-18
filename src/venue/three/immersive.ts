@@ -62,6 +62,11 @@ const fragment = /* glsl */ `
   varying vec2 vUv;
 
   float hash11(float p){ p = fract(p * 0.1031); p *= p + 33.33; p *= p + p; return fract(p); }
+  vec2 hash22(vec2 p){
+    vec3 p3 = fract(vec3(p.xyx) * vec3(0.1031, 0.1030, 0.0973));
+    p3 += dot(p3, p3.yzx + 33.33);
+    return fract((p3.xx + p3.yz) * p3.zy);
+  }
   float hash21(vec2 p){
     vec3 p3 = fract(vec3(p.xyx) * 0.1031);
     p3 += dot(p3, p3.yzx + 33.33);
@@ -108,7 +113,7 @@ const fragment = /* glsl */ `
   /* The three content families. Rather than crossfading three separate worlds
      (three times the cost, and it would read as a dissolve) one world morphs:
      its structures go from cut architecture, through poured metal, to light. */
-  vec3 gradeA(float t){ return mix(vec3(0.10,0.14,0.18), vec3(0.66,0.78,0.92), t); }
+  vec3 gradeA(float t){ return mix(vec3(0.06,0.11,0.19), vec3(0.58,0.76,0.98), t); }
   vec3 gradeB(float t){ return mix(vec3(0.19,0.12,0.07), vec3(0.96,0.68,0.37), t); }
   vec3 gradeC(float t){ return mix(vec3(0.05,0.13,0.15), vec3(0.72,0.98,0.95), t); }
 
@@ -116,65 +121,140 @@ const fragment = /* glsl */ `
     return gradeA(t) * w.x + gradeB(t) * w.y + gradeC(t) * w.z;
   }
 
-  /* The virtual corridor's own surfaces.
-     The material is dark and the structure is light. That ordering matters:
-     lighting the material instead would give a white box, which is the single
-     fastest way to make expensive LED look cheap. */
-  vec3 shell(vec3 p, vec3 rd, float axisKind, vec3 w, float fade){
-    // zf runs with the world, so structures travel toward the viewer.
+  /* ── The world, in three bands ──────────────────────────
+     Read from the reference the client supplied: an immersive tunnel does not
+     treat its surfaces equally. Above you it goes quiet and nearly black, so
+     the eye has somewhere to rest; at head height it is dense with structure;
+     and the floor is the brightest, most detailed surface in the room. That
+     ordering is what makes the space feel enormous, and it is worth more than
+     any individual effect. The bands below are the venue's own world built on
+     that principle — not a copy of the reference's artwork. */
+
+  /** Above the structure: stars, a breath of nebula, and very little else. */
+  vec3 skyBand(vec3 p, vec3 w){
+    vec2 q = vec2(p.x, p.z) * 0.055;
+    float stars = 0.0;
+    for (int i = 0; i < 2; i++){
+      float fi = float(i);
+      vec2 g = q * (9.0 + fi * 17.0);
+      vec2 id = floor(g);
+      vec2 f = fract(g) - 0.5;
+      vec2 off = (hash22(id + fi * 31.0) - 0.5) * 0.7;
+      float m = hash21(id + fi * 7.0);
+      float twinkle = 0.55 + 0.45 * sin(uTime * 1.3 + m * 40.0);
+      stars += smoothstep(0.06, 0.0, length(f - off)) * step(0.80, m) * twinkle;
+    }
+    float neb = fbm(q * 2.4 + vec2(uTime * 0.012, 0.0));
+    vec3 col = vec3(0.004, 0.007, 0.012);
+    col += grade(0.5, w) * pow(neb, 2.6) * 0.075;
+    col += vec3(0.86, 0.93, 1.0) * stars * 0.85;
+    return col;
+  }
+
+  /** Head height: a canyon of built form, with light rising behind it. */
+  vec3 wallBand(vec3 p, vec3 w, float fade){
     float zf = p.z - uTime * uFlow;
 
-    // Transverse coordinate: height on the side walls, lateral position on the
-    // floor and ceiling. One expression, so the treatment is identical on all
-    // of them and nothing changes character at a corner.
-    float tr = mix(p.y - uCentreY, p.x, axisKind);
+    // A skyline rather than a grid of blocks: each bay of the wall has its own
+    // height, so the top edge is irregular and the band reads as a city seen
+    // from the street instead of as stacked frames.
+    float bay = floor(zf / 3.0);
+    float bf = fract(zf / 3.0);
+    float top = 2.4 + hash11(bay) * 7.0;
+    float inside = smoothstep(0.05, -0.05, p.y - top);
+    float slot = smoothstep(0.50, 0.44, abs(bf - 0.5));      // gap between bays
 
-    // Architectural ribs receding down the corridor: the strongest perspective
-    // cue there is. Deliberately thin — a rib a hand's width across in world
-    // space, not a glowing slab.
-    float ribPeriod = mix(7.0, 11.0, w.y);
-    float ribs = rule(zf, ribPeriod, 90.0);
-    float fine = rule(zf, ribPeriod * 0.25, 190.0) * 0.45;
+    // Window rows. Sparse and small: a lit window is a highlight, and making
+    // every one of them bright is what turned an earlier version into a wall
+    // of picture frames.
+    float row = floor(p.y / 0.62);
+    float onRow = step(0.58, hash21(vec2(bay, row)));
+    vec2 wf = abs(vec2(fract(zf / 0.44), fract(p.y / 0.62)) - 0.5);
+    float windows = inside * slot * onRow
+      * (1.0 - smoothstep(0.24, 0.36, wf.x))
+      * (1.0 - smoothstep(0.24, 0.36, wf.y));
 
-    // Transverse structure: cut joints in A, flowing bands in B, filaments in C.
-    float bandsA = rule(tr, 2.6, 300.0);
-    // The zf coupling here used to be strong enough to sweep diagonals across
-    // every surface, which read as lens flare rather than as architecture.
-    float bandsB = pow(0.5 + 0.5 * sin(tr * 1.0 + zf * 0.04 + uTime * 0.45), 18.0);
-    float bandsC = pow(0.5 + 0.5 * sin(tr * 0.6 - zf * 0.08), 22.0);
-    float bands = bandsA * w.x + bandsB * w.y + bandsC * w.z;
+    // The lit parapet along the top of each bay.
+    float roofline = inside * slot * (1.0 - smoothstep(0.0, 0.10, top - p.y));
 
-    // A large-scale flow gives the material its body; without it the corridor
-    // is flat colour and reads as a wireframe.
-    float body = fbm(vec2(zf * 0.06 + tr * 0.02, tr * 0.10) + w.y * 3.0);
+    // Plumes of light lifting off the roofline into the sky. This is the
+    // element that stops the vault reading as a lid.
+    float plume = pow(max(0.0, fbm(vec2(zf * 0.15, p.y * 0.18 - uTime * 0.3))), 1.9);
+    plume *= smoothstep(top - 0.5, top + 4.0, p.y) * smoothstep(top + 16.0, top + 3.0, p.y);
 
-    vec3 base = grade(0.06 + body * 0.30, w) * 0.16;
-    // Longitudinal ribs carry the perspective; the transverse rules are a
-    // quieter counterpoint. Weighting them equally turns the vanishing point
-    // into a starburst, which reads as a lens artefact rather than a room.
-    float emitL = ribs + fine + bands * 0.16;
-    vec3 emit = grade(0.95, w) * emitL * 0.8 + uAccent * (ribs * 0.75 + bands * 0.3) * 0.7;
+    // Vary each window: a uniform field of them reads as a pegboard.
+    float wv = hash21(vec2(bay * 3.7, row * 1.9));
+    float lamp = windows * (0.35 + 0.65 * wv);
 
-    vec3 col = base + emit;
-
-    // A real floor reads brighter because you are close to it and it catches
-    // everything; a ceiling falls away.
-    float above = step(0.0, p.y - (uEye.y - uCentre.y));
-    col *= mix(1.0, mix(1.12, 0.80, above), axisKind);
-
+    vec3 col = grade(0.05, w) * 0.08 * inside;
+    col += grade(0.95, w) * lamp * 0.40;
+    col += uAccent * lamp * 0.26;
+    // a minority of windows burn warm, which is what keeps a cold canyon alive
+    col += vec3(0.95, 0.58, 0.26) * lamp * step(0.86, wv) * 0.7;
+    col += grade(1.0, w) * roofline * 0.62;
+    col += mix(grade(0.85, w), uAccent, 0.72) * plume * 0.55;
     return col * fade;
   }
 
-  /* The destination. */
-  vec3 portal(vec3 p, vec3 w){
-    float r = length(vec2(p.x, (p.y - uCentreY) * 1.22));
-    float open = 2.0 + uPhase * 5.2;
-    float core = exp(-r * r / (open * open));
-    float rings = pow(0.5 + 0.5 * sin(r * 1.7 - uTime * 1.1), 14.0) * exp(-r * 0.09);
-    float halo = exp(-r * 0.055);
+  /** The floor: the brightest and most detailed surface in the room. */
+  vec3 terrainBand(vec3 p, vec3 w, float fade){
+    float zf = p.z - uTime * uFlow;
+    vec2 q = vec2(p.x, zf);
 
-    vec3 col = grade(1.0, w) * (core * 1.9 + rings * 0.55 + halo * 0.16);
-    col += uAccent * (core * 0.7 + rings * 0.4) * 0.6;
+    // A city plan seen from far above: dark plots, a bright street grid, and
+    // a scattering of lit blocks. An earlier version used a hex field, which
+    // at this scale alternated light and dark cells and read as a chequerboard
+    // dance floor — the one thing a floor must not look like.
+    vec2 block = floor(q / 2.2);
+    vec2 f = fract(q / 2.2);
+    float sub = 1.0 + floor(hash21(block) * 3.0);
+    vec2 g = f * sub;
+    vec2 plot = floor(g);
+    vec2 sf = fract(g);
+
+    vec2 db = min(f, 1.0 - f);
+    float street = 1.0 - smoothstep(0.010, 0.028, min(db.x, db.y));
+    vec2 dl = min(sf, 1.0 - sf);
+    float lane = (1.0 - smoothstep(0.018, 0.048, min(dl.x, dl.y))) * 0.35;
+    // Not every street is lit the same. A uniform grid reads as graph paper.
+    street *= 0.45 + 0.55 * hash21(block.yx * 2.3);
+
+    // Districts: a slow field deciding which plots are lit and how warmly.
+    float lit = step(0.60, hash21(block * 1.7 + plot * 3.1));
+    float district = smoothstep(0.32, 0.82, fbm(q * 0.05 + 11.0));
+    float glow = lit * district * (0.62 + 0.38 * sin(uTime * 0.8 + hash21(plot + block) * 30.0));
+
+    // The warm interiors are the only warmth in the world besides the portal,
+    // and they are what stop the whole tunnel reading as monochrome.
+    vec3 warm = mix(vec3(0.98, 0.55, 0.22), uAccent, 0.18);
+    vec3 col = vec3(0.005, 0.009, 0.014);
+    col += warm * glow * 0.30;
+    col += grade(0.94, w) * street * 0.70;
+    col += uAccent * street * 0.40;
+    col += grade(0.8, w) * lane * 0.18;
+    return col * fade * 1.1;
+  }
+
+  /* The destination.
+     In the reference this is the only warm element in a cold world, it sits at
+     eye height rather than centred, and it has a defined rim rather than being
+     a soft glow. All three matter: it is what the whole corridor points at. */
+  vec3 portal(vec3 p, vec3 w){
+    vec2 q = vec2(p.x, (p.y - uCentreY) * 1.15);
+    float r = length(q);
+
+    float open = 2.1 + uPhase * 4.6;
+    float core = exp(-pow(r / open, 2.4));
+    // A bright rim right at the aperture edge, warm against everything else.
+    float rim = exp(-pow((r - open) * 1.9, 2.0));
+    float halo = exp(-r * 0.075);
+    float rings = pow(0.5 + 0.5 * sin(r * 1.5 - uTime * 0.9), 16.0) * exp(-r * 0.1);
+
+    vec3 warm = vec3(1.0, 0.52, 0.26);
+    vec3 col = grade(1.0, w) * (core * 1.7 + rings * 0.5 + halo * 0.14);
+    col += warm * rim * 1.5;
+    col += warm * core * 0.45;
+    col += uAccent * (core * 0.5 + rings * 0.35) * 0.55;
     return col;
   }
 
@@ -246,18 +326,21 @@ const fragment = /* glsl */ `
     float tBg = min(min(tX, tY), min(tZ, 900.0));
     vec3 pBg = ro + rd * tBg;
 
+    // Atmospheric depth: the far end dissolves into the destination's colour,
+    // which is what makes the distance readable at all.
+    float fade = exp(-tBg * 0.0075);
+    // Airlight: the far end of the world fills with the destination's colour.
+    vec3 air = grade(1.0, w) * (1.0 - fade) * 0.11;
+
     vec3 bg;
     if (tZ <= tX && tZ <= tY) {
       bg = portal(pBg, w);
+    } else if (tY < tX) {
+      // The sky is the backdrop, so it takes no airlight — adding it there
+      // would lift the one band whose darkness the composition depends on.
+      bg = rd.y > 0.0 ? skyBand(pBg, w) : terrainBand(pBg, w, fade) + air;
     } else {
-      float axisKind = (tY < tX) ? 1.0 : 0.0;
-      // Atmospheric depth: the far end dissolves into the portal's colour,
-      // which is what makes the distance readable at all.
-      float fade = exp(-tBg * 0.0075);
-      bg = shell(pBg, rd, axisKind, w, fade);
-      // Airlight: distance is readable because the far end of the corridor
-      // fills with the destination's own colour.
-      bg += grade(1.0, w) * (1.0 - fade) * 0.10;
+      bg = wallBand(pBg, w, fade) + air;
     }
 
     /* Depth planes, composited front to back. Each is one ray-plane
@@ -299,7 +382,7 @@ const fragment = /* glsl */ `
       emitter = mix(1.0, smoothstep(0.62, 0.24, length(fv)), structure * 0.5);
     }
 
-    col = max(vec3(0.0), col) * 0.72;   // exposure: rich blacks, controlled glow
+    col = max(vec3(0.0), col) * 0.62;   // exposure: rich blacks, controlled glow
     col = col / (1.0 + col * 0.26);
     col *= uBright * uOn * emitter;
     col += vec3(0.004, 0.0075, 0.008) * (1.0 - emitter) * (0.25 + 0.75 * uOn);

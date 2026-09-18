@@ -1,5 +1,6 @@
 "use client";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import * as THREE from "three";
 import { M } from "../three/materials";
 import { ImmersiveVolume, type Surface } from "../three/ImmersiveVolume";
 import { Haze } from "../three/rig";
@@ -9,29 +10,33 @@ import { useVenue } from "../systems/store";
 /**
  * The four-sided immersive LED tunnel — the venue's first signature moment.
  *
- * Left wall, right wall, ceiling and floor are continuous LED, and between
- * them they are the tunnel: the structure is a slim reveal at each end and
- * nothing else. There is deliberately no frame around any panel, no cabinet
- * line, and no gap where two surfaces meet, because the whole effect depends
- * on the visitor being unable to find the edges.
+ * It is a vaulted tunnel, not a box: a flat LED floor with a continuous LED
+ * arch springing from both edges of it. The reference the client supplied is
+ * built the same way, and the reason is not decorative — an arch gives the eye
+ * no corner to find, so the room stops having a shape and the content becomes
+ * the only thing there is. There is deliberately no frame around any panel, no
+ * cabinet line, and no gap where the floor meets the arch.
  *
- * What they are showing is not four videos. It is one virtual canyon that
- * exists in the venue's own coordinates, far wider and far deeper than the
- * room — its floor below the real floor, its ceiling above the real ceiling,
- * and a portal in the distance ahead. Each surface is a window onto it from
- * the visitor's exact eye position (see `three/immersive.ts`), so structures
- * cross from floor to wall to ceiling without a break, and walking forward
- * moves you through the world rather than past a picture of one.
+ * What the surfaces show is not a video. It is one virtual world that exists
+ * in the venue's own coordinates, far wider and far deeper than the room, and
+ * each surface is a window onto it from the visitor's exact eye position (see
+ * `three/immersive.ts`). So structures cross from floor to arch without a
+ * break, and walking forward moves you through the world rather than past a
+ * picture of one.
  */
 
 export const TUNNEL = {
-  width: 5.4,
-  height: 4.2,
+  /** the vault springs from ±RADIUS, so the tunnel is twice this wide */
+  radius: 3.0,
+  /** crown height as a multiple of the radius */
+  rise: 1.55,
   /** entry and exit Z */
   from: -3.4,
   to: -28.4,
 };
 
+const WIDTH = TUNNEL.radius * 2;
+const CROWN = TUNNEL.radius * TUNNEL.rise;
 const DEPTH = Math.abs(TUNNEL.to - TUNNEL.from);
 const MID_Z = (TUNNEL.from + TUNNEL.to) / 2;
 
@@ -44,73 +49,65 @@ function tunnelPhase(camZ: number) {
   return Math.min(1, Math.max(0, (TUNNEL.from - camZ) / DEPTH));
 }
 
-/**
- * The wall the tunnel mouth is cut into. Without it the visitor can see over
- * the top of the tunnel into a 15 m hall from outside the building, which
- * gives the reveal away and makes the architecture read as scenery.
- */
-function Bulkhead({ z, width = 52, height = 15 }: { z: number; width?: number; height?: number }) {
-  const w = TUNNEL.width + 0.5;
-  const h = TUNNEL.height + 0.5;
-  return (
-    <group position={[0, 0, z]}>
-      {[-1, 1].map((side) => (
-        <mesh key={side} position={[side * (w / 2 + (width / 2 - w / 2) / 2), height / 2, 0]} material={M.charcoal}>
-          <boxGeometry args={[width / 2 - w / 2, height, 0.5]} />
-        </mesh>
-      ))}
-      <mesh position={[0, (height + h) / 2, 0]} material={M.charcoal}>
-        <boxGeometry args={[w, height - h, 0.5]} />
-      </mesh>
-    </group>
-  );
+/** The arched profile of the aperture, as a 2D path. */
+function archPath(radius: number, rise: number) {
+  const path = new THREE.Path();
+  path.moveTo(-radius, 0);
+  path.absellipse(0, 0, radius, radius * rise, Math.PI, 0, true, 0);
+  path.lineTo(-radius, 0);
+  return path;
 }
 
-/** A slim machined reveal at the mouth. The only structure the visitor sees. */
+/**
+ * The wall the tunnel mouth is cut into. Without it the visitor can see over
+ * the top of the tunnel into a fifteen-metre hall from outside the building,
+ * which gives the reveal away and makes the architecture read as scenery.
+ *
+ * The opening is a real arch cut out of the wall rather than a rectangle with
+ * an arch inside it — a rectangular opening would leave two triangles of the
+ * hall showing in the corners.
+ */
+function Bulkhead({ z, width = 52, height = 15 }: { z: number; width?: number; height?: number }) {
+  const geometry = useMemo(() => {
+    const shape = new THREE.Shape();
+    shape.moveTo(-width / 2, 0);
+    shape.lineTo(width / 2, 0);
+    shape.lineTo(width / 2, height);
+    shape.lineTo(-width / 2, height);
+    shape.closePath();
+    shape.holes.push(archPath(TUNNEL.radius + 0.22, TUNNEL.rise));
+    return new THREE.ShapeGeometry(shape);
+  }, [width, height]);
+  useEffect(() => () => geometry.dispose(), [geometry]);
+
+  return <mesh geometry={geometry} position={[0, 0, z]} material={M.charcoal} />;
+}
+
+/** A slim machined reveal around the mouth. The only structure the visitor sees. */
 function Threshold({ z }: { z: number }) {
-  const w = TUNNEL.width;
-  const h = TUNNEL.height;
-  return (
-    <group position={[0, 0, z]}>
-      {[-1, 1].map((side) => (
-        <mesh key={side} position={[side * (w / 2 + 0.09), h / 2, 0]} material={M.aluminium}>
-          <boxGeometry args={[0.18, h + 0.36, 0.34]} />
-        </mesh>
-      ))}
-      <mesh position={[0, h + 0.09, 0]} material={M.aluminium}>
-        <boxGeometry args={[w + 0.36, 0.18, 0.34]} />
-      </mesh>
-    </group>
-  );
+  const geometry = useMemo(() => {
+    const outer = new THREE.Shape();
+    const o = archPath(TUNNEL.radius + 0.22, TUNNEL.rise);
+    outer.curves = o.curves;
+    outer.autoClose = true;
+    outer.holes.push(archPath(TUNNEL.radius + 0.04, TUNNEL.rise));
+    return new THREE.ExtrudeGeometry(outer, { depth: 0.3, bevelEnabled: false, curveSegments: 40 });
+  }, []);
+  useEffect(() => () => geometry.dispose(), [geometry]);
+
+  return <mesh geometry={geometry} position={[0, 0, z]} material={M.aluminium} />;
 }
 
 /**
  * The far end of the tunnel, seen from inside it, is a hole cut in the content
  * — and a hole is the one thing the composition cannot afford, because it sits
- * exactly where the eye is being sent. So the exit is lit: a cove around the
- * aperture, a wash on the floor beyond it, and a fixture throwing light back
- * up the tunnel. The visitor walks toward light rather than toward a gap.
+ * exactly where the eye is being sent. So the exit is lit: a wash on the floor
+ * beyond it and a fixture throwing light back up the tunnel, with the vestibule
+ * in `zones/Exhibition` providing the room behind it.
  */
 function ExitReveal() {
-  const w = TUNNEL.width;
-  const h = TUNNEL.height;
-  const z = TUNNEL.to - 0.36;
   return (
     <group>
-      <group position={[0, 0, z]}>
-        {[-1, 1].map((side) => (
-          <mesh key={side} position={[side * (w / 2 + 0.16), h / 2, 0]} rotation={[0, 0, Math.PI / 2]}>
-            <planeGeometry args={[h + 0.3, 0.14]} />
-            <meshBasicMaterial color="#c9b18a" toneMapped />
-          </mesh>
-        ))}
-        <mesh position={[0, h + 0.16, 0]} rotation={[Math.PI / 2, 0, 0]}>
-          <planeGeometry args={[w + 0.3, 0.14]} />
-          <meshBasicMaterial color="#c9b18a" toneMapped />
-        </mesh>
-      </group>
-      {/* the vestibule beyond: warm floor wash and a soffit line, so the
-          aperture opens onto a lit room rather than onto the dark */}
       <LightPool position={[0, 0.05, TUNNEL.to - 6]} size={[16, 14]} color="#b89468" opacity={0.2} pulse={0.25} />
       <mesh position={[0, 5.6, TUNNEL.to - 4.2]} rotation={[Math.PI / 2, 0, 0]}>
         <planeGeometry args={[13, 0.18]} />
@@ -123,26 +120,17 @@ function ExitReveal() {
 
 export function Tunnel() {
   const quality = useVenue((s) => s.quality);
-  const w = TUNNEL.width;
-  const h = TUNNEL.height;
 
   /**
-   * Four surfaces, meeting exactly at the corners. They are placed on the
-   * boundary planes of the aperture rather than inset, so no surface can ever
-   * show its own edge against the next one.
+   * Two surfaces, meeting exactly where the vault springs from the floor.
+   * Everything else the visitor sees in here is content.
    */
   const surfaces = useMemo<Surface[]>(
     () => [
-      // left wall, facing +X
-      { size: [DEPTH, h], position: [-w / 2, h / 2, MID_Z], rotation: [0, Math.PI / 2, 0] },
-      // right wall, facing -X
-      { size: [DEPTH, h], position: [w / 2, h / 2, MID_Z], rotation: [0, -Math.PI / 2, 0] },
-      // ceiling, facing down
-      { size: [w, DEPTH], position: [0, h, MID_Z], rotation: [Math.PI / 2, 0, 0] },
-      // floor, facing up
-      { size: [w, DEPTH], position: [0, 0.015, MID_Z], rotation: [-Math.PI / 2, 0, 0] },
+      { kind: "vault", size: [TUNNEL.radius, DEPTH], position: [0, 0, MID_Z], rise: TUNNEL.rise },
+      { size: [WIDTH, DEPTH], position: [0, 0.012, MID_Z], rotation: [-Math.PI / 2, 0, 0] },
     ],
-    [w, h],
+    [],
   );
 
   return (
@@ -150,15 +138,13 @@ export function Tunnel() {
       <Bulkhead z={TUNNEL.from} />
       <Bulkhead z={TUNNEL.to} />
 
-      {/* the structural shell the panels are built into, entirely outside the
-          aperture — from inside the tunnel none of it is visible */}
-      {[-1, 1].map((side) => (
-        <mesh key={`sh${side}`} position={[side * (w / 2 + 0.3), h / 2, MID_Z]} material={M.charcoal}>
-          <boxGeometry args={[0.56, h + 1.1, DEPTH + 0.4]} />
-        </mesh>
-      ))}
-      <mesh position={[0, h + 0.3, MID_Z]} material={M.charcoal}>
-        <boxGeometry args={[w + 1.1, 0.56, DEPTH + 0.4]} />
+      {/* The structural shell the vault is built into, entirely outside the
+          aperture — from inside the tunnel none of it is visible. */}
+      <mesh position={[0, 0, MID_Z]} rotation={[Math.PI / 2, 0, 0]} scale={[1, 1, TUNNEL.rise]}>
+        <cylinderGeometry
+          args={[TUNNEL.radius + 0.4, TUNNEL.radius + 0.4, DEPTH + 0.3, 40, 1, true, Math.PI / 2, Math.PI]}
+        />
+        <meshStandardMaterial color="#0b0f10" roughness={0.8} metalness={0.12} side={THREE.DoubleSide} />
       </mesh>
 
       {/* ── the environment ── */}
@@ -168,11 +154,13 @@ export function Tunnel() {
         brightness={1.06}
         accent="#63d9cc"
         flow={6.5}
-        /* The virtual canyon: three times the width of the room it is shown in,
-           its floor two and a half metres below the one being walked on. */
-        boxMin={[-8.6, -2.6, -400]}
-        boxMax={[8.6, 11.5, 40]}
-        centreY={2.1}
+        doubleSided
+        /* The virtual world: three times the width of the room it is shown in,
+           with a sky thirty metres up so the arch opens onto something rather
+           than closing over. */
+        boxMin={[-9.5, -0.5, -400]}
+        boxMax={[9.5, 34, 40]}
+        centreY={1.9}
         phase={tunnelPhase}
         /* The destination advances with the visitor and then settles, so the
            portal grows as the exit approaches instead of staying a backdrop. */
@@ -181,31 +169,31 @@ export function Tunnel() {
 
       {/* protective glass deck over the floor LED — the floor is walked on */}
       <mesh position={[0, 0.05, MID_Z]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={2}>
-        <planeGeometry args={[w, DEPTH]} />
+        <planeGeometry args={[WIDTH, DEPTH]} />
         <meshPhysicalMaterial
           color="#0a1012"
           roughness={0.05}
           metalness={0}
           transparent
-          opacity={0.1}
+          opacity={0.08}
           depthWrite={false}
         />
       </mesh>
 
-      <Threshold z={TUNNEL.from + 0.06} />
-      <Threshold z={TUNNEL.to - 0.06} />
+      <Threshold z={TUNNEL.from + 0.02} />
+      <Threshold z={TUNNEL.to - 0.32} />
       <ExitReveal />
 
-      {/* the tunnel's own atmosphere — light leaving the walls needs something
-          to land on, and it is what stops the air reading as vacuum */}
+      {/* the tunnel's own atmosphere — light leaving the surfaces needs
+          something to land on, and it is what stops the air reading as vacuum */}
       {quality !== "low" && (
         <Haze
           count={8}
-          area={[3.6, 2.8, DEPTH * 0.85]}
-          position={[0, h * 0.55, MID_Z]}
+          area={[4.0, 3.0, DEPTH * 0.85]}
+          position={[0, CROWN * 0.5, MID_Z]}
           color="#9fc8c4"
           opacity={0.014}
-          scale={3.6}
+          scale={3.8}
           seed={3}
         />
       )}
