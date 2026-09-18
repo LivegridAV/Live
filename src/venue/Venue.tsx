@@ -77,7 +77,7 @@ export default function Venue() {
             camera={{ fov: 52, near: 0.1, far: 340, position: [0, 2.35, 21] }}
             onCreated={({ gl, scene }) => {
               gl.toneMapping = THREE.ACESFilmicToneMapping;
-              gl.toneMappingExposure = 1.15;
+              gl.toneMappingExposure = 1.38;
               gl.outputColorSpace = THREE.SRGBColorSpace;
               scene.background = new THREE.Color("#05090a");
             }}

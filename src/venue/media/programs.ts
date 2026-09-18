@@ -738,7 +738,7 @@ const corporatePremium = wrap(/* glsl */ `
     float rake = exp(-pow((p.x - sin(uTime * 0.16) * 1.6) * 0.85, 2.0));
     col *= 0.9 + 0.45 * rake;
 
-    gl_FragColor = vec4(tone(col * 1.95), 1.0);
+    gl_FragColor = vec4(tone(col * 1.68), 1.0);
   }
 `);
 

@@ -203,31 +203,44 @@ function EntranceArch() {
         </group>
       ))}
 
-      {/* Banding across the arch face. A nineteen-metre unbroken slab of dark
+      {/* Banding on the arch face. A nineteen-metre unbroken slab of dark
           material reads as a hole in the night however well the sign on it is
-          lit; three shallow reveals give the mass a scale and something for the
-          uplighting to catch. */}
-      {[2.2, 5.6, 9.2].map((y) => (
-        <group key={`band${y}`}>
-          <mesh position={[0, y, ARCH.faceZ + 0.06]} material={M.charcoal}>
-            <boxGeometry args={[18.4, 0.22, 0.14]} />
+          lit; shallow reveals give the mass a scale and something for the
+          uplighting to catch.
+
+          They run in two pieces, one either side of the opening, and stop
+          clear of it. Drawn full width they crossed the aperture instead —
+          two bars straight through the archway and a third through the sign,
+          with the plinth laying a fourth across the threshold like something
+          you would trip over. A reveal is cut into a face; it cannot run
+          through the hole in the middle of one. */}
+      {[2.2, 4.6].map((y) =>
+        [-1, 1].map((side) => (
+          <group key={`band${y}${side}`} position={[side * 7.5, y, 0]}>
+            <mesh position={[0, 0, ARCH.faceZ + 0.06]} material={M.charcoal}>
+              <boxGeometry args={[4.0, 0.22, 0.14]} />
+            </mesh>
+            <mesh position={[0, -0.13, ARCH.faceZ + 0.14]}>
+              <planeGeometry args={[3.85, 0.035]} />
+              <meshBasicMaterial color="#4e6a6c" toneMapped />
+            </mesh>
+          </group>
+        )),
+      )}
+
+      {/* the lit plinth, in the same two pieces, so the mass sits on the
+          ground rather than floating out of it */}
+      {[-1, 1].map((side) => (
+        <group key={`plinth${side}`} position={[side * 7.5, 0, 0]}>
+          <mesh position={[0, 0.16, ARCH.faceZ + 0.12]} material={M.anodised}>
+            <boxGeometry args={[4.0, 0.32, 0.3]} />
           </mesh>
-          <mesh position={[0, y - 0.13, ARCH.faceZ + 0.14]}>
-            <planeGeometry args={[18.2, 0.035]} />
-            <meshBasicMaterial color="#4e6a6c" toneMapped />
+          <mesh position={[0, 0.35, ARCH.faceZ + 0.2]}>
+            <planeGeometry args={[3.85, 0.05]} />
+            <meshBasicMaterial color="#c2975d" toneMapped />
           </mesh>
         </group>
       ))}
-
-      {/* a lit plinth reveal along the foot of the arch, so the mass sits on
-          the ground rather than floating out of it */}
-      <mesh position={[0, 0.16, ARCH.faceZ + 0.12]} material={M.anodised}>
-        <boxGeometry args={[19, 0.32, 0.3]} />
-      </mesh>
-      <mesh position={[0, 0.35, ARCH.faceZ + 0.2]}>
-        <planeGeometry args={[18.6, 0.05]} />
-        <meshBasicMaterial color="#c2975d" toneMapped />
-      </mesh>
 
       {/* the graze up the face from the plaza, and the light the arch throws
           onto the apron in front of it */}
@@ -350,9 +363,11 @@ export function Arrival() {
         </mesh>
         {/* canopy underside light line */}
         <mesh position={[0, FACADE_H * 0.62 - 0.29, 3.2]} rotation={[Math.PI / 2, 0, 0]}>
-          <planeGeometry args={[FACADE_W * 0.5, 0.16]} />
-          <meshBasicMaterial color="#6e5a3a" toneMapped />
+          <planeGeometry args={[FACADE_W * 0.56, 0.24]} />
+          <meshBasicMaterial color="#c0a06a" toneMapped />
         </mesh>
+        {/* what the canopy throws down onto the forecourt */}
+        <LightPool position={[0, 0.03, 3.2]} size={[FACADE_W * 0.6, 12]} color="#96784c" opacity={0.13} />
 
         {/* Vertical façade fins, each with a light line washing the wall
             behind it. A building at night is legible because of how it is lit,
@@ -367,34 +382,64 @@ export function Arrival() {
                 <boxGeometry args={[0.35, FACADE_H - 0.6, 0.7]} />
               </mesh>
               <mesh position={[x, FACADE_H / 2 - 0.6, 0.72]}>
-                <planeGeometry args={[0.07, FACADE_H - 3.2]} />
-                <meshBasicMaterial color="#5c7f84" toneMapped />
+                <planeGeometry args={[0.1, FACADE_H - 3.2]} />
+                <meshBasicMaterial color="#8fbdc0" toneMapped />
               </mesh>
               {/* an uplight at the base, grazing the wall */}
               <mesh position={[x, 0.08, 1.3]} rotation={[-Math.PI / 2, 0, 0]}>
-                <planeGeometry args={[0.5, 0.18]} />
-                <meshBasicMaterial color="#b89a66" toneMapped />
+                <planeGeometry args={[0.8, 0.26]} />
+                <meshBasicMaterial color="#e0bd85" toneMapped />
               </mesh>
+              {/* The graze itself. A camera-ridden point light is twenty-four
+                  metres from this elevation with a decay of two, which is to
+                  say it contributes nothing — a forty-six metre facade has to
+                  light itself or it is a black rectangle with a sign on it. */}
               <LightPool
-                position={[x, FACADE_H * 0.42, 0.78]}
+                position={[x, FACADE_H * 0.4, 0.8]}
                 rotation={[0, 0, 0]}
-                size={[3.4, FACADE_H * 0.9]}
-                color="#8f9e8a"
-                opacity={0.09}
+                size={[4.2, FACADE_H * 1.05]}
+                color="#9a8a68"
+                opacity={0.19}
               />
+              <LightPool position={[x, 0.04, 2.4]} size={[5, 6]} color="#a8834f" opacity={0.12} />
             </group>
           );
         })}
 
         {/* a continuous cove along the top of the elevation */}
         <mesh position={[0, FACADE_H - 0.5, 0.55]}>
-          <planeGeometry args={[FACADE_W - 1.2, 0.12]} />
-          <meshBasicMaterial color="#7c8f94" toneMapped />
+          <planeGeometry args={[FACADE_W - 1.2, 0.18]} />
+          <meshBasicMaterial color="#b6ccd0" toneMapped />
+        </mesh>
+        {/* the wash falling from that cove down the top of the elevation */}
+        <LightPool
+          position={[0, FACADE_H - 3.4, 0.6]}
+          rotation={[0, 0, 0]}
+          size={[FACADE_W - 2, 7]}
+          color="#6f8288"
+          opacity={0.13}
+        />
+        {/* and a low band along the foot of the whole elevation, so the
+            building meets the ground somewhere the eye can find */}
+        <mesh position={[0, 0.5, 0.58]}>
+          <planeGeometry args={[FACADE_W - 1.2, 0.07]} />
+          <meshBasicMaterial color="#5f7d74" toneMapped />
         </mesh>
       </group>
 
       <EntranceArch />
-      <LightPool position={[0, 0.03, 6]} size={[18, 14]} color="#4f9a92" opacity={0.08} pulse={0.4} />
+      <LightPool position={[0, 0.03, 6]} size={[20, 16]} color="#4f9a92" opacity={0.12} pulse={0.4} />
+      {/* approach lighting out across the plaza — without it the visitor
+          starts the walkthrough standing in an unlit car park */}
+      {[10, 18, 27].map((z, i) => (
+        <LightPool
+          key={`ap${z}`}
+          position={[0, 0.025, z]}
+          size={[26 + i * 6, 12]}
+          color="#7d6a4a"
+          opacity={0.1 - i * 0.02}
+        />
+      ))}
 
       {/* wayfinding sign beside the entrance */}
       <Screen

@@ -95,7 +95,10 @@ export const MEDIA: Record<string, MediaDesc> = {
 
   /* ── Creative LED gallery ─────────────────────────────── */
   "pillar-flow": { kind: "shader", program: "volumetric", accent: ACCENT.teal, variant: 0.1, res: [320, 768], fps: 30 },
-  "pillar-metal": { kind: "shader", program: "liquidMetal", accent: ACCENT.copper, variant: 0.6, res: [320, 768], fps: 30 },
+  // A horizontal grain motif on a vertical column resolves into stacked
+  // light and dark bands — zebra, not metal. A column wants depth, so it
+  // gets the raymarched structure instead.
+  "pillar-metal": { kind: "shader", program: "architecture", accent: ACCENT.copper, variant: 0.6, res: [320, 768], fps: 30 },
   "blade-rain": { kind: "shader", program: "pixelRain", accent: ACCENT.brand, variant: 0.8, res: [512, 448], fps: 30 },
   "cylinder-ribbon": { kind: "shader", program: "plasmaRibbon", accent: ACCENT.amber, res: [1024, 384], fps: 30 },
   "ring-waves": { kind: "shader", program: "spatialWaves", accent: ACCENT.teal, res: [1536, 192], fps: 30 },
@@ -154,7 +157,7 @@ export const MEDIA: Record<string, MediaDesc> = {
   // The totems pass within a few metres of the camera, so whatever they play
   // is inspected at close range. A matrix motif reads as a dot grid there,
   // which is the one impression a fine-pitch venue cannot give.
-  "approach-pillar": { kind: "shader", program: "liquidMetal", accent: ACCENT.brand, variant: 0.18, res: [256, 768], fps: 30 },
+  "approach-pillar": { kind: "shader", program: "architecture", accent: ACCENT.brand, variant: 0.18, res: [256, 768], fps: 30 },
   "approach-portrait": { kind: "shader", program: "pixelRain", accent: ACCENT.amber, variant: 0.15, res: [192, 512], fps: 30 },
 
   /* ── Main stage: the mode switch lives here ───────────── */
