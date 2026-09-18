@@ -1253,9 +1253,9 @@ const chromeFlow = wrap(/* glsl */ `
     float spec = 0.0;
     float rim = 0.0;
 
-    for (int i = 0; i < 6; i++){
+    for (int i = 0; i < 8; i++){
       float fi = float(i);
-      float depth = 1.0 + fi * 0.42;
+      float depth = 1.0 + fi * 0.38;
       vec2 q = p / depth;
       q *= rot(sin(t * 0.3 + fi) * 0.45 + fi * 0.5);
 
@@ -1264,17 +1264,25 @@ const chromeFlow = wrap(/* glsl */ `
         + sin(q.x * (2.3 - fi * 0.15) - t * 1.35) * 0.15
         + fbm(vec2(q.x * 0.6 + t * 0.2, fi * 4.0)) * 0.5 - 0.25;
 
-      float w = 0.10 + 0.07 * sin(t * 0.8 + fi * 1.7);
+      float w = 0.075 + 0.05 * sin(t * 0.8 + fi * 1.7);
       float d = (q.y - wave) / max(w, 1e-4);
       float band = smoothstep(1.0, 0.0, abs(d));
       float n = sqrt(max(0.0, 1.0 - min(1.0, d * d)));
 
-      spec += band * pow(n, 30.0) / depth;
+      /* A brushed grain running along the ribbon.
+         Without it these are perfectly smooth tubes, and a perfectly smooth
+         tube has no detail to resolve — so on the cylinder, which the camera
+         passes within a few metres of, the content read as soft whatever
+         resolution it was rendered at. Sharpness is high-frequency *content*,
+         not pixels. */
+      float brush = 0.82 + 0.34 * noise(vec2(q.x * 9.0 + fi * 13.0, d * 2.2));
+
+      spec += band * pow(n, 44.0) * brush / depth;
       rim  += band * pow(1.0 - n, 3.0) * 0.6 / depth;
       vec3 tint = mix(uAccent,
         pal(fi * 0.15 + q.x * 0.06 + t * 0.05,
             vec3(0.5), vec3(0.5), vec3(1.0), vec3(0.0, 0.30, 0.62)), 0.5);
-      sheen += tint * band * n * 0.5 / depth;
+      sheen += tint * band * n * brush * 0.55 / depth;
     }
 
     // motes carried along in the flow
@@ -1285,7 +1293,7 @@ const chromeFlow = wrap(/* glsl */ `
 
     vec3 col = vec3(0.004, 0.006, 0.010);
     col += sheen * 1.10;
-    col += vec3(1.0, 0.98, 0.94) * spec * 1.05;
+    col += vec3(1.0, 0.98, 0.94) * spec * 1.25;
     col += mix(uAccent, vec3(1.0), 0.3) * rim * 0.45;
     col += mix(uAccent, vec3(1.0), 0.6) * mote * 0.55;
     gl_FragColor = vec4(tone(col * 1.08), 1.0);

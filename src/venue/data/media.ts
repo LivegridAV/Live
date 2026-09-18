@@ -181,26 +181,33 @@ export const MEDIA: Record<string, MediaDesc> = {
   // ribbons genuinely travel around the corners instead of restarting on
   // every face. The render is wide (1024) and tall (1024) because it is
   // carrying four faces' worth of image, not one.
+  /* 704 x 1024 is not arbitrary: the unwrapped strip is the column's
+     perimeter (~4.4 m) by its height (~7 m), so a square target spent a third
+     of its pixels on an aspect the surface does not have. 22 fps because the
+     motion is slow — a ribbon crossing a corner does not need 30. */
   "pillar-flow": {
     kind: "shader", program: "pillarWrap", accent: ACCENT.ice, variant: 0.1,
-    res: [1024, 1024], fps: 30, syncGroup: "pillars",
+    res: [704, 1024], fps: 22, syncGroup: "pillars",
   },
   "pillar-metal": {
     kind: "shader", program: "pillarWrap", accent: ACCENT.gold, variant: 0.62,
-    res: [1024, 1024], fps: 30, syncGroup: "pillars",
+    res: [704, 1024], fps: 22, syncGroup: "pillars",
   },
   // The blade array is one composition cut across six panels, so it is one
   // clock: six panels each running their own copy would shear the image.
   "blade-rain": { kind: "shader", program: "chromeFlow", accent: ACCENT.indigo, variant: 0.8, res: [1024, 512], fps: 30, syncGroup: "blades" },
-  // A full 360 degree wrap. `chromeFlow` is horizontally continuous enough to
-  // carry it, and a cylinder is the one product where the eye can check.
-  "cylinder-ribbon": { kind: "shader", program: "chromeFlow", accent: ACCENT.gold, res: [1280, 448], fps: 30, syncGroup: "cylinder" },
+  /* A full 360 degree wrap, and the surface the camera passes closest to —
+     inside two metres, where a 13.8 m circumference at 1280 px is only ~90
+     texels per metre and the content goes soft. Texel density has to be set
+     by the closest approach, not by the object's size on screen from the
+     aisle. */
+  "cylinder-ribbon": { kind: "shader", program: "chromeFlow", accent: ACCENT.gold, res: [2048, 704], fps: 24, syncGroup: "cylinder" },
   // Continuous angular content on a 34 m circumference, 1.5 m tall.
   "ring-waves": { kind: "shader", program: "chromeFlow", accent: ACCENT.ice, res: [2048, 256], fps: 30, syncGroup: "ring" },
   // The fascia is a metre from the camera and its own header calls it
   // fine pitch. A matrix motif here contradicts the product in the same frame.
-  "bar-brand": { kind: "shader", program: "chromeFlow", accent: ACCENT.magenta, variant: 0.45, res: [1280, 192], fps: 30, syncGroup: "bar" },
-  "curve-natural": { kind: "shader", program: "auroraSilk", accent: ACCENT.lime, res: [896, 512], fps: 24, syncGroup: "curved" },
+  "bar-brand": { kind: "shader", program: "chromeFlow", accent: ACCENT.magenta, variant: 0.45, res: [1792, 256], fps: 30, syncGroup: "bar" },
+  "curve-natural": { kind: "shader", program: "auroraSilk", accent: ACCENT.lime, res: [1280, 704], fps: 24, syncGroup: "curved" },
   // A flat slab field was reading as grey card. A lattice running into depth
   // gives the cut silhouette something worth being cut around.
   "mosaic-arch": { kind: "shader", program: "portalDepth", accent: ACCENT.indigo, res: [768, 576], fps: 24, syncGroup: "mosaic" },
@@ -254,7 +261,7 @@ export const MEDIA: Record<string, MediaDesc> = {
   // The totems pass within a few metres of the camera, so whatever they play
   // is inspected at close range. A matrix motif reads as a dot grid there,
   // which is the one impression a fine-pitch venue cannot give.
-  "approach-pillar": { kind: "shader", program: "pillarWrap", accent: ACCENT.gold, variant: 0.18, res: [1024, 896], fps: 30, syncGroup: "approach" },
+  "approach-pillar": { kind: "shader", program: "pillarWrap", accent: ACCENT.gold, variant: 0.18, res: [768, 896], fps: 22, syncGroup: "approach" },
   "approach-portrait": { kind: "shader", program: "chromeFlow", accent: ACCENT.amber, variant: 0.15, res: [320, 640], fps: 30, syncGroup: "approach" },
 
   /* ── Main stage: the mode switch lives here ───────────── */
@@ -375,6 +382,14 @@ for (const [p, sub] of [
   ...PAVILIONS.map((p) => [p, `We Do ${p.doing}`] as const),
   [PARTNER_BAY, "With our partners"] as const,
 ]) {
+  const lines = p.services
+    .map((slug) => SERVICES.find((x) => x.slug === slug)?.title ?? slug)
+    // Some pavilions are named after their single service — "AV Engineering" is
+    // the headline, the discipline and the service — so without this the kiosk
+    // printed the same three words three times, as a heading, a subtitle and a
+    // list of one.
+    .filter((t) => t.toLowerCase() !== p.headline.toLowerCase());
+
   MEDIA[`kiosk-${p.id}`] = {
     kind: "canvas",
     painter: "kioskInfo",
@@ -383,8 +398,8 @@ for (const [p, sub] of [
     fps: 6,
     text: {
       title: p.headline,
-      sub,
-      lines: p.services.map((slug) => SERVICES.find((x) => x.slug === slug)?.title ?? slug),
+      sub: sub.toLowerCase() === `we do ${p.headline}`.toLowerCase() ? "We Do" : sub,
+      lines,
     },
   };
 }

@@ -61,8 +61,15 @@ export const KEYFRAMES: Keyframe[] = [
   { p: 0.392, pos: [-4.0, 2.15, -54.5], look: [3.2, 3.2, -59], fov: 52 },
   { p: 0.41, pos: [1.2, 2.05, -57.5], look: [8.6, 3.0, -60.5], fov: 50 },
   { p: 0.428, pos: [5.2, 2.0, -61.5], look: [9.8, 2.6, -66], fov: 52 },
-  { p: 0.446, pos: [6.7, 2.1, -66], look: [8.9, 3.1, -70.5], fov: 50 },
-  { p: 0.462, pos: [5.7, 2.25, -71.6], look: [9.4, 3.2, -69.8], fov: 55 },
+  /* The close pass on the cylinder.
+     These two sit about two metres off its surface, which is the point — but at
+     that distance a 13.8 m circumference rendered at 1280 px is ~90 texels per
+     metre and the content goes soft, so the media manifest sizes this surface
+     from its *closest approach* rather than from how big it is on screen from
+     the aisle. Widening the lens at 0.446 keeps some room in the frame; pulling
+     the camera back instead put it a metre from the blades stand's backdrop. */
+  { p: 0.446, pos: [2.0, 2.3, -66.9], look: [8.6, 3.0, -70.2], fov: 54 },
+  { p: 0.462, pos: [3.4, 2.3, -74.4], look: [8.8, 3.1, -70.2], fov: 54 },
   { p: 0.48, pos: [1.4, 2.4, -75], look: [-3.2, 6.0, -78], fov: 56 },
   { p: 0.496, pos: [-3.2, 2.5, -78.6], look: [-3.2, 7.6, -80.2], fov: 62 },
   { p: 0.512, pos: [-4.2, 2.1, -82], look: [-9.6, 2.3, -85], fov: 50 },

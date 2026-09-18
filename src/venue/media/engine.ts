@@ -51,7 +51,16 @@ interface VideoEntry extends BaseEntry {
 
 type Entry = ShaderEntry | CanvasEntry | VideoEntry;
 
-const QUALITY_SCALE: Record<QualityTier, number> = { low: 0.6, medium: 0.85, high: 1.25 };
+/**
+ * Quality scale.
+ *
+ * `high` was 1.25, which quietly multiplied every declared resolution by a
+ * quarter again — so a surface written down as 1024×1024 in the manifest was
+ * actually rendering 1280×1280, and nobody reading the manifest could tell.
+ * A manifest that does not mean what it says is not a manifest. High now
+ * renders exactly what is asked for, and the lower tiers scale down from it.
+ */
+const QUALITY_SCALE: Record<QualityTier, number> = { low: 0.55, medium: 0.8, high: 1.0 };
 
 /**
  * How every media texture is sampled.
@@ -75,7 +84,22 @@ function tuneSampling(t: THREE.Texture, maxAnisotropy: number, mip = true) {
   t.generateMipmaps = mip;
   t.anisotropy = Math.min(8, maxAnisotropy);
 }
-const FRAME_BUDGET: Record<QualityTier, number> = { low: 3, medium: 6, high: 10 };
+/**
+ * The per-frame refresh budget, in megapixels.
+ *
+ * This used to be a *count* of entries, which assumed every media entry costs
+ * about the same. They do not: a 384×96 pavilion sign and a 2048×704 cylinder
+ * wrap differ by a factor of forty, and a budget of "ten entries" happily
+ * spent twenty million pixel-shader invocations in a single frame if the ten
+ * that came due happened to be the big ones. Standing in the pillar cluster —
+ * two 1024×1024 totem renders, in one sync group, therefore always due on the
+ * same frame — that is exactly what happened, and the frame rate went to 17.
+ *
+ * Budgeting by area makes the cost of a decision visible at the point the
+ * decision is made: raising a surface's resolution now spends a proportionate
+ * share of the frame rather than the same share as a sign.
+ */
+const FRAME_BUDGET_MP: Record<QualityTier, number> = { low: 0.9, medium: 1.8, high: 3.4 };
 /** Idle media still refreshes this often so it never looks frozen on return. */
 const IDLE_INTERVAL = 0.5;
 
@@ -344,7 +368,7 @@ export class MediaEngine {
    */
   update(dt: number) {
     this.elapsed += dt;
-    const budget = FRAME_BUDGET[this.quality];
+    const budget = FRAME_BUDGET_MP[this.quality] * 1e6;
 
     /* Groups refresh together. If one panel of a blade array is on camera and
        its neighbour is at a grazing angle, they must still be repainted on the
@@ -380,17 +404,30 @@ export class MediaEngine {
 
     const prevTarget = this.renderer.getRenderTarget();
     let spent = 0;
+    let painted = 0;
     for (const e of due) {
-      if (spent >= budget && e.importance < 0.99) break;
+      const cost = this.costOf(e);
+      // The most important entry always refreshes, whatever it costs —
+      // otherwise a single surface larger than the whole budget would never
+      // update at all, which is worse than a dropped frame.
+      if (painted > 0 && spent + cost > budget) continue;
       if (e.kind === "shader") this.renderShader(e);
       else if (e.kind === "canvas") this.paintCanvas(e);
       e.since = 0;
-      spent++;
+      spent += cost;
+      painted++;
     }
     if (this.renderer.getRenderTarget() !== prevTarget) this.renderer.setRenderTarget(prevTarget);
 
     // Importance decays each frame; consumers re-assert it.
     for (const e of this.entries.values()) e.importance = 0;
+  }
+
+  /** What refreshing this entry costs, in pixels. */
+  private costOf(e: Entry) {
+    if (e.kind === "shader") return e.rt.width * e.rt.height;
+    if (e.kind === "canvas") return e.canvas.width * e.canvas.height * 0.6; // CPU, but cheaper per pixel
+    return 0;
   }
 
   private renderShader(e: ShaderEntry) {

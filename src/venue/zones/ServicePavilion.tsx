@@ -607,7 +607,7 @@ export function ServicePavilion({ p }: { p: Pavilion }) {
         rotation={[0, 0, 0]}
         size={[W * 1.25, H * 1.6]}
         color={p.accent}
-        opacity={0.34}
+        opacity={0.24}
         pulse={0.3}
       />
       {/* a graze down the back wall and a pool on the deck */}
@@ -615,11 +615,11 @@ export function ServicePavilion({ p }: { p: Pavilion }) {
         <planeGeometry args={[W - 0.8, 0.08]} />
         <meshBasicMaterial color={p.accent} toneMapped />
       </mesh>
-      <LightPool position={[0, 0.16, -2.4]} size={[W * 0.95, 7]} color={p.accent} opacity={0.2} />
+      <LightPool position={[0, 0.16, -2.4]} size={[W * 0.95, 7]} color={p.accent} opacity={0.16} />
       {/* A second, warm pool over the whole deck. The accent pool alone left
           the stall floor reading as a hole in the aisle: an accent lights an
           *object*, and a floor needs a key. */}
-      <LightPool position={[0, 0.155, -1.8]} size={[W * 1.02, 8.4]} color="#b89464" opacity={0.17} />
+      <LightPool position={[0, 0.155, -1.8]} size={[W * 1.02, 8.4]} color="#b89464" opacity={0.11} />
 
       {/* ── stall lighting ──
           A pavilion is a room inside a room, and the hall's own ceiling is
@@ -636,7 +636,7 @@ export function ServicePavilion({ p }: { p: Pavilion }) {
             <planeGeometry args={[1.6, 0.38]} />
             <meshBasicMaterial color="#f6d5a4" toneMapped />
           </mesh>
-          <LightPool position={[f * W * 0.32, 0.17, -2.1]} size={[5.4, 6.4]} color="#b58d57" opacity={0.16} />
+          <LightPool position={[f * W * 0.32, 0.17, -2.1]} size={[5.4, 6.4]} color="#b58d57" opacity={0.11} />
         </group>
       ))}
       {/* the valance over the opening, and the light it throws forward */}
@@ -762,7 +762,7 @@ export function ServicePavilion({ p }: { p: Pavilion }) {
           look bright — so without this the counter, the glass and the planting
           were all silhouettes. One is the budget: eight stalls on a forward
           renderer is eight more lights in every material in view. */}
-      <pointLight position={[0, 3.6, -1.6]} intensity={22} distance={12} decay={2} color="#e0be8e" />
+      <pointLight position={[0, 3.4, -1.4]} intensity={12} distance={10} decay={2} color="#e0be8e" />
 
       <Form p={p} />
 

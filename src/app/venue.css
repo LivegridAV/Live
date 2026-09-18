@@ -906,6 +906,21 @@
   position: relative;
   isolation: isolate;
 }
+
+/* The sheen needs its host to be a positioned element, so the rule above sets
+   `position: relative` on every glass control. It is declared later in the
+   file than the components themselves, at equal specificity, so it also
+   *overrides* any component that positioned itself — which is how the mobile
+   menu's Close button lost its `position: absolute`, fell back into the grid
+   as a full-width row, and landed on top of the "In the venue" heading.
+
+   `absolute` establishes a containing block just as well as `relative` does,
+   so the sheen is unaffected. These are re-asserted here rather than at their
+   own declarations so that the exception lives next to the rule that caused
+   it: anything added to the list above needs checking against this one. */
+.v-nav-sheet-close {
+  position: absolute;
+}
 .v-btn::before,
 .v-nav-brand::before,
 .v-nav-links::before,
