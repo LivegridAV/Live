@@ -130,109 +130,130 @@ const fragment = /* glsl */ `
      any individual effect. The bands below are the venue's own world built on
      that principle — not a copy of the reference's artwork. */
 
-  /** Above the structure: stars, a breath of nebula, and very little else. */
+  /* ── stars ──────────────────────────────────────────────
+     One helper, used at several densities and cut-offs so the field has
+     magnitude classes rather than one uniform sprinkle of identical dots.
+     'cut' is the fraction of cells left empty; what survives is graded by how
+     far past the cut it fell, which is what gives a few stars real presence. */
+  float starLayer(vec2 q, float density, float cut, float seedOff){
+    vec2 g = q * density;
+    vec2 id = floor(g) + seedOff;
+    vec2 f = fract(g) - 0.5;
+    vec2 off = (hash22(id) - 0.5) * 0.74;
+    float m = hash21(id + 11.0);
+    float live = step(cut, m);
+    float mag = (m - cut) / max(1e-4, 1.0 - cut);
+    float tw = 0.62 + 0.38 * sin(uTime * 1.4 + m * 57.0);
+    float r = length(f - off);
+    return live * smoothstep(0.048 + mag * 0.055, 0.0, r) * (0.3 + 1.15 * mag) * tw;
+  }
+
+  /** The diffraction cross on the few brightest stars. */
+  float starGlint(vec2 q, float density, float cut){
+    vec2 g = q * density;
+    vec2 id = floor(g);
+    vec2 f = fract(g) - 0.5;
+    vec2 off = (hash22(id + 5.0) - 0.5) * 0.7;
+    float live = step(cut, hash21(id + 19.0));
+    vec2 d = abs(f - off);
+    float cross = max(
+      smoothstep(0.26, 0.0, d.x) * smoothstep(0.010, 0.0, d.y),
+      smoothstep(0.26, 0.0, d.y) * smoothstep(0.010, 0.0, d.x));
+    return live * cross;
+  }
+
+  /** Above: open sky. Deep field, a wash of nebula, one arm crossing it. */
   vec3 skyBand(vec3 p, vec3 w){
-    vec2 q = vec2(p.x, p.z) * 0.055;
-    float stars = 0.0;
-    for (int i = 0; i < 2; i++){
-      float fi = float(i);
-      vec2 g = q * (9.0 + fi * 17.0);
-      vec2 id = floor(g);
-      vec2 f = fract(g) - 0.5;
-      vec2 off = (hash22(id + fi * 31.0) - 0.5) * 0.7;
-      float m = hash21(id + fi * 7.0);
-      float twinkle = 0.55 + 0.45 * sin(uTime * 1.3 + m * 40.0);
-      stars += smoothstep(0.06, 0.0, length(f - off)) * step(0.80, m) * twinkle;
-    }
-    float neb = fbm(q * 2.4 + vec2(uTime * 0.012, 0.0));
-    vec3 col = vec3(0.004, 0.007, 0.012);
-    col += grade(0.5, w) * pow(neb, 2.6) * 0.075;
-    col += vec3(0.86, 0.93, 1.0) * stars * 0.85;
+    vec2 q = vec2(p.x, p.z) * 0.05;
+    float s1 = starLayer(q, 11.0, 0.855, 0.0);
+    float s2 = starLayer(q, 23.0, 0.900, 7.0);
+    float s3 = starLayer(q, 41.0, 0.938, 19.0);
+
+    float neb = fbm(q * 1.8 + vec2(uTime * 0.008, 0.0));
+    // a galactic arm running across the vault, so the sky has a direction
+    float arm = exp(-pow((q.y * 0.55 + fbm(q * 0.7) * 0.95 - 0.2) * 2.1, 2.0));
+
+    vec3 col = vec3(0.003, 0.005, 0.010);
+    col += grade(0.42, w) * pow(neb, 3.2) * 0.075;
+    col += mix(grade(0.62, w), uAccent, 0.4) * arm * pow(neb, 2.2) * 0.075;
+    col += vec3(0.88, 0.94, 1.0) * (s1 + s2 * 0.7 + s3 * 0.45) * 1.05;
+    // a scattering of warm giants — the only warmth up here
+    col += vec3(1.0, 0.70, 0.40) * s1 * step(0.965, hash21(floor(q * 11.0))) * 1.0;
     return col;
   }
 
-  /** Head height: a canyon of built form, with light rising behind it. */
+  /** Head height: the deep field, with nebula structure and dust. */
   vec3 wallBand(vec3 p, vec3 w, float fade){
-    float zf = p.z - uTime * uFlow;
+    float zf = p.z - uTime * uFlow * 0.35;
+    vec2 q = vec2(zf, p.y) * 0.075;
 
-    // A skyline rather than a grid of blocks: each bay of the wall has its own
-    // height, so the top edge is irregular and the band reads as a city seen
-    // from the street instead of as stacked frames.
-    float bay = floor(zf / 3.0);
-    float bf = fract(zf / 3.0);
-    float top = 2.4 + hash11(bay) * 7.0;
-    float inside = smoothstep(0.05, -0.05, p.y - top);
-    float slot = smoothstep(0.50, 0.44, abs(bf - 0.5));      // gap between bays
+    float s1 = starLayer(q, 13.0, 0.840, 3.0);
+    float s2 = starLayer(q, 27.0, 0.890, 17.0);
+    float s3 = starLayer(q, 47.0, 0.930, 29.0);
+    float glint = starGlint(q, 13.0, 0.976);
 
-    // Window rows. Sparse and small: a lit window is a highlight, and making
-    // every one of them bright is what turned an earlier version into a wall
-    // of picture frames.
-    float row = floor(p.y / 0.62);
-    float onRow = step(0.58, hash21(vec2(bay, row)));
-    vec2 wf = abs(vec2(fract(zf / 0.44), fract(p.y / 0.62)) - 0.5);
-    float windows = inside * slot * onRow
-      * (1.0 - smoothstep(0.24, 0.36, wf.x))
-      * (1.0 - smoothstep(0.24, 0.36, wf.y));
+    // Two noise fields, one eroding the other. A single fbm reads as even fog;
+    // subtracting a finer field from a coarser one is what gives a cloud
+    // structure, an edge, and dark dust in front of it.
+    float n1 = fbm(q * 1.6 + vec2(uTime * 0.010, 0.0));
+    float n2 = fbm(q * 3.4 - vec2(uTime * 0.016, 0.0));
+    float cloud = pow(max(0.0, n1 * 1.28 - n2 * 0.46), 2.0);
+    float dust = smoothstep(0.62, 0.30, n2);
 
-    // The lit parapet along the top of each bay.
-    float roofline = inside * slot * (1.0 - smoothstep(0.0, 0.10, top - p.y));
+    // rare distant galaxies — small, elliptical, and unmistakably far away
+    vec2 gg = q * 3.2;
+    vec2 gf = fract(gg) - 0.5;
+    float gal = step(0.972, hash21(floor(gg) + 41.0))
+      * exp(-pow(length(gf * vec2(1.0, 2.7)) * 7.0, 2.0));
 
-    // Plumes of light lifting off the roofline into the sky. This is the
-    // element that stops the vault reading as a lid.
-    float plume = pow(max(0.0, fbm(vec2(zf * 0.15, p.y * 0.18 - uTime * 0.3))), 1.9);
-    plume *= smoothstep(top - 0.5, top + 4.0, p.y) * smoothstep(top + 16.0, top + 3.0, p.y);
-
-    // Vary each window: a uniform field of them reads as a pegboard.
-    float wv = hash21(vec2(bay * 3.7, row * 1.9));
-    float lamp = windows * (0.35 + 0.65 * wv);
-
-    vec3 col = grade(0.05, w) * 0.08 * inside;
-    col += grade(0.95, w) * lamp * 0.40;
-    col += uAccent * lamp * 0.26;
-    // a minority of windows burn warm, which is what keeps a cold canyon alive
-    col += vec3(0.95, 0.58, 0.26) * lamp * step(0.86, wv) * 0.7;
-    col += grade(1.0, w) * roofline * 0.62;
-    col += mix(grade(0.85, w), uAccent, 0.72) * plume * 0.55;
+    vec3 col = vec3(0.002, 0.004, 0.008);
+    // Restraint is the whole discipline here. Nebula is *faint* — it is the
+    // thing you notice second, after the stars — and at the weight this ran
+    // at, eleven composited depth planes of it turned the vault into grey
+    // smoke with lights behind it.
+    col += grade(0.45, w) * cloud * 0.15 * dust;
+    col += mix(uAccent, grade(0.9, w), 0.45) * pow(cloud, 2.6) * 0.26 * dust;
+    // warm emission where the cloud is densest, so the field is not all blue
+    col += vec3(1.0, 0.55, 0.28) * pow(max(0.0, n2 - 0.60), 2.2) * 0.16;
+    col += vec3(0.86, 0.92, 1.0) * (s1 + s2 * 0.72 + s3 * 0.5) * 1.15;
+    col += vec3(0.80, 0.90, 1.0) * glint * 0.5;
+    col += mix(grade(0.8, w), vec3(1.0, 0.86, 0.62), 0.4) * gal * 1.5;
     return col * fade;
   }
 
-  /** The floor: the brightest and most detailed surface in the room. */
+  /** The floor: the galactic plane, passing underneath. Brightest surface. */
   vec3 terrainBand(vec3 p, vec3 w, float fade){
-    float zf = p.z - uTime * uFlow;
-    vec2 q = vec2(p.x, zf);
+    float zf = p.z - uTime * uFlow * 0.5;
+    vec2 q = vec2(p.x, zf) * 0.06;
 
-    // A city plan seen from far above: dark plots, a bright street grid, and
-    // a scattering of lit blocks. An earlier version used a hex field, which
-    // at this scale alternated light and dark cells and read as a chequerboard
-    // dance floor — the one thing a floor must not look like.
-    vec2 block = floor(q / 2.2);
-    vec2 f = fract(q / 2.2);
-    float sub = 1.0 + floor(hash21(block) * 3.0);
-    vec2 g = f * sub;
-    vec2 plot = floor(g);
-    vec2 sf = fract(g);
+    // The plane itself: a band of light running away down the tunnel, densest
+    // on the centre line. Keeping the brightness *banded* rather than even is
+    // what makes the floor read as something enormous seen edge-on, instead of
+    // as a lit floor.
+    float band = exp(-pow(q.x * 1.25, 2.0));
+    float core = exp(-pow(length(vec2(q.x * 0.9, (q.y + 6.0) * 0.16)), 2.0));
 
-    vec2 db = min(f, 1.0 - f);
-    float street = 1.0 - smoothstep(0.010, 0.028, min(db.x, db.y));
-    vec2 dl = min(sf, 1.0 - sf);
-    float lane = (1.0 - smoothstep(0.018, 0.048, min(dl.x, dl.y))) * 0.35;
-    // Not every street is lit the same. A uniform grid reads as graph paper.
-    street *= 0.45 + 0.55 * hash21(block.yx * 2.3);
+    float n1 = fbm(q * 2.2 + vec2(0.0, uTime * 0.012));
+    float n2 = fbm(q * 5.0 - vec2(0.0, uTime * 0.020));
+    float rift = smoothstep(0.58, 0.30, n2);   // dark dust lanes across it
+    float haze = pow(max(0.0, n1), 1.7);
 
-    // Districts: a slow field deciding which plots are lit and how warmly.
-    float lit = step(0.60, hash21(block * 1.7 + plot * 3.1));
-    float district = smoothstep(0.32, 0.82, fbm(q * 0.05 + 11.0));
-    float glow = lit * district * (0.62 + 0.38 * sin(uTime * 0.8 + hash21(plot + block) * 30.0));
+    float s1 = starLayer(q, 17.0, 0.780, 61.0);
+    float s2 = starLayer(q, 34.0, 0.850, 71.0);
+    float s3 = starLayer(q, 62.0, 0.900, 83.0);
+    float cluster = pow(max(0.0, fbm(q * 1.1 + 4.0)), 3.0);
 
-    // The warm interiors are the only warmth in the world besides the portal,
-    // and they are what stop the whole tunnel reading as monochrome.
-    vec3 warm = mix(vec3(0.98, 0.55, 0.22), uAccent, 0.18);
-    vec3 col = vec3(0.005, 0.009, 0.014);
-    col += warm * glow * 0.30;
-    col += grade(0.94, w) * street * 0.70;
-    col += uAccent * street * 0.40;
-    col += grade(0.8, w) * lane * 0.18;
-    return col * fade * 1.1;
+    vec3 col = vec3(0.004, 0.007, 0.012);
+    col += grade(0.72, w) * band * pow(haze, 2.2) * rift * 0.26;
+    // Teal is an accent in this brand, not a wash — at 0.35 the whole floor
+    // went green and the galactic plane read as a lit swimming pool.
+    col += mix(grade(0.95, w), uAccent, 0.16) * band * pow(haze, 3.0) * rift * 0.40;
+    col += vec3(1.0, 0.64, 0.30) * core * rift * 0.46;
+    // The stars carry the floor. That keeps it the most detailed surface in
+    // the room — the rule the tunnel reference set — without lighting it.
+    col += vec3(0.90, 0.95, 1.0) * (s1 * 1.35 + s2 * 0.9 + s3 * 0.6) * (0.55 + band);
+    col += uAccent * cluster * band * 0.16;
+    return col * fade * 1.15;
   }
 
   /* The destination.
@@ -264,14 +285,17 @@ const fragment = /* glsl */ `
     float r = length(q);
     float a = atan(q.y, q.x);
 
-    // A - cut architecture: slabs on a coarse grid, only some cells occupied.
-    vec2 cell = floor(q / 2.6);
-    float occupied = step(0.52, hash21(cell + idx * 13.7));
-    vec2 f = abs(fract(q / 2.6) - 0.5);
-    float m = max(f.x, f.y);
-    float edge = clamp(smoothstep(0.50, 0.42, m) - smoothstep(0.40, 0.31, m), 0.0, 1.0);
+    // A - dust and debris drifting between here and the far field. This used
+    //     to be slabs on a grid, which in a city read as cut architecture and
+    //     in space reads as a building that wandered in.
+    vec2 dg = q * 1.7 + idx * 4.0;
+    vec2 did = floor(dg);
+    vec2 df = fract(dg) - 0.5;
+    vec2 doff = (hash22(did + 9.0) - 0.5) * 0.7;
+    float occupied = step(0.86, hash21(did + idx * 13.7));
+    float edge = smoothstep(0.085, 0.004, length(df - doff));
     // Keep the middle of the corridor clear so the portal is never blocked.
-    float slabs = occupied * edge * smoothstep(3.2, 6.0, r);
+    float slabs = occupied * edge * smoothstep(2.4, 6.0, r);
 
     // B - poured metal: broad ribbons turning slowly around the axis.
     float ribbon = pow(0.5 + 0.5 * sin(a * 3.0 + r * 0.8 - uTime * 0.7 + idx), 9.0);
@@ -283,13 +307,13 @@ const fragment = /* glsl */ `
     motes *= smoothstep(0.42, 0.10, length(fract(g) - 0.5));
     float wave = pow(0.5 + 0.5 * sin(r * 0.9 - uTime * 2.1 + idx * 1.7), 30.0) * smoothstep(0.5, 3.0, r);
 
-    float alpha = slabs * 0.34 * w.x + ribbon * 0.26 * w.y + (motes * 2.0 + wave * 0.4) * w.z;
+    float alpha = slabs * 0.22 * w.x + ribbon * 0.16 * w.y + (motes * 2.0 + wave * 0.4) * w.z;
     alpha *= smoothstep(0.0, 14.0, dist) * smoothstep(250.0, 90.0, dist);
     alpha = clamp(alpha, 0.0, 1.0);
 
     float lum = 0.45 + 0.4 * hash11(idx * 7.13);
     vec3 col = grade(lum, w) * (0.6 + 1.3 * w.z);
-    col += uAccent * (wave * w.z * 1.2 + edge * occupied * w.x * 0.3);
+    col += uAccent * (wave * w.z * 1.2 + edge * occupied * w.x * 0.45);
     return vec4(col, alpha);
   }
 

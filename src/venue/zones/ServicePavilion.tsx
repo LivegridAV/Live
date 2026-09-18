@@ -494,6 +494,50 @@ export function ServicePavilion({ p }: { p: Pavilion }) {
         <meshBasicMaterial color={p.accent} toneMapped />
       </mesh>
       <LightPool position={[0, 0.16, -2.4]} size={[W * 0.95, 7]} color={p.accent} opacity={0.14} />
+
+      {/* ── stall lighting ──
+          A pavilion is a room inside a room, and the hall's own ceiling is
+          nine metres above it — nothing of that reaches down here. Each stall
+          therefore carries its own rig: a header truss, warm downlights along
+          it washing the back wall, a lit valance over the opening, and a pair
+          of accent uplights in the back corners. This is what the brief means
+          by more light in the service area, and it is also what makes eight
+          stalls read as eight *places* rather than eight dark alcoves. */}
+      <Truss length={W * 0.94} size={0.26} position={[0, 4.5, -1.2]} braceEvery={0.8} />
+      {[-1, -0.34, 0.34, 1].map((f, i) => (
+        <group key={`dl${i}`}>
+          <mesh position={[f * W * 0.34, 4.26, -1.2]} rotation={[Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[1.5, 0.34]} />
+            <meshBasicMaterial color="#f0cd99" toneMapped />
+          </mesh>
+          <LightPool position={[f * W * 0.32, 0.17, -2.1]} size={[5, 6]} color="#a8814f" opacity={0.12} />
+        </group>
+      ))}
+      {/* the valance over the opening, and the light it throws forward */}
+      <mesh position={[0, 4.02, 1.5]} material={M.charcoal}>
+        <boxGeometry args={[W * 0.98, 0.5, 0.3]} />
+      </mesh>
+      <mesh position={[0, 3.79, 1.66]}>
+        <planeGeometry args={[W * 0.92, 0.07]} />
+        <meshBasicMaterial color={p.accent} toneMapped />
+      </mesh>
+      <LightPool position={[0, 0.17, 1.4]} size={[W, 5]} color={p.accent} opacity={0.11} />
+      {/* back-corner uplights, grazing the side walls */}
+      {[-1, 1].map((side) => (
+        <group key={`up${side}`}>
+          <mesh position={[side * W * 0.44, 0.09, -3.2]} rotation={[-Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[0.6, 0.24]} />
+            <meshBasicMaterial color="#d9b077" toneMapped />
+          </mesh>
+          <LightPool
+            position={[side * W * 0.47, 2.2, -3.0]}
+            rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
+            size={[5.5, 4.6]}
+            color="#8a6f4c"
+            opacity={0.14}
+          />
+        </group>
+      ))}
       <mesh position={[0, H - 0.08, -2.4]} rotation={[Math.PI / 2, 0, 0]}>
         <planeGeometry args={[W - 1.4, 0.12]} />
         <meshBasicMaterial color={p.accent} toneMapped />

@@ -830,3 +830,140 @@
   .v-stagemode,
   .v-contact { transition-duration: 0.01ms; }
 }
+
+
+/* ══════════════════════════════════════════════════════════
+   Glass
+   ------------------------------------------------------------------
+   One recipe, applied to every piece of navigation and control chrome
+   so the interface reads as a single material laid over the venue
+   rather than as a set of differently-tinted boxes.
+
+   Four things make glass look like glass and not like a grey panel:
+   a *saturating* blur (light through glass keeps its colour), a hairline
+   that is brighter along the top edge than the bottom, a specular sheen
+   across the top third, and a shadow that proves the panel is floating
+   above something. All four are here; the blur alone is what everything
+   else was already doing.
+
+   The zone caption is deliberately left as bare type: it is a title
+   card, not a control, and putting it in a box would make the venue
+   look like a dashboard.
+   ══════════════════════════════════════════════════════════ */
+
+:root {
+  --v-glass-tint: linear-gradient(170deg, rgba(24, 44, 42, 0.56) 0%, rgba(7, 15, 15, 0.68) 62%);
+  --v-glass-blur: blur(18px) saturate(1.35);
+  --v-glass-edge: rgba(156, 216, 208, 0.18);
+  --v-glass-lift:
+    inset 0 1px 0 rgba(233, 255, 251, 0.10),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.32),
+    0 16px 44px rgba(0, 0, 0, 0.42);
+}
+
+.v-glass,
+.v-btn,
+.v-nav-brand,
+.v-nav-links,
+.v-nav-toggle,
+.v-nav-sheet,
+.v-rail,
+.v-stagemode-switch,
+.v-prompt,
+.v-panel-inner,
+.v-contact-card,
+.v-guide {
+  background: var(--v-glass-tint);
+  -webkit-backdrop-filter: var(--v-glass-blur);
+  backdrop-filter: var(--v-glass-blur);
+  border: 1px solid var(--v-glass-edge);
+  box-shadow: var(--v-glass-lift);
+}
+
+/* The sheen. A pseudo-element rather than another gradient in the
+   background, so it survives whatever each component sets its own
+   background to. */
+.v-btn,
+.v-nav-brand,
+.v-nav-links,
+.v-nav-toggle,
+.v-rail,
+.v-stagemode-switch,
+.v-prompt {
+  position: relative;
+  isolation: isolate;
+}
+.v-btn::before,
+.v-nav-brand::before,
+.v-nav-links::before,
+.v-rail::before,
+.v-stagemode-switch::before,
+.v-prompt::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 42%;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0));
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ── navigation ── */
+.v-nav {
+  /* the scrim goes: the pills carry the contrast now */
+  background: linear-gradient(to bottom, rgba(4, 8, 10, 0.34), transparent 78%);
+}
+.v-nav-brand {
+  padding: 9px 16px;
+  border-radius: 999px;
+}
+.v-nav-links {
+  padding: 4px 6px;
+  border-radius: 999px;
+  gap: 2px;
+}
+.v-nav-link {
+  border-radius: 999px;
+  font-weight: 600;
+  /* 0.18em on a ten-pixel label is what made the nav look loose */
+  letter-spacing: 0.12em;
+}
+.v-nav-link:hover,
+.v-nav-link[aria-current="true"] {
+  background: rgba(150, 214, 205, 0.14);
+}
+.v-nav-cta {
+  margin-left: 6px;
+  border-radius: 999px;
+}
+.v-nav-toggle { border-radius: 999px; }
+.v-nav-sheet {
+  border-radius: 20px;
+  --v-glass-blur: blur(26px) saturate(1.3);
+}
+
+/* ── the progress rail ── */
+.v-rail {
+  padding: 14px 12px;
+  border-radius: 18px;
+}
+
+/* ── type weight across the chrome ── */
+.v-btn { font-weight: 600; }
+.v-rail-label,
+.v-nav-sheet-label { font-weight: 600; letter-spacing: 0.12em; }
+.v-hud-title { font-weight: 600; letter-spacing: -0.015em; }
+
+/* Blur is expensive per pixel and a phone is already the tightest budget
+   in the venue, so the effect degrades to a flat tint where it is not
+   supported — and on coarse pointers it loses the saturation pass. */
+@media (pointer: coarse) {
+  :root { --v-glass-blur: blur(12px); }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root { --v-glass-tint: linear-gradient(170deg, rgba(14, 26, 25, 0.9), rgba(5, 11, 11, 0.94)); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  :root { --v-glass-blur: none; --v-glass-tint: rgba(6, 13, 13, 0.94); }
+}

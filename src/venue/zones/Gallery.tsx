@@ -397,10 +397,19 @@ function AnamorphicCorner() {
         <ringGeometry args={[0.45, 0.52, 28]} />
         <meshBasicMaterial color="#8c9a86" toneMapped />
       </mesh>
-      {/* Hung above the left leaf on a real header, turned a little toward the
-          viewing mark. It used to be a bare panel floating at the top of the
-          building face, which read as a UI element stuck to the scene. */}
-      <NameBoard position={[-3.4, 5.95, 0.25]} face={0.35} media="stand-anamorphic" width={4.2} accent="#b9ab93" />
+      {/* Hung above the *right* leaf, facing the aisle.
+          On the left leaf it sat at x = -10, directly behind the creative-shapes
+          mosaic at x = -9.6 — two installations stacked along the same sightline,
+          so from anywhere up the aisle the mosaic covered the name of the one
+          behind it. The right leaf faces the walkway and has nothing in front
+          of it. */}
+      <NameBoard
+        position={[-0.1, 5.9, -4.4]}
+        face={Math.PI / 2}
+        media="stand-anamorphic"
+        width={3.8}
+        accent="#b9ab93"
+      />
       <LightPool position={[2.6, 0.05, 2.6]} size={16} color="#b9ab93" opacity={0.14} />
     </group>
   );

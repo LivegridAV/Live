@@ -20,8 +20,28 @@ export interface PaintCtx {
   text?: { title: string; sub: string; lines?: string[] };
 }
 
-const MONO = '"SFMono-Regular", "DejaVu Sans Mono", "Courier New", monospace';
-const SANS = 'system-ui, "Segoe UI", Helvetica, Arial, sans-serif';
+const MONO_FALLBACK = '"SFMono-Regular", "DejaVu Sans Mono", "Courier New", monospace';
+const SANS_FALLBACK = 'system-ui, "Segoe UI", Helvetica, Arial, sans-serif';
+
+/**
+ * The venue's own typefaces, read off the document.
+ *
+ * Canvas cannot resolve a CSS custom property, so the signage was being set in
+ * the system UI font while every other word on the site is Space Grotesk — two
+ * different voices, one of them a browser default. Reading the computed family
+ * off the page gets the real (hashed) next/font family name, and the painters
+ * repaint often enough that the first frames rendered before the webfont
+ * arrives are replaced within a fraction of a second.
+ */
+let _sans: string | null = null;
+let _mono: string | null = null;
+function fam(varName: string, fallback: string) {
+  if (typeof window === "undefined") return fallback;
+  const v = getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+  return v ? `${v}, ${fallback}` : fallback;
+}
+const SANS_OF = () => (_sans ??= fam("--font-space-grotesk", SANS_FALLBACK));
+const MONO_OF = () => (_mono ??= fam("--font-space-mono", MONO_FALLBACK));
 
 const PANEL = "#0e1616";
 const LINE = "#1d2b2a";
@@ -38,12 +58,14 @@ function bg({ ctx, w, h }: PaintCtx) {
   ctx.fillRect(0, 0, w, h);
 }
 
-function label(p: PaintCtx, text: string, x: number, y: number, size: number, color = DIM) {
+function label(p: PaintCtx, text: string, x: number, y: number, size: number, color = DIM, weight = 500) {
   const { ctx } = p;
-  ctx.font = `${size}px ${MONO}`;
+  ctx.font = `${weight} ${size}px ${MONO_OF()}`;
   ctx.fillStyle = color;
   ctx.textBaseline = "top";
-  ctx.letterSpacing = `${(size * 0.14).toFixed(2)}px`;
+  // 0.14 em of tracking on a nine-pixel label is most of a character between
+  // every letter — it reads as spaced-out rather than as a caption.
+  ctx.letterSpacing = `${(size * 0.09).toFixed(2)}px`;
   ctx.fillText(text.toUpperCase(), x, y);
   ctx.letterSpacing = "0px";
 }
@@ -141,7 +163,7 @@ const avSignalDiagram = (p: PaintCtx) => {
     ctx.strokeStyle = accent;
     ctx.lineWidth = Math.max(1, h * 0.005);
     ctx.strokeRect(x - bw / 2 + 0.5, y - bh / 2 + 0.5, bw - 1, bh - 1);
-    ctx.font = `${h * 0.05}px ${SANS}`;
+    ctx.font = `${h * 0.05}px ${SANS_OF()}`;
     ctx.fillStyle = BRIGHT;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -209,7 +231,7 @@ const avRackStatus = (p: PaintCtx) => {
   rows.forEach((r, i) => {
     const y = h * (0.2 + i * 0.125);
     panel(p, w * 0.06, y, w * 0.88, h * 0.095);
-    ctx.font = `${h * 0.048}px ${SANS}`;
+    ctx.font = `${h * 0.048}px ${SANS_OF()}`;
     ctx.fillStyle = BRIGHT;
     ctx.textBaseline = "middle";
     ctx.fillText(r, w * 0.1, y + h * 0.048);
@@ -240,7 +262,7 @@ const ledPitch = (p: PaintCtx) => {
     const y = h * (0.2 + i * 0.185);
     const active = Math.floor(t * 0.4) % items.length === i;
     panel(p, w * 0.06, y, w * 0.88, h * 0.145, active ? accent : LINE);
-    ctx.font = `${h * 0.055}px ${SANS}`;
+    ctx.font = `${h * 0.055}px ${SANS_OF()}`;
     ctx.fillStyle = active ? BRIGHT : "#9fb0ae";
     ctx.textBaseline = "top";
     ctx.fillText(it[0], w * 0.1, y + h * 0.024);
@@ -302,7 +324,7 @@ const scCues = (p: PaintCtx) => {
       ctx.fillStyle = "rgba(90,180,170,0.12)";
       ctx.fillRect(w * 0.06, y, w * 0.88, h * 0.115);
     }
-    ctx.font = `${h * 0.05}px ${SANS}`;
+    ctx.font = `${h * 0.05}px ${SANS_OF()}`;
     ctx.fillStyle = i === active ? BRIGHT : "#8d9c9a";
     ctx.textBaseline = "middle";
     ctx.fillText(c, w * 0.1, y + h * 0.058);
@@ -510,7 +532,7 @@ const webCode = (p: PaintCtx) => {
     const indent = [0, 1, 2, 2, 1, 0, 1, 2, 3, 2, 1, 0, 1, 1, 2, 0][i % 16];
     const lw = w * (0.18 + 0.5 * Math.abs(Math.sin(i * 2.3 + 1.1)));
     ctx.fillStyle = "rgba(60,80,78,0.5)";
-    ctx.font = `${h * 0.035}px ${MONO}`;
+    ctx.font = `${h * 0.035}px ${MONO_OF()}`;
     ctx.fillText(String(i + 1).padStart(2, "0"), w * 0.03, y + h * 0.03);
     ctx.fillStyle = i % 5 === 0 ? accent : "rgba(140,160,158,0.35)";
     ctx.fillRect(w * 0.1 + indent * w * 0.035, y, lw, h * 0.016);
@@ -533,7 +555,7 @@ const partnerBay = (p: PaintCtx) => {
     const lit = (Math.sin(t * 1.1 + i * 0.7) * 0.5 + 0.5);
     ctx.fillStyle = `rgba(200,150,80,${0.25 + lit * 0.5})`;
     ctx.fillRect(w * 0.06, y + h * 0.02, h * 0.012, h * 0.03);
-    ctx.font = `${h * 0.042}px ${SANS}`;
+    ctx.font = `${h * 0.042}px ${SANS_OF()}`;
     ctx.fillStyle = "#b9c6c4";
     ctx.textBaseline = "top";
     ctx.fillText(r, w * 0.11, y + h * 0.012);
@@ -560,11 +582,11 @@ const makeSign =
     ctx.globalAlpha = 0.35 + bar * 0.5;
     ctx.fillRect(0, h * 0.5 - h * 0.006, w * (0.25 + bar * 0.2), h * 0.012);
     ctx.globalAlpha = 1;
-    ctx.font = `600 ${h * 0.2}px ${SANS}`;
+    ctx.font = `700 ${h * 0.22}px ${SANS_OF()}`;
     ctx.fillStyle = BRIGHT;
     ctx.textBaseline = "alphabetic";
-    ctx.fillText(title, w * 0.06, h * 0.42);
-    label(p, sub, w * 0.06, h * 0.58, h * 0.11, accent);
+    ctx.fillText(title, w * 0.06, h * 0.46);
+    label(p, sub, w * 0.06, h * 0.58, h * 0.115, accent, 700);
   };
 
 const wordmark = (p: PaintCtx) => {
@@ -572,7 +594,7 @@ const wordmark = (p: PaintCtx) => {
   ctx.fillStyle = "#05090a";
   ctx.fillRect(0, 0, w, h);
   const glow = 0.5 + 0.5 * Math.sin(t * 0.6);
-  ctx.font = `600 ${h * 0.4}px ${SANS}`;
+  ctx.font = `700 ${h * 0.4}px ${SANS_OF()}`;
   ctx.textBaseline = "middle";
   ctx.textAlign = "center";
   const text = "livegrid";
@@ -620,10 +642,10 @@ const brandFascia = (p: PaintCtx) => {
   ctx.fillRect(0, 0, w, h);
 
   const size = h * 0.46;
-  ctx.font = `600 ${size}px ${SANS}`;
+  ctx.font = `700 ${size}px ${SANS_OF()}`;
   ctx.textBaseline = "middle";
   ctx.textAlign = "center";
-  ctx.letterSpacing = `${(size * 0.17).toFixed(2)}px`;
+  ctx.letterSpacing = `${(size * 0.15).toFixed(2)}px`;
 
   const cy = h * 0.46;
   ctx.shadowColor = accent;
@@ -667,20 +689,28 @@ const pavilionHeader = (p: PaintCtx) => {
   ctx.fillStyle = sg;
   ctx.fillRect(0, 0, w, h);
 
+  // The rule and the text share one left margin. They did not before: the
+  // rule sat at 0.05w and the type at 0.10w, so the two lines were indented
+  // off a mark that was not there.
+  const x = w * 0.075;
   ctx.fillStyle = accent;
-  ctx.fillRect(w * 0.05, h * 0.3, h * 0.035, h * 0.4);
+  ctx.fillRect(w * 0.035, h * 0.26, h * 0.05, h * 0.48);
 
   // Title, shrunk to fit rather than clipped — pavilion names vary in length.
   let size = h * 0.3;
-  ctx.font = `600 ${size}px ${SANS}`;
-  while (ctx.measureText(title).width > w * 0.86 && size > h * 0.12) {
+  const fit = () => (ctx.font = `700 ${size}px ${SANS_OF()}`);
+  fit();
+  while (ctx.measureText(title).width > w * 0.84 && size > h * 0.13) {
     size *= 0.94;
-    ctx.font = `600 ${size}px ${SANS}`;
+    fit();
   }
+  // Two lines, set as a block and centred in the plate, rather than two
+  // independent baselines that happened to nearly collide.
+  const subSize = h * 0.125;
   ctx.fillStyle = BRIGHT;
   ctx.textBaseline = "alphabetic";
-  ctx.fillText(title, w * 0.1, h * 0.52);
-  if (sub) label(p, sub, w * 0.1, h * 0.62, h * 0.12, accent);
+  ctx.fillText(title, x, sub ? h * 0.48 : h * 0.62);
+  if (sub) label(p, sub, x, h * 0.585, subSize, accent, 700);
 };
 
 /* ── pavilion kiosk ────────────────────────────────────── */
@@ -709,7 +739,7 @@ const kioskInfo = (p: PaintCtx) => {
 
   // Title, wrapped rather than clipped — headlines vary a lot in length.
   let size = h * 0.115;
-  ctx.font = `600 ${size}px ${SANS}`;
+  ctx.font = `700 ${size}px ${SANS_OF()}`;
   const words = title.split(" ");
   const rows: string[] = [];
   let row = "";
@@ -725,8 +755,18 @@ const kioskInfo = (p: PaintCtx) => {
   if (row) rows.push(row);
   while (rows.length > 3 && size > h * 0.06) {
     size *= 0.92;
-    ctx.font = `600 ${size}px ${SANS}`;
+    ctx.font = `700 ${size}px ${SANS_OF()}`;
     rows.length = 3;
+  }
+  // Wrapping only ever breaks *between* words, so a single long one — and
+  // "Engineering" is one — still ran off the plate. Shrink until the widest
+  // row fits, which is the only thing that can rescue an unbreakable word.
+  let guard = 0;
+  while (guard++ < 24) {
+    ctx.font = `700 ${size}px ${SANS_OF()}`;
+    const widest = rows.reduce((m, r) => Math.max(m, ctx.measureText(r).width), 0);
+    if (widest <= w * 0.84 || size <= h * 0.05) break;
+    size *= 0.94;
   }
   ctx.fillStyle = BRIGHT;
   ctx.textBaseline = "top";
@@ -734,7 +774,7 @@ const kioskInfo = (p: PaintCtx) => {
 
   // The services this pavilion covers, as a ruled list.
   const top = h * 0.25 + rows.length * size * 1.14 + h * 0.06;
-  ctx.font = `${h * 0.05}px ${SANS}`;
+  ctx.font = `${h * 0.05}px ${SANS_OF()}`;
   lines.slice(0, 4).forEach((line, i) => {
     const y = top + i * h * 0.095;
     ctx.strokeStyle = LINE;

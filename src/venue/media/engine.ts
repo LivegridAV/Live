@@ -50,7 +50,30 @@ interface VideoEntry extends BaseEntry {
 
 type Entry = ShaderEntry | CanvasEntry | VideoEntry;
 
-const QUALITY_SCALE: Record<QualityTier, number> = { low: 0.5, medium: 0.75, high: 1 };
+const QUALITY_SCALE: Record<QualityTier, number> = { low: 0.6, medium: 0.85, high: 1.25 };
+
+/**
+ * How every media texture is sampled.
+ *
+ * All three kinds used to be created with `generateMipmaps: false` and a plain
+ * linear filter, which is fine while a screen is magnified and wrong the
+ * moment it is not. Most screens in a 375 m venue are minified most of the
+ * time — distant, oblique, or simply small in frame — and a minified texture
+ * without mipmaps takes one texel per output pixel out of a high-frequency
+ * animated image. As the camera moves, the texel it lands on changes, and the
+ * surface sparkles. That is the flicker, and it is also most of the reason
+ * the content read as soft rather than sharp.
+ *
+ * Trilinear filtering fixes the sparkle; anisotropy is what keeps a panel seen
+ * at an angle — which, on a stage array with canted clusters, is most of them
+ * — from going to mush in the process.
+ */
+function tuneSampling(t: THREE.Texture, maxAnisotropy: number, mip = true) {
+  t.magFilter = THREE.LinearFilter;
+  t.minFilter = mip ? THREE.LinearMipmapLinearFilter : THREE.LinearFilter;
+  t.generateMipmaps = mip;
+  t.anisotropy = Math.min(8, maxAnisotropy);
+}
 const FRAME_BUDGET: Record<QualityTier, number> = { low: 3, medium: 6, high: 10 };
 /** Idle media still refreshes this often so it never looks frozen on return. */
 const IDLE_INTERVAL = 0.5;
@@ -166,16 +189,24 @@ export class MediaEngine {
 
   private createShader(id: string, desc: ShaderMedia): ShaderEntry {
     const [w, h] = this.size(desc);
+    // Half-float mipmaps need a filterable float texture. WebGL2 gives us
+    // that on every desktop GPU we care about; where it is missing we fall
+    // back to linear rather than shipping a black screen.
+    const caps = this.renderer.capabilities;
+    const canMipFloat =
+      caps.isWebGL2 && this.renderer.extensions.has("OES_texture_float_linear");
+
     const rt = new THREE.WebGLRenderTarget(w, h, {
       type: THREE.HalfFloatType, // LED content is emissive — keep HDR headroom
-      minFilter: THREE.LinearFilter,
+      minFilter: canMipFloat ? THREE.LinearMipmapLinearFilter : THREE.LinearFilter,
       magFilter: THREE.LinearFilter,
       depthBuffer: false,
       stencilBuffer: false,
-      generateMipmaps: false,
+      generateMipmaps: canMipFloat,
     });
     rt.texture.colorSpace = THREE.LinearSRGBColorSpace;
     rt.texture.wrapS = rt.texture.wrapT = THREE.ClampToEdgeWrapping;
+    tuneSampling(rt.texture, caps.getMaxAnisotropy(), canMipFloat);
 
     const program = this.programFor(desc);
     const m = Math.min(w, h);
@@ -217,9 +248,7 @@ export class MediaEngine {
     const ctx = canvas.getContext("2d", { alpha: false })!;
     const texture = new THREE.CanvasTexture(canvas);
     texture.colorSpace = THREE.SRGBColorSpace;
-    texture.minFilter = THREE.LinearFilter;
-    texture.magFilter = THREE.LinearFilter;
-    texture.generateMipmaps = false;
+    tuneSampling(texture, this.renderer.capabilities.getMaxAnisotropy());
     return {
       kind: "canvas",
       id,
@@ -253,9 +282,9 @@ export class MediaEngine {
 
     const texture = new THREE.VideoTexture(video);
     texture.colorSpace = THREE.SRGBColorSpace;
-    texture.minFilter = THREE.LinearFilter;
-    texture.magFilter = THREE.LinearFilter;
-    texture.generateMipmaps = false;
+    // A video texture uploads a new frame every tick, so regenerating its
+    // mip chain each time is real cost for no benefit — anisotropy only.
+    tuneSampling(texture, this.renderer.capabilities.getMaxAnisotropy(), false);
     return {
       kind: "video",
       id,

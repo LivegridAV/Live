@@ -270,6 +270,31 @@ export function NameBoard({
         range={78}
         frame={false}
       />
+      {/* The glass the sign lives behind. Real venue signage is nearly always
+          behind a laminate, and the give-away is not the pane itself but the
+          two things it does: a faint specular sheet across the face, and a
+          bright line where the glass edge catches light. */}
+      <mesh position={[0, h / 2 + 0.24, 0.035]}>
+        <planeGeometry args={[width + 0.34, h + 0.34]} />
+        <meshPhysicalMaterial
+          color="#cfe6e2"
+          transparent
+          opacity={0.07}
+          roughness={0.08}
+          metalness={0}
+          clearcoat={1}
+          clearcoatRoughness={0.05}
+          depthWrite={false}
+        />
+      </mesh>
+      <mesh position={[0, h + 0.42, 0.04]}>
+        <planeGeometry args={[width + 0.34, 0.025]} />
+        <meshBasicMaterial color="#b8ded8" toneMapped />
+      </mesh>
+      <mesh position={[0, -0.09, 0.04]}>
+        <planeGeometry args={[width + 0.34, 0.02]} />
+        <meshBasicMaterial color="#7fa8a4" toneMapped />
+      </mesh>
       {/* lit reveal under the board — signage reads at distance because it is
           lit, not because it is large */}
       <mesh position={[0, -0.06, 0.02]}>
@@ -312,6 +337,23 @@ export function Gantry({
         range={70}
         frame={false}
       />
+      <mesh position={[0, height - 0.5, 0.24]}>
+        <planeGeometry args={[5.94, 1.39]} />
+        <meshPhysicalMaterial
+          color="#cfe6e2"
+          transparent
+          opacity={0.07}
+          roughness={0.08}
+          metalness={0}
+          clearcoat={1}
+          clearcoatRoughness={0.05}
+          depthWrite={false}
+        />
+      </mesh>
+      <mesh position={[0, height + 0.2, 0.25]}>
+        <planeGeometry args={[5.94, 0.025]} />
+        <meshBasicMaterial color="#b8ded8" toneMapped />
+      </mesh>
       {[-1, 1].map((side) => (
         <mesh key={`f${side}`} position={[side * (width / 2 - 0.3), 0.04, 0]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[0.5, 0.5]} />
