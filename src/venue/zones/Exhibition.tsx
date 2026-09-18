@@ -282,6 +282,7 @@ export function NameBoard({
           opacity={0.07}
           roughness={0.08}
           metalness={0}
+          envMapIntensity={0.45}
           clearcoat={1}
           clearcoatRoughness={0.05}
           depthWrite={false}
@@ -302,6 +303,195 @@ export function NameBoard({
         <meshBasicMaterial color={accent} toneMapped />
       </mesh>
       <LightPool position={[0, h / 2 + 0.24, 0.2]} rotation={[0, 0, 0]} size={[width * 1.5, 3.2]} color={accent} opacity={0.1} />
+    </group>
+  );
+}
+
+/* ── exhibition furnishing ─────────────────────────────── */
+
+/**
+ * The things between the exhibits.
+ *
+ * An installation hall is not a gallery of objects on plinths — it is a place
+ * people are meant to stand in, sit down in, and be served coffee in, and the
+ * reference photographs make that obvious: in every one of them the LED is
+ * surrounded by seating, counters, planting and glass. Adding them is not
+ * decoration. It is the difference between "here are some screens" and "here
+ * is an event", and it is also what finally gives the venue human scale — a
+ * six-metre column only reads as six metres when there is a one-metre bench
+ * in front of it.
+ *
+ * Everything here is pale enough to catch the LED spill, which is the other
+ * half of the job: a screen that lights nothing looks like a picture of a
+ * screen.
+ */
+
+/** A low upholstered bench, the exhibition's basic unit of human scale. */
+export function Bench({
+  position,
+  rotation = 0,
+  length = 2.0,
+}: {
+  position: [number, number, number];
+  rotation?: number;
+  length?: number;
+}) {
+  return (
+    <group position={position} rotation={[0, rotation, 0]}>
+      <mesh position={[0, 0.20, 0]} material={M.upholstery} castShadow receiveShadow>
+        <boxGeometry args={[length, 0.34, 0.72]} />
+      </mesh>
+      {/* the shadow gap under it — furniture that meets the floor flush reads
+          as a box painted on it */}
+      <mesh position={[0, 0.025, 0]} material={M.anodised}>
+        <boxGeometry args={[length - 0.24, 0.05, 0.56]} />
+      </mesh>
+      <mesh position={[0, 0.375, 0]} material={M.pale}>
+        <boxGeometry args={[length + 0.04, 0.02, 0.76]} />
+      </mesh>
+    </group>
+  );
+}
+
+/** A planter. The one soft, living thing in a hall made of metal and glass. */
+export function Planter({
+  position,
+  scale = 1,
+  seed = 0,
+}: {
+  position: [number, number, number];
+  scale?: number;
+  seed?: number;
+}) {
+  const blades = useMemo(() => {
+    const out: { a: number; r: number; h: number; tilt: number }[] = [];
+    for (let i = 0; i < 9; i++) {
+      const n = Math.sin((i + seed) * 12.9898) * 43758.5453;
+      const f = n - Math.floor(n);
+      out.push({
+        a: (i / 9) * Math.PI * 2 + f * 0.7,
+        r: 0.1 + f * 0.22,
+        h: 0.85 + f * 0.75,
+        tilt: 0.12 + f * 0.3,
+      });
+    }
+    return out;
+  }, [seed]);
+
+  return (
+    <group position={position} scale={scale}>
+      <mesh position={[0, 0.3, 0]} material={M.planter} castShadow>
+        <cylinderGeometry args={[0.46, 0.38, 0.6, 16]} />
+      </mesh>
+      <mesh position={[0, 0.605, 0]} material={M.foliage}>
+        <cylinderGeometry args={[0.43, 0.43, 0.05, 16]} />
+      </mesh>
+      {blades.map((b, i) => (
+        <mesh
+          key={i}
+          position={[Math.cos(b.a) * b.r, 0.6 + b.h / 2, Math.sin(b.a) * b.r]}
+          rotation={[Math.cos(b.a) * b.tilt, b.a, Math.sin(b.a) * b.tilt]}
+          material={M.foliage}
+        >
+          <boxGeometry args={[0.07, b.h, 0.014]} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+/**
+ * A glass-fronted counter with a lit toe kick.
+ *
+ * Reception desks, info points, coffee — the piece of furniture that says a
+ * stand is staffed. The lit reveal along the base is doing the same job the
+ * reveals do everywhere else in this venue: it turns a box into a designed
+ * object, and it gives the polished floor something to reflect.
+ */
+export function Counter({
+  position,
+  rotation = 0,
+  width = 3.2,
+  accent = "#8fa3b8",
+}: {
+  position: [number, number, number];
+  rotation?: number;
+  width?: number;
+  accent?: string;
+}) {
+  return (
+    <group position={position} rotation={[0, rotation, 0]}>
+      <mesh position={[0, 0.54, 0]} material={M.charcoal} castShadow receiveShadow>
+        <boxGeometry args={[width, 1.0, 0.72]} />
+      </mesh>
+      {/* worktop, overhanging so it casts a line down the front */}
+      <mesh position={[0, 1.06, 0.02]} material={M.pale}>
+        <boxGeometry args={[width + 0.14, 0.05, 0.84]} />
+      </mesh>
+      {/* the glass front */}
+      <mesh position={[0, 0.58, 0.37]} material={M.smokedGlass}>
+        <planeGeometry args={[width - 0.18, 0.82]} />
+      </mesh>
+      {/* lit toe kick */}
+      <mesh position={[0, 0.06, 0.365]}>
+        <planeGeometry args={[width - 0.1, 0.09]} />
+        <meshBasicMaterial color={accent} toneMapped />
+      </mesh>
+      <mesh position={[0, 1.035, 0.44]}>
+        <planeGeometry args={[width + 0.14, 0.02]} />
+        <meshBasicMaterial color={accent} toneMapped />
+      </mesh>
+      <ReflectionStreak position={[0, 0.03, 1.0]} width={width} length={2.2} color={accent} opacity={0.12} />
+    </group>
+  );
+}
+
+/** A poseur table — the standing-height counterpart to the bench. */
+export function Poseur({ position }: { position: [number, number, number] }) {
+  return (
+    <group position={position}>
+      <mesh position={[0, 0.02, 0]} material={M.anodised}>
+        <cylinderGeometry args={[0.32, 0.36, 0.04, 16]} />
+      </mesh>
+      <mesh position={[0, 0.53, 0]} material={M.steel}>
+        <cylinderGeometry args={[0.045, 0.045, 1.02, 10]} />
+      </mesh>
+      <mesh position={[0, 1.06, 0]} material={M.pale} castShadow>
+        <cylinderGeometry args={[0.38, 0.38, 0.05, 20]} />
+      </mesh>
+    </group>
+  );
+}
+
+/**
+ * A furnished pocket beside a stand: two benches at right angles, a planter
+ * and a poseur table, with a pool of light over them.
+ *
+ * Grouped rather than scattered, because that is how furniture is actually
+ * laid out in a hall — you place a *place to stop*, not a distribution of
+ * chairs.
+ */
+export function Lounge({
+  position,
+  rotation = 0,
+  accent = "#8fa3b8",
+  seed = 0,
+}: {
+  position: [number, number, number];
+  rotation?: number;
+  accent?: string;
+  seed?: number;
+}) {
+  return (
+    <group position={position} rotation={[0, rotation, 0]}>
+      <Bench position={[0, 0, 0]} length={2.2} />
+      <Bench position={[1.55, 0, -1.55]} rotation={Math.PI / 2} length={2.2} />
+      <Planter position={[-1.5, 0, -0.9]} seed={seed} />
+      <Planter position={[-1.05, 0, -1.9]} scale={0.8} seed={seed + 3} />
+      <Poseur position={[2.3, 0, 1.0]} />
+      {/* a soft overhead pool, so the pocket reads as lit rather than as lost */}
+      <LightPool position={[0.4, 0.05, -0.6]} size={[7.2, 6.4]} color={accent} opacity={0.11} />
+      <pointLight position={[0.4, 3.2, -0.6]} intensity={9} distance={9} decay={2} color="#d7c2a0" />
     </group>
   );
 }
@@ -345,6 +535,7 @@ export function Gantry({
           opacity={0.07}
           roughness={0.08}
           metalness={0}
+          envMapIntensity={0.45}
           clearcoat={1}
           clearcoatRoughness={0.05}
           depthWrite={false}

@@ -610,7 +610,7 @@ function StageScreens({ rim }: { rim: THREE.Material }) {
 function StageLighting() {
   const quality = useVenue((s) => s.quality);
   const deckZ = (STAGE.front + STAGE.back) / 2;
-  const rake = useMemo(() => Array.from({ length: 19 }, (_, i) => (i - 9) * 3.5), []);
+  const rake = useMemo(() => Array.from({ length: 25 }, (_, i) => (i - 12) * 2.72), []);
   const back = useMemo(() => Array.from({ length: 13 }, (_, i) => (i - 6) * 4.6), []);
 
   return (
@@ -625,9 +625,9 @@ function StageLighting() {
           seed={i * 1.7}
           reach={17}
           beamAngle={0.05}
-          color="#f0c489"
-          intensity={1.2}
-          beamGain={2.3}
+          color="#f6ce97"
+          intensity={1.35}
+          beamGain={2.9}
         />
       ))}
       {rake
@@ -708,12 +708,22 @@ function StageLighting() {
  */
 function CeilingGrid() {
   const quality = useVenue((s) => s.quality);
+  /* Density is the effect.
+     At a 4.6 m pitch over eleven columns the fixtures read as a scattering of
+     bright marks; the reference's ceiling is a *field*, close enough that the
+     rows merge into perspective lines running toward the stage. Tightening the
+     pitch and widening the grid is the single change that moves the top third
+     of the arena shot from "dark lid with some lights on it" to the reference
+     image. The extra rows are plain emissive plates — no lighting cost. */
   const rows = useMemo(() => {
     const out: number[] = [];
-    for (let z = -288; z > -356; z -= 4.6) out.push(z);
+    for (let z = -278; z > -356; z -= 3.2) out.push(z);
     return out;
   }, []);
-  const cols = useMemo(() => [-35, -28, -21, -14, -7, 0, 7, 14, 21, 28, 35], []);
+  const cols = useMemo(
+    () => [-38, -32, -26, -20, -14, -8, -3, 3, 8, 14, 20, 26, 32, 38],
+    [],
+  );
   const step = quality === "low" ? 2 : 1;
   const Y = STAGE.ceiling;
 
@@ -725,12 +735,12 @@ function CeilingGrid() {
           cols.map((x) => (
             <group key={`cf${z}${x}`}>
               <mesh position={[x, Y - 0.24, z]} rotation={[Math.PI / 2, 0, 0]}>
-                <planeGeometry args={[3.2, 0.42]} />
-                <meshBasicMaterial color="#f4d09a" toneMapped />
+                <planeGeometry args={[2.9, 0.4]} />
+                <meshBasicMaterial color="#ffe0ae" toneMapped />
               </mesh>
               {/* the housing, so each fixture has a body above it */}
               <mesh position={[x, Y - 0.08, z]} material={M.charcoal}>
-                <boxGeometry args={[3.5, 0.32, 0.7]} />
+                <boxGeometry args={[3.2, 0.3, 0.62]} />
               </mesh>
             </group>
           )),
@@ -747,12 +757,12 @@ function CeilingGrid() {
           a void and the room has no lid; with it, the top of every arena shot
           is a lit ceiling receding toward the stage — which is the single
           largest thing the reference does that this venue was not doing. */}
-      <mesh position={[0, Y + 0.55, -322]} rotation={[Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[90, 104]} />
+      <mesh position={[0, Y + 0.55, -318]} rotation={[Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[96, 120]} />
         {/* a dark *warm* soffit, not black. A ceiling full of tungsten
             fixtures is never neutral, and the difference between #000 and
             this is most of what stops the upper frame reading as a hole. */}
-        <meshBasicMaterial color="#161009" toneMapped />
+        <meshBasicMaterial color="#1f170c" toneMapped />
       </mesh>
       {quality !== "low" &&
         Array.from({ length: 34 }, (_, i) => (
@@ -760,6 +770,10 @@ function CeilingGrid() {
             <boxGeometry args={[90, 0.2, 0.55]} />
           </mesh>
         ))}
+      {/* The wash the field lays on the room. Emissive plates look bright and
+          light nothing; without this the ceiling was a lit lid over a dark
+          floor, which is the one combination a real venue never shows. */}
+      <LightPool position={[0, 0.06, -312]} size={[84, 76]} color="#a8814f" opacity={0.1} />
       {/* a warm cove where the ceiling meets each side wall */}
       {[-1, 1].map((side) => (
         <mesh
@@ -803,8 +817,8 @@ function Seating() {
                 boxes on a dark floor are invisible, and an arena with no
                 legible audience has no scale. */}
             <mesh position={[side * 15.5, 0.8, z + 0.03]} rotation={[-Math.PI / 2.3, 0, 0]}>
-              <planeGeometry args={[23, 0.05]} />
-              <meshBasicMaterial color={i % 4 === 0 ? "#7a6144" : "#584736"} toneMapped />
+              <planeGeometry args={[23, 0.07]} />
+              <meshBasicMaterial color={i % 4 === 0 ? "#a5855f" : "#7a624a"} toneMapped />
             </mesh>
           </group>
         )),

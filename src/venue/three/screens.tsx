@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { useScreenTexture } from "../media/MediaContext";
+import { useMedia, useScreenTexture } from "../media/MediaContext";
 import { createLEDMaterial, createProjectionMaterial, type LEDOptions } from "./ledMaterial";
 import { useVenue } from "../systems/store";
 import { show } from "../systems/journey";
@@ -57,6 +57,11 @@ function useLED(
   range: number,
 ) {
   const texture = useScreenTexture(media, meshRef, range);
+  // The manifest may trim a surface's output — a panel a metre from the camera
+  // and a wall forty metres away are not run at the same level in a real
+  // venue, and that decision belongs with the content, not with the geometry.
+  const trim = useMedia().trim(media);
+  opts = { ...opts, brightness: (opts.brightness ?? 1) * trim };
   const key = ledKey(opts);
   // eslint-disable-next-line react-hooks/exhaustive-deps -- `key` covers every field of `opts`
   const material = useMemo(() => createLEDMaterial(texture, opts), [texture, key]);
@@ -368,6 +373,37 @@ export function RingScreen({
 
 /* ── LED pillar (four-sided column) ────────────────────── */
 
+/**
+ * A four-sided LED totem, mapped the way a real one is.
+ *
+ * This used to be a single `boxGeometry`, and that was the whole problem with
+ * the pillars. Three.js gives every face of a box its own 0..1 UV, so a box
+ * does not wrap content around a column — it shows the *same image four
+ * times*, once per face, and a visitor walking past sees a texture that
+ * restarts at every corner. No amount of art direction fixes that, because it
+ * is a mapping fault rather than a content fault.
+ *
+ * So the column is built as four separate faces, and each is handed its own
+ * slice of one unwrapped master canvas:
+ *
+ *      u:  0 ────── FRONT ────── RIGHT ────── BACK ────── LEFT ────── 1
+ *
+ * Going round the column in that order is not arbitrary — it is the order the
+ * faces physically meet, so the right edge of one slice is drawn against the
+ * left edge of the next with nothing between them. Slice widths follow the
+ * real perimeter, so a rectangular column keeps a constant pixel density
+ * instead of stretching its narrow faces.
+ *
+ * `flat` is set on every face for the same reason it is set on the anamorphic
+ * corner: four faces of a column are seen at four different angles by
+ * definition, and any off-axis falloff would put a brightness step on each of
+ * the four corners — which is precisely the "visible joint" the venue claims
+ * not to have.
+ *
+ * Content still has to be authored to wrap (see `pillarWrap` in
+ * `media/programs.ts`, which is periodic in u by construction). This component
+ * supplies the geometry; the programme supplies the continuity.
+ */
 export function PillarScreen({
   media,
   width,
@@ -381,31 +417,79 @@ export function PillarScreen({
   range = 80,
   spill = 0,
   spillColor = "#84b5ad",
-}: BaseProps & { width: number; height: number; depth: number }) {
-  const mesh = useRef<THREE.Mesh>(null);
-  const material = useLED(media, mesh, { width, height, pitch, brightness, tint, cabinet: 0.5 }, range);
-  usePowerState(material);
+  plinth = true,
+}: BaseProps & { width: number; height: number; depth: number; plinth?: boolean }) {
+  const perimeter = 2 * (width + depth);
+  // face: [physical width, position, rotation about Y]
+  const faces: { w: number; pos: Vec3; rotY: number }[] = [
+    { w: width, pos: [0, 0, depth / 2], rotY: 0 },
+    { w: depth, pos: [width / 2, 0, 0], rotY: Math.PI / 2 },
+    { w: width, pos: [0, 0, -depth / 2], rotY: Math.PI },
+    { w: depth, pos: [-width / 2, 0, 0], rotY: -Math.PI / 2 },
+  ];
 
-  // Four faces from one box: the wrap makes the content run continuously
-  // around the column, the way a real four-sided totem is mapped.
+  const base = plinth ? 0.12 : 0;
+  const midY = base + height / 2;
+
+  let u = 0;
   return (
     <group position={position} rotation={rotation}>
-      {/* base plate */}
-      <mesh position={[0, 0.06, 0]}>
-        <boxGeometry args={[width + 0.12, 0.12, depth + 0.12]} />
-        <meshStandardMaterial color="#0c1011" roughness={0.55} metalness={0.75} />
+      {plinth && (
+        <>
+          {/* base plate, with a lit reveal so the column stands on something */}
+          <mesh position={[0, 0.06, 0]}>
+            <boxGeometry args={[width + 0.16, 0.12, depth + 0.16]} />
+            <meshStandardMaterial color="#0c1011" roughness={0.55} metalness={0.75} />
+          </mesh>
+          <mesh position={[0, 0.125, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[width + 0.16, depth + 0.16]} />
+            <meshBasicMaterial color={spillColor} toneMapped />
+          </mesh>
+          {/* top cap */}
+          <mesh position={[0, base + height + 0.06, 0]}>
+            <boxGeometry args={[width + 0.12, 0.12, depth + 0.12]} />
+            <meshStandardMaterial color="#0c1011" roughness={0.5} metalness={0.8} />
+          </mesh>
+        </>
+      )}
+
+      {/* the column's own dark core, so a dimmed face is never see-through */}
+      <mesh position={[0, midY, 0]}>
+        <boxGeometry args={[width - 0.02, height - 0.02, depth - 0.02]} />
+        <meshStandardMaterial color="#070a0b" roughness={0.7} metalness={0.4} />
       </mesh>
-      {/* the LED column itself, standing on the plate */}
-      <mesh ref={mesh} material={material} position={[0, 0.12 + height / 2, 0]}>
-        <boxGeometry args={[width, height, depth]} />
-      </mesh>
-      {/* top cap */}
-      <mesh position={[0, 0.12 + height + 0.06, 0]}>
-        <boxGeometry args={[width + 0.1, 0.12, depth + 0.1]} />
-        <meshStandardMaterial color="#0c1011" roughness={0.5} metalness={0.8} />
-      </mesh>
+
+      {faces.map((f, i) => {
+        const span = f.w / perimeter;
+        const offset = u;
+        u += span;
+        return (
+          <Screen
+            key={i}
+            media={media}
+            width={f.w}
+            height={height}
+            position={[f.pos[0], midY, f.pos[2]]}
+            rotation={[0, f.rotY, 0]}
+            uv={[span, 1, offset, 0]}
+            pitch={pitch}
+            brightness={brightness}
+            tint={tint}
+            range={range}
+            frame={false}
+            flat
+          />
+        );
+      })}
+
       {spill > 0 && (
-        <pointLight position={[0, height * 0.55, 0]} intensity={spill} color={spillColor} distance={height * 2.4} decay={2} />
+        <pointLight
+          position={[0, height * 0.55, 0]}
+          intensity={spill}
+          color={spillColor}
+          distance={height * 2.4}
+          decay={2}
+        />
       )}
     </group>
   );

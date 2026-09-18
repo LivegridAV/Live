@@ -41,7 +41,11 @@
   inset: 0;
   z-index: 2;
   pointer-events: none;
-  background: radial-gradient(ellipse at 50% 52%, transparent 48%, rgba(2, 5, 6, 0.62) 100%);
+  /* A vignette is a grading tool, not a dimmer. At 48%/0.62 this was taking a
+     stop and a half out of the outer half of every frame — which is most of
+     the architecture — and no amount of lighting inside the scene could win
+     it back. Pulled in to the outer quarter, and halved. */
+  background: radial-gradient(ellipse at 50% 52%, transparent 62%, rgba(2, 5, 6, 0.34) 100%);
 }
 
 /* ── shared atoms ───────────────────────────────────────── */

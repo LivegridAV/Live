@@ -18,6 +18,7 @@ import type { QualityTier, StageMode } from "../systems/store";
 
 interface BaseEntry {
   id: string;
+  desc: MediaDesc;
   refs: number;
   /** highest importance any consumer reported this frame, 0 → 1 */
   importance: number;
@@ -89,6 +90,18 @@ export class MediaEngine {
   private isMobile = false;
   private elapsed = 0;
   private fallback: THREE.Texture;
+  /**
+   * One clock per synchronised group.
+   *
+   * Media that carries a single composition across several panels — a blade
+   * array, a stage package, the finale taking every major surface — names a
+   * `syncGroup`. Every member is seeded from this map rather than from
+   * `Math.random()`, so the members of a group are at the same point in the
+   * same animation on the same frame. Without it, ten blades showing "one
+   * image cut across ten panels" would each be showing a different moment of
+   * it, which is the one failure that makes an array read as ten screens.
+   */
+  private groupSeed = new Map<string, number>();
 
   constructor(renderer: THREE.WebGLRenderer) {
     this.renderer = renderer;
@@ -141,6 +154,25 @@ export class MediaEngine {
 
   private programFor(d: ShaderMedia): ShaderProgramId {
     return this.mode === "festival" && d.festival ? d.festival : d.program;
+  }
+
+  /**
+   * A start offset for one media entry. Ungrouped media gets its own random
+   * phase so twin screens never look cloned; grouped media shares one.
+   */
+  private seedFor(group?: string) {
+    if (!group) return Math.random() * 100;
+    let seed = this.groupSeed.get(group);
+    if (seed === undefined) {
+      seed = Math.random() * 100;
+      this.groupSeed.set(group, seed);
+    }
+    return seed;
+  }
+
+  /** The manifest's per-surface output trim, for whoever builds the material. */
+  trim(id: string) {
+    return MEDIA[id]?.brightness ?? 1;
   }
 
   private accentFor(d: ShaderMedia) {
@@ -210,14 +242,16 @@ export class MediaEngine {
 
     const program = this.programFor(desc);
     const m = Math.min(w, h);
+    const seed = this.seedFor(desc.syncGroup);
+
     const material = new THREE.ShaderMaterial({
       vertexShader: VERT,
       fragmentShader: SHADER_PROGRAMS[program],
       depthTest: false,
       depthWrite: false,
       uniforms: {
-        uTime: { value: Math.random() * 40 },
-        uSeed: { value: Math.random() * 100 },
+        uTime: { value: seed },
+        uSeed: { value: seed },
         uMode: { value: this.mode === "festival" ? 1 : 0 },
         uVariant: { value: desc.variant ?? 0 },
         uAccent: { value: this.accentFor(desc) },
@@ -312,6 +346,25 @@ export class MediaEngine {
     this.elapsed += dt;
     const budget = FRAME_BUDGET[this.quality];
 
+    /* Groups refresh together. If one panel of a blade array is on camera and
+       its neighbour is at a grazing angle, they must still be repainted on the
+       same frame — otherwise the array shears, which is exactly the artefact
+       the group exists to prevent. So importance is pooled first, and every
+       member then competes for the frame budget at the group's importance
+       rather than at its own. */
+    const groupImportance = new Map<string, number>();
+    for (const e of this.entries.values()) {
+      const g = e.desc.syncGroup;
+      if (!g) continue;
+      groupImportance.set(g, Math.max(groupImportance.get(g) ?? 0, e.importance));
+    }
+    if (groupImportance.size) {
+      for (const e of this.entries.values()) {
+        const g = e.desc.syncGroup;
+        if (g) e.importance = groupImportance.get(g)!;
+      }
+    }
+
     // Collect shader/canvas entries that are due, most important first.
     const due: Entry[] = [];
     for (const e of this.entries.values()) {
@@ -341,6 +394,8 @@ export class MediaEngine {
   }
 
   private renderShader(e: ShaderEntry) {
+    // Both terms are shared inside a group, so grouped surfaces are always on
+    // the same frame of the same animation.
     e.material.uniforms.uTime.value = this.elapsed + e.material.uniforms.uSeed.value;
     this.quad.material = e.material;
     this.renderer.setRenderTarget(e.rt);
