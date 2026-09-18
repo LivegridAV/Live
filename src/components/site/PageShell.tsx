@@ -36,10 +36,8 @@ export default function PageShell({ children }: { children: ReactNode }) {
   return (
     <div className="lg-dark flex min-h-full flex-col bg-paper text-text">
       <header
-        className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
-          scrolled
-            ? "border-b border-line bg-paper/90 backdrop-blur-md"
-            : "border-b border-transparent bg-transparent"
+        className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+          scrolled ? "lg-glass-nav" : "border-b border-transparent bg-transparent"
         }`}
       >
         <nav className="mx-auto flex max-w-[1180px] items-center justify-between px-6 py-4 md:px-12">
@@ -48,7 +46,7 @@ export default function PageShell({ children }: { children: ReactNode }) {
             <Wordmark className="text-xl" accent="glow" />
           </Link>
 
-          <div className="hidden items-center gap-6 md:flex">
+          <div className="lg-glass-pill hidden items-center gap-5 px-5 py-2 md:flex">
             {NAV.map((l) => (
               <Link
                 key={l.href}
@@ -60,7 +58,7 @@ export default function PageShell({ children }: { children: ReactNode }) {
             ))}
             <Link
               href="/contact"
-              className="rounded-xl bg-aqua px-5 py-2.5 text-sm font-medium text-white transition-[filter] hover:brightness-110"
+              className="lg-btn lg-btn-primary !rounded-full !px-5 !py-2.5 text-sm"
             >
               Start a project
             </Link>
@@ -70,7 +68,7 @@ export default function PageShell({ children }: { children: ReactNode }) {
             aria-label="Toggle menu"
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="flex h-10 w-10 items-center justify-center rounded-lg text-text md:hidden"
+            className="lg-glass-pill flex h-10 w-10 items-center justify-center text-text md:hidden"
           >
             <div className="space-y-1.5">
               <span className="block h-0.5 w-6 bg-current" />
@@ -86,7 +84,7 @@ export default function PageShell({ children }: { children: ReactNode }) {
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.25 }}
-              className="overflow-hidden border-t border-line bg-paper md:hidden"
+              className="lg-glass-nav overflow-hidden md:hidden"
             >
               <div className="flex flex-col gap-1 px-6 py-4">
                 {NAV.map((l) => (

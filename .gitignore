@@ -46,3 +46,6 @@ next-env.d.ts
 # scratch screenshots / playwright output (never commit)
 /*.png
 .playwright-mcp/
+
+# QA screenshots from the venue walkthrough review (local only)
+/qa/

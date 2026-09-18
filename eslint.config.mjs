@@ -17,7 +17,7 @@ const eslintConfig = defineConfig([
     // The WebGL experience mutates Three.js objects inside useFrame render
     // loops — that's the idiomatic react-three-fiber pattern, but the React
     // Compiler lint rules (written for React render functions) flag it.
-    files: ["src/experience/**/*.{ts,tsx}"],
+    files: ["src/experience/**/*.{ts,tsx}", "src/venue/**/*.{ts,tsx}"],
     rules: {
       "react-hooks/purity": "off",
       "react-hooks/immutability": "off",

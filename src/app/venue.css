@@ -1,0 +1,1035 @@
+/* ══════════════════════════════════════════════════════════
+   The venue walkthrough — DOM chrome over the WebGL journey.
+
+   The rule for everything here: the building is the interface. Chrome stays
+   thin, mono-labelled and out of the way; only one glowing element is allowed
+   in view at a time. Type is Space Grotesk / Space Mono from the root layout.
+   ══════════════════════════════════════════════════════════ */
+
+.venue {
+  --v-ink: #05090a;
+  --v-panel: rgba(9, 16, 17, 0.82);
+  --v-line: rgba(122, 156, 152, 0.18);
+  --v-line-strong: rgba(122, 156, 152, 0.34);
+  --v-text: #eef3f2;
+  --v-muted: #9aa8a6;
+  --v-faint: #6c7b79;
+  --v-glow: #3fd6c8;
+  --v-amber: #d99a52;
+
+  position: relative;
+  background: var(--v-ink);
+  color: var(--v-text);
+}
+
+.venue-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+/* The scroll track. It carries no content — the venue is the content — but it
+   is what turns a wheel into 375 metres of camera move. */
+.venue-track {
+  position: relative;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.venue-vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 52%, transparent 48%, rgba(2, 5, 6, 0.62) 100%);
+}
+
+/* ── shared atoms ───────────────────────────────────────── */
+
+.v-mono {
+  font-family: var(--font-space-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--v-faint);
+}
+
+.v-btn {
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  padding: 11px 20px;
+  border-radius: 12px;
+  border: 1px solid var(--v-line-strong);
+  background: rgba(10, 18, 19, 0.7);
+  color: var(--v-text);
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+  backdrop-filter: blur(10px);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.v-btn:hover {
+  border-color: var(--v-glow);
+  color: #fff;
+}
+.v-btn:focus-visible {
+  outline: 2px solid var(--v-glow);
+  outline-offset: 2px;
+}
+.v-btn--primary {
+  background: var(--v-glow);
+  border-color: var(--v-glow);
+  color: #06100f;
+  font-weight: 600;
+}
+.v-btn--primary:hover {
+  filter: brightness(1.1);
+  color: #06100f;
+}
+
+/* ══════════════════════════════════════════════════════════
+   Loader
+   ══════════════════════════════════════════════════════════ */
+
+.v-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  background: #04080a;
+  transition: opacity 0.9s ease, visibility 0.9s;
+}
+.v-loader[data-done="true"] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.v-loader-inner {
+  display: grid;
+  gap: 22px;
+  justify-items: center;
+  text-align: center;
+  padding: 24px;
+  max-width: 460px;
+}
+.v-loader-mark {
+  display: grid;
+  grid-template-columns: repeat(5, 8px);
+  gap: 3px;
+}
+.v-loader-cell {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: #16302d;
+}
+.v-loader-cell[data-on="true"] {
+  background: var(--v-glow);
+  box-shadow: 0 0 10px rgba(63, 214, 200, 0.55);
+  animation: vPop 2.6s ease-in-out infinite;
+}
+@keyframes vPop {
+  0%, 100% { transform: scale(0.6); opacity: 0.35; }
+  16% { transform: scale(1); opacity: 1; }
+  70% { transform: scale(1); opacity: 1; }
+}
+.v-loader-word {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.v-loader-word span { color: var(--v-glow); }
+.v-loader-bar {
+  width: min(320px, 70vw);
+  height: 2px;
+  background: rgba(122, 156, 152, 0.16);
+  overflow: hidden;
+  border-radius: 2px;
+}
+.v-loader-fill {
+  height: 100%;
+  background: var(--v-glow);
+  box-shadow: 0 0 12px rgba(63, 214, 200, 0.6);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+.v-loader-enter { margin-top: 6px; }
+.v-loader-note {
+  max-width: 42ch;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--v-muted);
+}
+
+/* ══════════════════════════════════════════════════════════
+   Navigation
+   ══════════════════════════════════════════════════════════ */
+
+.v-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 26px;
+  background: linear-gradient(to bottom, rgba(4, 8, 10, 0.72), transparent);
+  pointer-events: none;
+}
+.v-nav > * { pointer-events: auto; }
+.v-nav-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--v-text);
+  text-decoration: none;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+}
+.v-nav-brand span { color: var(--v-glow); }
+.v-nav-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 3px);
+  gap: 1.5px;
+}
+.v-nav-grid i {
+  width: 3px;
+  height: 3px;
+  border-radius: 1px;
+  background: #1d3733;
+}
+.v-nav-grid i[data-on="true"] {
+  background: var(--v-glow);
+}
+.v-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.v-nav-link {
+  font-family: var(--font-space-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--v-muted);
+  background: none;
+  border: 0;
+  padding: 9px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s, background 0.2s;
+}
+.v-nav-link:hover,
+.v-nav-link[aria-current="true"] {
+  color: var(--v-text);
+  background: rgba(122, 156, 152, 0.1);
+}
+.v-nav-link[aria-current="true"] { color: var(--v-glow); }
+.v-nav-cta { margin-left: 8px; }
+
+.v-nav-toggle {
+  display: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid var(--v-line);
+  background: rgba(9, 16, 17, 0.7);
+  color: var(--v-text);
+  cursor: pointer;
+}
+.v-nav-sheet {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  background: rgba(4, 8, 10, 0.96);
+  backdrop-filter: blur(14px);
+  display: grid;
+  align-content: center;
+  gap: 4px;
+  padding: 28px;
+}
+.v-nav-sheet .v-nav-link {
+  font-size: 13px;
+  letter-spacing: 0.2em;
+  padding: 16px 10px;
+  border-bottom: 1px solid var(--v-line);
+  border-radius: 0;
+  text-align: left;
+}
+.v-nav-sheet-close {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+}
+.v-nav-sheet-label {
+  margin: 20px 10px 6px;
+  color: var(--v-glow);
+}
+.v-nav-sheet-label:first-of-type { margin-top: 0; }
+
+/* ══════════════════════════════════════════════════════════
+   Zone HUD
+   ══════════════════════════════════════════════════════════ */
+
+.v-hud {
+  position: fixed;
+  left: 26px;
+  bottom: 26px;
+  z-index: 30;
+  display: grid;
+  gap: 10px;
+  max-width: min(440px, 62vw);
+  pointer-events: none;
+}
+.v-hud-zone {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.v-hud-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--v-glow);
+  box-shadow: 0 0 10px var(--v-glow);
+}
+.v-hud-title {
+  font-size: clamp(20px, 3vw, 34px);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  margin: 0;
+  text-wrap: balance;
+}
+.v-hud-line {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--v-muted);
+  margin: 0;
+  max-width: 46ch;
+}
+.v-hud-fade {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+/* progress rail down the right edge */
+.v-rail {
+  position: fixed;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 30;
+  display: grid;
+  gap: 14px;
+  justify-items: end;
+}
+.v-rail-stop {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: none;
+  border: 0;
+  padding: 2px;
+  cursor: pointer;
+  color: var(--v-faint);
+}
+.v-rail-label {
+  font-family: var(--font-space-mono), ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateX(6px);
+  transition: opacity 0.25s, transform 0.25s;
+  white-space: nowrap;
+}
+.v-rail-stop:hover .v-rail-label,
+.v-rail-stop[data-active="true"] .v-rail-label {
+  opacity: 1;
+  transform: none;
+}
+.v-rail-tick {
+  width: 18px;
+  height: 1px;
+  background: currentColor;
+  transition: width 0.25s, background 0.25s;
+}
+.v-rail-stop[data-active="true"] {
+  color: var(--v-glow);
+}
+.v-rail-stop[data-active="true"] .v-rail-tick {
+  width: 28px;
+  box-shadow: 0 0 8px var(--v-glow);
+}
+
+.v-scrollcue {
+  position: fixed;
+  left: 50%;
+  bottom: 26px;
+  transform: translateX(-50%);
+  z-index: 30;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  pointer-events: none;
+  transition: opacity 0.5s;
+}
+.v-scrollcue-rail {
+  width: 1px;
+  height: 34px;
+  background: linear-gradient(to bottom, transparent, var(--v-glow), transparent);
+  animation: vCue 2.2s ease-in-out infinite;
+}
+@keyframes vCue {
+  0%, 100% { opacity: 0.2; transform: translateY(-6px); }
+  50% { opacity: 1; transform: translateY(6px); }
+}
+
+/* ══════════════════════════════════════════════════════════
+   Pavilion prompt + detail panel
+   ══════════════════════════════════════════════════════════ */
+
+.v-prompt {
+  position: fixed;
+  z-index: 32;
+  bottom: 108px;
+  display: grid;
+  gap: 4px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  border: 1px solid var(--v-line);
+  background: var(--v-panel);
+  backdrop-filter: blur(14px);
+  transition: opacity 0.45s ease, transform 0.45s ease;
+  max-width: min(340px, 42vw);
+}
+.v-prompt[data-side="-1"] { left: 34px; }
+.v-prompt[data-side="1"] { right: 34px; }
+.v-prompt-no {
+  font-family: var(--font-space-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  color: var(--v-glow);
+}
+.v-prompt h2 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.v-prompt-act {
+  margin-top: 8px;
+}
+.v-prompt-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.v-tag {
+  font-family: var(--font-space-mono), ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--v-faint);
+  border: 1px solid var(--v-line);
+  border-radius: 999px;
+  padding: 5px 10px;
+}
+
+/* the detail panel slides out of the stall */
+.v-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  grid-template-columns: 1fr min(620px, 100%);
+}
+.v-panel-scrim {
+  background: rgba(3, 7, 8, 0.72);
+  backdrop-filter: blur(3px);
+  border: 0;
+  cursor: pointer;
+  animation: vFade 0.35s ease;
+}
+@keyframes vFade { from { opacity: 0; } }
+.v-panel-body {
+  background: linear-gradient(to bottom, #0a1213, #060a0b);
+  border-left: 1px solid var(--v-line);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 0 48px;
+  animation: vSlide 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes vSlide { from { transform: translateX(28px); opacity: 0; } }
+.v-panel-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 28px;
+  background: rgba(7, 12, 13, 0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--v-line);
+}
+.v-panel-inner { padding: 28px; display: grid; gap: 30px; }
+.v-panel h2 {
+  margin: 0;
+  font-size: clamp(26px, 4vw, 38px);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+}
+.v-panel h3 {
+  margin: 0 0 10px;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+.v-panel p { margin: 0; font-size: 15px; line-height: 1.65; color: var(--v-muted); }
+.v-panel ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 9px; }
+.v-panel li {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--v-muted);
+  padding-left: 18px;
+  position: relative;
+}
+.v-panel li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 9px;
+  width: 6px;
+  height: 1px;
+  background: var(--v-glow);
+}
+.v-panel-service {
+  border-top: 1px solid var(--v-line);
+  padding-top: 22px;
+  display: grid;
+  gap: 14px;
+}
+.v-panel-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.v-panel-note {
+  border: 1px solid rgba(217, 154, 82, 0.28);
+  background: rgba(217, 154, 82, 0.07);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: #dcc39b;
+}
+
+/* ══════════════════════════════════════════════════════════
+   Stage mode switch
+   ══════════════════════════════════════════════════════════ */
+
+.v-stagemode {
+  position: fixed;
+  left: 50%;
+  bottom: 30px;
+  transform: translateX(-50%);
+  z-index: 34;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  transition: opacity 0.45s ease, transform 0.45s ease;
+}
+.v-stagemode-switch {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 14px;
+  border: 1px solid var(--v-line-strong);
+  background: rgba(7, 13, 14, 0.82);
+  backdrop-filter: blur(14px);
+}
+.v-stagemode-btn {
+  font-family: var(--font-space-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--v-muted);
+  background: none;
+  border: 0;
+  padding: 12px 22px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.25s, color 0.25s;
+}
+.v-stagemode-btn[aria-pressed="true"] {
+  background: var(--v-glow);
+  color: #06100f;
+  font-weight: 700;
+}
+.v-stagemode-btn[aria-pressed="true"][data-mode="festival"] {
+  background: #b678e0;
+  color: #120520;
+}
+
+/* ══════════════════════════════════════════════════════════
+   Contact experience
+   ══════════════════════════════════════════════════════════ */
+
+.v-contact {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 36;
+  display: grid;
+  justify-items: center;
+  padding: 0 20px 26px;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.v-contact-card {
+  /* Deliberately short: the finale is still playing on the wall behind it, and
+     a full-height panel would hide the moment the whole journey builds to. */
+  width: min(980px, 100%);
+  max-height: 54vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-radius: 18px;
+  border: 1px solid var(--v-line);
+  background: var(--v-panel);
+  backdrop-filter: blur(18px);
+  padding: 18px 20px;
+  display: grid;
+  gap: 12px;
+}
+.v-contact-card h2 { font-size: clamp(19px, 2.4vw, 25px); }
+.v-contact-head { display: grid; gap: 8px; }
+.v-contact-head h2 {
+  margin: 0;
+  font-size: clamp(22px, 3.4vw, 32px);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+.v-contact-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.v-contact-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 28px;
+  font-size: 13px;
+  color: var(--v-muted);
+}
+.v-contact-details a { color: var(--v-muted); text-decoration: none; }
+.v-contact-details a:hover { color: var(--v-glow); }
+
+.v-form { display: grid; gap: 12px; }
+.v-form-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.v-form-row {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 2fr);
+  align-items: start;
+}
+.v-field { display: grid; gap: 6px; }
+.v-field label {
+  font-family: var(--font-space-mono), ui-monospace, monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--v-faint);
+}
+.v-field input,
+.v-field select,
+.v-field textarea {
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--v-text);
+  background: rgba(5, 10, 11, 0.8);
+  border: 1px solid var(--v-line);
+  border-radius: 10px;
+  padding: 9px 12px;
+  width: 100%;
+}
+.v-field textarea { resize: vertical; min-height: 58px; }
+.v-field input:focus,
+.v-field select:focus,
+.v-field textarea:focus {
+  outline: none;
+  border-color: var(--v-glow);
+}
+.v-field select option { background: #0a1213; }
+.v-form-status {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--v-muted);
+}
+.v-form-status[data-state="ok"] { color: var(--v-glow); }
+.v-form-status[data-state="error"] { color: #e0a06a; }
+
+/* ══════════════════════════════════════════════════════════
+   Reduced motion / guided route
+   ══════════════════════════════════════════════════════════ */
+
+.v-guide {
+  position: fixed;
+  left: 50%;
+  bottom: 26px;
+  transform: translateX(-50%);
+  z-index: 34;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 14px;
+  border: 1px solid var(--v-line-strong);
+  background: rgba(7, 13, 14, 0.86);
+  backdrop-filter: blur(14px);
+}
+.v-guide-step {
+  font-family: var(--font-space-mono), ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--v-muted);
+  min-width: 108px;
+  text-align: center;
+}
+
+/* ══════════════════════════════════════════════════════════
+   Semantic content beneath the experience
+   ══════════════════════════════════════════════════════════ */
+
+.v-seo {
+  position: relative;
+  z-index: 3;
+  background: #060a0b;
+  border-top: 1px solid var(--v-line);
+  padding: 72px 24px 96px;
+}
+.v-seo-inner { max-width: 1180px; margin: 0 auto; display: grid; gap: 44px; }
+.v-seo h1 {
+  font-size: clamp(28px, 4.4vw, 46px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.06;
+  margin: 0;
+  max-width: 24ch;
+}
+.v-seo h2 {
+  font-size: clamp(20px, 2.6vw, 26px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0 0 14px;
+}
+.v-seo h3 { font-size: 16px; font-weight: 600; margin: 0 0 6px; letter-spacing: -0.01em; }
+.v-seo p { margin: 0 0 12px; font-size: 15px; line-height: 1.7; color: var(--v-muted); max-width: 72ch; }
+.v-seo a { color: var(--v-glow); text-decoration: none; }
+.v-seo a:hover { text-decoration: underline; }
+.v-seo-grid {
+  display: grid;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+.v-seo-card {
+  border: 1px solid var(--v-line);
+  border-radius: 16px;
+  padding: 20px;
+  background: rgba(10, 18, 19, 0.5);
+}
+.v-seo-card p { font-size: 14px; margin: 0; }
+.v-seo-list { display: grid; gap: 8px; padding: 0; margin: 0; list-style: none; }
+.v-seo-list a { font-size: 14.5px; }
+.v-seo-foot {
+  border-top: 1px solid var(--v-line);
+  padding-top: 26px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px 30px;
+  font-size: 13.5px;
+  color: var(--v-faint);
+}
+
+/* ══════════════════════════════════════════════════════════
+   Responsive
+   ══════════════════════════════════════════════════════════ */
+
+@media (max-width: 900px) {
+  .v-nav { padding: 14px 16px; }
+  .v-nav-links { display: none; }
+  .v-nav-toggle { display: grid; place-items: center; }
+
+  .v-hud {
+    left: 16px;
+    right: 16px;
+    bottom: 132px;
+    max-width: none;
+  }
+  .v-hud-title { font-size: 21px; }
+  /* the supporting line competes with the stage switch on a phone */
+  .v-hud-line { display: none; }
+
+  .v-rail { right: 10px; gap: 11px; }
+  .v-rail-label { display: none; }
+
+  .v-prompt {
+    left: 16px !important;
+    right: 16px !important;
+    max-width: none;
+    bottom: 96px;
+    padding: 14px 16px;
+  }
+  .v-prompt h2 { font-size: 17px; }
+
+  .v-panel { grid-template-columns: 1fr; }
+  .v-panel-scrim { display: none; }
+  .v-panel-body { border-left: 0; }
+  .v-panel-inner { padding: 20px; gap: 24px; }
+
+  .v-stagemode { bottom: 18px; }
+  .v-stagemode-btn { padding: 11px 16px; font-size: 9px; }
+
+  .v-contact { padding: 0 12px 14px; }
+  .v-contact-card { padding: 16px; max-height: 66vh; }
+  .v-form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .v-form-row { grid-template-columns: 1fr; }
+
+  .v-seo { padding: 52px 18px 72px; }
+}
+
+@media (max-width: 420px) {
+  .v-hud { bottom: 126px; }
+  .v-hud-title { font-size: 19px; }
+}
+
+/* ══════════════════════════════════════════════════════════
+   Reduced motion
+   ══════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  .v-loader-cell[data-on="true"],
+  .v-scrollcue-rail {
+    animation: none;
+  }
+  .v-panel-body,
+  .v-panel-scrim { animation: none; }
+  .v-hud-fade,
+  .v-prompt,
+  .v-stagemode,
+  .v-contact { transition-duration: 0.01ms; }
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   Glass
+   ------------------------------------------------------------------
+   One recipe, applied to every piece of navigation and control chrome
+   so the interface reads as a single material laid over the venue
+   rather than as a set of differently-tinted boxes.
+
+   Four things make glass look like glass and not like a grey panel:
+   a *saturating* blur (light through glass keeps its colour), a hairline
+   that is brighter along the top edge than the bottom, a specular sheen
+   across the top third, and a shadow that proves the panel is floating
+   above something. All four are here; the blur alone is what everything
+   else was already doing.
+
+   The zone caption is deliberately left as bare type: it is a title
+   card, not a control, and putting it in a box would make the venue
+   look like a dashboard.
+   ══════════════════════════════════════════════════════════ */
+
+:root {
+  /* Transparency is the point of the material, so the tint is deliberately
+     light — the venue stays visible through every control. What buys back the
+     legibility a thin tint costs is not opacity, it is the *blur*: a heavily
+     blurred backdrop has almost no local contrast, so white text sits on an
+     even field whatever is moving behind it. Text on glass also carries its
+     own shadow (see below), which is what makes this safe over a stage wall
+     running at full output. */
+  --v-glass-tint: linear-gradient(170deg, rgba(22, 42, 40, 0.30) 0%, rgba(6, 13, 13, 0.44) 68%);
+  --v-glass-blur: blur(24px) saturate(1.5);
+  --v-glass-edge: rgba(178, 234, 226, 0.24);
+  --v-glass-lift:
+    inset 0 1px 0 rgba(236, 255, 252, 0.16),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.30),
+    0 18px 46px rgba(0, 0, 0, 0.40);
+  --v-glass-text: 0 1px 2px rgba(2, 8, 8, 0.72), 0 0 14px rgba(2, 8, 8, 0.42);
+}
+
+.v-glass,
+.v-btn,
+.v-nav-brand,
+.v-nav-links,
+.v-nav-toggle,
+.v-nav-sheet,
+.v-rail,
+.v-stagemode-switch,
+.v-prompt,
+.v-panel-inner,
+.v-contact-card,
+.v-guide {
+  text-shadow: var(--v-glass-text);
+  background: var(--v-glass-tint);
+  -webkit-backdrop-filter: var(--v-glass-blur);
+  backdrop-filter: var(--v-glass-blur);
+  border: 1px solid var(--v-glass-edge);
+  box-shadow: var(--v-glass-lift);
+}
+
+/* The sheen. A pseudo-element rather than another gradient in the
+   background, so it survives whatever each component sets its own
+   background to. */
+.v-btn,
+.v-nav-brand,
+.v-nav-links,
+.v-nav-toggle,
+.v-rail,
+.v-stagemode-switch,
+.v-prompt {
+  position: relative;
+  isolation: isolate;
+}
+.v-btn::before,
+.v-nav-brand::before,
+.v-nav-links::before,
+.v-rail::before,
+.v-stagemode-switch::before,
+.v-prompt::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 42%;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0));
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ── navigation ── */
+.v-nav {
+  /* the scrim goes: the pills carry the contrast now */
+  background: linear-gradient(to bottom, rgba(4, 8, 10, 0.34), transparent 78%);
+}
+.v-nav-brand {
+  padding: 9px 16px;
+  border-radius: 999px;
+}
+.v-nav-links {
+  padding: 4px 6px;
+  border-radius: 999px;
+  gap: 2px;
+}
+.v-nav-link {
+  border-radius: 999px;
+  font-weight: 600;
+  /* 0.18em on a ten-pixel label is what made the nav look loose */
+  letter-spacing: 0.12em;
+}
+.v-nav-link:hover,
+.v-nav-link[aria-current="true"] {
+  background: rgba(150, 214, 205, 0.14);
+}
+.v-nav-cta {
+  margin-left: 6px;
+  border-radius: 999px;
+}
+.v-nav-toggle { border-radius: 999px; }
+.v-nav-sheet {
+  border-radius: 20px;
+  --v-glass-blur: blur(26px) saturate(1.3);
+}
+
+/* ── the progress rail ── */
+.v-rail {
+  padding: 14px 12px;
+  border-radius: 18px;
+}
+
+/* ── type weight across the chrome ── */
+.v-btn { font-weight: 600; }
+.v-rail-label,
+.v-nav-sheet-label { font-weight: 600; letter-spacing: 0.12em; }
+.v-hud-title { font-weight: 600; letter-spacing: -0.015em; }
+
+/* Blur is expensive per pixel and a phone is already the tightest budget
+   in the venue, so the effect degrades to a flat tint where it is not
+   supported — and on coarse pointers it loses the saturation pass. */
+@media (pointer: coarse) {
+  :root { --v-glass-blur: blur(12px); }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root { --v-glass-tint: linear-gradient(170deg, rgba(14, 26, 25, 0.9), rgba(5, 11, 11, 0.94)); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  :root { --v-glass-blur: none; --v-glass-tint: rgba(6, 13, 13, 0.94); }
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   Type weight and colour
+   ------------------------------------------------------------------
+   Space Grotesk at 700 is a loud face. The venue was setting almost
+   everything at 600-700, which on a dark ground reads as shouting —
+   so the hierarchy is rebuilt out of *size and colour* instead, and
+   the weights come down a step. 500 for body and controls, 600 only
+   where something genuinely leads.
+
+   Colours are raised at the same time: --v-muted was doing double duty
+   as "secondary" and "barely there", and on glass it disappeared.
+   ══════════════════════════════════════════════════════════ */
+
+:root {
+  --v-text: #eef6f4;
+  --v-muted: #b9cbc8;
+  --v-faint: #8fa5a2;
+}
+
+.v-btn { font-weight: 500; letter-spacing: 0.005em; }
+.v-btn--primary { font-weight: 600; text-shadow: none; }
+.v-nav-brand { font-weight: 600; letter-spacing: -0.015em; }
+.v-nav-link { font-weight: 500; letter-spacing: 0.1em; color: var(--v-muted); }
+.v-nav-link:hover,
+.v-nav-link[aria-current="true"] { color: var(--v-text); }
+.v-hud-title { font-weight: 500; letter-spacing: -0.01em; color: var(--v-text); }
+.v-hud-line { color: var(--v-muted); }
+.v-rail-label,
+.v-nav-sheet-label { font-weight: 500; letter-spacing: 0.1em; color: var(--v-muted); }
+.v-prompt h2 { font-weight: 600; }
+.v-mono { color: var(--v-faint); }
+
+/* The primary action is the one element that is NOT glass.
+   It carries dark ink on a bright fill, so inheriting the translucent tint
+   put dark text on a dark panel and the button read as an empty pill — the
+   exact readability failure glass is prone to. One confident opaque element
+   in a translucent system is also what tells the eye where to go. */
+.v-btn--primary {
+  background: var(--v-glow);
+  border-color: var(--v-glow);
+  color: #06100f;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.34);
+}
+.v-btn--primary::before { display: none; }
+.v-btn--primary:hover { color: #06100f; filter: brightness(1.08); }
+.v-btn--primary,
+.v-btn--primary * { text-shadow: none; }
+
+/* Anything that sits on glass and is not itself a glass panel still needs
+   the shadow — the HUD caption is bare type over the live scene. */
+.v-hud-title,
+.v-hud-line,
+.v-hud-zone { text-shadow: var(--v-glass-text); }
