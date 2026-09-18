@@ -203,7 +203,7 @@ export const MEDIA: Record<string, MediaDesc> = {
      aisle. */
   "cylinder-ribbon": { kind: "shader", program: "chromeFlow", accent: ACCENT.gold, res: [2048, 704], fps: 24, syncGroup: "cylinder" },
   // Continuous angular content on a 34 m circumference, 1.5 m tall.
-  "ring-waves": { kind: "shader", program: "chromeFlow", accent: ACCENT.ice, res: [2048, 256], fps: 30, syncGroup: "ring" },
+  "ring-waves": { kind: "shader", program: "chromeFlow", accent: ACCENT.ice, res: [2304, 320], fps: 24, syncGroup: "ring" },
   // The fascia is a metre from the camera and its own header calls it
   // fine pitch. A matrix motif here contradicts the product in the same frame.
   "bar-brand": { kind: "shader", program: "chromeFlow", accent: ACCENT.magenta, variant: 0.45, res: [1792, 256], fps: 30, syncGroup: "bar" },

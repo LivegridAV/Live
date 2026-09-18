@@ -210,14 +210,20 @@ function Cylinder() {
 function Ring() {
   return (
     <group position={[-3.2, 0, -78]}>
+      {/* The camera passes directly underneath, and from there you are looking
+          at the *inside* of an outward-facing ring — the dimmest view of it
+          there is. It carries the whole frame at that moment, so it is run
+          hot and given real spill. */}
       <RingScreen
         media="ring-waves"
         radius={5.4}
         height={1.5}
         position={[0, 6.4, 0]}
         pitch={1.9}
-        brightness={1.6}
+        brightness={2.3}
         range={80}
+        spill={26}
+        spillColor="#6fc2b6"
       />
       {/* a second, smaller ring inside it — the composition needs a counterpoint */}
       <RingScreen
@@ -226,7 +232,7 @@ function Ring() {
         height={0.9}
         position={[0, 7.9, 0]}
         pitch={1.9}
-        brightness={1.35}
+        brightness={1.95}
         inward
         range={80}
       />
@@ -239,7 +245,10 @@ function Ring() {
       <mesh position={[0, 0.026, 0]} rotation={[-Math.PI / 2, 0, 0]} material={M.deck}>
         <circleGeometry args={[5.4, 48]} />
       </mesh>
-      <LightPool position={[0, 0.05, 0]} size={20} color="#4fa79c" opacity={0.13} pulse={0.45} />
+      <LightPool position={[0, 0.05, 0]} size={20} color="#4fa79c" opacity={0.2} pulse={0.45} />
+      {/* a soft disc of light in the air under the ring, so the pass beneath it
+          is a lit moment rather than a dark ceiling */}
+      <LightPool position={[0, 5.5, 0]} size={16} color="#5fb8ac" opacity={0.1} pulse={0.4} />
       {/* The ring is flown over the walkway rather than standing on a stand,
           so its name board hangs clear to one side — directly under it is
           where the camera goes. */}
