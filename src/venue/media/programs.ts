@@ -250,9 +250,12 @@ const liquidMetal = wrap(/* glsl */ `
 
     // Long horizontal flow lines, warped just enough to feel liquid. fbm on
     // its own reads as marble; it is the directional grain that makes metal.
-    vec2 q = vec2(p.x * 0.55, p.y * 1.7);
-    float warp = fbm(q * 0.9 + vec2(t, -t * 0.4));
-    q.y += (warp - 0.5) * 0.42;
+    // Grain frequency matters more than anything else here: at the density
+    // this ran at, a tall LED column resolved into four fat bands and read as
+    // marble, which is the opposite of the machined look intended.
+    vec2 q = vec2(p.x * 0.5, p.y * 3.6);
+    float warp = fbm(q * 0.55 + vec2(t, -t * 0.4));
+    q.y += (warp - 0.5) * 0.2;
     q.x += fbm(q * 0.5 - vec2(t * 0.6, 0.0)) * 0.5;
 
     // Stacked ribbons of varying width sliding past each other.
@@ -277,7 +280,7 @@ const liquidMetal = wrap(/* glsl */ `
     col += hot * spec * (0.35 + 0.65 * rake) * 1.4;
     col += mix(uAccent, hot, 0.35) * edge * 0.55;
     col += uAccent * ribbon * 0.06;
-    gl_FragColor = vec4(tone(col * 1.1), 1.0);
+    gl_FragColor = vec4(tone(col * 1.25), 1.0);
   }
 `);
 

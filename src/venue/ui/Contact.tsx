@@ -42,7 +42,7 @@ export function ContactPanel() {
   // and 0.996 — brand, strapline, invitation — and putting a form over the top
   // of them turns a show ending into a page with a modal on it. The panel
   // arrives only once the invitation is up.
-  const visible = entered && progress > 0.9885 && !panelOpen && !pastVenue;
+  const visible = entered && progress > 0.9905 && !panelOpen && !pastVenue;
 
   const submit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

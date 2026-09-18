@@ -400,7 +400,7 @@ function AnamorphicCorner() {
       {/* Hung above the left leaf on a real header, turned a little toward the
           viewing mark. It used to be a bare panel floating at the top of the
           building face, which read as a UI element stuck to the scene. */}
-      <NameBoard position={[-3.4, 7.2, 0.2]} face={0.35} media="stand-anamorphic" width={4.4} accent="#b9ab93" />
+      <NameBoard position={[-3.4, 5.95, 0.25]} face={0.35} media="stand-anamorphic" width={4.2} accent="#b9ab93" />
       <LightPool position={[2.6, 0.05, 2.6]} size={16} color="#b9ab93" opacity={0.14} />
     </group>
   );

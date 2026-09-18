@@ -76,11 +76,16 @@ function ramp(a: number, b: number) {
 }
 
 /* The finale, beat by beat. Each ramp is one cue, and they overlap the way a
-   programmed sequence does rather than cutting between states. */
-const showOut = ramp(0.952, 0.966); // the performance ends, the room settles
-const brandUp = ramp(0.962, 0.976); // livegridAV takes every major surface
-const lineUp = ramp(0.976, 0.987); // the strapline follows
-const ctaUp = ramp(0.987, 0.996); // and then the invitation
+   programmed sequence does rather than cutting between states.
+
+   The whole sequence was pulled ~8 thousandths earlier so that the last beat
+   has somewhere to live: the contact form gates in at 0.9905, and the
+   invitation used to arrive at 0.987 and be covered by it about a frame
+   later. A finale whose final card is never seen is not a finale. */
+const showOut = ramp(0.944, 0.958); // the performance ends, the room settles
+const brandUp = ramp(0.954, 0.968); // livegridAV takes every major surface
+const lineUp = ramp(0.968, 0.979); // the strapline follows
+const ctaUp = ramp(0.979, 0.9885); // and then the invitation
 const showLive = () => 1 - showOut();
 
 /* ── approach ──────────────────────────────────────────── */
@@ -434,6 +439,20 @@ function StageScreens({ rim }: { rim: THREE.Material }) {
             uv={[1, 1, 0, 0]}
             power={() => 0.06 + 0.94 * showLive()}
           />
+          {/* the strips join the finale too — "every major display
+              synchronises" has to be literal or it is not a finale */}
+          <Panel
+            media="finale"
+            width={0.5}
+            height={STAGE.heroH}
+            position={[side * 12.5, HERO_Y, Z + 0.06]}
+            rim={rim}
+            pitch={1.9}
+            brightness={1.1}
+            chrome={false}
+            uv={[0.12, 1, 0.44, 0]}
+            power={brandUp}
+          />
 
           {/* ── portrait fillers ── */}
           {[
@@ -529,6 +548,23 @@ function StageScreens({ rim }: { rim: THREE.Material }) {
               uv={[0.5, 1, 0.5, 0]}
               power={() => 0.06 + 0.94 * showLive()}
             />
+            {[
+              { y: 10.0, v: 0.5 },
+              { y: 5.2, v: 0 },
+            ].map((p, i) => (
+              <Panel
+                key={`of${i}`}
+                media="finale"
+                width={8.6}
+                height={4.4}
+                position={[0, p.y, 0.06]}
+                rim={rim}
+                brightness={0.96}
+                chrome={false}
+                uv={[1, 0.5, 0, p.v]}
+                power={brandUp}
+              />
+            ))}
           </group>
         </group>
       ))}

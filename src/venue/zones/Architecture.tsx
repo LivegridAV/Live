@@ -102,6 +102,21 @@ function HallChunk({ from, to }: { from: number; to: number }) {
     return out;
   }, [from, to]);
 
+  /**
+   * Warm downlights in the ceiling, on a tighter spacing than the truss bays.
+   *
+   * Everything lighting this hall was some shade of steel or teal, and a room
+   * lit entirely in one cool hue reads as unlit however many emitters are in
+   * it — there is nothing for the cool to be cool *against*. These are the
+   * warm half of the scheme, and they are what the brief means by
+   * architectural ambience.
+   */
+  const downs = useMemo(() => {
+    const out: number[] = [];
+    for (let z = from - 3.5; z > to; z -= 7) out.push(z);
+    return out;
+  }, [from, to]);
+
   return (
     <group>
       {/* side walls */}
@@ -222,9 +237,57 @@ function HallChunk({ from, to }: { from: number; to: number }) {
           position={[0, 0.04, z]}
           size={[34, 24]}
           color="#8497a0"
-          opacity={0.085}
+          opacity={0.1}
         />
       ))}
+
+      {/* ── warm architectural ambience ── */}
+      {downs.map((z) =>
+        [-15.5, -9, 9, 15.5].map((x) => (
+          <group key={`dn${z}${x}`}>
+            <mesh position={[x, V.hall.y - 0.55, z]} rotation={[Math.PI / 2, 0, 0]}>
+              <planeGeometry args={[1.5, 0.5]} />
+              <meshBasicMaterial color="#e6c08a" toneMapped />
+            </mesh>
+            {/* the pool it lays on the floor, well out toward the walls where
+                the hall was darkest */}
+            <LightPool position={[x * 0.92, 0.045, z]} size={[9, 8]} color="#a8814d" opacity={0.085} />
+          </group>
+        )),
+      )}
+
+      {/* a warm cove opposite the cool one, low on the wall — this is the
+          "low-level environment lighting that reveals the space" */}
+      {[-1, 1].map((side) => (
+        <group key={`warm${side}`}>
+          <mesh
+            position={[side * (V.hall.x - 0.07), 2.5, mid]}
+            rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
+          >
+            <planeGeometry args={[len, 0.09]} />
+            <meshBasicMaterial color="#9a7748" toneMapped />
+          </mesh>
+          <LightPool
+            position={[side * (V.hall.x - 0.35), 1.5, mid]}
+            rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
+            size={[len * 0.96, 5.2]}
+            color="#8a6a42"
+            opacity={0.1}
+          />
+        </group>
+      ))}
+
+      {/* rigging practicals: a warm point at each truss end, so the steel
+          overhead glows rather than disappearing */}
+      {quality !== "low" &&
+        trusses.map((z) =>
+          [-1, 1].map((side) => (
+            <mesh key={`tg${z}${side}`} position={[side * (V.hall.x - 2.2), V.hall.y - 1.1, z]}>
+              <sphereGeometry args={[0.09, 6, 5]} />
+              <meshBasicMaterial color="#f0cf9c" toneMapped />
+            </mesh>
+          )),
+        )}
 
       {/* longitudinal runs, so the roof reads as a grid and not a ladder */}
       {quality === "high" &&

@@ -203,9 +203,43 @@ function EntranceArch() {
         </group>
       ))}
 
-      {/* the light the arch throws onto the apron in front of it */}
-      <LightPool position={[0, 0.035, 3.4]} size={[17, 12]} color="#c79a62" opacity={0.15} pulse={0.25} />
-      <pointLight position={[0, 4.2, 1.6]} intensity={24} distance={18} decay={2} color="#d9b681" />
+      {/* Banding across the arch face. A nineteen-metre unbroken slab of dark
+          material reads as a hole in the night however well the sign on it is
+          lit; three shallow reveals give the mass a scale and something for the
+          uplighting to catch. */}
+      {[2.2, 5.6, 9.2].map((y) => (
+        <group key={`band${y}`}>
+          <mesh position={[0, y, ARCH.faceZ + 0.06]} material={M.charcoal}>
+            <boxGeometry args={[18.4, 0.22, 0.14]} />
+          </mesh>
+          <mesh position={[0, y - 0.13, ARCH.faceZ + 0.14]}>
+            <planeGeometry args={[18.2, 0.035]} />
+            <meshBasicMaterial color="#4e6a6c" toneMapped />
+          </mesh>
+        </group>
+      ))}
+
+      {/* a lit plinth reveal along the foot of the arch, so the mass sits on
+          the ground rather than floating out of it */}
+      <mesh position={[0, 0.16, ARCH.faceZ + 0.12]} material={M.anodised}>
+        <boxGeometry args={[19, 0.32, 0.3]} />
+      </mesh>
+      <mesh position={[0, 0.35, ARCH.faceZ + 0.2]}>
+        <planeGeometry args={[18.6, 0.05]} />
+        <meshBasicMaterial color="#c2975d" toneMapped />
+      </mesh>
+
+      {/* the graze up the face from the plaza, and the light the arch throws
+          onto the apron in front of it */}
+      <LightPool
+        position={[0, 4.4, ARCH.faceZ + 0.18]}
+        rotation={[0, 0, 0]}
+        size={[20, 11]}
+        color="#7f6d4e"
+        opacity={0.1}
+      />
+      <LightPool position={[0, 0.035, 3.4]} size={[19, 13]} color="#c79a62" opacity={0.17} pulse={0.25} />
+      <pointLight position={[0, 4.2, 1.6]} intensity={28} distance={20} decay={2} color="#d9b681" />
     </group>
   );
 }
@@ -404,7 +438,9 @@ export function Arrival() {
       {strips.map((z, i) => (
         <mesh key={`st${i}`} position={[0, 0.015, z]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[PORTAL_W + 3.4 + i * 0.9, 0.09]} />
-          <meshBasicMaterial color="#20403e" toneMapped />
+          {/* warmer and brighter toward the arch: the strips are the only
+              thing leading the eye across a very dark plaza */}
+          <meshBasicMaterial color={i < 4 ? "#3d5c4f" : "#2a4a46"} toneMapped />
         </mesh>
       ))}
 
