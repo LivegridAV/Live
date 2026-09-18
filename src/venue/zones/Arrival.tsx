@@ -1,5 +1,5 @@
 "use client";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { M } from "../three/materials";
@@ -23,6 +23,16 @@ const PORTAL_W = 10.8;
 const PORTAL_H = 6.4;
 const FACADE_W = 46;
 const FACADE_H = 15;
+
+/**
+ * The entrance arch.
+ *
+ * Springing radius and rise are deliberately a little smaller than the hole
+ * cut in the facade, so the arch face covers the rectangular opening corners
+ * and what the visitor sees is an arch, not an arch sitting inside a box.
+ */
+const ARCH = { radius: 5.0, rise: 1.2, faceZ: 0.55, depth: 0.62 };
+const ARCH_CROWN = ARCH.radius * ARCH.rise;
 
 /** Night sky — a single graded dome, so the plaza has somewhere to be. */
 function SkyDome() {
@@ -55,6 +65,149 @@ function SkyDome() {
     [],
   );
   return <mesh geometry={geo} material={mat} renderOrder={-1} frustumCulled={false} />;
+}
+
+/** The arched profile of the aperture, as a 2D path. */
+function archPath(radius: number, rise: number) {
+  const path = new THREE.Path();
+  path.moveTo(-radius, 0);
+  path.absellipse(0, 0, radius, radius * rise, Math.PI, 0, true, 0);
+  path.lineTo(-radius, 0);
+  return path;
+}
+
+/**
+ * The entrance arch.
+ *
+ * The first structure on the site, so it carries the whole promise: this is a
+ * flagship event entrance, not a door in a wall. What it was — a rectangular
+ * hole with a metal surround and an abstract band floating above it — read as
+ * temporary, and a temporary-looking entrance undermines every premium claim
+ * made after it.
+ *
+ * Three things make it read as event-grade, in this order: the opening is an
+ * *arch*, so the elevation has a gesture in it; the arch has real depth, a
+ * machined reveal you pass through rather than a line you cross; and the
+ * fascia over it says the name, lit, on its own illuminated band.
+ */
+function EntranceArch() {
+  const face = useMemo(() => {
+    const shape = new THREE.Shape();
+    const w = 19;
+    const h = 12.6;
+    shape.moveTo(-w / 2, 0);
+    shape.lineTo(w / 2, 0);
+    shape.lineTo(w / 2, h);
+    shape.lineTo(-w / 2, h);
+    shape.closePath();
+    shape.holes.push(archPath(ARCH.radius, ARCH.rise));
+    return new THREE.ShapeGeometry(shape);
+  }, []);
+
+  const reveal = useMemo(() => {
+    const outer = new THREE.Shape();
+    const o = archPath(ARCH.radius + 0.34, ARCH.rise);
+    outer.curves = o.curves;
+    outer.autoClose = true;
+    outer.holes.push(archPath(ARCH.radius, ARCH.rise));
+    return new THREE.ExtrudeGeometry(outer, {
+      depth: ARCH.depth,
+      bevelEnabled: false,
+      curveSegments: 48,
+    });
+  }, []);
+
+  const cove = useMemo(() => {
+    const outer = new THREE.Shape();
+    const o = archPath(ARCH.radius + 0.1, ARCH.rise);
+    outer.curves = o.curves;
+    outer.autoClose = true;
+    outer.holes.push(archPath(ARCH.radius + 0.02, ARCH.rise));
+    return new THREE.ShapeGeometry(outer, 48);
+  }, []);
+
+  useEffect(
+    () => () => {
+      face.dispose();
+      reveal.dispose();
+      cove.dispose();
+    },
+    [face, reveal, cove],
+  );
+
+  return (
+    <group>
+      {/* the arch face, standing proud of the facade */}
+      <mesh geometry={face} position={[0, 0, ARCH.faceZ]} material={M.graphite} />
+      {/* and its returns back to the wall, so it reads as a solid mass */}
+      {[-1, 1].map((side) => (
+        <mesh key={`rt${side}`} position={[side * 9.5, 6.3, ARCH.faceZ / 2]} material={M.charcoal}>
+          <boxGeometry args={[0.35, 12.6, ARCH.faceZ + 0.5]} />
+        </mesh>
+      ))}
+
+      {/* machined reveal through the thickness of the arch */}
+      <mesh geometry={reveal} position={[0, 0, ARCH.faceZ - ARCH.depth]} material={M.aluminium} />
+      {/* a warm cove hidden in the reveal, washing the soffit of the arch */}
+      <mesh geometry={cove} position={[0, 0, ARCH.faceZ - 0.02]}>
+        <meshBasicMaterial color="#e2bb85" toneMapped side={THREE.DoubleSide} />
+      </mesh>
+
+      {/* Fascia. Set on its own lit band above the crown, on a header that
+          projects from the arch face — signage that is part of the building
+          rather than stuck to it. */}
+      <mesh position={[0, ARCH_CROWN + 1.55, ARCH.faceZ + 0.28]} material={M.charcoal}>
+        <boxGeometry args={[12.6, 2.6, 0.62]} />
+      </mesh>
+      <Screen
+        media="entry-brand"
+        width={11.2}
+        height={1.85}
+        position={[0, ARCH_CROWN + 1.55, ARCH.faceZ + 0.6]}
+        pitch={1.5}
+        brightness={1.12}
+        range={80}
+        frame={false}
+        edge="#2c6f68"
+        edgeWidth={0.06}
+      />
+      {/* a projecting lintel over the fascia, catching a warm line underneath */}
+      <mesh position={[0, ARCH_CROWN + 3.05, ARCH.faceZ + 0.5]} material={M.charcoal}>
+        <boxGeometry args={[14.4, 0.42, 1.2]} />
+      </mesh>
+      <mesh position={[0, ARCH_CROWN + 2.83, ARCH.faceZ + 0.72]} rotation={[Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[13.4, 0.1]} />
+        <meshBasicMaterial color="#c9a373" toneMapped />
+      </mesh>
+
+      {/* Vertical light lines down the shoulders of the arch, so it reads as a
+          mass with a top and two legs rather than as a cut-out. */}
+      {[-1, 1].map((side) => (
+        <group key={`sh${side}`}>
+          <mesh position={[side * 7.4, 5.4, ARCH.faceZ + 0.04]}>
+            <planeGeometry args={[0.1, 9.2]} />
+            <meshBasicMaterial color="#5f8a86" toneMapped />
+          </mesh>
+          {/* uplight grazing the arch leg from the plaza floor */}
+          <mesh position={[side * 6.1, 0.06, ARCH.faceZ + 0.9]} rotation={[-Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[0.7, 0.24]} />
+            <meshBasicMaterial color="#d8b177" toneMapped />
+          </mesh>
+          <LightPool
+            position={[side * 6.6, 4.6, ARCH.faceZ + 0.3]}
+            rotation={[0, 0, 0]}
+            size={[4.2, 11]}
+            color="#a68a5e"
+            opacity={0.13}
+          />
+        </group>
+      ))}
+
+      {/* the light the arch throws onto the apron in front of it */}
+      <LightPool position={[0, 0.035, 3.4]} size={[17, 12]} color="#c79a62" opacity={0.15} pulse={0.25} />
+      <pointLight position={[0, 4.2, 1.6]} intensity={24} distance={18} decay={2} color="#d9b681" />
+    </group>
+  );
 }
 
 /**
@@ -151,19 +304,10 @@ export function Arrival() {
             <boxGeometry args={[FACADE_W / 2 - PORTAL_W / 2, FACADE_H, 1]} />
           </mesh>
         ))}
-        {/* lintel above the portal */}
+        {/* The wall the opening is cut into. The arch face standing in front
+            of it is what the visitor actually reads. */}
         <mesh position={[0, (FACADE_H + PORTAL_H) / 2, -0.5]} material={M.graphite}>
           <boxGeometry args={[PORTAL_W, FACADE_H - PORTAL_H, 1]} />
-        </mesh>
-
-        {/* portal reveal — brushed metal jamb catching light from inside */}
-        {[-1, 1].map((side) => (
-          <mesh key={`j${side}`} position={[side * (PORTAL_W / 2 + 0.12), PORTAL_H / 2, -0.5]} material={M.aluminium}>
-            <boxGeometry args={[0.24, PORTAL_H, 1.1]} />
-          </mesh>
-        ))}
-        <mesh position={[0, PORTAL_H + 0.12, -0.5]} material={M.aluminium}>
-          <boxGeometry args={[PORTAL_W + 0.48, 0.24, 1.1]} />
         </mesh>
 
         {/* canopy */}
@@ -215,18 +359,8 @@ export function Arrival() {
         </mesh>
       </group>
 
-      {/* ── brand band above the doors ── */}
-      <Screen
-        media="entry-brand"
-        width={12.6}
-        height={2.1}
-        position={[0, PORTAL_H + 2.6, 0.1]}
-        pitch={1.9}
-        brightness={1.05}
-        range={70}
-        frame={false}
-      />
-      <LightPool position={[0, 0.03, 4]} size={[16, 12]} color="#5fb8ad" opacity={0.1} pulse={0.4} />
+      <EntranceArch />
+      <LightPool position={[0, 0.03, 6]} size={[18, 14]} color="#4f9a92" opacity={0.08} pulse={0.4} />
 
       {/* wayfinding sign beside the entrance */}
       <Screen

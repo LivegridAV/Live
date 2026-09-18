@@ -72,7 +72,9 @@ export type MediaDesc = ShaderMedia | CanvasMedia | VideoMedia;
 
 export const MEDIA: Record<string, MediaDesc> = {
   /* ── Arrival ──────────────────────────────────────────── */
-  "entry-brand": { kind: "shader", program: "brandType", accent: ACCENT.brand, res: [1024, 160], fps: 30 },
+  // The arch fascia. This has to *say the name* — an abstract brand sweep was
+  // playing here, which is a fine motif and a poor sign.
+  "entry-brand": { kind: "canvas", painter: "brandFascia", accent: ACCENT.brand, res: [1024, 192], fps: 12 },
   "entry-sign": { kind: "canvas", painter: "signWelcome", accent: ACCENT.brand, res: [512, 128], fps: 8 },
   "entry-blade": { kind: "shader", program: "pixelRain", accent: ACCENT.teal, variant: 0.3, res: [128, 384], fps: 24 },
 
@@ -182,14 +184,40 @@ export const MEDIA: Record<string, MediaDesc> = {
   // ten small screens doing their own thing. That is what a real show does
   // with a blade array, and it is why the mode switch transforms the whole
   // rig instead of one rectangle.
-  "stage-blade": {
+  // The vertical light strips flanking the hero canvas. Thin and full height,
+  // so whatever plays here has to work as a *column* — a slice of a wide
+  // render would read as a random crop.
+  "stage-strip": {
+    kind: "shader",
+    program: "plasmaRibbon",
+    festival: "pixelRain",
+    accent: ACCENT.amber,
+    festivalAccent: "#b464e0",
+    variant: 0.55,
+    res: [96, 640],
+    fps: 30,
+  },
+  // Portrait fillers: two slices of one render, so a pair reads as one image
+  // split by the gap between them.
+  "stage-portrait": {
     kind: "shader",
     program: "corporatePremium",
     festival: "festivalMonument",
     accent: ACCENT.bone,
     festivalAccent: "#a86ad6",
-    variant: 0.55,
-    res: [1024, 352],
+    variant: 0.34,
+    res: [320, 704],
+    fps: 30,
+  },
+  // The canted outer clusters, upper and lower halves of one render.
+  "stage-outer": {
+    kind: "shader",
+    program: "corporatePremium",
+    festival: "festivalMonument",
+    accent: ACCENT.copper,
+    festivalAccent: "#9a5ad0",
+    variant: 0.78,
+    res: [640, 448],
     fps: 30,
   },
   "stage-floor": {

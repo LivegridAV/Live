@@ -104,28 +104,40 @@ export const KEYFRAMES: Keyframe[] = [
      height of the one just left. */
   { p: 0.812, pos: [0, 2.05, -237], look: [0, 4.8, -252], fov: 54 },
   { p: 0.83, pos: [0, 2.6, -248], look: [0, 8.5, -266], fov: 60 },
-  { p: 0.846, pos: [0, 3.2, -256], look: [0, 15.0, -282], fov: 64 },
+  { p: 0.846, pos: [0, 3.2, -256], look: [0, 12.0, -284], fov: 64 },
 
-  /* ── Main arena: the stage grows until it owns the frame ── */
-  { p: 0.868, pos: [0, 3.4, -272], look: [0, 13.0, -330], fov: 58 },
-  { p: 0.892, pos: [-2.4, 3.0, -290], look: [0, 11.0, -344], fov: 54 },
-  { p: 0.912, pos: [1.8, 2.8, -304], look: [0, 10.0, -348], fov: 52 },
+  /* ── Main arena: the stage grows until it owns the frame ──
+     The set is sixty-plus metres wide, so the approach is about the array
+     *filling* the frame rather than about closing distance: the camera comes
+     down the centre aisle and the elevation keeps opening sideways past the
+     edges of the picture. An earlier cut held the stage small until 0.91,
+     which is the one mistake an arena sequence cannot survive.
+
+     The camera also climbs, from eye height on the floor to five metres up by
+     the hero mark. That is not a flourish: the house ceiling is the top third
+     of this composition, and from floor level it sits above the top of the
+     frame no matter how wide the lens goes. */
+  { p: 0.862, pos: [0, 4.2, -276], look: [0, 11.0, -338], fov: 56 },
+  { p: 0.884, pos: [-2.6, 4.6, -288], look: [0, 10.0, -346], fov: 52 },
+  { p: 0.906, pos: [2.2, 5.0, -297], look: [0, 9.4, -350], fov: 48 },
 
   /* ── Main stage ─────────────────────────────────────────
-     Hero position is four metres off the barrier: from here the main wall is
-     twenty-two metres away and fills the frame, which is the whole argument
-     of the arena section. */
-  { p: 0.932, pos: [0, 2.7, -316], look: [0, 9.2, -350], fov: 50 },
-  { p: 0.95, pos: [0, 2.6, -326], look: [0, 8.6, -350], fov: 52 },
+     Hero position: fifty metres out on the centre line, five metres up. From
+     here the array runs edge to edge, the centre canvas alone is a third of
+     the picture width, the lit ceiling recedes across the top and the seating
+     falls away underneath — the whole room in one frame, which is the shot
+     the reference is built around. */
+  { p: 0.932, pos: [0, 5.4, -304], look: [0, 8.8, -353], fov: 45 },
+  { p: 0.95, pos: [0, 5.0, -313], look: [0, 8.2, -353], fov: 43 },
 
   /* ── Finale ─────────────────────────────────────────────
-     The camera rises off the floor and moves in. Nothing else in the venue
-     leaves the ground, so the lift reads as the show ending. */
-  { p: 0.968, pos: [0, 4.6, -324], look: [0, 10.0, -350], fov: 48 },
-  { p: 0.986, pos: [0, 7.6, -320], look: [0, 11.0, -350], fov: 45 },
+     The camera keeps rising and moves in. Nothing else in the venue leaves
+     the ground, so the lift reads as the show ending. */
+  { p: 0.968, pos: [0, 6.6, -311], look: [0, 9.2, -353], fov: 42 },
+  { p: 0.986, pos: [0, 8.2, -307], look: [0, 9.8, -353], fov: 40 },
 
   /* ── Contact settle ─────────────────────────────────────── */
-  { p: 1.0, pos: [0, 5.6, -322], look: [0, 9.0, -350], fov: 44 },
+  { p: 1.0, pos: [0, 7.0, -309], look: [0, 8.8, -353], fov: 39 },
 ];
 
 /* ── Hermite interpolation with Catmull-Rom tangents ───── */

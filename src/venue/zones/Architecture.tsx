@@ -296,16 +296,26 @@ export function ArenaShell() {
         [-1, 1].map((side) => (
           <group key={`al${i}${side}`}>
             {/* a full-height slot every bay */}
-            {[0.3, 0.7].map((f) => (
+            {[0.22, 0.5, 0.78].map((f) => (
               <mesh
                 key={f}
-                position={[side * (V.arena.x - 0.12), V.arena.y * 0.46, seg.z + (f - 0.5) * seg.len]}
+                position={[side * (V.arena.x - 0.12), 7.4, seg.z + (f - 0.5) * seg.len]}
                 rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
               >
-                <planeGeometry args={[0.16, V.arena.y * 0.7]} />
-                <meshBasicMaterial color="#5f7d85" toneMapped />
+                <planeGeometry args={[0.18, 12.4]} />
+                <meshBasicMaterial color="#6d8a8e" toneMapped />
               </mesh>
             ))}
+            {/* a warm architectural wash at mid height between the slots —
+                the side walls of a room this wide are most of what the eye
+                sees in peripheral vision, and unlit they read as nothing */}
+            <LightPool
+              position={[side * (V.arena.x - 0.3), 6.2, seg.z]}
+              rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
+              size={[seg.len * 0.9, 13]}
+              color="#8a6f4c"
+              opacity={0.1}
+            />
             {/* a low wash along the base of the wall */}
             <mesh
               position={[side * (V.arena.x - 0.1), 0.12, seg.z]}
@@ -324,15 +334,19 @@ export function ArenaShell() {
         )),
       )}
 
-      {/* house lights in the roof, so the steel has something above it */}
-      {trusses.map((z) =>
-        [-24, -8, 8, 24].map((x) => (
-          <mesh key={`hl${z}${x}`} position={[x, V.arena.y - 3.0, z]} rotation={[Math.PI / 2, 0, 0]}>
-            <planeGeometry args={[8, 0.26]} />
-            <meshBasicMaterial color="#8fa2a8" toneMapped />
-          </mesh>
-        )),
-      )}
+      {/* House lighting used to hang at thirty-one metres, above the top of
+          every frame. The ceiling in `zones/Arena` carries it now, at a height
+          the camera can see. What is left here is the light on the *floor*,
+          which is what gives the room its foreground. */}
+      {trusses.map((z) => (
+        <LightPool
+          key={`fl${z}`}
+          position={[0, 0.045, z]}
+          size={[70, 26]}
+          color="#8a6f4c"
+          opacity={0.05}
+        />
+      ))}
 
       {/* back wall behind the stage */}
       <mesh position={[0, V.arena.y / 2, V.arena.to]} material={M.concrete}>
@@ -358,11 +372,11 @@ export function ArenaShell() {
         [-1, 1].map((side) => (
           <mesh
             key={`ac${i}${side}`}
-            position={[side * (V.arena.x - 0.1), V.arena.y - 3.2, s.z]}
+            position={[side * (V.arena.x - 0.1), 14.8, s.z]}
             rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
           >
             <planeGeometry args={[s.len, 0.3]} />
-            <meshBasicMaterial color="#6e858c" toneMapped />
+            <meshBasicMaterial color="#7d9498" toneMapped />
           </mesh>
         )),
       )}

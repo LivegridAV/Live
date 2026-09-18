@@ -15,7 +15,7 @@ import { LightPool } from "../three/environment";
 import { ReflectionStreak } from "../three/Reflection";
 import { useVenue } from "../systems/store";
 import { ZoneGroup } from "../three/ZoneGroup";
-import { Aisle, Gantry, Stand, Vestibule } from "./Exhibition";
+import { Aisle, Gantry, NameBoard, Stand, Vestibule } from "./Exhibition";
 
 /**
  * The creative LED gallery.
@@ -53,6 +53,9 @@ function Pillars() {
         backdrop={false}
         overhead={false}
         label="stand-pillars"
+        labelAt={[6.4, 6.6, 3.2]}
+        labelFace={1.15}
+        labelWidth={5.0}
       />
       {/* the pillars are tall, so their overhead rig spans the whole cluster */}
       <Truss length={14} size={0.32} position={[-9.6, 10.2, -46]} braceEvery={0.9} />
@@ -97,7 +100,15 @@ const BLADES: { x: number; z: number; y: number; h: number; rot: number }[] = [
 function Blades() {
   return (
     <group>
-      <Stand position={[7.8, 0, -59.6]} size={[12, 13]} accent="#4fc4b6" label="stand-blades" />
+      <Stand
+        position={[7.8, 0, -59.6]}
+        size={[12, 13]}
+        accent="#4fc4b6"
+        label="stand-blades"
+        labelAt={[-5.4, 5.9, 3.6]}
+        labelFace={-1.15}
+        labelWidth={4.4}
+      />
       {/* the truss the blades hang from */}
       <Truss length={12} size={0.3} position={[7.8, 7.2, -59.6]} rotation={[0, 0.18, 0]} braceEvery={0.7} />
       {BLADES.map((b, i) => (
@@ -135,7 +146,15 @@ function Blades() {
 function Cylinder() {
   return (
     <group>
-      <Stand position={[8.6, 0, -70]} size={[11, 11]} accent="#c08a4e" label="stand-cylinder" />
+      <Stand
+        position={[8.6, 0, -70]}
+        size={[11, 11]}
+        accent="#c08a4e"
+        label="stand-cylinder"
+        labelAt={[-4.9, 5.4, 3.6]}
+        labelFace={-1.15}
+        labelWidth={4.2}
+      />
       <group position={[8.6, 0, -70]}>
         <mesh position={[0, 0.1, 0]} material={M.anodised}>
           <cylinderGeometry args={[2.5, 2.7, 0.14, 40]} />
@@ -191,6 +210,10 @@ function Ring() {
         <circleGeometry args={[5.4, 48]} />
       </mesh>
       <LightPool position={[0, 0.05, 0]} size={20} color="#4fa79c" opacity={0.13} pulse={0.45} />
+      {/* The ring is flown over the walkway rather than standing on a stand,
+          so its name board hangs clear to one side — directly under it is
+          where the camera goes. */}
+      <NameBoard position={[-5.6, 4.4, 0.6]} face={1.0} media="stand-ring" width={4.2} accent="#4fa79c" />
     </group>
   );
 }
@@ -200,7 +223,16 @@ function Ring() {
 function Bar() {
   return (
     <group>
-      <Stand position={[-9.8, 0, -84]} size={[13, 10]} rotation={Math.PI / 2.3} accent="#4fc4b6" label="stand-bar" />
+      <Stand
+        position={[-9.8, 0, -84]}
+        size={[13, 10]}
+        rotation={Math.PI / 2.3}
+        accent="#4fc4b6"
+        label="stand-bar"
+        labelAt={[-0.8, 4.6, -2.4]}
+        labelFace={0.9}
+        labelWidth={4.4}
+      />
       <group position={[-9.8, 0, -84]} rotation={[0, Math.PI / 2.3, 0]}>
         <BarScreen media="bar-brand" width={7.6} height={1.08} depth={0.72} pitch={1.2} brightness={0.72} spill={0} />
         {/* back bar + bottle shelf, lit by the fascia */}
@@ -245,7 +277,15 @@ function Bar() {
 function Curved() {
   return (
     <group>
-      <Stand position={[8.4, 0, -90.5]} size={[13, 12]} accent="#7ea36a" label="stand-curved" />
+      <Stand
+        position={[8.4, 0, -90.5]}
+        size={[13, 12]}
+        accent="#7ea36a"
+        label="stand-curved"
+        labelAt={[-5.4, 4.9, 3.2]}
+        labelFace={-1.0}
+        labelWidth={4.4}
+      />
       <group position={[8.4, 0, -90.5]} rotation={[0, -Math.PI / 2.6, 0]}>
         <CurvedScreen
           media="curve-natural"
@@ -357,16 +397,10 @@ function AnamorphicCorner() {
         <ringGeometry args={[0.45, 0.52, 28]} />
         <meshBasicMaterial color="#8c9a86" toneMapped />
       </mesh>
-      <Screen
-        media="stand-anamorphic"
-        width={3.4}
-        height={0.62}
-        position={[-3.2, 6.9, -0.05]}
-        pitch={1.5}
-        brightness={1.05}
-        range={52}
-        frame={false}
-      />
+      {/* Hung above the left leaf on a real header, turned a little toward the
+          viewing mark. It used to be a bare panel floating at the top of the
+          building face, which read as a UI element stuck to the scene. */}
+      <NameBoard position={[-3.4, 7.2, 0.2]} face={0.35} media="stand-anamorphic" width={4.4} accent="#b9ab93" />
       <LightPool position={[2.6, 0.05, 2.6]} size={16} color="#b9ab93" opacity={0.14} />
     </group>
   );
@@ -429,7 +463,17 @@ export function Gallery() {
       </ZoneGroup>
       <ZoneGroup from={-86} to={-95} ahead={40} behind={22}>
         <Curved />
-        <Stand position={[-9.6, 0, -93]} size={[11, 9]} rotation={Math.PI / 3.4} accent="#7f97ab" backdrop={false} label="stand-mosaic" />
+        <Stand
+          position={[-9.6, 0, -93]}
+          size={[11, 9]}
+          rotation={Math.PI / 3.4}
+          accent="#7f97ab"
+          backdrop={false}
+          label="stand-mosaic"
+          labelAt={[3.2, 4.7, 2.2]}
+          labelFace={1.15}
+          labelWidth={4.4}
+        />
         <Mosaic />
       </ZoneGroup>
       <ZoneGroup from={-92} to={-108} ahead={42} behind={28}>

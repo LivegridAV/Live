@@ -48,6 +48,7 @@ const fragment = /* glsl */ `
   uniform float uOn;       // 0 = dark panel, 1 = full output
   uniform float uDot;      // emitter structure, only ever visible very close
   uniform float uSeam;     // 0 everywhere except the module-construction exhibit
+  uniform float uFlat;     // 1 = no off-axis falloff at all (folded/tiled arrays)
 
   varying vec2 vUv;
   varying vec3 vViewDir;
@@ -87,9 +88,13 @@ const fragment = /* glsl */ `
     }
 
     // Gentle off-axis falloff. Deliberately shallow so adjacent surfaces of an
-    // enveloping installation keep the same apparent brightness.
+    // enveloping installation keep the same apparent brightness — and switched
+    // off entirely where panels meet at an angle. Two leaves folded at 90 deg
+    // are viewed at two different angles by definition, so *any* falloff puts
+    // a brightness step exactly on the fold: a visible line down the middle of
+    // an illusion whose whole job is to have no middle.
     float axis = clamp(dot(normalize(vNormalV), normalize(vViewDir)), 0.0, 1.0);
-    float offAxis = mix(0.74, 1.0, pow(axis, 0.45));
+    float offAxis = mix(mix(0.74, 1.0, pow(axis, 0.45)), 1.0, uFlat);
 
     vec3 col = content * uTint * uBright * emitter * seam * offAxis * uOn;
 
@@ -128,6 +133,12 @@ export interface LEDOptions {
   seam?: number;
   /** curved and ring products are seen from both sides */
   doubleSided?: boolean;
+  /**
+   * Disable off-axis falloff. Set on any surface whose neighbour is at a
+   * different angle to the viewer — folded corners, blade arrays, mosaics —
+   * so the array reads as one continuous canvas with no step between panels.
+   */
+  flat?: boolean;
 }
 
 /**
@@ -163,6 +174,7 @@ export function createLEDMaterial(texture: THREE.Texture, o: LEDOptions) {
       uOn: { value: 1 },
       uDot: { value: o.dot ?? 1 },
       uSeam: { value: o.seam ?? 0 },
+      uFlat: { value: o.flat ? 1 : 0 },
     },
     side: o.doubleSided ? THREE.DoubleSide : THREE.FrontSide,
     toneMapped: true,

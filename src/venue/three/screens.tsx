@@ -45,7 +45,7 @@ interface BaseProps {
 function ledKey(o: LEDOptions) {
   return [
     o.width, o.height, o.pitch, o.cabinet, o.brightness, o.tint, o.dot, o.doubleSided,
-    o.swap, o.flip?.[0], o.flip?.[1],
+    o.swap, o.flip?.[0], o.flip?.[1], o.flat,
     o.repeat?.[0], o.repeat?.[1], o.offset?.[0], o.offset?.[1],
   ].join("|");
 }
@@ -138,6 +138,19 @@ export interface ScreenProps extends BaseProps {
   /** sample the content with u/v exchanged — long surfaces, tunnel walls */
   swap?: boolean;
   flip?: [boolean, boolean];
+  /** no off-axis falloff — for panels whose neighbours sit at another angle */
+  flat?: boolean;
+  /**
+   * A lit reveal around the panel edge, as a colour.
+   *
+   * This is set architecture, not a cabinet join. A stage built from discrete
+   * panels reads as *designed* when each one is outlined in light and as a
+   * pile of rectangles when it is not — which is why every real multi-screen
+   * set does it. It is never used on a continuous surface, where an outline
+   * would be exactly the fault the venue is claiming not to have.
+   */
+  edge?: string;
+  edgeWidth?: number;
 }
 
 export function Screen({
@@ -159,6 +172,9 @@ export function Screen({
   dot,
   swap,
   flip,
+  flat,
+  edge,
+  edgeWidth = 0.09,
 }: ScreenProps) {
   const mesh = useRef<THREE.Mesh>(null);
   const group = useRef<THREE.Group>(null);
@@ -175,6 +191,7 @@ export function Screen({
       dot,
       swap,
       flip,
+      flat,
       repeat: uv ? [uv[0], uv[1]] : [1, 1],
       offset: uv ? [uv[2], uv[3]] : [0, 0],
     },
@@ -190,6 +207,12 @@ export function Screen({
         <mesh position={[0, 0, -0.06]}>
           <boxGeometry args={[width + 0.05, height + 0.05, 0.11]} />
           <meshStandardMaterial color="#0b0e0f" roughness={0.62} metalness={0.75} />
+        </mesh>
+      )}
+      {edge && (
+        <mesh position={[0, 0, -0.012]}>
+          <planeGeometry args={[width + edgeWidth * 2, height + edgeWidth * 2]} />
+          <meshBasicMaterial color={edge} toneMapped />
         </mesh>
       )}
       <mesh ref={mesh} material={material}>
@@ -410,7 +433,16 @@ export function CornerScreen({
 }: BaseProps & { width: number; height: number }) {
   return (
     <group position={position} rotation={rotation}>
-      {/* left leaf — runs away from the corner along -X */}
+      {/* Left leaf — runs away from the corner along -X.
+          `frame` is off on both leaves and that is not a detail. A framed
+          Screen carries a backing box 25 mm wider than the panel on each side;
+          folded at 90 deg, each leaf's box therefore protruded 25 mm past the
+          fold and stood 110 mm proud of its neighbour's emitter plane. The
+          result was a dark vertical bar straight down the middle of the
+          illusion — the visible line in the anamorphic screen. The structure
+          the leaves need is already there: the two building faces behind them.
+          `flat` removes the other half of the problem, the brightness step
+          between two surfaces the viewer necessarily sees at two angles. */}
       <Screen
         media={media}
         width={width}
@@ -420,6 +452,8 @@ export function CornerScreen({
         pitch={pitch}
         brightness={brightness}
         range={range}
+        frame={false}
+        flat
         spill={spill}
         spillColor={spillColor}
       />
@@ -434,6 +468,8 @@ export function CornerScreen({
         pitch={pitch}
         brightness={brightness}
         range={range}
+        frame={false}
+        flat
       />
       {/* floor return, so the volume looks like it stands on something */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[-width / 2, 0.01, -width / 2]} receiveShadow>

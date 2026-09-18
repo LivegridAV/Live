@@ -593,6 +593,57 @@ const wordmark = (p: PaintCtx) => {
 };
 
 /**
+ * The entrance fascia.
+ *
+ * The one surface on the whole site whose job is to say the name, so it does
+ * exactly that: LIVEGRID AV, set large, tracked wide, lit from behind, with a
+ * hairline rule under it. Everything else on this sign is restraint — a
+ * flagship entrance says its name once and does not decorate it.
+ */
+const brandFascia = (p: PaintCtx) => {
+  const { ctx, w, h, t, accent } = p;
+
+  const g = ctx.createLinearGradient(0, 0, 0, h);
+  g.addColorStop(0, "#0a1112");
+  g.addColorStop(0.5, "#060b0c");
+  g.addColorStop(1, "#040708");
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, w, h);
+
+  // a slow wash travelling across the band, so the fascia is lit rather than printed
+  const sweep = ((t * 0.06) % 1.7) - 0.35;
+  const sg = ctx.createLinearGradient((sweep - 0.3) * w, 0, (sweep + 0.3) * w, 0);
+  sg.addColorStop(0, "rgba(255,255,255,0)");
+  sg.addColorStop(0.5, "rgba(230,240,238,0.06)");
+  sg.addColorStop(1, "rgba(255,255,255,0)");
+  ctx.fillStyle = sg;
+  ctx.fillRect(0, 0, w, h);
+
+  const size = h * 0.46;
+  ctx.font = `600 ${size}px ${SANS}`;
+  ctx.textBaseline = "middle";
+  ctx.textAlign = "center";
+  ctx.letterSpacing = `${(size * 0.17).toFixed(2)}px`;
+
+  const cy = h * 0.46;
+  ctx.shadowColor = accent;
+  ctx.shadowBlur = size * 0.5 * (0.6 + 0.4 * Math.sin(t * 0.5));
+  ctx.fillStyle = "#f2f7f6";
+  ctx.fillText("LIVEGRID AV", w / 2, cy);
+  ctx.shadowBlur = 0;
+  ctx.letterSpacing = "0px";
+
+  // hairline rule and end ticks
+  ctx.fillStyle = accent;
+  ctx.globalAlpha = 0.85;
+  ctx.fillRect(w * 0.3, h * 0.76, w * 0.4, Math.max(1, h * 0.016));
+  ctx.globalAlpha = 0.5;
+  ctx.fillRect(w * 0.085, h * 0.42, Math.max(1, h * 0.022), h * 0.2);
+  ctx.fillRect(w * 0.9, h * 0.42, Math.max(1, h * 0.022), h * 0.2);
+  ctx.globalAlpha = 1;
+};
+
+/**
  * A pavilion's own header sign. The copy comes from the media descriptor, so
  * eight stalls share one painter and still each say their own name.
  */
@@ -729,6 +780,7 @@ export const PAINTERS = {
   webCode,
   partnerBay,
   wordmark,
+  brandFascia,
   signServices: makeSign("Services", "Pavilions 01 — 08"),
   signArena: makeSign("Main arena", "This way"),
   signGallery: makeSign("Creative LED", "Gallery"),

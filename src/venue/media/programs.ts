@@ -655,6 +655,11 @@ const corporatePremium = wrap(/* glsl */ `
    * architectural volume instead: a corridor of illuminated fins receding to a
    * lit aperture, with suspended slabs catching the light on the way in. It
    * has real depth, it holds up at scale, and it stays graphite.
+   *
+   * Exposure is set high on purpose. A show wall is the brightest object in
+   * its room — that is the entire point of the product — and at the levels
+   * this ran at before, a 22 m canvas read as mid-grey line-work from the
+   * hero position and the arena looked unlit. Content carries the room.
    */
   void main(){
     vec2 p = centred();
@@ -680,8 +685,11 @@ const corporatePremium = wrap(/* glsl */ `
       // The aperture at the far end: the brightest thing in the composition,
       // and the reason the eye goes to the centre of the wall.
       float r = length(vec2(hit.x, hit.y * 1.25));
-      col += vec3(0.52, 0.60, 0.70) * exp(-r * r * 0.5) * 0.9;
-      col += uAccent * exp(-r * r * 1.4) * 0.4;
+      col += vec3(0.62, 0.70, 0.82) * exp(-r * r * 0.42) * 2.9;
+      col += uAccent * exp(-r * r * 1.1) * 1.15;
+      // a warm bloom bed around the aperture, so the brightest thing in the
+      // room is not a cold hole
+      col += vec3(0.42, 0.31, 0.19) * exp(-r * r * 0.14) * 0.55;
     } else {
       float axis = (tY < tX) ? 1.0 : 0.0;
       float zf = hit.z + t;
@@ -690,11 +698,13 @@ const corporatePremium = wrap(/* glsl */ `
       float fine = rule(zf, 0.3375, 150.0) * 0.28;
       float cross = rule(tr, 0.42, 170.0) * 0.35;
       float body = fbm(vec2(zf * 0.35, tr * 1.4));
-      float fade = exp(-hit.z * 0.11);
-      col += vec3(0.15, 0.18, 0.22) * (0.10 + body * 0.34) * fade;
-      col += vec3(0.70, 0.78, 0.88) * (ribs + fine + cross) * 0.68 * fade;
-      col += uAccent * ribs * 0.4 * fade;
-      col += vec3(0.38, 0.44, 0.54) * (1.0 - fade) * 0.18;
+      float fade = exp(-hit.z * 0.065);
+      col += vec3(0.19, 0.23, 0.29) * (0.16 + body * 0.52) * fade;
+      col += vec3(0.82, 0.88, 0.98) * (ribs + fine + cross) * 1.62 * fade;
+      col += uAccent * ribs * 0.85 * fade;
+      // a warm graze along the floor and ceiling of the volume
+      col += vec3(0.60, 0.44, 0.26) * pow(clamp(abs(tr) / 1.2, 0.0, 1.0), 3.0) * fade * 0.5;
+      col += vec3(0.44, 0.50, 0.60) * (1.0 - fade) * 0.3;
     }
 
     // Suspended slabs between here and the aperture.
@@ -712,9 +722,9 @@ const corporatePremium = wrap(/* glsl */ `
       vec2 f = abs(fract(pl.xy / 0.5) - 0.5);
       float m = max(f.x, f.y);
       float edge = clamp(smoothstep(0.5, 0.44, m) - smoothstep(0.42, 0.34, m), 0.0, 1.0);
-      float a = occupied * edge * smoothstep(0.35, 0.8, length(pl.xy)) * 0.45;
-      a *= smoothstep(0.0, 1.5, zl) * smoothstep(24.0, 12.0, zl);
-      vec3 slab = mix(vec3(0.52, 0.60, 0.70), uAccent, 0.22) * (0.5 + 0.5 * hash11(fi));
+      float a = occupied * edge * smoothstep(0.35, 0.8, length(pl.xy)) * 0.55;
+      a *= smoothstep(0.0, 1.5, zl) * smoothstep(26.0, 11.0, zl);
+      vec3 slab = mix(vec3(0.92, 1.00, 1.12), uAccent, 0.26) * (0.6 + 0.6 * hash11(fi));
       acc += trans * slab * a;
       trans *= 1.0 - a;
     }
@@ -723,9 +733,9 @@ const corporatePremium = wrap(/* glsl */ `
     // One slow raking sweep. Restrained on purpose: corporate does not mean
     // boring, but it does mean controlled.
     float rake = exp(-pow((p.x - sin(uTime * 0.16) * 1.6) * 0.85, 2.0));
-    col *= 0.86 + 0.32 * rake;
+    col *= 0.9 + 0.45 * rake;
 
-    gl_FragColor = vec4(tone(col * 0.95), 1.0);
+    gl_FragColor = vec4(tone(col * 1.95), 1.0);
   }
 `);
 
@@ -864,7 +874,7 @@ const festivalMonument = wrap(/* glsl */ `
     }
 
     col += (uAccent * 0.6 + vec3(0.85, 0.25, 0.4) * 0.4) * glow * 0.8;
-    gl_FragColor = vec4(tone(col * 1.2), 1.0);
+    gl_FragColor = vec4(tone(col * 2.28), 1.0);
   }
 `);
 

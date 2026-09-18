@@ -120,6 +120,22 @@ export interface StandProps {
   /** overhead lighting truss and cove */
   overhead?: boolean;
   label?: string;
+  /**
+   * Where the name board hangs, relative to the stand centre and in **world**
+   * axes — it is deliberately outside the stand's own rotation.
+   *
+   * The default used to be the back edge of the footprint, facing the way the
+   * stand faces, which put the name behind the very installation it was
+   * naming: from the aisle you saw a screen with its label hidden somewhere
+   * behind it. A real exhibition hangs the fascia at the aisle edge, above
+   * head height, turned to face the walkway, and that is what every call site
+   * now specifies.
+   */
+  labelAt?: [number, number, number];
+  /** Y rotation of the name board, in world axes. 0 faces +Z (back up the aisle). */
+  labelFace?: number;
+  /** name board width — wide stands carry a wider fascia */
+  labelWidth?: number;
 }
 
 /**
@@ -135,12 +151,25 @@ export function Stand({
   backdrop = true,
   overhead = true,
   label,
+  labelAt,
+  labelFace = 0,
+  labelWidth,
 }: StandProps) {
   const quality = useVenue((s) => s.quality);
   const [w, d] = size;
 
   return (
-    <group position={position} rotation={[0, rotation, 0]}>
+    <group position={position}>
+      {label && (
+        <NameBoard
+          position={labelAt ?? [0, 4.6, d / 2 - 0.4]}
+          face={labelFace}
+          media={label}
+          width={labelWidth ?? Math.min(w * 0.5, 4.6)}
+          accent={accent}
+        />
+      )}
+      <group rotation={[0, rotation, 0]}>
       {/* the footprint: a different, matte floor material with a lit edge */}
       <mesh position={[0, 0.025, 0]} rotation={[-Math.PI / 2, 0, 0]} material={M.deck} receiveShadow>
         <planeGeometry args={[w, d]} />
@@ -191,19 +220,63 @@ export function Stand({
           </mesh>
         </>
       )}
+      </group>
+    </group>
+  );
+}
 
-      {label && (
-        <Screen
-          media={label}
-          width={Math.min(w * 0.55, 4.2)}
-          height={0.78}
-          position={[0, 3.62, -d / 2 + 0.3]}
-          pitch={1.5}
-          brightness={1.05}
-          range={52}
-          frame={false}
-        />
-      )}
+/**
+ * A stand's name board.
+ *
+ * Signage in a hall is a built object, not a floating rectangle: a fascia
+ * panel on a header beam, hung off two droppers, with a lit reveal under it.
+ * Building it that way is also what keeps it legible — it sits at a height
+ * nothing else on the stand occupies, so it can never end up behind an
+ * exhibit.
+ */
+export function NameBoard({
+  position,
+  face = 0,
+  media,
+  width = 4.2,
+  accent = "#8fa3b8",
+}: {
+  position: [number, number, number];
+  face?: number;
+  media: string;
+  width?: number;
+  accent?: string;
+}) {
+  const h = 0.86;
+  return (
+    <group position={position} rotation={[0, face, 0]}>
+      {/* header beam the fascia is built onto */}
+      <mesh position={[0, h / 2 + 0.24, -0.16]} material={M.charcoal}>
+        <boxGeometry args={[width + 0.7, h + 0.48, 0.26]} />
+      </mesh>
+      {/* droppers */}
+      {[-1, 1].map((side) => (
+        <mesh key={side} position={[side * (width / 2 + 0.28), h + 1.5, -0.16]} material={M.steel}>
+          <cylinderGeometry args={[0.028, 0.028, 2.4, 6]} />
+        </mesh>
+      ))}
+      <Screen
+        media={media}
+        width={width}
+        height={h}
+        position={[0, h / 2 + 0.24, 0]}
+        pitch={1.5}
+        brightness={1.12}
+        range={78}
+        frame={false}
+      />
+      {/* lit reveal under the board — signage reads at distance because it is
+          lit, not because it is large */}
+      <mesh position={[0, -0.06, 0.02]}>
+        <planeGeometry args={[width + 0.5, 0.05]} />
+        <meshBasicMaterial color={accent} toneMapped />
+      </mesh>
+      <LightPool position={[0, h / 2 + 0.24, 0.2]} rotation={[0, 0, 0]} size={[width * 1.5, 3.2]} color={accent} opacity={0.1} />
     </group>
   );
 }

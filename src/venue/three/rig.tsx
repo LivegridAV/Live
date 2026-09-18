@@ -150,6 +150,8 @@ export interface MoverProps {
   /** hangs upside down from truss (true) or stands on the deck */
   hanging?: boolean;
   beamAngle?: number;
+  /** multiplier on beam visibility, for fixtures that are meant to be seen */
+  beamGain?: number;
 }
 
 /**
@@ -165,6 +167,7 @@ export function MovingHead({
   intensity = 1,
   hanging = true,
   beamAngle = 0.055,
+  beamGain = 1,
 }: MoverProps) {
   const yoke = useRef<THREE.Group>(null);
   const head = useRef<THREE.Group>(null);
@@ -205,7 +208,12 @@ export function MovingHead({
       const chase = Math.pow(0.5 + 0.5 * Math.sin(t * 5.2 + seed * 1.1), 1.6);
       const breathe = (0.55 + 0.25 * Math.sin(t * 0.7 + seed)) * 0.6;
       const on = breathe + (chase - breathe) * f;
-      beamMat.current.opacity = on * 0.065 * intensity * (1 - show.cue * 0.75);
+      // `beamGain` is for fixtures meant to be *seen* as beams rather than
+      // merely to light something. The fan of warm beams raking across the
+      // stage array is a large part of the reference picture, and at the
+      // default weight it was invisible from the hero position.
+      beamMat.current.opacity =
+        Math.min(0.16, on * 0.065 * intensity * beamGain) * (1 - show.cue * 0.75);
 
       if (f > 0.02) {
         festivalCol.setHSL((seed * 0.11 + t * 0.035) % 1, 0.62, 0.62);
