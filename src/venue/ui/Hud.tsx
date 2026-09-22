@@ -54,7 +54,7 @@ export function ProgressRail() {
   if (!entered || pastVenue) return null;
 
   return (
-    <nav className="v-rail" aria-label="Jump to a part of the venue">
+    <nav className="v-rail" aria-label="Jump to a part of the experience">
       {NAV_STOPS.map((s) => {
         const z = ZONES.find((x) => x.id === s.id);
         const active =

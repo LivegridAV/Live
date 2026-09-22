@@ -447,33 +447,42 @@ export function Arrival() {
           metres away and behind the arch light. It was present and it was
           invisible, which is the worst of both.
 
-          A welcome is a moment, so it is now an object you walk past: a
-          free-standing double-sided totem out on the plaza, turned to face the
-          path, lit from its own base, at the point where the camera has broken
-          left and is coming back toward the centre line. */}
-      <group position={[-5.0, 0, 12.5]} rotation={[0, 0.5, 0]}>
+          A welcome is a moment, so it is now a restrained glass sign in the
+          near foreground: immediately legible, but small enough that the
+          architecture remains the first impression. */}
+      <group position={[-4.0, 0, 10.2]} rotation={[0, 0.32, 0]}>
         {/* base and stem */}
         <mesh position={[0, 0.09, 0]} material={M.anodised}>
-          <boxGeometry args={[2.6, 0.18, 0.9]} />
+          <boxGeometry args={[1.55, 0.14, 0.62]} />
         </mesh>
         <mesh position={[0, 0.3, 0]}>
-          <planeGeometry args={[2.4, 0.04]} />
+          <planeGeometry args={[1.38, 0.03]} />
           <meshBasicMaterial color="#c2975d" toneMapped />
         </mesh>
         {[-1, 1].map((side) => (
-          <mesh key={side} position={[side * 1.5, 1.7, 0]} material={M.aluminium}>
-            <boxGeometry args={[0.13, 3.2, 0.34]} />
+          <mesh key={side} position={[side * 0.82, 1.15, 0]} material={M.aluminium}>
+            <boxGeometry args={[0.07, 2.05, 0.18]} />
           </mesh>
         ))}
-        {/* the carcass, so the sign has a back as well as a front */}
-        <mesh position={[0, 2.25, -0.09]} material={M.charcoal}>
-          <boxGeometry args={[3.2, 1.5, 0.22]} />
+        {/* transparent body with a compact illuminated message suspended in it */}
+        <mesh position={[0, 1.48, -0.06]}>
+          <boxGeometry args={[1.74, 0.92, 0.11]} />
+          <meshPhysicalMaterial
+            color="#b9d6d1"
+            transparent
+            opacity={0.16}
+            roughness={0.18}
+            metalness={0.05}
+            clearcoat={1}
+            clearcoatRoughness={0.08}
+            depthWrite={false}
+          />
         </mesh>
         <Screen
           media="entry-sign"
-          width={2.96}
-          height={1.28}
-          position={[0, 2.25, 0.04]}
+          width={1.46}
+          height={0.63}
+          position={[0, 1.48, 0.035]}
           pitch={1.2}
           brightness={1.18}
           range={70}
@@ -484,9 +493,9 @@ export function Arrival() {
         {/* and the same face on the reverse, for the walk back out */}
         <Screen
           media="entry-sign"
-          width={2.96}
-          height={1.28}
-          position={[0, 2.25, -0.22]}
+          width={1.46}
+          height={0.63}
+          position={[0, 1.48, -0.13]}
           rotation={[0, Math.PI, 0]}
           pitch={1.2}
           brightness={0.9}
@@ -494,8 +503,8 @@ export function Arrival() {
           frame={false}
         />
         {/* the glass over it, and the light it stands in */}
-        <mesh position={[0, 2.25, 0.07]}>
-          <planeGeometry args={[3.24, 1.56]} />
+        <mesh position={[0, 1.48, 0.075]}>
+          <planeGeometry args={[1.76, 0.94]} />
           <meshPhysicalMaterial
             color="#cfe6e2"
             transparent
@@ -507,12 +516,12 @@ export function Arrival() {
             depthWrite={false}
           />
         </mesh>
-        <mesh position={[0, 3.04, 0.08]}>
-          <planeGeometry args={[3.24, 0.025]} />
+        <mesh position={[0, 1.96, 0.08]}>
+          <planeGeometry args={[1.76, 0.02]} />
           <meshBasicMaterial color="#b8ded8" toneMapped />
         </mesh>
         <LightPool position={[0, 0.03, 0.6]} size={[6, 5]} color="#5fb0a6" opacity={0.22} pulse={0.3} />
-        <pointLight position={[0, 2.4, 1.1]} intensity={12} distance={9} decay={2} color="#7fd0c4" />
+        <pointLight position={[0, 1.5, 0.9]} intensity={7} distance={7} decay={2} color="#7fd0c4" />
       </group>
 
       {/* flanking LED blades */}

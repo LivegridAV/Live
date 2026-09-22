@@ -24,7 +24,7 @@ export const ZONES: Zone[] = [
     id: "arrival",
     label: "Arrival",
     title: "We turn ideas into unforgettable experiences",
-    line: "Scroll to enter the venue.",
+    line: "Scroll to begin the experience.",
     range: [0, 0.14],
     priority: 0,
   },
@@ -71,7 +71,7 @@ export const ZONES: Zone[] = [
   {
     id: "arena",
     label: "Main Arena",
-    title: "One venue, built for anything",
+    title: "One stage, built for anything",
     line: "Rigging, trussing, movers, haze and large-format LED.",
     range: [0.846, 0.926],
     priority: 2,

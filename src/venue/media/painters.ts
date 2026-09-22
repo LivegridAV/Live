@@ -660,14 +660,14 @@ const brandFascia = (p: PaintCtx) => {
   ctx.fillRect(0, 0, w, h);
 
   const size = h * 0.46;
-  ctx.font = `700 ${size}px ${SANS_OF()}`;
+  ctx.font = `600 ${size}px ${SANS_OF()}`;
   ctx.textBaseline = "middle";
   ctx.textAlign = "center";
   ctx.letterSpacing = `${(size * 0.15).toFixed(2)}px`;
 
   const cy = h * 0.46;
   ctx.shadowColor = accent;
-  ctx.shadowBlur = size * 0.5 * (0.6 + 0.4 * Math.sin(t * 0.5));
+  ctx.shadowBlur = size * 0.18 * (0.7 + 0.3 * Math.sin(t * 0.5));
   ctx.fillStyle = "#f2f7f6";
   ctx.fillText("LIVEGRID AV", w / 2, cy);
   ctx.shadowBlur = 0;
@@ -716,7 +716,7 @@ const pavilionHeader = (p: PaintCtx) => {
 
   // Title, shrunk to fit rather than clipped — pavilion names vary in length.
   let size = h * 0.3;
-  const fit = () => (ctx.font = `700 ${size}px ${SANS_OF()}`);
+  const fit = () => (ctx.font = `600 ${size}px ${SANS_OF()}`);
   fit();
   while (ctx.measureText(title).width > w * 0.84 && size > h * 0.13) {
     size *= 0.94;
@@ -728,7 +728,7 @@ const pavilionHeader = (p: PaintCtx) => {
   ctx.fillStyle = BRIGHT;
   ctx.textBaseline = "alphabetic";
   ctx.fillText(title, x, sub ? h * 0.48 : h * 0.62);
-  if (sub) label(p, sub, x, h * 0.585, subSize, accent, 700);
+  if (sub) label(p, sub, x, h * 0.585, subSize, accent, 600);
 };
 
 /* ── pavilion kiosk ────────────────────────────────────── */
@@ -757,7 +757,7 @@ const kioskInfo = (p: PaintCtx) => {
 
   // Title, wrapped rather than clipped — headlines vary a lot in length.
   let size = h * 0.115;
-  ctx.font = `700 ${size}px ${SANS_OF()}`;
+  ctx.font = `600 ${size}px ${SANS_OF()}`;
   const words = title.split(" ");
   const rows: string[] = [];
   let row = "";
@@ -773,7 +773,7 @@ const kioskInfo = (p: PaintCtx) => {
   if (row) rows.push(row);
   while (rows.length > 3 && size > h * 0.06) {
     size *= 0.92;
-    ctx.font = `700 ${size}px ${SANS_OF()}`;
+    ctx.font = `600 ${size}px ${SANS_OF()}`;
     rows.length = 3;
   }
   // Wrapping only ever breaks *between* words, so a single long one — and
@@ -781,7 +781,7 @@ const kioskInfo = (p: PaintCtx) => {
   // row fits, which is the only thing that can rescue an unbreakable word.
   let guard = 0;
   while (guard++ < 24) {
-    ctx.font = `700 ${size}px ${SANS_OF()}`;
+    ctx.font = `600 ${size}px ${SANS_OF()}`;
     const widest = rows.reduce((m, r) => Math.max(m, ctx.measureText(r).width), 0);
     if (widest <= w * 0.84 || size <= h * 0.05) break;
     size *= 0.94;
@@ -842,7 +842,7 @@ export const PAINTERS = {
   signServices: makeSign("What We Do", "Eight disciplines"),
   signArena: makeSign("Main arena", "This way"),
   signGallery: makeSign("Creative LED", "Gallery"),
-  signWelcome: makeSign("Welcome", "You are entering a livegridAV venue"),
+  signWelcome: makeSign("WELCOME", "LIVEGRIDAV"),
   signFinaleCta: makeSign("Let’s build your next experience", "Talk to livegridAV"),
 } as const;
 

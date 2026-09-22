@@ -1,5 +1,8 @@
 import * as THREE from "three";
 
+const EMPTY_BACKDROP = new THREE.DataTexture(new Uint8Array([0, 0, 0, 255]), 1, 1);
+EMPTY_BACKDROP.needsUpdate = true;
+
 /**
  * The immersive-environment surface.
  *
@@ -56,6 +59,8 @@ const fragment = /* glsl */ `
   uniform float uYaw;        // and which way it faces
   uniform float uCell;       // metres per emitter, for the fine-pitch treatment
   uniform float uDot;
+  uniform sampler2D uBackdrop;
+  uniform float uBackdropMix;
 
   varying vec3 vWorld;
   varying vec3 vNrm;
@@ -495,6 +500,17 @@ const fragment = /* glsl */ `
     }
     vec3 col = acc + trans * bg;
 
+    /* A single panoramic plate sits behind the procedural depth. Sampling it
+       from the world ray—not from any panel UV—is the important part: left,
+       right, vault and floor remain windows onto one image, with no restart at
+       a physical seam. The procedural planes stay in front, so the plate reads
+       as a destination rather than wallpaper. */
+    float panoU = atan(rd.x, -rd.z) / 6.28318530718 + 0.5;
+    float panoV = asin(clamp(rd.y, -1.0, 1.0)) / 3.14159265359 + 0.5;
+    vec3 plate = texture2D(uBackdrop, vec2(panoU, panoV)).rgb;
+    plate *= 0.78 + 0.22 * fade;
+    col = mix(col, plate + col * 0.28, uBackdropMix * 0.84);
+
     /* The physical panel the world is being shown on. Emitters are measured
        in world metres rather than UVs, so every surface of an installation
        shares one pitch however its geometry happens to be built — and one
@@ -544,6 +560,8 @@ export interface ImmersiveOptions {
   layers?: number;
   dot?: number;
   doubleSided?: boolean;
+  /** optional panoramic plate, sampled from the same world ray on every face */
+  backdrop?: THREE.Texture;
 }
 
 export function createImmersiveMaterial(o: ImmersiveOptions) {
@@ -569,6 +587,8 @@ export function createImmersiveMaterial(o: ImmersiveOptions) {
       uYaw: { value: o.yaw ?? 0 },
       uCell: { value: pitch / 1000 },
       uDot: { value: o.dot ?? 1 },
+      uBackdrop: { value: o.backdrop ?? EMPTY_BACKDROP },
+      uBackdropMix: { value: o.backdrop ? 1 : 0 },
     },
     side: o.doubleSided ? THREE.DoubleSide : THREE.FrontSide,
     toneMapped: true,

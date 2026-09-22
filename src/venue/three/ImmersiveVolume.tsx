@@ -34,9 +34,11 @@ export function ImmersiveVolume({
   phase,
   portalZ,
   maxLayers,
+  backdrop,
   ...options
-}: Omit<ImmersiveOptions, "portalZ" | "layers"> & {
+}: Omit<ImmersiveOptions, "portalZ" | "layers" | "backdrop"> & {
   surfaces: Surface[];
+  backdrop?: string;
   /** a small demonstration cube does not need an arena's worth of depth */
   maxLayers?: number;
   /** 0 → 1 along the installation, from the camera's world Z, read per frame */
@@ -46,16 +48,29 @@ export function ImmersiveVolume({
 }) {
   const quality = useVenue((s) => s.quality);
   const reduced = useVenue((s) => s.reducedMotion);
+  const backdropTexture = useMemo(() => {
+    if (!backdrop) return undefined;
+    const texture = new THREE.TextureLoader().load(backdrop);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.ClampToEdgeWrapping;
+    texture.minFilter = THREE.LinearMipmapLinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+    texture.anisotropy = 4;
+    return texture;
+  }, [backdrop]);
+  useEffect(() => () => backdropTexture?.dispose(), [backdropTexture]);
 
   const material = useMemo(
     () =>
       createImmersiveMaterial({
         ...options,
+        backdrop: backdropTexture,
         portalZ: portalZ(0),
         layers: Math.min(LAYERS[quality], maxLayers ?? LAYERS.high),
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps -- options are fixed per installation; quality is the only live input
-    [quality],
+    [quality, backdropTexture],
   );
   useEffect(() => () => material.dispose(), [material]);
 

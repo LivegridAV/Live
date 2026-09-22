@@ -150,6 +150,7 @@ export function Tunnel() {
       {/* ── the environment ── */}
       <ImmersiveVolume
         surfaces={surfaces}
+        backdrop="/media/final/tunnel-world.png"
         pitch={1.2}
         brightness={1.06}
         accent="#63d9cc"

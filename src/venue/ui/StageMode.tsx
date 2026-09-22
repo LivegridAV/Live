@@ -21,6 +21,10 @@ export function StageModeSwitch() {
   const pastVenue = useVenue((s) => s.pastVenue);
   const inRange = zone === "arena" || zone === "stage" || zone === "approach";
   const visible = entered && inRange && !panelOpen && !contactOpen && !pastVenue;
+  const labels = {
+    corporate: "Meetings & Conferences",
+    festival: "Celebrations & Social",
+  } as const;
 
   return (
     <div
@@ -44,7 +48,7 @@ export function StageModeSwitch() {
             onClick={() => setMode(m)}
             tabIndex={visible ? 0 : -1}
           >
-            {m}
+            {labels[m]}
           </button>
         ))}
       </div>

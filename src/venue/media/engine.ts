@@ -1,5 +1,12 @@
 import * as THREE from "three";
-import { MEDIA, type MediaDesc, type ShaderMedia, type CanvasMedia, type VideoMedia } from "../data/media";
+import {
+  MEDIA,
+  type MediaDesc,
+  type ShaderMedia,
+  type CanvasMedia,
+  type VideoMedia,
+  type ImageMedia,
+} from "../data/media";
 import { SHADER_PROGRAMS, VERT, HEAVY_PROGRAMS, type ShaderProgramId } from "./programs";
 import { PAINTERS, type PaintCtx } from "./painters";
 import type { QualityTier, StageMode } from "../systems/store";
@@ -49,7 +56,22 @@ interface VideoEntry extends BaseEntry {
   video: HTMLVideoElement;
 }
 
-type Entry = ShaderEntry | CanvasEntry | VideoEntry;
+interface ImageEntry extends BaseEntry {
+  kind: "image";
+  desc: ImageMedia;
+  assetKey: string;
+}
+
+interface ImageAsset {
+  texture: THREE.Texture;
+  canvas: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D;
+  source: string;
+  request: number;
+  images: Map<string, HTMLImageElement>;
+}
+
+type Entry = ShaderEntry | CanvasEntry | VideoEntry | ImageEntry;
 
 /**
  * Quality scale.
@@ -126,6 +148,9 @@ export class MediaEngine {
    * it, which is the one failure that makes an array read as ten screens.
    */
   private groupSeed = new Map<string, number>();
+  /** Still packages are shared by source pair, so repeated gallery and stage
+   * surfaces upload one GPU texture rather than one texture per media id. */
+  private imageAssets = new Map<string, ImageAsset>();
 
   constructor(renderer: THREE.WebGLRenderer) {
     this.renderer = renderer;
@@ -156,23 +181,30 @@ export class MediaEngine {
   }
 
   setMobile(v: boolean) {
+    if (v === this.isMobile) return;
     this.isMobile = v;
+    for (const e of this.entries.values()) {
+      if (e.kind === "image") this.loadImageAsset(this.imageAssets.get(e.assetKey)!, e.desc);
+    }
   }
 
   setMode(mode: StageMode) {
     if (mode === this.mode) return;
     this.mode = mode;
     for (const e of this.entries.values()) {
-      if (e.kind !== "shader") continue;
-      const want = this.programFor(e.desc);
-      if (want !== e.program) {
-        e.material.fragmentShader = SHADER_PROGRAMS[want];
-        e.material.needsUpdate = true;
-        e.program = want;
+      if (e.kind === "shader") {
+        const want = this.programFor(e.desc);
+        if (want !== e.program) {
+          e.material.fragmentShader = SHADER_PROGRAMS[want];
+          e.material.needsUpdate = true;
+          e.program = want;
+        }
+        e.material.uniforms.uMode.value = mode === "festival" ? 1 : 0;
+        e.material.uniforms.uAccent.value.set(this.accentFor(e.desc));
+        e.since = 10; // force an immediate repaint so the switch is instant
+      } else if (e.kind === "image") {
+        this.loadImageAsset(this.imageAssets.get(e.assetKey)!, e.desc);
       }
-      e.material.uniforms.uMode.value = mode === "festival" ? 1 : 0;
-      e.material.uniforms.uAccent.value.set(this.accentFor(e.desc));
-      e.since = 10; // force an immediate repaint so the switch is instant
     }
   }
 
@@ -240,7 +272,98 @@ export class MediaEngine {
   private create(id: string, desc: MediaDesc): Entry {
     if (desc.kind === "shader") return this.createShader(id, desc);
     if (desc.kind === "canvas") return this.createCanvas(id, desc);
+    if (desc.kind === "image") return this.createImage(id, desc);
     return this.createVideo(id, desc);
+  }
+
+  private imageSource(desc: ImageMedia) {
+    if (this.mode === "festival") {
+      if (this.isMobile && desc.festivalMobile) return desc.festivalMobile;
+      if (desc.festival) return desc.festival;
+    }
+    return this.isMobile && desc.mobile ? desc.mobile : desc.desktop;
+  }
+
+  private loadImageAsset(asset: ImageAsset, desc: ImageMedia) {
+    const source = this.imageSource(desc);
+    if (asset.source === source) return;
+    asset.source = source;
+
+    const cached = asset.images.get(source);
+    if (cached?.complete && cached.naturalWidth > 0) {
+      this.applyImageAsset(asset, cached);
+      return;
+    }
+
+    const request = ++asset.request;
+    const image = cached ?? new Image();
+    asset.images.set(source, image);
+    image.decoding = "async";
+    image.crossOrigin = "anonymous";
+    image.onload = () => {
+      if (request !== asset.request || asset.source !== source) return;
+      this.applyImageAsset(asset, image);
+    };
+    image.onerror = () => {
+      if (process.env.NODE_ENV !== "production") console.warn(`[venue] image media failed to load: ${source}`);
+    };
+    image.src = source;
+  }
+
+  private applyImageAsset(asset: ImageAsset, image: HTMLImageElement) {
+    if (asset.canvas.width !== image.naturalWidth || asset.canvas.height !== image.naturalHeight) {
+      asset.canvas.width = image.naturalWidth;
+      asset.canvas.height = image.naturalHeight;
+    }
+    asset.ctx.clearRect(0, 0, asset.canvas.width, asset.canvas.height);
+    asset.ctx.drawImage(image, 0, 0, asset.canvas.width, asset.canvas.height);
+    asset.texture.needsUpdate = true;
+  }
+
+  private preloadImageAsset(asset: ImageAsset, desc: ImageMedia) {
+    const sources = [desc.desktop, desc.mobile, desc.festival, desc.festivalMobile].filter(
+      (source): source is string => Boolean(source),
+    );
+    for (const source of new Set(sources)) {
+      if (asset.images.has(source)) continue;
+      const image = new Image();
+      image.decoding = "async";
+      image.crossOrigin = "anonymous";
+      image.src = source;
+      asset.images.set(source, image);
+    }
+  }
+
+  private createImage(id: string, desc: ImageMedia): ImageEntry {
+    const assetKey = [desc.desktop, desc.mobile ?? "", desc.festival ?? "", desc.festivalMobile ?? ""].join("|");
+    let asset = this.imageAssets.get(assetKey);
+    if (!asset) {
+      const placeholder = document.createElement("canvas");
+      placeholder.width = placeholder.height = 2;
+      const ctx = placeholder.getContext("2d")!;
+      ctx.fillStyle = "#05090a";
+      ctx.fillRect(0, 0, 2, 2);
+      const texture = new THREE.CanvasTexture(placeholder);
+      texture.colorSpace = desc.colorSpace === "linear" ? THREE.LinearSRGBColorSpace : THREE.SRGBColorSpace;
+      texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
+      tuneSampling(texture, this.renderer.capabilities.getMaxAnisotropy());
+      texture.needsUpdate = true;
+      asset = { texture, canvas: placeholder, ctx, source: "", request: 0, images: new Map() };
+      this.imageAssets.set(assetKey, asset);
+      this.preloadImageAsset(asset, desc);
+      this.loadImageAsset(asset, desc);
+    }
+    return {
+      kind: "image",
+      id,
+      desc,
+      assetKey,
+      refs: 0,
+      importance: 0,
+      since: 0,
+      interval: 0,
+      texture: asset.texture,
+    };
   }
 
   private createShader(id: string, desc: ShaderMedia): ShaderEntry {
@@ -392,7 +515,7 @@ export class MediaEngine {
     // Collect shader/canvas entries that are due, most important first.
     const due: Entry[] = [];
     for (const e of this.entries.values()) {
-      if (e.kind === "video") {
+      if (e.kind === "video" || e.kind === "image") {
         e.importance = 0;
         continue; // the browser drives video decoding for us
       }
@@ -483,10 +606,12 @@ export class MediaEngine {
         e.video.removeAttribute("src");
         e.video.load();
         e.texture.dispose();
-      } else {
+      } else if (e.kind === "canvas") {
         e.texture.dispose();
       }
     }
+    for (const asset of this.imageAssets.values()) asset.texture.dispose();
+    this.imageAssets.clear();
     this.entries.clear();
     this.quad.geometry.dispose();
     this.fallback.dispose();

@@ -841,14 +841,14 @@ body {
    ══════════════════════════════════════════════════════════ */
 
 :root {
-  --lg-glass-tint: linear-gradient(170deg, rgba(22, 42, 40, 0.30) 0%, rgba(6, 13, 13, 0.44) 68%);
-  --lg-glass-blur: blur(24px) saturate(1.5);
-  --lg-glass-edge: rgba(178, 234, 226, 0.24);
+  --lg-glass-tint: linear-gradient(170deg, rgba(24, 35, 35, 0.24) 0%, rgba(5, 10, 11, 0.32) 68%);
+  --lg-glass-blur: blur(14px) saturate(1.18);
+  --lg-glass-edge: rgba(218, 235, 231, 0.18);
   --lg-glass-lift:
     inset 0 1px 0 rgba(236, 255, 252, 0.16),
     inset 0 -1px 0 rgba(0, 0, 0, 0.30),
-    0 18px 46px rgba(0, 0, 0, 0.40);
-  --lg-glass-text: 0 1px 2px rgba(2, 8, 8, 0.6);
+    0 16px 38px rgba(0, 0, 0, 0.32);
+  --lg-glass-text: 0 1px 2px rgba(2, 8, 8, 0.58);
 }
 
 .lg-glass {
@@ -876,6 +876,17 @@ body {
   border: 1px solid var(--lg-glass-edge);
   box-shadow: var(--lg-glass-lift);
   text-shadow: var(--lg-glass-text);
+}
+
+/* Translucent card material for the service catalogue: warm graphite, a
+   controlled specular edge and enough transparency for the page grade to
+   remain visible through it. */
+.lg-surface-card {
+  background: linear-gradient(155deg, rgba(39, 35, 30, 0.58), rgba(12, 12, 11, 0.36));
+  -webkit-backdrop-filter: blur(12px) saturate(1.1);
+  backdrop-filter: blur(12px) saturate(1.1);
+  border: 1px solid rgba(226, 214, 194, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 14px 34px rgba(0,0,0,0.22);
 }
 
 /* The primary action stays a solid fill: one confident opaque element in a

@@ -95,9 +95,9 @@ export function Loader() {
         ) : null}
 
         <p className="v-loader-note">
-          A walkthrough of a livegridAV venue — entrance, immersive LED tunnel,
-          creative LED gallery, service pavilions and the main stage. Scroll to
-          move through it.
+          A walkthrough of a live event experience — entrance, immersive LED
+          tunnel, creative gallery, what we do and a transformable main stage.
+          Scroll to move through it.
         </p>
       </div>
     </div>

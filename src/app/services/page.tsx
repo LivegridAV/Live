@@ -68,7 +68,7 @@ export default function ServicesHub() {
         const items = SERVICES.filter((s) => s.group === group.id);
         if (items.length === 0) return null;
         return (
-          <section key={group.id} className="border-t border-line bg-white py-16 md:py-20">
+          <section key={group.id} className="border-t border-line bg-[radial-gradient(circle_at_18%_0%,rgba(130,94,54,0.10),transparent_36%),linear-gradient(180deg,#12100e,#0b0a09)] py-16 md:py-20">
             <div className="mx-auto max-w-[1180px] px-6 md:px-12">
               <Reveal>
                 <div className="flex items-center gap-4">
@@ -87,7 +87,7 @@ export default function ServicesHub() {
                   <Reveal key={s.slug} delay={(i % 3) * 0.06}>
                     <Link
                       href={`/services/${s.slug}`}
-                      className="group flex h-full flex-col rounded-[20px] border border-line bg-paper p-7 transition-all duration-300 hover:-translate-y-1 hover:border-aqua/40 hover:shadow-[0_18px_40px_-24px_rgba(31,160,147,0.5)]"
+                      className="lg-surface-card group flex h-full flex-col rounded-[20px] p-7 transition-all duration-300 hover:-translate-y-1 hover:border-aqua/40 hover:shadow-[0_18px_40px_-24px_rgba(31,160,147,0.5)]"
                     >
                       <div className="flex items-start justify-between">
                         <span className="lg-icon-badge">

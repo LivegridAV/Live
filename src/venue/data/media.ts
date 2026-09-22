@@ -148,7 +148,25 @@ export interface VideoMedia extends CommonMedia {
   stageMode?: "corporate" | "festival";
 }
 
-export type MediaDesc = ShaderMedia | CanvasMedia | VideoMedia;
+/**
+ * A graded still rendered for an architectural LED surface.
+ *
+ * Stills are first-class media rather than ad-hoc texture loads in scene
+ * components. The engine can therefore share one GPU texture between every
+ * surface carrying the same package, and the stage can exchange an entire
+ * visual world on the existing show cue.
+ */
+export interface ImageMedia extends CommonMedia {
+  kind: "image";
+  desktop: string;
+  mobile?: string;
+  /** alternate package used by the second stage experience */
+  festival?: string;
+  festivalMobile?: string;
+  colorSpace?: "srgb" | "linear";
+}
+
+export type MediaDesc = ShaderMedia | CanvasMedia | VideoMedia | ImageMedia;
 
 export const MEDIA: Record<string, MediaDesc> = {
   /* ── Arrival ──────────────────────────────────────────── */
@@ -174,54 +192,29 @@ export const MEDIA: Record<string, MediaDesc> = {
   "hall-wordmark": { kind: "canvas", painter: "wordmark", accent: ACCENT.brand, res: [1024, 288], fps: 12 },
 
   /* ── Creative LED gallery ─────────────────────────────── */
-  // The four-sided totems.
-  //
-  // `pillarWrap` is authored as an unwrapped strip that goes once around the
-  // column, and `PillarScreen` hands each face its own quarter of it — so the
-  // ribbons genuinely travel around the corners instead of restarting on
-  // every face. The render is wide (1024) and tall (1024) because it is
-  // carrying four faces' worth of image, not one.
-  /* 704 x 1024 is not arbitrary: the unwrapped strip is the column's
-     perimeter (~4.4 m) by its height (~7 m), so a square target spent a third
-     of its pixels on an aspect the surface does not have. 22 fps because the
-     motion is slow — a ribbon crossing a corner does not need 30. */
-  "pillar-flow": {
-    kind: "shader", program: "pillarWrap", accent: ACCENT.ice, variant: 0.1,
-    res: [704, 1024], fps: 22, syncGroup: "pillars",
-  },
-  "pillar-metal": {
-    kind: "shader", program: "pillarWrap", accent: ACCENT.gold, variant: 0.62,
-    res: [704, 1024], fps: 22, syncGroup: "pillars",
-  },
-  // The blade array is one composition cut across six panels, so it is one
-  // clock: six panels each running their own copy would shear the image.
-  "blade-rain": { kind: "shader", program: "chromeFlow", accent: ACCENT.indigo, variant: 0.8, res: [1024, 512], fps: 30, syncGroup: "blades" },
-  /* A full 360 degree wrap, and the surface the camera passes closest to —
-     inside two metres, where a 13.8 m circumference at 1280 px is only ~90
-     texels per metre and the content goes soft. Texel density has to be set
-     by the closest approach, not by the object's size on screen from the
-     aisle. */
-  "cylinder-ribbon": { kind: "shader", program: "chromeFlow", accent: ACCENT.gold, res: [2048, 704], fps: 24, syncGroup: "cylinder" },
-  // Continuous angular content on a 34 m circumference, 1.5 m tall.
-  "ring-waves": { kind: "shader", program: "chromeFlow", accent: ACCENT.ice, res: [2304, 320], fps: 24, syncGroup: "ring" },
-  // The fascia is a metre from the camera and its own header calls it
-  // fine pitch. A matrix motif here contradicts the product in the same frame.
-  "bar-brand": { kind: "shader", program: "chromeFlow", accent: ACCENT.magenta, variant: 0.45, res: [1792, 256], fps: 30, syncGroup: "bar" },
-  "curve-natural": { kind: "shader", program: "auroraSilk", accent: ACCENT.lime, res: [1280, 704], fps: 24, syncGroup: "curved" },
-  // A flat slab field was reading as grey card. A lattice running into depth
-  // gives the cut silhouette something worth being cut around.
-  "mosaic-arch": { kind: "shader", program: "portalDepth", accent: ACCENT.indigo, res: [768, 576], fps: 24, syncGroup: "mosaic" },
-  "anamorphic": { kind: "shader", program: "anamorphicVoid", accent: ACCENT.ice, res: [896, 640], fps: 24, syncGroup: "anamorphic" },
+  /* The five high-resolution plates below are shared by related surfaces.
+     Four-sided and curved components still receive their appropriate UV crop;
+     sharing the underlying texture keeps the final pass visually coherent and
+     avoids duplicate multi-megapixel uploads to the GPU. */
+  "pillar-flow": { kind: "image", desktop: "/media/final/liquid-metal-wrap.png", brightness: 0.92 },
+  "pillar-metal": { kind: "image", desktop: "/media/final/liquid-metal-wrap.png", brightness: 0.98 },
+  "blade-rain": { kind: "image", desktop: "/media/final/creative-world.png", brightness: 0.9 },
+  "cylinder-ribbon": { kind: "image", desktop: "/media/final/liquid-metal-wrap.png", brightness: 0.96 },
+  "ring-waves": { kind: "image", desktop: "/media/final/liquid-metal-wrap.png", brightness: 0.88 },
+  "bar-brand": { kind: "image", desktop: "/media/final/liquid-metal-wrap.png", brightness: 0.86 },
+  "curve-natural": { kind: "image", desktop: "/media/final/creative-world.png", brightness: 0.92 },
+  "mosaic-arch": { kind: "image", desktop: "/media/final/creative-world.png", brightness: 0.9 },
+  "anamorphic": { kind: "image", desktop: "/media/final/anamorphic-sculpture.png", brightness: 0.95 },
 
   /* ── 01 · AV engineering ──────────────────────────────── */
-  "av-signal-diagram": { kind: "canvas", painter: "avSignalDiagram", accent: ACCENT.teal, res: [512, 288], fps: 15 },
+  "av-signal-diagram": { kind: "image", desktop: "/media/final/technical-control.png", brightness: 0.9 },
   "av-led-plan": { kind: "canvas", painter: "avLedPlan", accent: ACCENT.steel, res: [448, 256], fps: 10 },
   "av-rack-status": { kind: "canvas", painter: "avRackStatus", accent: ACCENT.teal, res: [320, 384], fps: 8 },
 
   /* ── 02 · Content studio ──────────────────────────────── */
-  "content-motion": { kind: "shader", program: "chromeFlow", accent: ACCENT.magenta, variant: 0.2, res: [640, 360], fps: 30 },
+  "content-motion": { kind: "image", desktop: "/media/final/creative-world.png", brightness: 0.92 },
   "content-3d": { kind: "shader", program: "architecture", accent: ACCENT.copper, variant: 0.5, res: [256, 256], fps: 20 },
-  "content-anamorphic": { kind: "shader", program: "anamorphicVoid", accent: ACCENT.amber, variant: 0.7, res: [384, 384], fps: 24 },
+  "content-anamorphic": { kind: "image", desktop: "/media/final/anamorphic-sculpture.png", brightness: 0.94 },
 
   /* ── 03 · LED solutions ───────────────────────────────── */
   "led-formats": { kind: "shader", program: "ledFormats", accent: ACCENT.teal, res: [448, 256], fps: 24 },

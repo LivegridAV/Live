@@ -104,7 +104,7 @@ export function Nav() {
           <button type="button" className="v-btn v-nav-sheet-close" onClick={() => setNavOpen(false)}>
             Close
           </button>
-          <p className="v-mono v-nav-sheet-label">In the venue</p>
+          <p className="v-mono v-nav-sheet-label">Experience map</p>
           {NAV_STOPS.map((s) => (
             <button key={s.id} type="button" className="v-nav-link" onClick={() => go(s.p)}>
               {s.label}

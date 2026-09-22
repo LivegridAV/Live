@@ -20,12 +20,12 @@ import { CONTACT, contactLinks } from "@/experience/contact";
 export const metadata: Metadata = {
   title: "livegridAV — Walk through an event we built | LED, AV & Live Production",
   description:
-    "Step inside a livegridAV venue: a four-sided immersive LED tunnel, creative LED installations, service pavilions and a main stage that switches between corporate and festival. AV engineering, content, LED, projection, show control and live production.",
+    "Explore a livegridAV event experience: a four-sided immersive LED tunnel, creative LED installations, working service environments and a main stage that transforms from meetings and conferences to celebrations and social events.",
   alternates: { canonical: "https://livegridav.com/" },
   openGraph: {
     title: "livegridAV — We turn ideas into unforgettable experiences",
     description:
-      "Walk through a livegridAV event: immersive LED tunnel, creative LED gallery, service pavilions and a main stage you can switch between corporate and festival.",
+      "Walk through a livegridAV event: immersive LED tunnel, creative LED gallery, working service environments and two distinct main-stage experiences.",
     url: "https://livegridav.com/",
     siteName: "livegridAV",
     type: "website",
@@ -41,7 +41,7 @@ const ZONE_COPY: Record<string, string> = {
   gallery:
     "Creative LED at real scale: pillars, vertical blades, a cylinder, a suspended ring, an LED bar counter, a curved wall, a shaped module mosaic and a 90° anamorphic corner.",
   boulevard:
-    "Eight service pavilions, each a working stall with its own architecture, screens and live content.",
+    "Eight working service environments, each with its own architecture, screens and live content.",
   approach: "Giant LED pillars and portrait displays lead into the arena portal.",
   arena: "A full-scale arena: rigging, trussing, moving lights, haze, flown PA and large-format LED.",
   stage:
@@ -115,7 +115,7 @@ export default function Home() {
               and streaming, virtual and hybrid events, and web development.
             </p>
             <p>
-              The page above is a walkthrough of a venue we built in the browser —
+              The page above is a walkthrough of an event experience built in the browser —
               scroll and the camera moves through it. If you would rather read
               than walk, everything is here.
             </p>
@@ -134,16 +134,16 @@ export default function Home() {
           </div>
 
           <div>
-            <h2>Service pavilions</h2>
+            <h2>What we do</h2>
             <p>
-              Every service below has its own page. On the boulevard they are
-              grouped into eight pavilions plus a partner bay, because related
-              work is delivered together.
+              Every service below has its own page. In the experience they are
+              grouped into eight distinct working environments plus a partner bay,
+              because related work is delivered together.
             </p>
             <div className="v-seo-grid">
               {PAVILIONS.map((p) => (
                 <article key={p.id} className="v-seo-card">
-                  <p className="v-mono">Pavilion {p.no}</p>
+                  <p className="v-mono">We do · {p.no}</p>
                   <h3 style={{ marginTop: 8 }}>{p.headline}</h3>
                   <p style={{ marginBottom: 10 }}>{p.support}</p>
                   <ul className="v-seo-list">
