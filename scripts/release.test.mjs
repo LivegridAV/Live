@@ -36,6 +36,7 @@ test("home copy, canonical and crawlable business fallback", () => {
   for (const text of ["tel:+917801013919", "livegridav@gmail.com", "/services/av-engineering"]) assert.ok(html.includes(text));
   assert.match(read("out/robots.txt"), /sitemap/i);
   assert.match(read("out/sitemap.xml"), /https:\/\/livegridav.com\/services/);
+  assert.match(read("src/app/venue.css"), /\.v-seo\s*\{\s*color: #eef3f2;/);
 });
 test("brand color, stage labels and continuous tunnel contract", () => {
   assert.match(read("public/brand/lockup-inverse.svg"), /#3fd6c8/i);

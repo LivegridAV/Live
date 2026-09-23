@@ -86,5 +86,15 @@ remain separate work. Preserve the current underlying R3F and authored GLB setup
   match the verified contact constants. Backend lead delivery is NOT certified.
 - Exported-site browser logs had no critical errors. A dependency-level
   THREE.Clock deprecation warning remains; it is not a rendering failure.
+- Live smoke exposed dark inherited headings in the text-only fallback; the
+  fallback now explicitly uses `#eef3f2`, with a regression assertion and rendered
+  confirmation. This correction follows the initial `e19520a` release.
+- Repeat desktop development walkthroughs settled around 53–57fps. Texture count
+  held at 56, geometry count stabilized at 1422, and observed heap went from
+  135.3MB to 135.2MB to 124.5MB. Eight unique image requests, no video streams or
+  repeated image downloads. Initial shader/scene warm-up produced long tasks
+  (up to 5305ms during concurrent browser testing); this is not a hitch-free
+  load-time certification. Physical-device profiling and warm-up optimization
+  remain follow-up work.
 - Skills used: Graphify for the code relationship map, Imagegen for the media
   masters and stage-image correction, and computer-use for rendered QA.
