@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync, existsSync, readdirSync } from "node:fs";
 import path from "node:path";
+import sharp from "sharp";
 
 const read = file => readFileSync(file, "utf8");
 const files = dir => readdirSync(dir, { withFileTypes: true }).flatMap(e =>
@@ -50,4 +51,25 @@ test("brand color, stage labels and continuous tunnel contract", () => {
   assert.match(tunnel, /cinematic-world/);
   assert.doesNotMatch(tunnel, /tunnel-world\.png/);
   assert.match(read("src/venue/three/cinematicWorld.ts"), /vWorld-uEye/);
+});
+
+test("entrance keeps the main fascia without a welcome board", () => {
+  const arrival = read("src/venue/zones/Arrival.tsx");
+  assert.match(arrival, /media="entry-brand"/);
+  assert.doesNotMatch(arrival, /entry-sign/);
+  assert.doesNotMatch(read("src/venue/data/media.ts"), /entry-sign/);
+  assert.doesNotMatch(read("src/venue/media/painters.ts"), /WELCOME LIVEGRIDAV/);
+});
+
+test("tunnel uses the enhanced desktop and mobile panorama assets", async () => {
+  const tunnel = read("src/venue/zones/Tunnel.tsx");
+  for (const [suffix, width, maxBytes] of [["4k", 3840, 2_500_000], ["mobile", 1920, 800_000]]) {
+    const file = `cinematic-world-v2-${suffix}.webp`;
+    assert.ok(tunnel.includes(file));
+    const buffer = readFileSync(`public/media/final/${file}`);
+    const metadata = await sharp(buffer).metadata();
+    assert.equal(metadata.width, width);
+    assert.equal(metadata.height, width / 2);
+    assert.ok(buffer.length < maxBytes, `${file} exceeds its transfer budget`);
+  }
 });

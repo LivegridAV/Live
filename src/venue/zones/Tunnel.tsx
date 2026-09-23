@@ -149,9 +149,9 @@ export function Tunnel() {
       <ImmersiveVolume
         surfaces={surfaces}
         cinematic
-        backdrop={mobile ? "/media/final/cinematic-world-mobile.webp" : "/media/final/cinematic-world.png"}
+        backdrop={mobile ? "/media/final/cinematic-world-v2-mobile.webp" : "/media/final/cinematic-world-v2-4k.webp"}
         pitch={1.2}
-        brightness={0.92}
+        brightness={1.03}
         accent="#ccad81"
         flow={6.5}
         doubleSided

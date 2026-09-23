@@ -441,11 +441,6 @@ export function Arrival() {
         />
       ))}
 
-      {/* A forward-facing welcome under the fascia leaves the approach clear. */}
-      <Screen media="entry-sign" width={7} height={1.16}
-        position={[0, 5.75, ARCH.faceZ + 1.15]} pitch={1.2}
-        range={70} frame={false} brightness={1} flat dot={0} />
-
       {/* flanking LED blades */}
       {[-1, 1].map((side) => (
         <group key={`blade${side}`} position={[side * 8.2, 0, 2.4]}>

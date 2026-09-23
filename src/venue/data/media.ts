@@ -173,7 +173,6 @@ export const MEDIA: Record<string, MediaDesc> = {
   // The arch fascia. This has to *say the name* — an abstract brand sweep was
   // playing here, which is a fine motif and a poor sign.
   "entry-brand": { kind: "canvas", painter: "brandFascia", accent: ACCENT.brand, res: [1024, 192], fps: 12 },
-  "entry-sign": { kind: "canvas", painter: "signWelcome", accent: ACCENT.brand, res: [1152, 192], fps: 8 },
   "entry-blade": { kind: "shader", program: "pillarWrap", accent: ACCENT.ice, variant: 0.3, res: [512, 640], fps: 24, syncGroup: "entry" },
 
   /* ── Tunnel ───────────────────────────────────────────────
@@ -377,4 +376,4 @@ for (const [id, title, sub, accent] of STAND_LABELS) {
 export type MediaId = keyof typeof MEDIA;
 
 /** Screens that must be live before the visitor is allowed in. */
-export const CRITICAL_MEDIA = ["entry-brand", "entry-sign", "entry-blade", "vestibule-blade"];
+export const CRITICAL_MEDIA = ["entry-brand", "entry-blade", "vestibule-blade"];

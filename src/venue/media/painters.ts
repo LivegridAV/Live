@@ -865,17 +865,6 @@ export const PAINTERS = {
   signServices: makeSign("What We Do", "Eight disciplines"),
   signArena: makeSign("Main arena", "This way"),
   signGallery: makeSign("Creative LED", "Gallery"),
-  signWelcome: (p: PaintCtx) => {
-    const { ctx, w, h } = p;
-    ctx.fillStyle = "#081011";
-    ctx.fillRect(0, 0, w, h);
-    ctx.font = `500 ${h * 0.37}px ${SANS_OF()}`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillStyle = "#ffffff";
-    ctx.fillText("WELCOME LIVEGRIDAV", w / 2, h / 2, w * 0.91);
-    ctx.textAlign = "left";
-  },
   signFinaleCta: makeSign("Let’s build your next experience", "Talk to livegridAV"),
 } as const;
 
