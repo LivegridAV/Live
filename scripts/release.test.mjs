@@ -73,3 +73,25 @@ test("tunnel uses the enhanced desktop and mobile panorama assets", async () => 
     assert.ok(buffer.length < maxBytes, `${file} exceeds its transfer budget`);
   }
 });
+
+test("tunnel panorama covers the front 180 degrees without rear repetition", () => {
+  const shader = read("src/venue/three/cinematicWorld.ts");
+  assert.match(shader, /PANORAMA_HORIZONTAL=PI;/);
+  assert.match(shader, /PANORAMA_VERTICAL=PI\*\.5;/);
+  assert.match(shader, /yaw\/PANORAMA_HORIZONTAL\+\.5/);
+  assert.match(shader, /elevation\/PANORAMA_VERTICAL\+\.5/);
+  assert.match(shader, /if\(front<=0\.0\) return rear;/);
+  const visibleEnvironment = shader.split("vec3 environment(vec3 d) {")[1].split("vec3 sculptureReflection")[0];
+  assert.doesNotMatch(visibleEnvironment, /atan\(d\.x,-d\.z\)\/\(2\.0\*PI\)/);
+  assert.match(shader, /sculptureReflection\(reflect\(rd,normal\)\)/);
+  assert.doesNotMatch(shader, /rd\.xz=mat2/);
+  // Cardinal rays for the declared shader projection: the full image width
+  // is in front, with the 2:1 asset's vertical angular span scaled equally.
+  const uv = (yaw, elevation = 0) => [yaw / Math.PI + .5, elevation / (Math.PI * .5) + .5];
+  assert.deepEqual(uv(-Math.PI / 2), [0, .5]);
+  assert.deepEqual(uv(0), [.5, .5]);
+  assert.deepEqual(uv(Math.PI / 2), [1, .5]);
+  assert.deepEqual(uv(0, Math.PI / 4), [.5, 1]);
+  assert.deepEqual(uv(0, -Math.PI / 4), [.5, 0]);
+  assert.ok(uv(Math.PI)[0] > 1, "rear direction must not wrap into the image");
+});

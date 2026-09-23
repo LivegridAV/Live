@@ -22,11 +22,29 @@ export function createCinematicMaterial(backdrop?: THREE.Texture, brightness = 1
       uniform vec3 uEye;
       uniform float uTime, uAlpha, uBright;
       const float PI=3.14159265359;
+      // The complete 2:1 artwork belongs to the front 180 x 90 degrees,
+      // not a 360-degree globe. Equal angular pixel density keeps it in proportion.
+      const float PANORAMA_HORIZONTAL=PI;
+      const float PANORAMA_VERTICAL=PI*.5;
       vec3 environment(vec3 d) {
         d=normalize(d);
+        float yaw=atan(d.x,-d.z);
+        float elevation=asin(clamp(d.y,-1.0,1.0));
+        vec2 uv=vec2(yaw/PANORAMA_HORIZONTAL+.5,elevation/PANORAMA_VERTICAL+.5);
+        // The rear hemisphere is unlit, never a repeated or mirrored copy.
+        // Feather only the final degree of the front edges. Shared world rays
+        // still give identical samples where wall, ceiling and floor meet.
+        float front=1.0-smoothstep(PI*.5-.018,PI*.5,abs(yaw));
+        vec3 rear=vec3(.008,.011,.016);
+        if(front<=0.0) return rear;
+        return mix(rear,texture2D(uBackdrop,clamp(uv,vec2(.0005),vec2(.9995))).rgb,front);
+      }
+      // Sculpture lighting is independent of the visible screen coverage.
+      // Keep the original all-around reflection lookup so front-facing chrome
+      // does not become a flat dark disk when it reflects toward the entrance.
+      vec3 sculptureReflection(vec3 d) {
+        d=normalize(d);
         vec2 uv=vec2(atan(d.x,-d.z)/(2.0*PI)+.5,asin(clamp(d.y,-1.0,1.0))/PI+.5);
-        // The narrow back meridian blends to a common sample at both ends.
-        // Floor/wall/ceiling corners need no blend: their rays are identical.
         float seam=smoothstep(0.0,.025,min(uv.x,1.0-uv.x));
         return mix(texture2D(uBackdrop,vec2(.5,uv.y)).rgb,
           texture2D(uBackdrop,uv).rgb,seam);
@@ -38,9 +56,8 @@ export function createCinematicMaterial(backdrop?: THREE.Texture, brightness = 1
       }
       void main() {
         vec3 rd=normalize(vWorld-uEye);
-        // Slow cinematic orbit, continuous in time even when the visitor stops.
-        float a=.035*sin(uTime*.055);
-        rd.xz=mat2(cos(a),-sin(a),sin(a),cos(a))*rd.xz;
+        // Keep the 180-degree screen facing the tunnel exit (-Z). Sculptures
+        // and dust retain their continuous animation without drifting the map.
         vec3 ro=vec3(uEye.x*.22,(uEye.y-1.8)*.22,uEye.z*.18);
         vec3 col=environment(rd);
         float nearest=1e5; vec3 centre=vec3(0.0); float radius=1.0;
@@ -53,7 +70,7 @@ export function createCinematicMaterial(backdrop?: THREE.Texture, brightness = 1
         }
         if(nearest<1e4) {
           vec3 normal=(ro+rd*nearest-centre)/radius;
-          vec3 reflected=environment(reflect(rd,normal));
+          vec3 reflected=sculptureReflection(reflect(rd,normal));
           float fresnel=pow(1.0-max(0.0,dot(-rd,normal)),5.0);
           col=reflected*.84+vec3(.035,.043,.055)+fresnel*vec3(.2,.18,.14);
           float sun=pow(max(0.0,dot(reflect(rd,normal),normalize(vec3(-.6,.5,.3)))),100.0);
