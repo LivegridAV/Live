@@ -1,6 +1,6 @@
 "use client";
 import { FormEvent, useState } from "react";
-import { CONTACT, contactLinks, LEAD_WEBHOOK_URL } from "@/experience/contact";
+import { CONTACT, contactLinks, LEAD_WEBHOOK_URL, LEAD_WEBHOOK_ENABLED } from "@/experience/contact";
 
 /**
  * Guided project brief (brief §37). Posts straight to the marketing lead pipeline
@@ -19,13 +19,14 @@ const PROJECT_TYPES = [
 const NEEDS = [
   "AV Engineering", "Content & Visuals", "LED Displays", "3D / Anamorphic",
   "Projection Mapping", "Show Control", "Live Production", "Virtual / Hybrid",
-  "Streaming", "Sound", "Lighting", "Web",
+  "Streaming", "Sound (partners)", "Lighting (partners)", "Web",
 ];
 
 export default function ContactBrief() {
   const [projectType, setProjectType] = useState("");
   const [needs, setNeeds] = useState<string[]>([]);
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error" | "ready">("idle");
+  const [draft, setDraft] = useState("");
   const [typeError, setTypeError] = useState(false);
 
   const toggleNeed = (n: string) =>
@@ -55,10 +56,13 @@ export default function ContactBrief() {
     const form = e.currentTarget;
     const data = new FormData(form);
     const message = buildMessage(data);
+    setDraft([`Name: ${data.get("name")}`, `Email: ${data.get("email")}`, `Phone: ${data.get("phone") ?? ""}`, `Company: ${data.get("company") ?? ""}`, "", message].join("\n"));
+    if (!LEAD_WEBHOOK_ENABLED) { setStatus("ready"); return; }
 
     setStatus("sending");
     try {
       const res = await fetch(LEAD_WEBHOOK_URL, {
+        signal: AbortSignal.timeout(12000),
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -77,9 +81,6 @@ export default function ContactBrief() {
       setProjectType("");
       setNeeds([]);
     } catch {
-      // pipeline unreachable — hand the brief to the mail client so it still arrives.
-      const body = [`Name: ${data.get("name")}`, `Email: ${data.get("email")}`, `Company: ${data.get("company") ?? ""}`, "", message].join("\n");
-      window.location.href = `${contactLinks.email("Project brief — livegridav.com")}&body=${encodeURIComponent(body)}`;
       setStatus("error");
     }
   };
@@ -120,6 +121,7 @@ export default function ContactBrief() {
 
   return (
     <form onSubmit={submit} className="space-y-12">
+      {!LEAD_WEBHOOK_ENABLED && <p className="text-sm text-muted">Prepare your brief below, then choose email or WhatsApp to send it. Your details stay in this page until you choose a handoff.</p>}
       {/* Step 1 — what are we building */}
       <fieldset>
         <legend className="font-mono text-xs uppercase tracking-[0.2em] text-aqua">
@@ -207,10 +209,14 @@ export default function ContactBrief() {
         </div>
       </fieldset>
 
-      {status === "error" && (
-        <p className="text-sm text-muted">
-          We opened your mail client so the brief still reaches {CONTACT.email}.
-        </p>
+      {(status === "error" || status === "ready") && (
+        <div role="status" className="space-y-3 rounded-xl border border-line p-5 text-sm text-muted">
+          <p>{status === "error" ? "Online submission is unavailable. " : "Your brief is ready. "}Nothing has been sent yet — open your email or WhatsApp draft and send it to our team.</p>
+          <div className="flex flex-wrap gap-4">
+            <a className="underline" href={`${contactLinks.email("Project brief — livegridav.com")}&body=${encodeURIComponent(draft)}`}>Open email draft</a>
+            <a className="underline" href={contactLinks.whatsapp(draft)} target="_blank" rel="noopener noreferrer">Open WhatsApp draft</a>
+          </div>
+        </div>
       )}
 
       <div className="flex flex-wrap gap-3">
@@ -219,7 +225,7 @@ export default function ContactBrief() {
           disabled={status === "sending"}
           className="rounded-xl bg-aqua px-7 py-3.5 text-sm font-medium text-white transition-[filter] hover:brightness-110 disabled:opacity-60"
         >
-          {status === "sending" ? "Sending…" : "Send project brief"}
+          {status === "sending" ? "Sending…" : LEAD_WEBHOOK_ENABLED ? "Send project brief" : "Prepare project brief"}
         </button>
         <button
           type="button"

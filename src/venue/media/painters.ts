@@ -89,13 +89,38 @@ function timecode(t: number) {
   return `${pad(hrs)}:${pad(m)}:${pad(s)}:${pad(f)}`;
 }
 
-/** A moving abstract "feed" so camera/preview tiles are never static. */
+// A supplied stage visualization stands in for camera footage. Each monitor
+// gets its own reframed view; this is an illustrative feed, not a live stream.
+let cameraPlate: HTMLImageElement | undefined;
+function stagePlate() {
+  if (!cameraPlate && typeof Image !== "undefined") {
+    cameraPlate = new Image();
+    cameraPlate.decoding = "async";
+    cameraPlate.src = "/media/final/broadcast-stage.png";
+  }
+  return cameraPlate?.complete && cameraPlate.naturalWidth ? cameraPlate : undefined;
+}
+
+/** Camera-style crops, running timecode and tally are painted independently. */
 function feed(p: PaintCtx, x: number, y: number, w: number, h: number, seed: number, warm = false) {
   const { ctx, t } = p;
   ctx.save();
   ctx.beginPath();
   ctx.rect(x, y, w, h);
   ctx.clip();
+  const plate = stagePlate();
+  if (plate) {
+    const zoom = 1.08 + (Math.floor(seed) % 3) * 0.23 + Math.sin(t * 0.13 + seed) * 0.025;
+    const scale = Math.max(w / plate.naturalWidth, h / plate.naturalHeight) * zoom;
+    const dw = plate.naturalWidth * scale, dh = plate.naturalHeight * scale;
+    const pan = 0.5 + Math.sin(seed * 2.1 + t * 0.07) * 0.16;
+    ctx.drawImage(plate, x - (dw - w) * pan, y - (dh - h) * 0.5, dw, dh);
+    const shade = ctx.createLinearGradient(0, y + h * 0.72, 0, y + h);
+    shade.addColorStop(0, "transparent"); shade.addColorStop(1, "rgba(0,0,0,0.72)");
+    ctx.fillStyle = shade; ctx.fillRect(x, y, w, h);
+    ctx.restore();
+    return;
+  }
   const g = ctx.createLinearGradient(x, y, x + w, y + h);
   g.addColorStop(0, warm ? "#221408" : "#071313");
   g.addColorStop(1, warm ? "#0d0805" : "#04090b");
@@ -608,11 +633,10 @@ const makeSign =
   };
 
 const wordmark = (p: PaintCtx) => {
-  const { ctx, w, h, t, accent } = p;
+  const { ctx, w, h } = p;
   ctx.fillStyle = "#05090a";
   ctx.fillRect(0, 0, w, h);
-  const glow = 0.5 + 0.5 * Math.sin(t * 0.6);
-  ctx.font = `700 ${h * 0.4}px ${SANS_OF()}`;
+  ctx.font = `600 ${h * 0.4}px ${SANS_OF()}`;
   ctx.textBaseline = "middle";
   ctx.textAlign = "center";
   const text = "livegrid";
@@ -620,12 +644,11 @@ const wordmark = (p: PaintCtx) => {
   const tw = ctx.measureText(text).width;
   const aw = ctx.measureText(av).width;
   const total = tw + aw;
-  ctx.shadowColor = accent;
-  ctx.shadowBlur = h * 0.1 * glow;
-  ctx.fillStyle = BRIGHT;
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = "#ffffff";
   ctx.textAlign = "left";
   ctx.fillText(text, (w - total) / 2, h * 0.5);
-  ctx.fillStyle = accent;
+  ctx.fillStyle = "#3fd6c8";
   ctx.fillText(av, (w - total) / 2 + tw, h * 0.5);
   ctx.shadowBlur = 0;
   ctx.textAlign = "left";
@@ -667,7 +690,7 @@ const brandFascia = (p: PaintCtx) => {
 
   const cy = h * 0.46;
   ctx.shadowColor = accent;
-  ctx.shadowBlur = size * 0.18 * (0.7 + 0.3 * Math.sin(t * 0.5));
+  ctx.shadowBlur = 0;
   ctx.fillStyle = "#f2f7f6";
   ctx.fillText("LIVEGRID AV", w / 2, cy);
   ctx.shadowBlur = 0;
@@ -842,7 +865,17 @@ export const PAINTERS = {
   signServices: makeSign("What We Do", "Eight disciplines"),
   signArena: makeSign("Main arena", "This way"),
   signGallery: makeSign("Creative LED", "Gallery"),
-  signWelcome: makeSign("WELCOME", "LIVEGRIDAV"),
+  signWelcome: (p: PaintCtx) => {
+    const { ctx, w, h } = p;
+    ctx.fillStyle = "#081011";
+    ctx.fillRect(0, 0, w, h);
+    ctx.font = `500 ${h * 0.37}px ${SANS_OF()}`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText("WELCOME LIVEGRIDAV", w / 2, h / 2, w * 0.91);
+    ctx.textAlign = "left";
+  },
   signFinaleCta: makeSign("Let’s build your next experience", "Talk to livegridAV"),
 } as const;
 

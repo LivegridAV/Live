@@ -1,5 +1,15 @@
 # AI Web-Development Toolchain
 
+> **23 September 2026 verification update:** The architecture rebuild uses the
+> standard Blender 5.2.1 LTS executable at
+> `C:\Program Files\Blender Foundation\Blender 5.2\blender.exe`.
+> Headless Cycles/OptiX (RTX 2060), Eevee and GLB export passed locally.
+> `scripts/blender/rebuild_expo.py` reproduces fourteen authored GLBs and
+> three Cycles QA previews. The live Blender MCP status call could not connect
+> because its addon/server was not running; headless creation works separately.
+> See [the rebuild report](EXPO_ARCHITECTURE_REBUILD.md). Older tool statuses
+> below describe their original Claude session, not the current Codex tools.
+
 This repository is developed with an integrated, AI-assisted browser + documentation + 3D
 toolchain. Claude Code drives these MCP servers directly during development sessions to
 build, inspect, debug, test and visually verify the LivegridAV site.

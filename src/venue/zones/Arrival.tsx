@@ -168,7 +168,7 @@ function EntranceArch() {
         brightness={1.12}
         range={80}
         frame={false}
-        edge="#2c6f68"
+        edge="#ad9168"
         edgeWidth={0.06}
       />
       {/* a projecting lintel over the fascia, catching a warm line underneath */}
@@ -186,7 +186,7 @@ function EntranceArch() {
         <group key={`sh${side}`}>
           <mesh position={[side * 7.4, 5.4, ARCH.faceZ + 0.04]}>
             <planeGeometry args={[0.1, 9.2]} />
-            <meshBasicMaterial color="#5f8a86" toneMapped />
+            <meshBasicMaterial color="#c0a47c" toneMapped />
           </mesh>
           {/* uplight grazing the arch leg from the plaza floor */}
           <mesh position={[side * 6.1, 0.06, ARCH.faceZ + 0.9]} rotation={[-Math.PI / 2, 0, 0]}>
@@ -222,7 +222,7 @@ function EntranceArch() {
             </mesh>
             <mesh position={[0, -0.13, ARCH.faceZ + 0.14]}>
               <planeGeometry args={[3.85, 0.035]} />
-              <meshBasicMaterial color="#4e6a6c" toneMapped />
+              <meshBasicMaterial color="#927e61" toneMapped />
             </mesh>
           </group>
         )),
@@ -441,88 +441,10 @@ export function Arrival() {
         />
       ))}
 
-      {/* ── the welcome ──
-          This used to be a 4.2 m plate flat against the facade at x = -9.2:
-          nine metres off the centre line, edge-on to the approach, twenty-four
-          metres away and behind the arch light. It was present and it was
-          invisible, which is the worst of both.
-
-          A welcome is a moment, so it is now a restrained glass sign in the
-          near foreground: immediately legible, but small enough that the
-          architecture remains the first impression. */}
-      <group position={[-4.0, 0, 10.2]} rotation={[0, 0.32, 0]}>
-        {/* base and stem */}
-        <mesh position={[0, 0.09, 0]} material={M.anodised}>
-          <boxGeometry args={[1.55, 0.14, 0.62]} />
-        </mesh>
-        <mesh position={[0, 0.3, 0]}>
-          <planeGeometry args={[1.38, 0.03]} />
-          <meshBasicMaterial color="#c2975d" toneMapped />
-        </mesh>
-        {[-1, 1].map((side) => (
-          <mesh key={side} position={[side * 0.82, 1.15, 0]} material={M.aluminium}>
-            <boxGeometry args={[0.07, 2.05, 0.18]} />
-          </mesh>
-        ))}
-        {/* transparent body with a compact illuminated message suspended in it */}
-        <mesh position={[0, 1.48, -0.06]}>
-          <boxGeometry args={[1.74, 0.92, 0.11]} />
-          <meshPhysicalMaterial
-            color="#b9d6d1"
-            transparent
-            opacity={0.16}
-            roughness={0.18}
-            metalness={0.05}
-            clearcoat={1}
-            clearcoatRoughness={0.08}
-            depthWrite={false}
-          />
-        </mesh>
-        <Screen
-          media="entry-sign"
-          width={1.46}
-          height={0.63}
-          position={[0, 1.48, 0.035]}
-          pitch={1.2}
-          brightness={1.18}
-          range={70}
-          frame={false}
-          edge="#2f7a72"
-          edgeWidth={0.05}
-        />
-        {/* and the same face on the reverse, for the walk back out */}
-        <Screen
-          media="entry-sign"
-          width={1.46}
-          height={0.63}
-          position={[0, 1.48, -0.13]}
-          rotation={[0, Math.PI, 0]}
-          pitch={1.2}
-          brightness={0.9}
-          range={70}
-          frame={false}
-        />
-        {/* the glass over it, and the light it stands in */}
-        <mesh position={[0, 1.48, 0.075]}>
-          <planeGeometry args={[1.76, 0.94]} />
-          <meshPhysicalMaterial
-            color="#cfe6e2"
-            transparent
-            opacity={0.07}
-            roughness={0.08}
-            metalness={0}
-            clearcoat={1}
-            clearcoatRoughness={0.05}
-            depthWrite={false}
-          />
-        </mesh>
-        <mesh position={[0, 1.96, 0.08]}>
-          <planeGeometry args={[1.76, 0.02]} />
-          <meshBasicMaterial color="#b8ded8" toneMapped />
-        </mesh>
-        <LightPool position={[0, 0.03, 0.6]} size={[6, 5]} color="#5fb0a6" opacity={0.22} pulse={0.3} />
-        <pointLight position={[0, 1.5, 0.9]} intensity={7} distance={7} decay={2} color="#7fd0c4" />
-      </group>
+      {/* A forward-facing welcome under the fascia leaves the approach clear. */}
+      <Screen media="entry-sign" width={7} height={1.16}
+        position={[0, 5.75, ARCH.faceZ + 1.15]} pitch={1.2}
+        range={70} frame={false} brightness={1} flat dot={0} />
 
       {/* flanking LED blades */}
       {[-1, 1].map((side) => (

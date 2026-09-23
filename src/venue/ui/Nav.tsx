@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { trapDialogFocus } from "./focusTrap";
 import { useVenue } from "../systems/store";
 import { NAV_STOPS } from "../data/zones";
 import { scrollToProgress } from "../systems/ScrollRig";
@@ -41,15 +42,23 @@ const ROUTES = [
 ];
 
 export function Nav() {
+  const sheet = useRef<HTMLDivElement>(null);
   const zone = useVenue((s) => s.zone);
   const navOpen = useVenue((s) => s.navOpen);
   const setNavOpen = useVenue((s) => s.setNavOpen);
 
   useEffect(() => {
     if (!navOpen) return;
+    const releaseFocus = sheet.current ? trapDialogFocus(sheet.current) : undefined;
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setNavOpen(false);
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = overflow;
+      releaseFocus?.();
+    };
   }, [navOpen, setNavOpen]);
 
   const go = (p: number) => {
@@ -100,7 +109,7 @@ export function Nav() {
       </header>
 
       {navOpen && (
-        <div className="v-nav-sheet" role="dialog" aria-modal="true" aria-label="Menu">
+        <div ref={sheet} className="v-nav-sheet" role="dialog" aria-modal="true" aria-label="Menu">
           <button type="button" className="v-btn v-nav-sheet-close" onClick={() => setNavOpen(false)}>
             Close
           </button>

@@ -12,9 +12,9 @@
   --v-line: rgba(122, 156, 152, 0.18);
   --v-line-strong: rgba(122, 156, 152, 0.34);
   --v-text: #eef3f2;
-  --v-muted: #9aa8a6;
-  --v-faint: #6c7b79;
-  --v-glow: #3fd6c8;
+  --v-muted: #c2cdcb;
+  --v-faint: #a5b5b2;
+  --v-glow: #d9bb87;
   --v-amber: #d99a52;
 
   position: relative;
@@ -133,7 +133,7 @@
   background: #16302d;
 }
 .v-loader-cell[data-on="true"] {
-  background: var(--v-glow);
+  background: #3fd6c8;
   box-shadow: 0 0 10px rgba(63, 214, 200, 0.55);
   animation: vPop 2.6s ease-in-out infinite;
 }
@@ -147,7 +147,7 @@
   font-weight: 600;
   letter-spacing: -0.02em;
 }
-.v-loader-word span { color: var(--v-glow); }
+.v-loader-word span { color: #3fd6c8; }
 .v-loader-bar {
   width: min(320px, 70vw);
   height: 2px;
@@ -202,7 +202,7 @@
   cursor: pointer;
   padding: 0;
 }
-.v-nav-brand span { color: var(--v-glow); }
+.v-nav-brand span { color: #3fd6c8; }
 .v-nav-grid {
   display: grid;
   grid-template-columns: repeat(5, 3px);
@@ -215,7 +215,7 @@
   background: #1d3733;
 }
 .v-nav-grid i[data-on="true"] {
-  background: var(--v-glow);
+  background: #3fd6c8;
 }
 .v-nav-links {
   display: flex;
@@ -331,7 +331,7 @@
   transition: opacity 0.5s ease, transform 0.5s ease;
   padding: 18px 20px 19px;
   border-radius: 16px;
-  background: linear-gradient(155deg, rgba(16, 27, 28, 0.42), rgba(5, 10, 11, 0.24));
+  background: linear-gradient(155deg, rgba(12, 20, 23, 0.72), rgba(5, 10, 14, 0.57));
   -webkit-backdrop-filter: blur(12px) saturate(1.15);
   backdrop-filter: blur(12px) saturate(1.15);
   border: 1px solid rgba(210, 230, 226, 0.16);
@@ -418,7 +418,8 @@
 .v-prompt {
   position: fixed;
   z-index: 32;
-  bottom: 108px;
+  top: 50%;
+  bottom: auto;
   display: grid;
   gap: 4px;
   padding: 14px 18px;
@@ -429,8 +430,8 @@
   transition: opacity 0.45s ease, transform 0.45s ease;
   max-width: min(340px, 42vw);
 }
-.v-prompt[data-side="-1"] { left: 34px; }
-.v-prompt[data-side="1"] { right: 34px; }
+.v-prompt[data-side="-1"] { right: 94px; }
+.v-prompt[data-side="1"] { left: 34px; }
 .v-prompt-no {
   font-family: var(--font-space-mono), ui-monospace, monospace;
   font-size: 10px;
@@ -590,11 +591,11 @@
 .v-stagemode-btn[aria-pressed="true"] {
   background: var(--v-glow);
   color: #06100f;
-  font-weight: 700;
+  font-weight: 600;
 }
 .v-stagemode-btn[aria-pressed="true"][data-mode="festival"] {
-  background: #b678e0;
-  color: #120520;
+  background: #d9ae86;
+  color: #20180f;
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -873,14 +874,14 @@
      even field whatever is moving behind it. Text on glass also carries its
      own shadow (see below), which is what makes this safe over a stage wall
      running at full output. */
-  --v-glass-tint: linear-gradient(170deg, rgba(24, 35, 35, 0.24) 0%, rgba(5, 10, 11, 0.32) 68%);
+  --v-glass-tint: linear-gradient(170deg, rgba(18, 28, 31, 0.68) 0%, rgba(5, 10, 14, 0.76) 68%);
   --v-glass-blur: blur(14px) saturate(1.18);
   --v-glass-edge: rgba(218, 235, 231, 0.18);
   --v-glass-lift:
     inset 0 1px 0 rgba(236, 255, 252, 0.16),
     inset 0 -1px 0 rgba(0, 0, 0, 0.30),
     0 16px 38px rgba(0, 0, 0, 0.32);
-  --v-glass-text: 0 1px 2px rgba(2, 8, 8, 0.68);
+  --v-glass-text: none;
 }
 
 .v-glass,
@@ -931,6 +932,8 @@
 .v-nav-sheet-close {
   position: absolute;
 }
+.v-rail { position: fixed; }
+.v-prompt { position: fixed; top: 50%; bottom: auto; }
 .v-btn::before,
 .v-nav-brand::before,
 .v-nav-links::before,
@@ -983,9 +986,12 @@
 
 /* ── the progress rail ── */
 .v-rail {
-  padding: 14px 12px;
+  padding: 14px 8px;
   border-radius: 18px;
+  width: 48px;
 }
+.v-rail-stop { min-height: 20px; position: relative; }
+.v-rail-label { position: absolute; right: 40px; pointer-events: none; }
 
 /* ── type weight across the chrome ── */
 .v-btn { font-weight: 600; }
@@ -1037,6 +1043,9 @@
 .v-rail-label,
 .v-nav-sheet-label { font-weight: 500; letter-spacing: 0.1em; color: var(--v-muted); }
 .v-prompt h2 { font-weight: 600; }
+.v-hud[data-zone="stage"] { max-width: 250px; }
+.v-hud[data-zone="stage"] .v-hud-title { font-size: 23px; }
+.v-hud[data-zone="stage"] .v-hud-line { font-size: 12px; }
 .v-mono { color: var(--v-faint); }
 
 /* The primary action is the one element that is NOT glass.
@@ -1061,4 +1070,16 @@
    the shadow — the HUD caption is bare type over the live scene. */
 .v-hud-title,
 .v-hud-line,
-.v-hud-zone { text-shadow: var(--v-glass-text); }
+.v-hud-zone { text-shadow: none; }
+
+/* Portrait composition: keep the copy in the upper-middle area, leaving
+   the pavilion and stage hero artwork visible below it. */
+@media (max-width: 700px) {
+  .v-prompt { top: 45%; max-width: min(290px, calc(100vw - 76px)); padding: 13px 15px; }
+  .v-prompt h2 { font-size: 16px; }
+  .v-prompt .v-btn { padding: 11px 15px; }
+  .v-hud { top: 44%; }
+  .v-hud[data-zone="arrival"] { top: 61%; max-width: calc(100vw - 92px); }
+  .v-hud[data-zone="stage"], .v-hud[data-zone="arena"] { top: 61%; }
+  .v-hud[data-zone="stage"] .v-hud-title { font-size: 20px; }
+}

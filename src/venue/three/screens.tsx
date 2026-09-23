@@ -6,6 +6,7 @@ import { useMedia, useScreenTexture } from "../media/MediaContext";
 import { createLEDMaterial, createProjectionMaterial, type LEDOptions } from "./ledMaterial";
 import { useVenue } from "../systems/store";
 import { show } from "../systems/journey";
+import { MEDIA } from "../data/media";
 
 /**
  * The LED product range.
@@ -45,7 +46,7 @@ interface BaseProps {
 function ledKey(o: LEDOptions) {
   return [
     o.width, o.height, o.pitch, o.cabinet, o.brightness, o.tint, o.dot, o.doubleSided,
-    o.swap, o.flip?.[0], o.flip?.[1], o.flat,
+    o.swap, o.flip?.[0], o.flip?.[1], o.flat, o.fit, o.wrapX,
     o.repeat?.[0], o.repeat?.[1], o.offset?.[0], o.offset?.[1],
   ].join("|");
 }
@@ -62,9 +63,26 @@ function useLED(
   // venue, and that decision belongs with the content, not with the geometry.
   const trim = useMedia().trim(media);
   opts = { ...opts, brightness: (opts.brightness ?? 1) * trim };
+  const descriptor = MEDIA[media];
+  const isBrand = descriptor?.kind === "canvas" && ["wordmark", "brandFascia"].includes(descriptor.painter);
+  if (isBrand) opts = { ...opts, brightness: 1, flat: true, dot: 0 };
   const key = ledKey(opts);
+  const material = useMemo(() => {
+    const result = createLEDMaterial(texture, opts);
+    result.toneMapped = !isBrand;
+    return result;
   // eslint-disable-next-line react-hooks/exhaustive-deps -- `key` covers every field of `opts`
-  const material = useMemo(() => createLEDMaterial(texture, opts), [texture, key]);
+  }, [texture, key, isBrand]);
+  const reduced = useVenue((s) => s.reducedMotion);
+  useFrame(({ clock }) => {
+    material.uniforms.uTime.value = clock.elapsedTime;
+    material.uniforms.uMotion.value = !reduced && MEDIA[media]?.kind === "image" && !media.startsWith("av-") ? 1 : 0;
+    const image = texture.image as { width?: number; height?: number } | undefined;
+    if (opts.fit && MEDIA[media]?.kind === "image" && image?.width && image?.height) {
+      const ratio = (opts.width / opts.height) / (image.width / image.height);
+      material.uniforms.uFit.value.set(Math.min(1, ratio), Math.min(1, 1 / ratio));
+    }
+  });
   useEffect(() => () => material.dispose(), [material]);
   return material;
 }
@@ -145,6 +163,7 @@ export interface ScreenProps extends BaseProps {
   flip?: [boolean, boolean];
   /** no off-axis falloff — for panels whose neighbours sit at another angle */
   flat?: boolean;
+  wrapX?: boolean;
   /**
    * A lit reveal around the panel edge, as a colour.
    *
@@ -178,6 +197,7 @@ export function Screen({
   swap,
   flip,
   flat,
+  wrapX,
   edge,
   edgeWidth = 0.09,
 }: ScreenProps) {
@@ -197,6 +217,8 @@ export function Screen({
       swap,
       flip,
       flat,
+      wrapX,
+      fit: !uv,
       repeat: uv ? [uv[0], uv[1]] : [1, 1],
       offset: uv ? [uv[2], uv[3]] : [0, 0],
     },
@@ -299,7 +321,7 @@ export function CylinderScreen({
   const material = useLED(
     media,
     mesh,
-    { width: 2 * Math.PI * radius, height, pitch, brightness, tint, cabinet: 0.5 },
+    { width: 2 * Math.PI * radius, height, pitch, brightness, tint, cabinet: 0.5, wrapX: MEDIA[media]?.kind === "image" },
     range,
   );
   usePowerState(material);
@@ -346,7 +368,8 @@ export function RingScreen({
   const material = useLED(
     media,
     mesh,
-    { width: 2 * Math.PI * radius, height, pitch, brightness, tint, cabinet: 0.6, doubleSided: true },
+    { width: 2 * Math.PI * radius, height, pitch, brightness, tint, cabinet: 0.6, doubleSided: true,
+      wrapX: MEDIA[media]?.kind === "image", repeat: MEDIA[media]?.kind === "image" ? [4,1] : [1,1] },
     range,
   );
   usePowerState(material);
@@ -472,6 +495,7 @@ export function PillarScreen({
             position={[f.pos[0], midY, f.pos[2]]}
             rotation={[0, f.rotY, 0]}
             uv={[span, 1, offset, 0]}
+            wrapX
             pitch={pitch}
             brightness={brightness}
             tint={tint}

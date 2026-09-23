@@ -216,7 +216,7 @@ export function MovingHead({
         Math.min(0.16, on * 0.065 * intensity * beamGain) * (1 - show.cue * 0.75);
 
       if (f > 0.02) {
-        festivalCol.setHSL((seed * 0.11 + t * 0.035) % 1, 0.62, 0.62);
+        festivalCol.set(seed % 3 < 1 ? "#f4a148" : "#6682d5");
         beamMat.current.color.copy(col).lerp(festivalCol, f);
       } else {
         beamMat.current.color.copy(col);
@@ -251,7 +251,7 @@ export function MovingHead({
             <cylinderGeometry args={[0.095, 0.095, 0.02, 12]} />
             <meshBasicMaterial color={color} toneMapped={false} />
           </mesh>
-          {quality !== "low" && (
+          {(quality !== "low" || beamGain > 1.3) && (
             <mesh geometry={beamGeo} position={[0, -0.17, 0]} renderOrder={4}>
               <meshBasicMaterial
                 ref={beamMat}

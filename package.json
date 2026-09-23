@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/gen-build-info.mjs && next build",
+    "build": "next build && node scripts/prepare-export.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test scripts/release.test.mjs",
     "start": "next start",
     "lint": "eslint"
   },

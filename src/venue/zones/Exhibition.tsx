@@ -147,8 +147,8 @@ export function Stand({
   position,
   size,
   rotation = 0,
-  accent = "#8fa3b8",
-  backdrop = true,
+  accent = "#bf9f75",
+  backdrop = false,
   overhead = true,
   label,
   labelAt,
@@ -170,10 +170,7 @@ export function Stand({
         />
       )}
       <group rotation={[0, rotation, 0]}>
-      {/* the footprint: a different, matte floor material with a lit edge */}
-      <mesh position={[0, 0.025, 0]} rotation={[-Math.PI / 2, 0, 0]} material={M.deck} receiveShadow>
-        <planeGeometry args={[w, d]} />
-      </mesh>
+      {/* Open island edges leave the hall's shared reflective floor visible. */}
       {[-1, 1].map((side) => (
         <mesh key={`ex${side}`} position={[side * (w / 2), 0.03, 0]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[0.06, d]} />
@@ -235,76 +232,21 @@ export function Stand({
  * exhibit.
  */
 export function NameBoard({
-  position,
-  face = 0,
-  media,
-  width = 4.2,
-  accent = "#8fa3b8",
+  position, face = 0, media, width = 4.2, accent = "#bf9f75",
 }: {
-  position: [number, number, number];
-  face?: number;
-  media: string;
-  width?: number;
-  accent?: string;
+  position: [number, number, number]; face?: number; media: string; width?: number; accent?: string;
 }) {
-  const h = 0.86;
-  return (
-    <group position={position} rotation={[0, face, 0]}>
-      {/* header beam the fascia is built onto */}
-      <mesh position={[0, h / 2 + 0.24, -0.16]} material={M.charcoal}>
-        <boxGeometry args={[width + 0.7, h + 0.48, 0.26]} />
-      </mesh>
-      {/* droppers */}
-      {[-1, 1].map((side) => (
-        <mesh key={side} position={[side * (width / 2 + 0.28), h + 1.5, -0.16]} material={M.steel}>
-          <cylinderGeometry args={[0.028, 0.028, 2.4, 6]} />
-        </mesh>
-      ))}
-      <Screen
-        media={media}
-        width={width}
-        height={h}
-        position={[0, h / 2 + 0.24, 0]}
-        pitch={1.5}
-        brightness={1.12}
-        range={78}
-        frame={false}
-      />
-      {/* The glass the sign lives behind. Real venue signage is nearly always
-          behind a laminate, and the give-away is not the pane itself but the
-          two things it does: a faint specular sheet across the face, and a
-          bright line where the glass edge catches light. */}
-      <mesh position={[0, h / 2 + 0.24, 0.035]}>
-        <planeGeometry args={[width + 0.34, h + 0.34]} />
-        <meshPhysicalMaterial
-          color="#cfe6e2"
-          transparent
-          opacity={0.07}
-          roughness={0.08}
-          metalness={0}
-          envMapIntensity={0.45}
-          clearcoat={1}
-          clearcoatRoughness={0.05}
-          depthWrite={false}
-        />
-      </mesh>
-      <mesh position={[0, h + 0.42, 0.04]}>
-        <planeGeometry args={[width + 0.34, 0.025]} />
-        <meshBasicMaterial color="#b8ded8" toneMapped />
-      </mesh>
-      <mesh position={[0, -0.09, 0.04]}>
-        <planeGeometry args={[width + 0.34, 0.02]} />
-        <meshBasicMaterial color="#7fa8a4" toneMapped />
-      </mesh>
-      {/* lit reveal under the board — signage reads at distance because it is
-          lit, not because it is large */}
-      <mesh position={[0, -0.06, 0.02]}>
-        <planeGeometry args={[width + 0.5, 0.05]} />
-        <meshBasicMaterial color={accent} toneMapped />
-      </mesh>
-      <LightPool position={[0, h / 2 + 0.24, 0.2]} rotation={[0, 0, 0]} size={[width * 1.5, 3.2]} color={accent} opacity={0.1} />
-    </group>
-  );
+  const w = Math.min(width * .5, 2.4);
+  return <group position={[position[0], 0, position[2]]} rotation={[0, face, 0]}>
+    <mesh position={[0, .66, 0]} material={M.charcoal}>
+      <boxGeometry args={[w + .12, 1.32, .2]} />
+    </mesh>
+    <Screen media={media} width={w} height={.45} position={[0, 1.03, .112]}
+      pitch={1.2} brightness={1} range={45} frame={false} flat />
+    <mesh position={[0, .05, .112]}>
+      <planeGeometry args={[w, .025]} /><meshBasicMaterial color={accent} toneMapped />
+    </mesh>
+  </group>;
 }
 
 /* ── exhibition furnishing ─────────────────────────────── */
@@ -573,19 +515,16 @@ export function Aisle({ from, to, width = 7.2 }: { from: number; to: number; wid
 
   return (
     <group>
-      <mesh position={[0, 0.012, mid]} rotation={[-Math.PI / 2, 0, 0]} material={M.concrete}>
-        <planeGeometry args={[width, len]} />
-      </mesh>
       {[-1, 1].map((side) => (
         <mesh key={side} position={[side * (width / 2), 0.016, mid]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[0.05, len]} />
-          <meshBasicMaterial color="#2a5f5b" toneMapped />
+          <meshBasicMaterial color="#b79a70" toneMapped />
         </mesh>
       ))}
       {bands.map((z) => (
         <mesh key={z} position={[0, 0.016, z]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[width, 0.09]} />
-          <meshBasicMaterial color="#33474b" toneMapped />
+          <meshBasicMaterial color="#53504a" toneMapped />
         </mesh>
       ))}
     </group>

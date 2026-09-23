@@ -15,7 +15,8 @@ import { LightPool } from "../three/environment";
 import { ReflectionStreak } from "../three/Reflection";
 import { useVenue } from "../systems/store";
 import { ZoneGroup } from "../three/ZoneGroup";
-import { Aisle, Counter, Gantry, Lounge, NameBoard, Planter, Poseur, Stand, Vestibule } from "./Exhibition";
+import { ExpoAsset } from "../three/ExpoAsset";
+import { Aisle, Counter, Lounge, NameBoard, Planter, Poseur, Stand, Vestibule } from "./Exhibition";
 
 /**
  * The creative LED gallery.
@@ -44,12 +45,12 @@ import { Aisle, Counter, Gantry, Lounge, NameBoard, Planter, Poseur, Stand, Vest
  * share a width — a grid of identical columns reads as a product shot.
  */
 const PILLARS: { x: number; z: number; h: number; w: number; media: string }[] = [
-  { x: -10.6, z: -42.5, h: 5.6, w: 0.95, media: "pillar-flow" },
-  { x: -7.2, z: -46.5, h: 7.8, w: 1.15, media: "pillar-metal" },
-  { x: -11.4, z: -50.5, h: 6.4, w: 1.0, media: "pillar-metal" },
-  { x: -5.4, z: -54.0, h: 9.0, w: 1.25, media: "pillar-flow" },
-  { x: -9.8, z: -57.5, h: 6.0, w: 0.9, media: "pillar-flow" },
-  { x: -13.2, z: -53.0, h: 7.2, w: 1.1, media: "pillar-metal" },
+  { x: -10.6, z: -42.5, h: 11.8, w: 1.9, media: "pillar-flow" },
+  { x: -7.2, z: -46.5, h: 12.6, w: 2.05, media: "pillar-metal" },
+  { x: -11.4, z: -50.5, h: 11.9, w: 1.9, media: "pillar-metal" },
+  { x: -5.4, z: -54.0, h: 12.6, w: 2.15, media: "pillar-flow" },
+  { x: -9.8, z: -57.5, h: 11.6, w: 1.9, media: "pillar-flow" },
+  { x: -13.2, z: -53.0, h: 12.2, w: 2.0, media: "pillar-metal" },
 ];
 
 function Pillars() {
@@ -59,7 +60,7 @@ function Pillars() {
       <Stand
         position={[-9.6, 0, -50]}
         size={[14, 20]}
-        accent="#4f9b93"
+        accent="#bf9f75"
         backdrop={false}
         overhead={false}
         label="stand-pillars"
@@ -68,11 +69,11 @@ function Pillars() {
         labelWidth={5.0}
       />
       {/* the pillars are tall, so their overhead rig spans the whole cluster */}
-      <Truss length={14} size={0.32} position={[-9.6, 10.2, -46]} braceEvery={0.9} />
-      <Truss length={14} size={0.32} position={[-9.6, 10.2, -55]} braceEvery={0.9} />
+      <Truss length={14} size={0.32} position={[-9.6, 13.2, -46]} braceEvery={0.9} />
+      <Truss length={14} size={0.32} position={[-9.6, 13.2, -55]} braceEvery={0.9} />
       {PILLARS.map((p, i) => {
         const warm = p.media === "pillar-metal";
-        const hue = warm ? "#c09a5a" : "#5fb6ab";
+        const hue = warm ? "#c09a5a" : "#bf9f75";
         return (
           <group key={i}>
             <PillarScreen
@@ -100,10 +101,10 @@ function Pillars() {
           </group>
         );
       })}
-      <LightPool position={[-9.2, 0.05, -50]} size={[20, 24]} color="#4f9b93" opacity={0.09} pulse={0.5} />
+      <LightPool position={[-9.2, 0.05, -50]} size={[20, 24]} color="#bf9f75" opacity={0.09} pulse={0.5} />
       {/* somewhere to stand and look at them */}
-      <Lounge position={[-16.0, 0, -45.5]} rotation={0.5} accent="#4f9b93" seed={1} />
-      <Lounge position={[-15.4, 0, -59]} rotation={-0.4} accent="#4f9b93" seed={5} />
+      <group position={[-18.4,0,-49.6]} rotation={[0,Math.PI/2,0]}><ExpoAsset name="pillar-forum" /></group>
+      <Screen media="entry-brand" width={5.5} height={0.95} position={[-3.2, 7.7, -46.8]} rotation={[0, 1.15, 0]} brightness={1} frame={false} flat />
     </group>
   );
 }
@@ -125,9 +126,9 @@ function Blades() {
       <Stand
         position={[7.8, 0, -59.6]}
         size={[12, 13]}
-        accent="#4fc4b6"
+        accent="#bf9f75"
         label="stand-blades"
-        labelAt={[-5.4, 5.9, 3.6]}
+        labelAt={[-0.5, 5.9, -4.0]}
         labelFace={-1.15}
         labelWidth={4.4}
       />
@@ -154,12 +155,12 @@ function Blades() {
             position={[b.x, 0.04, b.z + 2.2]}
             width={1.1}
             length={4.4}
-            color="#4fc4b6"
+            color="#bf9f75"
             opacity={0.17}
           />
         </group>
       ))}
-      <Counter position={[14.2, 0, -57.5]} rotation={-0.5} width={3.6} accent="#4fc4b6" />
+      <Counter position={[14.2, 0, -57.5]} rotation={-0.5} width={3.6} accent="#bf9f75" />
       <Planter position={[13.0, 0, -61.6]} seed={11} />
       <Planter position={[13.9, 0, -63.0]} scale={0.85} seed={14} />
     </group>
@@ -187,13 +188,13 @@ function Cylinder() {
         <CylinderScreen
           media="cylinder-ribbon"
           radius={2.2}
-          height={4.6}
-          position={[0, 2.6, 0]}
+          height={7.4}
+          position={[0, 4.0, 0]}
           pitch={1.9}
           brightness={1.0}
           range={60}
         />
-        <HangPoint position={[0, 7.4, 0]} drop={2.4} />
+        <HangPoint position={[0, 11.4, 0]} drop={3.7} />
         <LightPool position={[0, 0.06, 0]} size={12} color="#c08a4e" opacity={0.16} pulse={0.35} />
         <ReflectionStreak position={[0, 0.04, 3.4]} width={5.2} length={6.0} color="#c08a4e" opacity={0.2} />
       </group>
@@ -220,10 +221,10 @@ function Ring() {
         height={1.5}
         position={[0, 6.4, 0]}
         pitch={1.9}
-        brightness={2.3}
+        brightness={1.12}
         range={80}
         spill={26}
-        spillColor="#6fc2b6"
+        spillColor="#bf9f75"
       />
       {/* a second, smaller ring inside it — the composition needs a counterpoint */}
       <RingScreen
@@ -232,7 +233,7 @@ function Ring() {
         height={0.9}
         position={[0, 7.9, 0]}
         pitch={1.9}
-        brightness={1.95}
+        brightness={1.0}
         inward
         range={80}
       />
@@ -240,19 +241,16 @@ function Ring() {
           camera can walk through rather than merely under */}
       <mesh position={[0, 0.03, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[5.3, 5.5, 64]} />
-        <meshBasicMaterial color="#2f7a72" toneMapped />
+        <meshBasicMaterial color="#b49a72" toneMapped />
       </mesh>
-      <mesh position={[0, 0.026, 0]} rotation={[-Math.PI / 2, 0, 0]} material={M.deck}>
-        <circleGeometry args={[5.4, 48]} />
-      </mesh>
-      <LightPool position={[0, 0.05, 0]} size={20} color="#4fa79c" opacity={0.2} pulse={0.45} />
+      <LightPool position={[0, 0.05, 0]} size={20} color="#bf9f75" opacity={0.2} pulse={0.45} />
       {/* a soft disc of light in the air under the ring, so the pass beneath it
           is a lit moment rather than a dark ceiling */}
       <LightPool position={[0, 5.5, 0]} size={16} color="#5fb8ac" opacity={0.1} pulse={0.4} />
       {/* The ring is flown over the walkway rather than standing on a stand,
           so its name board hangs clear to one side — directly under it is
           where the camera goes. */}
-      <NameBoard position={[-5.6, 4.4, 0.6]} face={1.0} media="stand-ring" width={4.2} accent="#4fa79c" />
+      <NameBoard position={[-5.6, 4.4, 0.6]} face={1.0} media="stand-ring" width={4.2} accent="#bf9f75" />
       {[-1, 1].map((side) => (
         <Planter key={side} position={[side * 6.6, 0, -3.4]} seed={side * 9 + 30} />
       ))}
@@ -269,7 +267,7 @@ function Bar() {
         position={[-9.8, 0, -84]}
         size={[13, 10]}
         rotation={Math.PI / 2.3}
-        accent="#4fc4b6"
+        accent="#bf9f75"
         label="stand-bar"
         labelAt={[-0.8, 4.6, -2.4]}
         labelFace={0.9}
@@ -307,8 +305,8 @@ function Bar() {
             </mesh>
           </group>
         ))}
-        <ReflectionStreak position={[0, 0.04, 2.4]} width={8} length={4.6} color="#57cbbd" opacity={0.22} />
-        <LightPool position={[0, 0.05, 1.6]} size={[12, 8]} color="#4fc4b6" opacity={0.14} />
+        <ReflectionStreak position={[0, 0.04, 2.4]} width={8} length={4.6} color="#cbb18e" opacity={0.16} />
+        <LightPool position={[0, 0.05, 1.6]} size={[12, 8]} color="#bf9f75" opacity={0.14} />
         {/* poseur tables in front of the bar — a counter with nothing in front
             of it reads as a prop */}
         {[-2.6, 0.4, 3.2].map((x) => (
@@ -470,30 +468,12 @@ function AnamorphicCorner() {
 /* ── the hall reveal ───────────────────────────────────── */
 
 function HallReveal() {
-  return (
-    <group>
-      {/* suspended wordmark banner — the first thing seen as the hall opens up */}
-      <Screen
-        media="hall-wordmark"
-        width={17}
-        height={4.6}
-        position={[0, 10.4, -54]}
-        pitch={2.6}
-        brightness={1.0}
-        range={120}
-        frame={false}
-      />
-      {[-7.4, 7.4].map((x) => (
-        <HangPoint key={x} position={[x, 14.2, -54]} drop={1.5} />
-      ))}
-
-      {/* wayfinding gantries spanning the aisle, so the route is legible from
-          a distance the way it is in a real exhibition hall */}
-      <Gantry z={-47} media="sign-gallery" />
-      <Gantry z={-74} media="sign-services" />
-      <Gantry z={-101} media="sign-arena" />
-    </group>
-  );
+  return <group>
+    {([{ z: -74, media: "sign-services" }, { z: -101, media: "sign-arena" }]).map(sign =>
+      <Screen key={sign.z} media={sign.media} width={3.5} height={.7}
+        position={[-18.65, 3.4, sign.z]} rotation={[0, Math.PI / 2, 0]}
+        pitch={1.5} brightness={1} range={50} frame={false} />)}
+  </group>;
 }
 
 /* ── zone root ─────────────────────────────────────────── */
@@ -515,6 +495,7 @@ export function Gallery() {
       </ZoneGroup>
       <ZoneGroup from={-64} to={-74} ahead={44} behind={24}>
         <Cylinder />
+        <group position={[14,0,-72]} rotation={[0,-Math.PI/2,0]}><ExpoAsset name="gallery-salon" /></group>
       </ZoneGroup>
       <ZoneGroup from={-72} to={-84} ahead={46} behind={26}>
         <Ring />

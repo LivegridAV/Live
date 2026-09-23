@@ -2,6 +2,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import { journey, show } from "../systems/journey";
 import { zoneAt } from "../data/zones";
 import { PAVILIONS, PARTNER_BAY } from "../data/pavilions";
@@ -16,56 +17,16 @@ import { PAVILIONS, PARTNER_BAY } from "../data/pavilions";
  * static lights the GPU would have to evaluate everywhere at once.
  */
 
-/** A dark room: cool ceiling wash, warm horizon bounce, near-black floor. */
-function buildEnvTexture() {
-  const w = 256;
-  const h = 128;
-  const c = document.createElement("canvas");
-  c.width = w;
-  c.height = h;
-  const ctx = c.getContext("2d")!;
-
-  const g = ctx.createLinearGradient(0, 0, 0, h);
-  g.addColorStop(0.0, "#1a2427"); // ceiling
-  g.addColorStop(0.35, "#10181a");
-  g.addColorStop(0.52, "#1b1d1c"); // horizon
-  g.addColorStop(0.7, "#090c0d");
-  g.addColorStop(1.0, "#050708"); // floor
-  ctx.fillStyle = g;
-  ctx.fillRect(0, 0, w, h);
-
-  // Warm architectural sources around the horizon, plus one cool key.
-  const blobs: [number, number, number, string][] = [
-    [0.18, 0.44, 42, "rgba(150,118,84,0.26)"],
-    [0.52, 0.40, 54, "rgba(110,160,158,0.2)"],
-    [0.82, 0.47, 36, "rgba(140,112,86,0.2)"],
-    [0.35, 0.16, 70, "rgba(96,128,138,0.18)"],
-  ];
-  for (const [x, y, r, col] of blobs) {
-    const rg = ctx.createRadialGradient(x * w, y * h, 0, x * w, y * h, r);
-    rg.addColorStop(0, col);
-    rg.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = rg;
-    ctx.fillRect(0, 0, w, h);
-  }
-
-  const tex = new THREE.CanvasTexture(c);
-  tex.mapping = THREE.EquirectangularReflectionMapping;
-  tex.colorSpace = THREE.SRGBColorSpace;
-  return tex;
-}
-
 export function VenueEnvironment() {
   const { gl, scene } = useThree();
 
   useEffect(() => {
-    const src = buildEnvTexture();
+    const room = new RoomEnvironment();
     const pmrem = new THREE.PMREMGenerator(gl);
-    pmrem.compileEquirectangularShader();
-    const rt = pmrem.fromEquirectangular(src);
+    const rt = pmrem.fromScene(room, 0.04);
     scene.environment = rt.texture;
-    scene.environmentIntensity = 0.62;
-    src.dispose();
+    scene.environmentIntensity = 0.24;
+    room.dispose();
     pmrem.dispose();
     return () => {
       scene.environment = null;
@@ -109,9 +70,9 @@ const FESTIVAL_OVERRIDE: Partial<ZoneLight> = {
   fill: "#d4643f",
   keyI: 34,
   fillI: 26,
-  amb: 0.14,
+  amb: 0.34,
   fog: "#0a0410",
-  fogDensity: 0.0105,
+  fogDensity: 0.0038,
 };
 
 /**
@@ -140,7 +101,7 @@ function blendLook(base: ZoneLight, over: Partial<ZoneLight>, f: number): ZoneLi
 
 export function LightRig() {
   const scene = useThree((s) => s.scene);
-  const stallRef = useRef<THREE.PointLight>(null);
+  const stallRef = useRef<THREE.SpotLight>(null);
   const keyRef = useRef<THREE.PointLight>(null);
   const fillRef = useRef<THREE.PointLight>(null);
   const rimRef = useRef<THREE.PointLight>(null);
@@ -236,9 +197,11 @@ export function LightRig() {
         }
       }
       const near = Math.max(0, 1 - bestD / 0.03);
-      stallRef.current.position.set(best.x, 4.2, best.z);
-      stallRef.current.color.copy(best.color);
-      stallRef.current.intensity = near * 78 * (0.9 + 0.1 * Math.sin(t * 0.8));
+      stallRef.current.position.set(best.x * .65, 10.5, best.z + 2);
+      stallRef.current.target.position.set(best.x, 0, best.z - 1);
+      stallRef.current.target.updateMatrixWorld();
+      stallRef.current.color.set("#ffe3ba");
+      stallRef.current.intensity = near * 310;
       stallRef.current.visible = near > 0.01;
     }
 
@@ -256,7 +219,9 @@ export function LightRig() {
       <pointLight ref={keyRef} distance={58} decay={2} intensity={26} />
       <pointLight ref={fillRef} distance={44} decay={2} intensity={14} />
       <pointLight ref={rimRef} distance={34} decay={2} intensity={8} />
-      <pointLight ref={stallRef} distance={34} decay={2} intensity={0} visible={false} />
+      <spotLight ref={stallRef} distance={28} angle={0.85} penumbra={0.65} decay={2}
+        intensity={0} visible={false} castShadow shadow-mapSize={[1024,1024]}
+        shadow-bias={-.0002} shadow-normalBias={.035} />
     </>
   );
 }

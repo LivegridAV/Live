@@ -18,14 +18,14 @@ import { CONTACT, contactLinks } from "@/experience/contact";
  */
 
 export const metadata: Metadata = {
-  title: "livegridAV — Walk through an event we built | LED, AV & Live Production",
+  title: "LivegridAV — Interactive LED, AV & Live Production Experience",
   description:
     "Explore a livegridAV event experience: a four-sided immersive LED tunnel, creative LED installations, working service environments and a main stage that transforms from meetings and conferences to celebrations and social events.",
   alternates: { canonical: "https://livegridav.com/" },
   openGraph: {
     title: "livegridAV — We turn ideas into unforgettable experiences",
     description:
-      "Walk through a livegridAV event: immersive LED tunnel, creative LED gallery, working service environments and two distinct main-stage experiences.",
+      "Explore LivegridAV capabilities: immersive LED, creative content, AV engineering and two distinct main-stage experiences.",
     url: "https://livegridav.com/",
     siteName: "livegridAV",
     type: "website",

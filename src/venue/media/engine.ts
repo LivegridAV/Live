@@ -10,6 +10,7 @@ import {
 import { SHADER_PROGRAMS, VERT, HEAVY_PROGRAMS, type ShaderProgramId } from "./programs";
 import { PAINTERS, type PaintCtx } from "./painters";
 import type { QualityTier, StageMode } from "../systems/store";
+import { mediaSlate } from "./fallback";
 
 /**
  * One engine owns every moving pixel in the venue.
@@ -54,6 +55,9 @@ interface VideoEntry extends BaseEntry {
   kind: "video";
   desc: VideoMedia;
   video: HTMLVideoElement;
+  canvas: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D;
+  cleanup: () => void;
 }
 
 interface ImageEntry extends BaseEntry {
@@ -64,8 +68,6 @@ interface ImageEntry extends BaseEntry {
 
 interface ImageAsset {
   texture: THREE.Texture;
-  canvas: HTMLCanvasElement;
-  ctx: CanvasRenderingContext2D;
   source: string;
   request: number;
   images: Map<string, HTMLImageElement>;
@@ -159,11 +161,7 @@ export class MediaEngine {
     this.scene.add(this.quad);
 
     // 1×1 dark texture so a screen always has something bound.
-    const c = document.createElement("canvas");
-    c.width = c.height = 2;
-    const cx = c.getContext("2d")!;
-    cx.fillStyle = "#05090a";
-    cx.fillRect(0, 0, 2, 2);
+    const c = mediaSlate();
     this.fallback = new THREE.CanvasTexture(c);
     this.fallback.colorSpace = THREE.SRGBColorSpace;
   }
@@ -241,6 +239,9 @@ export class MediaEngine {
     let s = QUALITY_SCALE[this.quality];
     if (d.kind === "shader" && HEAVY_PROGRAMS.includes(this.programFor(d))) s *= 0.75;
     if (this.isMobile) s *= 0.8;
+    // Technical drawings and labels should not dissolve into low-resolution
+    // UI when the governor trims expensive procedural effects.
+    if (d.kind === "canvas") s = Math.max(s, this.isMobile ? .75 : .85);
     const round = (n: number) => Math.max(64, Math.round((n * s) / 8) * 8);
     return [round(w), round(h)];
   }
@@ -311,17 +312,15 @@ export class MediaEngine {
   }
 
   private applyImageAsset(asset: ImageAsset, image: HTMLImageElement) {
-    if (asset.canvas.width !== image.naturalWidth || asset.canvas.height !== image.naturalHeight) {
-      asset.canvas.width = image.naturalWidth;
-      asset.canvas.height = image.naturalHeight;
-    }
-    asset.ctx.clearRect(0, 0, asset.canvas.width, asset.canvas.height);
-    asset.ctx.drawImage(image, 0, 0, asset.canvas.width, asset.canvas.height);
+    // Release the old allocation before changing dimensions. Keep the Texture
+    // identity so every screen uniform continues to sample this shared source.
+    asset.texture.dispose();
+    asset.texture.image = image;
     asset.texture.needsUpdate = true;
   }
 
   private preloadImageAsset(asset: ImageAsset, desc: ImageMedia) {
-    const sources = [desc.desktop, desc.mobile, desc.festival, desc.festivalMobile].filter(
+    const sources = [this.imageSource(desc)].filter(
       (source): source is string => Boolean(source),
     );
     for (const source of new Set(sources)) {
@@ -338,17 +337,13 @@ export class MediaEngine {
     const assetKey = [desc.desktop, desc.mobile ?? "", desc.festival ?? "", desc.festivalMobile ?? ""].join("|");
     let asset = this.imageAssets.get(assetKey);
     if (!asset) {
-      const placeholder = document.createElement("canvas");
-      placeholder.width = placeholder.height = 2;
-      const ctx = placeholder.getContext("2d")!;
-      ctx.fillStyle = "#05090a";
-      ctx.fillRect(0, 0, 2, 2);
+      const placeholder = mediaSlate();
       const texture = new THREE.CanvasTexture(placeholder);
       texture.colorSpace = desc.colorSpace === "linear" ? THREE.LinearSRGBColorSpace : THREE.SRGBColorSpace;
       texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
       tuneSampling(texture, this.renderer.capabilities.getMaxAnisotropy());
       texture.needsUpdate = true;
-      asset = { texture, canvas: placeholder, ctx, source: "", request: 0, images: new Map() };
+      asset = { texture, source: "", request: 0, images: new Map() };
       this.imageAssets.set(assetKey, asset);
       this.preloadImageAsset(asset, desc);
       this.loadImageAsset(asset, desc);
@@ -446,7 +441,6 @@ export class MediaEngine {
 
   private createVideo(id: string, desc: VideoMedia): VideoEntry {
     const video = document.createElement("video");
-    video.src = this.isMobile && desc.mobile ? desc.mobile : desc.desktop;
     video.loop = true;
     video.muted = true;
     video.defaultMuted = true;
@@ -454,6 +448,7 @@ export class MediaEngine {
     video.autoplay = true;
     video.crossOrigin = "anonymous";
     video.preload = "auto";
+    video.src = this.isMobile && desc.mobile ? desc.mobile : desc.desktop;
     if (desc.poster) video.poster = desc.poster;
     // Autoplay can be refused until a gesture; retry on the first interaction.
     const tryPlay = () => void video.play().catch(() => {});
@@ -461,7 +456,27 @@ export class MediaEngine {
     window.addEventListener("pointerdown", tryPlay, { once: true });
     window.addEventListener("keydown", tryPlay, { once: true });
 
-    const texture = new THREE.VideoTexture(video);
+    // Keep one stable GPU source through loading, autoplay denial and errors.
+    const canvas = mediaSlate();
+    const ctx = canvas.getContext("2d")!;
+    const texture = new THREE.CanvasTexture(canvas);
+    let disposed = false;
+    if (desc.poster) {
+      const poster = new Image();
+      poster.crossOrigin = "anonymous";
+      poster.onload = () => {
+        if (!disposed && video.readyState < 2) {
+          ctx.drawImage(poster, 0, 0, canvas.width, canvas.height);
+          texture.needsUpdate = true;
+        }
+      };
+      poster.src = desc.poster;
+    }
+    const cleanup = () => {
+      disposed = true;
+      window.removeEventListener("pointerdown", tryPlay);
+      window.removeEventListener("keydown", tryPlay);
+    };
     texture.colorSpace = THREE.SRGBColorSpace;
     // A video texture uploads a new frame every tick, so regenerating its
     // mip chain each time is real cost for no benefit — anisotropy only.
@@ -471,6 +486,7 @@ export class MediaEngine {
       id,
       desc,
       video,
+      canvas, ctx, cleanup,
       refs: 0,
       importance: 1,
       since: 0,
@@ -515,6 +531,14 @@ export class MediaEngine {
     // Collect shader/canvas entries that are due, most important first.
     const due: Entry[] = [];
     for (const e of this.entries.values()) {
+      if (e.kind === "video") {
+        e.since += dt;
+        if (e.importance > .02 && e.video.readyState >= 2 && e.since >= 1 / 30) {
+          e.ctx.drawImage(e.video, 0, 0, e.canvas.width, e.canvas.height);
+          e.texture.needsUpdate = true;
+          e.since = 0;
+        }
+      }
       if (e.kind === "video" || e.kind === "image") {
         e.importance = 0;
         continue; // the browser drives video decoding for us
@@ -602,6 +626,7 @@ export class MediaEngine {
         e.rt.dispose();
         e.material.dispose();
       } else if (e.kind === "video") {
+        e.cleanup();
         e.video.pause();
         e.video.removeAttribute("src");
         e.video.load();

@@ -49,7 +49,7 @@ export const KEYFRAMES: Keyframe[] = [
      fifteen-metre hall arrives. */
   { p: 0.3, pos: [0, 2.0, -31.5], look: [0, 3.3, -44], fov: 56 },
   { p: 0.318, pos: [0, 2.4, -37], look: [-1.6, 6.8, -52], fov: 58 },
-  { p: 0.34, pos: [1.7, 2.5, -42.5], look: [-6.6, 4.6, -50], fov: 54 },
+  { p: 0.34, pos: [3, 2.6, -38.5], look: [-9, 5.7, -50], fov: 56 },
 
   /* ── Creative LED gallery ────────────────────────────────
      Each installation gets a shape: come at it, go through or beside it, then
@@ -68,8 +68,8 @@ export const KEYFRAMES: Keyframe[] = [
      from its *closest approach* rather than from how big it is on screen from
      the aisle. Widening the lens at 0.446 keeps some room in the frame; pulling
      the camera back instead put it a metre from the blades stand's backdrop. */
-  { p: 0.446, pos: [2.0, 2.3, -66.9], look: [8.6, 3.0, -70.2], fov: 54 },
-  { p: 0.462, pos: [3.4, 2.3, -74.4], look: [8.8, 3.1, -70.2], fov: 54 },
+  { p: 0.446, pos: [-4, 2.6, -61], look: [6, 4, -73], fov: 66 },
+  { p: 0.462, pos: [-4, 2.8, -64], look: [6, 4.3, -75], fov: 68 },
   { p: 0.48, pos: [1.4, 2.4, -75], look: [-3.2, 6.0, -78], fov: 56 },
   { p: 0.496, pos: [-3.2, 2.5, -78.6], look: [-3.2, 7.6, -80.2], fov: 62 },
   { p: 0.512, pos: [-4.2, 2.1, -82], look: [-9.6, 2.3, -85], fov: 50 },
@@ -86,24 +86,24 @@ export const KEYFRAMES: Keyframe[] = [
      keyframe matches its entry in data/pavilions.ts — that is what puts the
      stall light, the prompt and the camera on the same beat. */
   { p: 0.578, pos: [-1.1, 2.0, -100.5], look: [0, 3.1, -112], fov: 54 },
-  { p: 0.592, pos: [-2.8, 2.12, -109.5], look: [-9.5, 3.0, -113.5], fov: 52 },
-  { p: 0.605, pos: [-0.6, 2.16, -117], look: [2.4, 3.0, -124], fov: 54 },
-  { p: 0.617, pos: [2.8, 2.12, -124.5], look: [9.5, 3.0, -128.5], fov: 52 },
-  { p: 0.63, pos: [0.6, 2.16, -132], look: [-2.4, 3.0, -139], fov: 54 },
-  { p: 0.642, pos: [-2.8, 2.12, -139.5], look: [-9.5, 3.0, -143.5], fov: 52 },
-  { p: 0.655, pos: [-0.6, 2.16, -147], look: [2.4, 3.0, -154], fov: 54 },
-  { p: 0.667, pos: [2.6, 2.12, -154.0], look: [10.4, 2.9, -156.2], fov: 52 },
-  { p: 0.68, pos: [0.6, 2.16, -162], look: [-2.4, 3.0, -169], fov: 54 },
-  { p: 0.692, pos: [-2.8, 2.12, -169.5], look: [-9.5, 2.9, -173.5], fov: 52 },
+  { p: 0.592, pos: [4.5, 2.8, -105.5], look: [-14, 4.2, -117], fov: 62 },
+  { p: 0.605, pos: [4.8, 2.9, -111], look: [-14, 4.1, -120], fov: 63 },
+  { p: 0.617, pos: [9, 3.0, -120], look: [-14, 4.0, -122], fov: 64 },
+  { p: 0.63, pos: [4.8, 2.9, -122], look: [-14, 4.0, -128], fov: 62 },
+  { p: 0.642, pos: [4, 2.8, -128.5], look: [-14, 4.0, -134], fov: 60 },
+  { p: 0.655, pos: [-0.6, 2.4, -140], look: [2.4, 3.0, -149], fov: 56 },
+  { p: 0.667, pos: [-3.5, 2.8, -149.5], look: [14, 4.2, -154.5], fov: 60 },
+  { p: 0.68, pos: [0.6, 2.3, -159], look: [-2.4, 3.0, -166], fov: 54 },
+  { p: 0.692, pos: [1, 2.8, -165.5], look: [-14, 3.8, -169.5], fov: 58 },
   { p: 0.705, pos: [-0.6, 2.16, -177], look: [2.4, 3.0, -184], fov: 54 },
-  { p: 0.717, pos: [2.8, 2.12, -184.5], look: [9.5, 2.9, -188.5], fov: 52 },
+  { p: 0.717, pos: [-1, 2.8, -184.5], look: [14, 3.8, -188.5], fov: 58 },
   { p: 0.73, pos: [0.6, 2.16, -192], look: [-2.4, 3.0, -199], fov: 54 },
-  { p: 0.742, pos: [-2.8, 2.12, -199.5], look: [-9.5, 2.9, -203.5], fov: 52 },
+  { p: 0.742, pos: [1, 2.8, -199.5], look: [-14, 3.8, -203.5], fov: 58 },
   { p: 0.755, pos: [-0.6, 2.16, -207], look: [2.4, 3.0, -214], fov: 54 },
-  { p: 0.767, pos: [2.8, 2.12, -214.5], look: [9.5, 2.9, -218.5], fov: 52 },
+  { p: 0.767, pos: [-1, 2.8, -214.5], look: [14, 3.8, -218.5], fov: 58 },
 
   /* ── Sound & lighting partner bay ───────────────────────── */
-  { p: 0.789, pos: [1.2, 2.05, -228], look: [8.2, 2.9, -232], fov: 50 },
+  { p: 0.789, pos: [-1, 2.8, -228], look: [14, 3.8, -232], fov: 58 },
 
   /* ── Arena approach and portal ──────────────────────────
      The portal is established from a distance, then the camera flies through
@@ -134,8 +134,8 @@ export const KEYFRAMES: Keyframe[] = [
      the picture width, the lit ceiling recedes across the top and the seating
      falls away underneath — the whole room in one frame, which is the shot
      the reference is built around. */
-  { p: 0.932, pos: [0, 5.4, -304], look: [0, 8.8, -353], fov: 45 },
-  { p: 0.95, pos: [0, 5.0, -313], look: [0, 8.2, -353], fov: 43 },
+  { p: 0.932, pos: [0, 3.5, -297], look: [0, 7.2, -353], fov: 52 },
+  { p: 0.95, pos: [0, 3.8, -301], look: [0, 7.2, -353], fov: 53 },
 
   /* ── Finale ─────────────────────────────────────────────
      The camera keeps rising and moves in. Nothing else in the venue leaves

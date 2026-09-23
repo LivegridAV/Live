@@ -173,7 +173,7 @@ export const MEDIA: Record<string, MediaDesc> = {
   // The arch fascia. This has to *say the name* — an abstract brand sweep was
   // playing here, which is a fine motif and a poor sign.
   "entry-brand": { kind: "canvas", painter: "brandFascia", accent: ACCENT.brand, res: [1024, 192], fps: 12 },
-  "entry-sign": { kind: "canvas", painter: "signWelcome", accent: ACCENT.brand, res: [768, 332], fps: 8 },
+  "entry-sign": { kind: "canvas", painter: "signWelcome", accent: ACCENT.brand, res: [1152, 192], fps: 8 },
   "entry-blade": { kind: "shader", program: "pillarWrap", accent: ACCENT.ice, variant: 0.3, res: [512, 640], fps: 24, syncGroup: "entry" },
 
   /* ── Tunnel ───────────────────────────────────────────────
@@ -196,20 +196,20 @@ export const MEDIA: Record<string, MediaDesc> = {
      Four-sided and curved components still receive their appropriate UV crop;
      sharing the underlying texture keeps the final pass visually coherent and
      avoids duplicate multi-megapixel uploads to the GPU. */
-  "pillar-flow": { kind: "image", desktop: "/media/final/liquid-metal-wrap.png", brightness: 0.92 },
-  "pillar-metal": { kind: "image", desktop: "/media/final/liquid-metal-wrap.png", brightness: 0.98 },
+  "pillar-flow": { kind: "image", desktop: "/media/final/chrome-landscape.png", mobile: "/media/final/chrome-landscape-mobile.webp", brightness: 0.92 },
+  "pillar-metal": { kind: "image", desktop: "/media/final/chrome-landscape.png", mobile: "/media/final/chrome-landscape-mobile.webp", brightness: 0.98 },
   "blade-rain": { kind: "image", desktop: "/media/final/creative-world.png", brightness: 0.9 },
-  "cylinder-ribbon": { kind: "image", desktop: "/media/final/liquid-metal-wrap.png", brightness: 0.96 },
-  "ring-waves": { kind: "image", desktop: "/media/final/liquid-metal-wrap.png", brightness: 0.88 },
-  "bar-brand": { kind: "image", desktop: "/media/final/liquid-metal-wrap.png", brightness: 0.86 },
+  "cylinder-ribbon": { kind: "image", desktop: "/media/final/gallery-blue-wrap-v2.png", brightness: 0.96, syncGroup: "creative-wrap" },
+  "ring-waves": { kind: "image", desktop: "/media/final/gallery-blue-wrap-v2.png", brightness: 0.94, syncGroup: "creative-wrap" },
+  "bar-brand": { kind: "image", desktop: "/media/final/gallery-blue-wrap-v2.png", brightness: 0.96, syncGroup: "creative-wrap" },
   "curve-natural": { kind: "image", desktop: "/media/final/creative-world.png", brightness: 0.92 },
   "mosaic-arch": { kind: "image", desktop: "/media/final/creative-world.png", brightness: 0.9 },
   "anamorphic": { kind: "image", desktop: "/media/final/anamorphic-sculpture.png", brightness: 0.95 },
 
   /* ── 01 · AV engineering ──────────────────────────────── */
   "av-signal-diagram": { kind: "image", desktop: "/media/final/technical-control.png", brightness: 0.9 },
-  "av-led-plan": { kind: "canvas", painter: "avLedPlan", accent: ACCENT.steel, res: [448, 256], fps: 10 },
-  "av-rack-status": { kind: "canvas", painter: "avRackStatus", accent: ACCENT.teal, res: [320, 384], fps: 8 },
+  "av-led-plan": { kind: "canvas", painter: "avLedPlan", accent: ACCENT.steel, res: [1024, 640], fps: 8 },
+  "av-rack-status": { kind: "canvas", painter: "avRackStatus", accent: ACCENT.steel, res: [960, 600], fps: 8 },
 
   /* ── 02 · Content studio ──────────────────────────────── */
   "content-motion": { kind: "image", desktop: "/media/final/creative-world.png", brightness: 0.92 },
@@ -218,7 +218,7 @@ export const MEDIA: Record<string, MediaDesc> = {
 
   /* ── 03 · LED solutions ───────────────────────────────── */
   "led-formats": { kind: "shader", program: "ledFormats", accent: ACCENT.teal, res: [448, 256], fps: 24 },
-  "led-pitch": { kind: "canvas", painter: "ledPitch", accent: ACCENT.brand, res: [448, 288], fps: 8 },
+  "led-pitch": { kind: "canvas", painter: "ledPitch", accent: ACCENT.steel, res: [960, 600], fps: 8 },
   "led-install": { kind: "canvas", painter: "ledInstall", accent: ACCENT.steel, res: [384, 256], fps: 15 },
 
   /* ── 04 · Spatial experiences ─────────────────────────── */
@@ -227,60 +227,41 @@ export const MEDIA: Record<string, MediaDesc> = {
   "mapping-warp": { kind: "shader", program: "architecture", accent: ACCENT.copper, variant: 0.9, res: [448, 320], fps: 20 },
 
   /* ── 05 · Show control ────────────────────────────────── */
-  "sc-cues": { kind: "canvas", painter: "scCues", accent: ACCENT.teal, res: [384, 320], fps: 10 },
-  "sc-preview": { kind: "canvas", painter: "scPreview", accent: ACCENT.teal, res: [320, 200], fps: 15 },
+  "sc-cues": { kind: "canvas", painter: "scCues", accent: ACCENT.teal, res: [960, 480], fps: 10 },
+  "sc-preview": { kind: "canvas", painter: "scPreview", accent: ACCENT.teal, res: [640, 640], fps: 15 },
   "sc-program": { kind: "canvas", painter: "scProgram", accent: ACCENT.amber, res: [320, 200], fps: 15 },
   "sc-sources": { kind: "canvas", painter: "scSources", accent: ACCENT.steel, res: [320, 256], fps: 12 },
 
   /* ── 06 · Live production & broadcast ─────────────────── */
-  "lp-multiview": { kind: "canvas", painter: "lpMultiview", accent: ACCENT.teal, res: [512, 288], fps: 15 },
-  "lp-program": { kind: "canvas", painter: "lpProgram", accent: ACCENT.ember, res: [384, 224], fps: 15 },
+  "lp-multiview": { kind: "canvas", painter: "lpMultiview", accent: ACCENT.teal, res: [1024, 576], fps: 15 },
+  "lp-program": { kind: "canvas", painter: "lpProgram", accent: ACCENT.ember, res: [640, 720], fps: 15 },
   "lp-stream": { kind: "canvas", painter: "lpStream", accent: ACCENT.teal, res: [384, 256], fps: 12 },
 
   /* ── 07 · Connected events ────────────────────────────── */
-  "ce-stage": { kind: "canvas", painter: "ceStage", accent: ACCENT.moss, res: [448, 256], fps: 15 },
-  "ce-remote": { kind: "canvas", painter: "ceRemote", accent: ACCENT.moss, res: [448, 288], fps: 10 },
+  "ce-stage": { kind: "canvas", painter: "ceStage", accent: ACCENT.moss, res: [1024, 600], fps: 12 },
+  "ce-remote": { kind: "canvas", painter: "ceRemote", accent: ACCENT.moss, res: [640, 800], fps: 10 },
   "ce-map": { kind: "canvas", painter: "ceMap", accent: ACCENT.teal, res: [384, 256], fps: 15 },
 
   /* ── 08 · Digital ─────────────────────────────────────── */
-  "web-showreel": { kind: "shader", program: "auroraSilk", accent: ACCENT.violet, variant: 0.35, res: [512, 288], fps: 30 },
+  "web-showreel": { kind: "image", desktop: "/media/final/creative-world.png", brightness: 0.94 },
   "web-code": { kind: "canvas", painter: "webCode", accent: ACCENT.violet, res: [320, 320], fps: 12 },
   "web-devices": { kind: "canvas", painter: "webDevices", accent: ACCENT.violet, res: [448, 256], fps: 15 },
 
   /* ── Partner bay ──────────────────────────────────────── */
-  "partner-bay": { kind: "canvas", painter: "partnerBay", accent: ACCENT.amber, res: [448, 320], fps: 10 },
+  "partner-bay": { kind: "canvas", painter: "partnerBay", accent: ACCENT.amber, res: [1024, 600], fps: 8 },
 
   /* ── Arena approach ───────────────────────────────────── */
   // The totems pass within a few metres of the camera, so whatever they play
   // is inspected at close range. A matrix motif reads as a dot grid there,
   // which is the one impression a fine-pitch venue cannot give.
-  "approach-pillar": { kind: "shader", program: "pillarWrap", accent: ACCENT.gold, variant: 0.18, res: [768, 896], fps: 22, syncGroup: "approach" },
-  "approach-portrait": { kind: "shader", program: "chromeFlow", accent: ACCENT.amber, variant: 0.15, res: [320, 640], fps: 30, syncGroup: "approach" },
+  "approach-pillar": { kind: "image", desktop: "/media/final/chrome-landscape.png", mobile: "/media/final/chrome-landscape-mobile.webp", brightness: 0.95 },
+  "approach-portrait": { kind: "image", desktop: "/media/final/creative-world.png", brightness: 0.92 },
 
   /* ── Main stage: the mode switch lives here ───────────── */
-  "stage-main": {
-    kind: "shader",
-    program: "premiumOrbit",
-    festival: "festivalMonument",
-    accent: ACCENT.ice,
-    festivalAccent: "#b05ad6",
-    res: [1280, 576],
-    fps: 60,
-    syncGroup: "stage",
-  },
+  "stage-main": { kind: "image", desktop: "/media/final/stage-conference.png", festival: "/media/final/stage-social.png", brightness: 0.9, syncGroup: "stage" },
   // Side screens run the same content family as the main wall — that is what a
   // real show does, and it keeps the room reading as one design.
-  "stage-side": {
-    kind: "shader",
-    program: "portalDepth",
-    festival: "monumentPortal",
-    accent: ACCENT.indigo,
-    festivalAccent: ACCENT.ember,
-    variant: 0.62,
-    res: [896, 576],
-    fps: 30,
-    syncGroup: "stage",
-  },
+  "stage-side": { kind: "image", desktop: "/media/final/stage-conference.png", festival: "/media/final/stage-social.png", brightness: 0.9, syncGroup: "stage" },
   // The blades carry a *slice each* of the same render as the main wall, so
   // the ten of them read as one composition continued above it rather than as
   // ten small screens doing their own thing. That is what a real show does
@@ -302,51 +283,11 @@ export const MEDIA: Record<string, MediaDesc> = {
   },
   // Portrait fillers: two slices of one render, so a pair reads as one image
   // split by the gap between them.
-  "stage-portrait": {
-    kind: "shader",
-    program: "chromeFlow",
-    festival: "pillarWrap",
-    accent: ACCENT.magenta,
-    festivalAccent: "#a86ad6",
-    variant: 0.34,
-    res: [512, 896],
-    fps: 30,
-    syncGroup: "stage",
-  },
+  "stage-portrait": { kind: "image", desktop: "/media/final/stage-conference.png", festival: "/media/final/stage-social.png", brightness: 0.9, syncGroup: "stage" },
   // The canted outer clusters, upper and lower halves of one render.
-  "stage-outer": {
-    kind: "shader",
-    program: "auroraSilk",
-    festival: "monumentPortal",
-    accent: ACCENT.coral,
-    festivalAccent: "#9a5ad0",
-    variant: 0.78,
-    res: [768, 512],
-    fps: 30,
-    syncGroup: "stage",
-  },
-  "stage-floor": {
-    kind: "shader",
-    program: "portalDepth",
-    festival: "volumetric",
-    accent: ACCENT.ice,
-    festivalAccent: ACCENT.ember,
-    variant: 0.7,
-    res: [768, 384],
-    fps: 24,
-    syncGroup: "stage",
-  },
-  "stage-wing": {
-    kind: "shader",
-    program: "chromeFlow",
-    festival: "monumentPortal",
-    accent: ACCENT.indigo,
-    festivalAccent: "#a54fb0",
-    variant: 0.85,
-    res: [640, 512],
-    fps: 24,
-    syncGroup: "stage",
-  },
+  "stage-outer": { kind: "image", desktop: "/media/final/stage-conference.png", festival: "/media/final/stage-social.png", brightness: 0.9, syncGroup: "stage" },
+  "stage-floor": { kind: "image", desktop: "/media/final/stage-conference.png", festival: "/media/final/stage-social.png", brightness: 0.9, syncGroup: "stage" },
+  "stage-wing": { kind: "image", desktop: "/media/final/stage-conference.png", festival: "/media/final/stage-social.png", brightness: 0.9, syncGroup: "stage" },
 
   /* ── Finale ───────────────────────────────────────────── */
   // Every major surface in the room plays this one render at the finale, so
@@ -365,7 +306,7 @@ for (const p of PAVILIONS) {
     kind: "canvas",
     painter: "pavilionHeader",
     accent: p.accent,
-    res: [576, 96],
+    res: [1152, 192],
     fps: 8,
     text: { title: p.doing, sub: "We Do" },
   };
@@ -401,7 +342,7 @@ MEDIA[`sign-${PARTNER_BAY.id}`] = {
   kind: "canvas",
   painter: "pavilionHeader",
   accent: PARTNER_BAY.accent,
-  res: [576, 96],
+  res: [1152, 192],
   fps: 8,
   // Deliberately not "We Do": sound and lighting is delivered with partners,
   // and the signage has to keep saying so.
@@ -427,7 +368,7 @@ for (const [id, title, sub, accent] of STAND_LABELS) {
     kind: "canvas",
     painter: "pavilionHeader",
     accent,
-    res: [576, 96],
+    res: [1152, 192],
     fps: 8,
     text: { title, sub },
   };

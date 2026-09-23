@@ -1,11 +1,14 @@
 "use client";
 import { useMemo } from "react";
+import { MeshReflectorMaterial } from "@react-three/drei";
 import * as THREE from "three";
+import { ExpoAsset } from "../three/ExpoAsset";
 import { M } from "../three/materials";
 import { Truss } from "../three/rig";
 import { ZoneGroup } from "../three/ZoneGroup";
 import { LightPool } from "../three/environment";
 import { useVenue } from "../systems/store";
+import { stoneSurface } from "../three/stoneSurface";
 
 /**
  * The building.
@@ -36,11 +39,21 @@ function segments(from: number, to: number, size: number) {
 /* ── ground ────────────────────────────────────────────── */
 
 export function Ground() {
+  const quality = useVenue((s) => s.quality);
+  const stone = useMemo(() => stoneSurface(), []);
   const hallSegs = useMemo(() => segments(V.hall.from + 6, V.hall.to, 36), []);
   const arenaSegs = useMemo(() => segments(V.arena.from + 6, V.arena.to, 40), []);
 
   return (
     <group>
+      <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.009, -200]}>
+        <planeGeometry args={[88, 360]} />
+        <MeshReflectorMaterial color="#919397" map={stone.colour} roughnessMap={stone.roughness}
+          metalness={0.19} roughness={0.32}
+          resolution={quality === "high" ? 1024 : 512} blur={quality === "low" ? [0, 0] : [180, 65]}
+          mixBlur={0.75} mixStrength={2.2} mirror={0.8} depthScale={0}
+          minDepthThreshold={0.85} maxDepthThreshold={1} />
+      </mesh>
       {/* exterior plaza */}
       <mesh
         rotation={[-Math.PI / 2, 0, 0]}
@@ -77,297 +90,15 @@ export function Ground() {
  * behind the façade — three.js culls by frustum, and a corridor is exactly the
  * shape that defeats it.
  */
-const HALL_CHUNK = 53;
-
-function HallChunk({ from, to }: { from: number; to: number }) {
-  const quality = useVenue((s) => s.quality);
-  const len = Math.abs(to - from);
-  const mid = (from + to) / 2;
-
-  const columns = useMemo(() => {
-    const out: number[] = [];
-    for (let z = Math.ceil(from / 24) * 24; z > to; z -= 24) if (z <= from) out.push(z);
-    return out;
-  }, [from, to]);
-
-  const trusses = useMemo(() => {
-    const out: number[] = [];
-    for (let z = from - 7; z > to; z -= 14) out.push(z);
-    return out;
-  }, [from, to]);
-
-  const slots = useMemo(() => {
-    const out: number[] = [];
-    for (let z = from - 4; z > to; z -= 8) out.push(z);
-    return out;
-  }, [from, to]);
-
-  /**
-   * Warm downlights in the ceiling, on a tighter spacing than the truss bays.
-   *
-   * Everything lighting this hall was some shade of steel or teal, and a room
-   * lit entirely in one cool hue reads as unlit however many emitters are in
-   * it — there is nothing for the cool to be cool *against*. These are the
-   * warm half of the scheme, and they are what the brief means by
-   * architectural ambience.
-   */
-  const downs = useMemo(() => {
-    const out: number[] = [];
-    for (let z = from - 2.2; z > to; z -= 4.4) out.push(z);
-    return out;
-  }, [from, to]);
-
-  /** Ceiling bay ribs — see the note by the ceiling plane below. */
-  const ribs = useMemo(() => {
-    const out: number[] = [];
-    for (let z = from - 3; z > to; z -= 6) out.push(z);
-    return out;
-  }, [from, to]);
-
-  return (
-    <group>
-      {/* side walls */}
-      {[-1, 1].map((side) => (
-        <mesh
-          key={`w${side}`}
-          position={[side * V.hall.x, V.hall.y / 2, mid]}
-          rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
-          material={M.graphite}
-        >
-          <planeGeometry args={[len, V.hall.y]} />
-        </mesh>
-      ))}
-
-      {/* ── the ceiling ──
-          A flat dark plane fifteen metres up is indistinguishable from no
-          ceiling at all, and a room with no ceiling has no height. What makes
-          a real hall's roof readable is not brightness, it is *articulation*:
-          ribs crossing it at a regular pitch, catching enough light along one
-          edge to give the eye something receding to measure the room against.
-          It costs two thin boxes per bay and it is the difference between a
-          fifteen-metre hall and a black lid. */}
-      <mesh position={[0, V.hall.y, mid]} rotation={[Math.PI / 2, 0, 0]} material={M.ceiling}>
-        <planeGeometry args={[V.hall.x * 2, len]} />
-      </mesh>
-      {quality !== "low" &&
-        ribs.map((z) => (
-          <group key={`rib${z}`}>
-            <mesh position={[0, V.hall.y - 0.22, z]} material={M.charcoal}>
-              <boxGeometry args={[V.hall.x * 2 - 0.4, 0.44, 0.34]} />
-            </mesh>
-            <mesh position={[0, V.hall.y - 0.45, z + 0.18]}>
-              <planeGeometry args={[V.hall.x * 2 - 1.2, 0.035]} />
-              <meshBasicMaterial color="#6f8288" toneMapped />
-            </mesh>
-          </group>
-        ))}
-
-      {/* Skirting, coves and wall slots.
-          Point lights with physical falloff cannot light a hall this size —
-          at twenty metres a 20 W fixture contributes almost nothing — so the
-          architecture lights itself, the way a real exhibition hall does.
-          These are emissive strips: free to draw, and they are what stops the
-          room reading as a void. */}
-      {[-1, 1].map((side) => (
-        <group key={`lit${side}`}>
-          {/* skirting line */}
-          <mesh
-            position={[side * (V.hall.x - 0.05), 0.07, mid]}
-            rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
-          >
-            <planeGeometry args={[len, 0.06]} />
-            <meshBasicMaterial color="#2c5c58" toneMapped />
-          </mesh>
-          {/* continuous cove where the wall meets the ceiling */}
-          <mesh
-            position={[side * (V.hall.x - 0.06), V.hall.y - 0.9, mid]}
-            rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
-          >
-            <planeGeometry args={[len, 0.26]} />
-            <meshBasicMaterial color="#a8bcc2" toneMapped />
-          </mesh>
-          {/* a graded wash down the wall beneath the cove */}
-          <mesh
-            position={[side * (V.hall.x - 0.08), V.hall.y * 0.62, mid]}
-            rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
-          >
-            <planeGeometry args={[len, V.hall.y * 0.5]} />
-            <meshBasicMaterial color="#1d282c" toneMapped transparent opacity={0.85} />
-          </mesh>
-        </group>
-      ))}
-
-      {/* vertical light slots at regular bays: the strongest single cue that a
-          dark wall is a wall and not the absence of one */}
-      {/* The bays alternate through a small, deliberate set of accent colours.
-          A venue lit in one hue is a corridor; a venue lit in six is a
-          nightclub. Four, cycling slowly along the length, is what reads as a
-          designed lighting scheme — you notice the richness before you notice
-          that it changes. */}
-      {slots.map((z, i) =>
-        [-1, 1].map((side) => {
-          const accents = ["#6f8b92", "#7f6fa8", "#4f9b93", "#a8825f"];
-          const hue = accents[(i + (side > 0 ? 2 : 0)) % accents.length];
-          return (
-            <group key={`sl${z}${side}`}>
-              <mesh
-                position={[side * (V.hall.x - 0.07), V.hall.y * 0.45, z]}
-                rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
-              >
-                <planeGeometry args={[0.12, V.hall.y * 0.72]} />
-                <meshBasicMaterial color={hue} toneMapped />
-              </mesh>
-              <LightPool
-                position={[side * (V.hall.x - 0.4), V.hall.y * 0.45, z]}
-                rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
-                size={[5.5, V.hall.y * 0.8]}
-                color={hue}
-                opacity={0.16}
-              />
-            </group>
-          );
-        }),
-      )}
-      {slots.map((z) =>
-        [-1, 1].map((side) => (
-          <LightPool
-            key={`wp${z}${side}`}
-            position={[side * (V.hall.x - 2.6), 0.05, z]}
-            size={[7, 9]}
-            color="#5f7c84"
-            opacity={0.07}
-          />
-        )),
-      )}
-
-      {/* structural columns down each side, with a recessed light slot */}
-      {columns.map((z) =>
-        [-1, 1].map((side) => (
-          <group key={`col${z}${side}`} position={[side * (V.hall.x - 0.6), 0, z]}>
-            <mesh position={[0, V.hall.y / 2, 0]} material={M.charcoal}>
-              <boxGeometry args={[1.2, V.hall.y, 1.2]} />
-            </mesh>
-            <mesh
-              position={[side * -0.62, V.hall.y / 2, 0]}
-              rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
-            >
-              <planeGeometry args={[0.1, V.hall.y - 2.4]} />
-              <meshBasicMaterial color="#4a7370" toneMapped />
-            </mesh>
-          </group>
-        )),
-      )}
-
-      {/* roof grid — real truss, spanning the hall */}
-      {quality !== "low" &&
-        trusses.map((z) => (
-          <Truss key={`t${z}`} length={V.hall.x * 2 - 1} size={0.4} position={[0, V.hall.y - 1.1, z]} braceEvery={0.9} />
-        ))}
-
-      {/* Architectural light bars rigged to the grid. Without them the hall has
-          no ceiling to read against and the room loses its height. */}
-      {trusses.map((z) =>
-        [-13, -4.5, 4.5, 13].map((x) => (
-          <mesh key={`lb${z}${x}`} position={[x, V.hall.y - 1.45, z]} rotation={[Math.PI / 2, 0, 0]}>
-            <planeGeometry args={[6.4, 0.22]} />
-            <meshBasicMaterial color="#b6c8ce" toneMapped />
-          </mesh>
-        )),
-      )}
-      {trusses.map((z) => (
-        <LightPool
-          key={`lp${z}`}
-          position={[0, 0.04, z]}
-          size={[34, 24]}
-          color="#8fa4ad"
-          opacity={0.13}
-        />
-      ))}
-
-      {/* ── warm architectural ambience ── */}
-      {/* Six across rather than four, at a 4.4 m pitch rather than 7 m.
-          The reference halls are lit by a *field* of small warm sources
-          receding into the distance — the density is the effect, and four
-          widely spaced fixtures per bay read as four fixtures. */}
-      {downs.map((z) =>
-        [-16, -11.2, -5.6, 5.6, 11.2, 16].map((x) => (
-          <group key={`dn${z}${x}`}>
-            <mesh position={[x, V.hall.y - 0.55, z]} rotation={[Math.PI / 2, 0, 0]}>
-              <planeGeometry args={[1.35, 0.42]} />
-              <meshBasicMaterial color="#f2cf9c" toneMapped />
-            </mesh>
-            <LightPool position={[x * 0.92, 0.045, z]} size={[8, 7]} color="#b08a55" opacity={0.10} />
-          </group>
-        )),
-      )}
-
-      {/* a warm cove opposite the cool one, low on the wall — this is the
-          "low-level environment lighting that reveals the space" */}
-      {[-1, 1].map((side) => (
-        <group key={`warm${side}`}>
-          <mesh
-            position={[side * (V.hall.x - 0.07), 2.5, mid]}
-            rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
-          >
-            <planeGeometry args={[len, 0.11]} />
-            <meshBasicMaterial color="#b28a52" toneMapped />
-          </mesh>
-          <LightPool
-            position={[side * (V.hall.x - 0.35), 1.5, mid]}
-            rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
-            size={[len * 0.96, 5.2]}
-            color="#9a7748"
-            opacity={0.13}
-          />
-        </group>
-      ))}
-
-      {/* rigging practicals: a warm point at each truss end, so the steel
-          overhead glows rather than disappearing */}
-      {quality !== "low" &&
-        trusses.map((z) =>
-          [-1, 1].map((side) => (
-            <mesh key={`tg${z}${side}`} position={[side * (V.hall.x - 2.2), V.hall.y - 1.1, z]}>
-              <sphereGeometry args={[0.09, 6, 5]} />
-              <meshBasicMaterial color="#f0cf9c" toneMapped />
-            </mesh>
-          )),
-        )}
-
-      {/* longitudinal runs, so the roof reads as a grid and not a ladder */}
-      {quality === "high" &&
-        [-14, 0, 14].map((x) => (
-          <Truss
-            key={`tl${x}`}
-            length={len}
-            size={0.4}
-            position={[x, V.hall.y - 1.55, mid]}
-            rotation={[0, Math.PI / 2, 0]}
-            braceEvery={1.6}
-          />
-        ))}
-    </group>
-  );
-}
-
 export function HallShell() {
-  const chunks = useMemo(() => {
-    const out: { from: number; to: number }[] = [];
-    for (let z = V.hall.from; z > V.hall.to; z -= HALL_CHUNK) {
-      out.push({ from: z, to: Math.max(V.hall.to, z - HALL_CHUNK) });
-    }
-    return out;
-  }, []);
-
-  return (
-    <group>
-      {chunks.map((c) => (
-        <ZoneGroup key={c.from} from={c.from} to={c.to} ahead={120} behind={55}>
-          <HallChunk from={c.from} to={c.to} />
-        </ZoneGroup>
-      ))}
-    </group>
-  );
+  return <group>{Array.from({ length: 8 }, (_, i) => {
+    const z = -39.25 - i * 26.5;
+    return <ZoneGroup key={i} from={z + 13.25} to={z - 13.25} ahead={68} behind={28}>
+      <group position={[0, 0, z]} scale={[1, 1, 26.5 / 26]}>
+        <ExpoAsset name="hall-bay" />
+      </group>
+    </ZoneGroup>;
+  })}</group>;
 }
 
 /* ── arena shell ───────────────────────────────────────── */
@@ -489,32 +220,6 @@ export function ArenaShell() {
         )),
       )}
 
-      {/* tiered seating banks either side — scale cues, not detail */}
-      {[-1, 1].map((side) =>
-        Array.from({ length: 9 }, (_, i) => (
-          <mesh
-            key={`seat${side}${i}`}
-            position={[side * (V.arena.x - 5 - i * 2.4), 1.0 + i * 1.2, -318]}
-            material={M.charcoal}
-          >
-            <boxGeometry args={[2.4, 1.2, 66]} />
-          </mesh>
-        )),
-      )}
-      {/* a lit nosing on every tier: banked seating is invisible in the dark
-          without one, and it is the cue that says "this room holds people" */}
-      {[-1, 1].map((side) =>
-        Array.from({ length: 9 }, (_, i) => (
-          <mesh
-            key={`nose${side}${i}`}
-            position={[side * (V.arena.x - 6.2 - i * 2.4), 1.62 + i * 1.2, -318]}
-            rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
-          >
-            <planeGeometry args={[66, 0.05]} />
-            <meshBasicMaterial color="#3b5a5c" toneMapped />
-          </mesh>
-        )),
-      )}
     </ZoneGroup>
   );
 }

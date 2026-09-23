@@ -35,6 +35,7 @@ export function StageModeSwitch() {
         transform: `translateX(-50%) translateY(${visible ? 0 : 12}px)`,
       }}
       aria-hidden={!visible}
+      inert={!visible}
     >
       <span className="v-mono">Stage experience</span>
       <div className="v-stagemode-switch" role="group" aria-label="Stage experience mode">

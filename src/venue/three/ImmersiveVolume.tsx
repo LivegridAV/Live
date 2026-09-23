@@ -4,6 +4,8 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { createImmersiveMaterial, type ImmersiveOptions } from "./immersive";
 import { useVenue } from "../systems/store";
+import { createCinematicMaterial } from "./cinematicWorld";
+import { mediaSlate } from "../media/fallback";
 
 /**
  * An enveloping LED installation.
@@ -25,6 +27,8 @@ export interface Surface {
   rotation?: [number, number, number];
   /** vault only: crown height as a multiple of the radius */
   rise?: number;
+  /** Virtual end scrim: dissolve into the next space as the camera approaches. */
+  reveal?: boolean;
 }
 
 const LAYERS = { low: 4, medium: 7, high: 11 } as const;
@@ -35,10 +39,12 @@ export function ImmersiveVolume({
   portalZ,
   maxLayers,
   backdrop,
+  cinematic = false,
   ...options
 }: Omit<ImmersiveOptions, "portalZ" | "layers" | "backdrop"> & {
   surfaces: Surface[];
   backdrop?: string;
+  cinematic?: boolean;
   /** a small demonstration cube does not need an arena's worth of depth */
   maxLayers?: number;
   /** 0 → 1 along the installation, from the camera's world Z, read per frame */
@@ -50,7 +56,7 @@ export function ImmersiveVolume({
   const reduced = useVenue((s) => s.reducedMotion);
   const backdropTexture = useMemo(() => {
     if (!backdrop) return undefined;
-    const texture = new THREE.TextureLoader().load(backdrop);
+    const texture: THREE.Texture = new THREE.CanvasTexture(mediaSlate());
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.ClampToEdgeWrapping;
@@ -59,30 +65,52 @@ export function ImmersiveVolume({
     texture.anisotropy = 4;
     return texture;
   }, [backdrop]);
-  useEffect(() => () => backdropTexture?.dispose(), [backdropTexture]);
+  useEffect(() => {
+    if (!backdrop || !backdropTexture) return;
+    let cancelled = false;
+    const loaded = new THREE.TextureLoader().load(backdrop, source => {
+      if (!cancelled) {
+        backdropTexture.dispose();
+        backdropTexture.image = source.image;
+        backdropTexture.needsUpdate = true;
+      }
+      source.dispose();
+    });
+    return () => { cancelled = true; loaded.dispose(); backdropTexture.dispose(); };
+  }, [backdrop, backdropTexture]);
 
   const material = useMemo(
     () =>
-      createImmersiveMaterial({
+      cinematic ? createCinematicMaterial(backdropTexture, options.brightness) : createImmersiveMaterial({
         ...options,
         backdrop: backdropTexture,
         portalZ: portalZ(0),
         layers: Math.min(LAYERS[quality], maxLayers ?? LAYERS.high),
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps -- options are fixed per installation; quality is the only live input
-    [quality, backdropTexture],
+    [quality, backdropTexture, cinematic],
   );
   useEffect(() => () => material.dispose(), [material]);
+  const scrim = useMemo(() => {
+    const clone = material.clone();
+    clone.uniforms = { ...material.uniforms, uAlpha: { value: 1 } };
+    clone.transparent = true;
+    clone.depthWrite = false;
+    return clone;
+  }, [material]);
+  useEffect(() => () => scrim.dispose(), [scrim]);
+  const exitZ = surfaces.find(surface => surface.reveal)?.position[2];
 
   const eye = useRef(new THREE.Vector3());
 
   useFrame(({ camera, clock }) => {
     const u = material.uniforms;
-    u.uTime.value = clock.elapsedTime * (reduced ? 0.35 : 1);
+    u.uTime.value = reduced ? 0 : clock.elapsedTime;
     // The eye is the real camera. That is what makes the projection exact and
     // the physical structure disappear: every surface shows precisely what the
     // viewer would see through it if the wall were not there.
     camera.getWorldPosition(eye.current);
+    if (exitZ !== undefined) scrim.uniforms.uAlpha.value = THREE.MathUtils.smoothstep(eye.current.z - exitZ, 1.5, 7);
     u.uEye.value.copy(eye.current);
     const p = phase(eye.current.z);
     u.uPhase.value = p;
@@ -101,7 +129,7 @@ export function ImmersiveVolume({
              in continuity. */
           <mesh
             key={i}
-            material={material}
+            material={s.reveal ? scrim : material}
             position={s.position}
             rotation={s.rotation ?? [Math.PI / 2, 0, 0]}
             scale={[1, 1, s.rise ?? 1.5]}
@@ -113,7 +141,7 @@ export function ImmersiveVolume({
         ) : (
           <mesh
             key={i}
-            material={material}
+            material={s.reveal ? scrim : material}
             position={s.position}
             rotation={s.rotation ?? [0, 0, 0]}
           >

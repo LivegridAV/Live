@@ -61,11 +61,16 @@ export function CameraRig() {
     if (narrow > 0) {
       const dist = tmp.current.distanceTo(sample.look);
       if (dist > 0.5) {
-        const establishing = dist > 16;
+        const establishing = dist > 16 || (journey.progress > 0.575 && journey.progress < 0.81);
         const move = establishing
-          ? -Math.min(dist * 0.34 * narrow, 11)
+          ? -Math.min(dist * 0.6 * narrow, 26)
           : Math.min(dist * 0.22 * narrow, 3.2);
         tmp.current.lerp(sample.look, move / dist);
+        // The service hall is 38 m wide. A portrait establishing dolly must
+        // not pass through its opposite wall or put the camera behind a stand.
+        if (journey.progress > 0.575 && journey.progress < 0.81) {
+          tmp.current.x = THREE.MathUtils.clamp(tmp.current.x, -16.8, 16.8);
+        }
       }
     }
 

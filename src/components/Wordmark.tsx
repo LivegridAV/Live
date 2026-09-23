@@ -1,6 +1,5 @@
 export default function Wordmark({
   className,
-  accent = "aqua",
 }: {
   className?: string;
   accent?: "aqua" | "glow";
@@ -8,9 +7,9 @@ export default function Wordmark({
   return (
     <span
       className={className}
-      style={{ fontWeight: 600, letterSpacing: "-0.03em" }}
+      style={{ fontWeight: 600, letterSpacing: "-0.03em", color: "#ffffff" }}
     >
-      livegrid<span className={accent === "glow" ? "text-glow" : "text-aqua"}>AV</span>
+      livegrid<span style={{ color: "#3fd6c8" }}>AV</span>
     </span>
   );
 }

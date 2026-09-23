@@ -1,4 +1,10 @@
 import type { NextConfig } from "next";
+import { execFileSync } from "node:child_process";
+
+// Also stamp hosts configured to invoke `next build` directly rather than npm.
+if (process.env.NODE_ENV === "production") {
+  execFileSync(process.execPath, ["scripts/gen-build-info.mjs"], { stdio: "inherit" });
+}
 
 const nextConfig: NextConfig = {
   // Fully static site — the 3D experience is all client-side and there are

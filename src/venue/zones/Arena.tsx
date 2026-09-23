@@ -2,8 +2,11 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { HouseCeiling } from "./HouseCeiling";
+import { Audience } from "./Audience";
+import { ExpoAsset } from "../three/ExpoAsset";
 import { M } from "../three/materials";
-import { CurvedScreen, PillarScreen, Screen } from "../three/screens";
+import { PillarScreen, Screen } from "../three/screens";
 import { Haze, HangPoint, LineArray, MovingHead, SubStack, Truss } from "../three/rig";
 import { LightPool } from "../three/environment";
 import { ReflectionStreak } from "../three/Reflection";
@@ -45,14 +48,14 @@ export const STAGE = {
   back: -354,
   deckH: 1.6,
   /** the deck runs nearly the full width of the room */
-  width: 62,
+  width: 80,
   /** the screen plane */
   wallZ: -353.4,
   /** every panel in the array stands off this line */
   baseY: 1.8,
   /** the dominant centre canvas */
-  heroW: 22,
-  heroH: 10.6,
+  heroW: 26,
+  heroH: 10.0,
   /**
    * Height of the stage roof grid.
    *
@@ -93,11 +96,9 @@ const showLive = () => 1 - showOut();
 function Approach() {
   const quality = useVenue((s) => s.quality);
   return (
-    <group>
-      {/* Giant LED totems flanking the run-in. They start past the partner bay
-          at -231: an earlier arrangement began at -228 and the first pair stood
-          directly between the camera and the bay it was meant to be walking
-          past. */}
+    <group position={[0,0,-8]}>
+      {/* Keep the complete run-in beyond the partner stand's footprint. The
+          eight-metre group offset clears its hero camera sightline. */}
       {[-1, 1].map((side) =>
         [0, 1, 2].map((i) => (
           <PillarScreen
@@ -247,139 +248,7 @@ function Panel({
 /* ── the stage ─────────────────────────────────────────── */
 
 function StageStructure() {
-  const deckZ = (STAGE.front + STAGE.back) / 2;
-  const deckD = Math.abs(STAGE.back - STAGE.front);
-  const towerX = STAGE.width / 2 + 2.2;
-
-  return (
-    <group>
-      {/* A low, very wide deck. The reference's deck is barely higher than a
-          kerb and runs the full width of the room; height is what makes a
-          stage look like a platform, width is what makes it look like a set. */}
-      <mesh position={[0, STAGE.deckH / 2, deckZ]} material={M.deck} receiveShadow>
-        <boxGeometry args={[STAGE.width, STAGE.deckH, deckD]} />
-      </mesh>
-      {/* a lit line along the whole deck edge */}
-      <mesh position={[0, STAGE.deckH - 0.06, STAGE.front + 0.02]}>
-        <planeGeometry args={[STAGE.width, 0.08]} />
-        <meshBasicMaterial color="#c08a4e" toneMapped />
-      </mesh>
-      <mesh position={[0, STAGE.deckH * 0.42, STAGE.front + 0.04]} material={M.charcoal}>
-        <boxGeometry args={[STAGE.width, STAGE.deckH * 0.84, 0.1]} />
-      </mesh>
-      {/* a second lit line low on the fascia, and the wash the array throws
-          down onto it — a black band the full width of the frame is the
-          fastest way to kill a stage picture */}
-      <mesh position={[0, 0.34, STAGE.front + 0.1]}>
-        <planeGeometry args={[STAGE.width - 2, 0.04]} />
-        <meshBasicMaterial color="#6d5029" toneMapped />
-      </mesh>
-      <LightPool
-        position={[0, STAGE.deckH * 0.5, STAGE.front + 0.5]}
-        rotation={[0, 0, 0]}
-        size={[STAGE.width, 4.6]}
-        color="#b58a55"
-        opacity={0.16}
-      />
-
-      {/* Centre steps down into the room — the reference's one asymmetry in an
-          otherwise symmetrical elevation, and the thing that connects stage to
-          audience instead of walling them off. */}
-      {Array.from({ length: 4 }, (_, i) => (
-        <group key={i}>
-          <mesh position={[0, STAGE.deckH - 0.2 - i * 0.4, STAGE.front + 0.5 + i * 0.92]} material={M.deck}>
-            <boxGeometry args={[15 + i * 1.6, 0.4, 0.92]} />
-          </mesh>
-          <mesh position={[0, STAGE.deckH - 0.02 - i * 0.4, STAGE.front + 0.96 + i * 0.92]}>
-            <planeGeometry args={[15 + i * 1.6, 0.04]} />
-            <meshBasicMaterial color="#b3874f" toneMapped />
-          </mesh>
-        </group>
-      ))}
-
-      {/* upstage wall the array is built against */}
-      <mesh position={[0, 9, STAGE.back - 1.4]} material={M.charcoal}>
-        <boxGeometry args={[86, 20, 1.4]} />
-      </mesh>
-
-      {/* The black framing columns at the extreme edges of the elevation. In
-          the reference these are what stop the set from bleeding into the room
-          — the composition has a left and right border, and it needs one. */}
-      {[-1, 1].map((side) => (
-        <group key={`col${side}`}>
-          <mesh position={[side * towerX, 7.6, STAGE.wallZ + 1.2]} material={M.charcoal}>
-            <boxGeometry args={[1.5, 15.2, 2.2]} />
-          </mesh>
-          <mesh position={[side * (towerX - 0.78), 7.6, STAGE.wallZ + 1.2]}>
-            <planeGeometry args={[0.05, 13.6]} />
-            <meshBasicMaterial color="#8a6a44" toneMapped />
-          </mesh>
-        </group>
-      ))}
-
-      {/* ground-support towers behind the columns */}
-      {[-1, 1].map((side) => (
-        <group key={side}>
-          <Truss
-            length={STAGE.roof - 2}
-            size={0.62}
-            position={[side * (towerX + 1.8), (STAGE.roof - 2) / 2 + 1, STAGE.back + 1]}
-            rotation={[0, 0, Math.PI / 2]}
-            braceEvery={1.1}
-          />
-          <Truss
-            length={STAGE.roof - 2}
-            size={0.62}
-            position={[side * (towerX + 1.8), (STAGE.roof - 2) / 2 + 1, STAGE.front + 1]}
-            rotation={[0, 0, Math.PI / 2]}
-            braceEvery={1.1}
-          />
-          <mesh position={[side * (towerX + 1.8), 0.4, STAGE.back + 1]} material={M.anodised}>
-            <boxGeometry args={[1.6, 0.8, 1.6]} />
-          </mesh>
-          <mesh position={[side * (towerX + 1.8), 0.4, STAGE.front + 1]} material={M.anodised}>
-            <boxGeometry args={[1.6, 0.8, 1.6]} />
-          </mesh>
-        </group>
-      ))}
-
-      {/* The roof grid. The front truss sits just above the array and carries
-          the fixtures that rake down across it — in the reference that single
-          line of warm beams is doing more for the picture than any screen. */}
-      <Truss length={towerX * 2 + 4} size={0.7} position={[0, 14.3, STAGE.wallZ + 4.2]} braceEvery={1.2} />
-      <Truss length={towerX * 2 + 4} size={0.7} position={[0, STAGE.roof, STAGE.front + 1]} braceEvery={1.2} />
-      <Truss length={towerX * 2 + 4} size={0.7} position={[0, STAGE.roof, STAGE.back + 1]} braceEvery={1.2} />
-      <Truss length={towerX * 2 + 4} size={0.56} position={[0, STAGE.roof - 1.6, deckZ]} braceEvery={1.2} />
-      {[-1, 1].map((side) => (
-        <Truss
-          key={`rl${side}`}
-          length={deckD + 2}
-          size={0.62}
-          position={[side * towerX, STAGE.roof, deckZ + 1]}
-          rotation={[0, Math.PI / 2, 0]}
-          braceEvery={1.4}
-        />
-      ))}
-      {[-22, -8, 8, 22].map((x) => (
-        <Truss key={x} length={22} size={0.44} position={[x, STAGE.roof - 1.0, deckZ]} rotation={[0, Math.PI / 2, 0]} braceEvery={1.3} />
-      ))}
-
-      {/* A catenary of small warm practicals strung across the front truss.
-          It is the one soft, hand-hung element in an otherwise engineered
-          elevation, and the reference leans on it heavily. */}
-      {Array.from({ length: 34 }, (_, i) => {
-        const f = i / 33;
-        const x = (f - 0.5) * (towerX * 2 - 4);
-        const sag = Math.sin(f * Math.PI) * 1.5;
-        return (
-          <mesh key={`fest${i}`} position={[x, 13.9 - sag, STAGE.wallZ + 5.4]}>
-            <sphereGeometry args={[0.075, 6, 5]} />
-            <meshBasicMaterial color="#f0c184" toneMapped />
-          </mesh>
-        );
-      })}
-    </group>
-  );
+  return <group position={[0, 0, -354]}><ExpoAsset name="flagship-stage" /></group>;
 }
 
 /* ── the screen array ──────────────────────────────────── */
@@ -390,220 +259,51 @@ function StageStructure() {
  * rather than approximately so — a stage set that is nearly symmetrical looks
  * like a mistake from the centre aisle.
  */
+function StageBrand() {
+  const texture = useMemo(() => {
+    const canvas = document.createElement("canvas"); canvas.width = 1536; canvas.height = 288;
+    const ctx = canvas.getContext("2d")!;
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.font = "600 166px Arial"; ctx.fillStyle = "#ffffff";
+    ctx.fillText("LivegridAV", 768, 118);
+    ctx.font = "400 24px Arial"; ctx.fillStyle = "#e3c49d";
+    ctx.fillText("P E O P L E   /   P L A T F O R M S   /   P O S S I B I L I T I E S", 768, 230);
+    const t = new THREE.CanvasTexture(canvas); t.colorSpace = THREE.SRGBColorSpace; return t;
+  }, []);
+  const material = useRef<THREE.MeshBasicMaterial>(null);
+  useEffect(() => () => texture.dispose(), [texture]);
+  useFrame(() => { if (material.current) material.current.opacity = showLive() * (1 - show.cue); });
+  return <mesh position={[0, 9.55, STAGE.wallZ + .04]}>
+    <planeGeometry args={[20, 3.75]} />
+    <meshBasicMaterial ref={material} map={texture} transparent depthWrite={false} toneMapped={false} />
+  </mesh>;
+}
+
 function StageScreens({ rim }: { rim: THREE.Material }) {
-  const Z = STAGE.wallZ;
-
-  return (
-    <group>
-      {/* ── centre: the dominant canvas ── */}
-      <Panel
-        media="stage-main"
-        width={STAGE.heroW}
-        height={STAGE.heroH}
-        position={[0, HERO_Y, Z]}
-        rim={rim}
-        brightness={1.12}
-        reveal={0.14}
-        /* dips rather than dying, so the finale crossfades over a live wall */
-        power={() => 0.1 + 0.9 * showLive()}
-      />
-      {/* The finale takes the same canvas, a hair in front of it — and
-          deliberately brings no chrome of its own: it is the same physical
-          panel showing different content, not a second panel. */}
-      <Panel
-        media="finale"
-        width={STAGE.heroW}
-        height={STAGE.heroH}
-        position={[0, HERO_Y, Z + 0.06]}
-        rim={rim}
-        brightness={1.06}
-        chrome={false}
-        power={brandUp}
-      />
-
-      {[-1, 1].map((side) => (
-        <group key={side}>
-          {/* ── the vertical light strips either side of centre ──
-              Thin, full height, carrying a slice of their own programme. They
-              are the hinge of the composition: they separate the hero canvas
-              from everything outboard of it and give the elevation a rhythm. */}
-          <Panel
-            media="stage-strip"
-            width={0.5}
-            height={STAGE.heroH}
-            position={[side * 12.5, HERO_Y, Z]}
-            rim={rim}
-            pitch={1.9}
-            brightness={1.15}
-            reveal={0.08}
-            uv={[1, 1, 0, 0]}
-            power={() => 0.06 + 0.94 * showLive()}
-          />
-          {/* the strips join the finale too — "every major display
-              synchronises" has to be literal or it is not a finale */}
-          <Panel
-            media="finale"
-            width={0.5}
-            height={STAGE.heroH}
-            position={[side * 12.5, HERO_Y, Z + 0.06]}
-            rim={rim}
-            pitch={1.9}
-            brightness={1.1}
-            chrome={false}
-            uv={[0.12, 1, 0.44, 0]}
-            power={brandUp}
-          />
-
-          {/* ── portrait fillers ── */}
-          {[
-            { x: 14.3, y: 4.9, w: 1.7, h: 6.2, u: 0 },
-            { x: 16.4, y: 5.7, w: 1.7, h: 7.8, u: 0.5 },
-          ].map((p, i) => (
-            <Panel
-              key={`pt${i}`}
-              media="stage-portrait"
-              width={p.w}
-              height={p.h}
-              position={[side * p.x, p.y, Z]}
-              rim={rim}
-              pitch={1.9}
-              brightness={1.02}
-              reveal={0.08}
-              uv={[0.5, 1, p.u, 0]}
-              power={() => 0.06 + 0.94 * showLive()}
-            />
-          ))}
-
-          {/* ── the stacked landscape pair ──
-              Two wide panels one above the other carrying the upper and lower
-              halves of a single render, so the pair reads as one tall image
-              interrupted by a band of light rather than as two screens. */}
-          {[
-            { y: 10.3, v: 0.5 },
-            { y: 5.3, v: 0 },
-          ].map((p, i) => (
-            <Panel
-              key={`st${i}`}
-              media="stage-side"
-              width={12}
-              height={4.6}
-              position={[side * 23.4, p.y, Z]}
-              rim={rim}
-              brightness={1.04}
-              uv={[1, 0.5, 0, p.v]}
-              power={() => 0.06 + 0.94 * showLive()}
-            />
-          ))}
-          {/* the finale reaches these too — "every major display
-              synchronises" has to be literal or it is not a finale */}
-          {[
-            { y: 10.3, v: 0.5 },
-            { y: 5.3, v: 0 },
-          ].map((p, i) => (
-            <Panel
-              key={`sf${i}`}
-              media="finale"
-              width={12}
-              height={4.6}
-              position={[side * 23.4, p.y, Z + 0.06]}
-              rim={rim}
-              brightness={0.98}
-              chrome={false}
-              uv={[1, 0.5, 0, p.v]}
-              power={brandUp}
-            />
-          ))}
-
-          {/* ── the canted outer cluster ──
-              Turned back toward the audience so the people at the ends of the
-              front rows are looking at a screen face rather than at its edge.
-              This is the detail that makes a wide set read as audience-facing
-              instead of merely long. */}
-          <group position={[side * 31.4, 0, Z + 2.6]} rotation={[0, -side * 0.34, 0]}>
-            {[
-              { y: 10.0, v: 0.5 },
-              { y: 5.2, v: 0 },
-            ].map((p, i) => (
-              <Panel
-                key={`oc${i}`}
-                media="stage-outer"
-                width={8.6}
-                height={4.4}
-                position={[0, p.y, 0]}
-                rim={rim}
-                brightness={1.0}
-                uv={[1, 0.5, 0, p.v]}
-                power={() => 0.06 + 0.94 * showLive()}
-              />
-            ))}
-            <Panel
-              media="stage-portrait"
-              width={1.6}
-              height={5.4}
-              position={[-5.9, 5.0, 0]}
-              rim={rim}
-              pitch={1.9}
-              brightness={1.0}
-              reveal={0.08}
-              uv={[0.5, 1, 0.5, 0]}
-              power={() => 0.06 + 0.94 * showLive()}
-            />
-            {[
-              { y: 10.0, v: 0.5 },
-              { y: 5.2, v: 0 },
-            ].map((p, i) => (
-              <Panel
-                key={`of${i}`}
-                media="finale"
-                width={8.6}
-                height={4.4}
-                position={[0, p.y, 0.06]}
-                rim={rim}
-                brightness={0.96}
-                chrome={false}
-                uv={[1, 0.5, 0, p.v]}
-                power={brandUp}
-              />
-            ))}
-          </group>
-        </group>
-      ))}
-
-      {/* stage floor LED, washing up under the array */}
-      <Screen
-        media="stage-floor"
-        width={34}
-        height={12}
-        position={[0, STAGE.deckH + 0.03, (STAGE.front + STAGE.back) / 2 + 2.4]}
-        rotation={[-Math.PI / 2, 0, 0]}
-        pitch={2.6}
-        brightness={0.72}
-        range={170}
-        frame={false}
-        flat
-        power={() => 0.05 + 0.95 * showLive()}
-      />
-
-      {/* curved wing screens, downstage left and right */}
-      {[-1, 1].map((side) => (
-        <CurvedScreen
-          key={`w${side}`}
-          media="stage-wing"
-          radius={5.0}
-          arc={Math.PI * 0.5}
-          height={7.2}
-          position={[side * 39, 3.8, STAGE.front + 6]}
-          rotation={[0, side === -1 ? -0.62 : 0.62, 0]}
-          pitch={2.6}
-          brightness={0.92}
-          range={160}
-        />
-      ))}
-
-      <ReflectionStreak position={[0, 0.04, STAGE.front - 18]} width={70} length={40} color="#c08a4e" opacity={0.15} />
-      <LightPool position={[0, 0.05, STAGE.front - 12]} size={[76, 42]} color="#b5854f" opacity={0.12} pulse={0.3} />
-    </group>
-  );
+  const panels = [
+    { x: 0, y: HERO_Y, w: 26, h: 10, media: "stage-main" },
+    ...[-1, 1].flatMap(side => [
+      { x: side * 14.1, y: 7.3, w: .42, h: 11, media: "stage-strip" },
+      { x: side * 15.05, y: 7.3, w: .42, h: 11, media: "stage-strip" },
+      { x: side * 17.05, y: 6.7, w: 2.5, h: 9.8, media: "stage-portrait" },
+      { x: side * 24.8, y: 9.8, w: 12.1, h: 4.15, media: "stage-side" },
+      { x: side * 24.8, y: 5.05, w: 12.1, h: 4.15, media: "stage-side" },
+      { x: side * 35.85, y: 9.8, w: 8.8, h: 4.15, media: "stage-outer" },
+      { x: side * 35.85, y: 5.05, w: 8.8, h: 4.15, media: "stage-outer" },
+    ]),
+  ];
+  return <group>
+    {panels.map((p, i) => <group key={i}>
+      <Panel media={p.media} width={p.w} height={p.h} position={[p.x,p.y,STAGE.wallZ]}
+        rim={rim} brightness={1} reveal={.045} power={() => .08 + .92 * showLive()} />
+      <Panel media="finale" width={p.w} height={p.h} position={[p.x,p.y,STAGE.wallZ+.07]}
+        rim={rim} chrome={false} power={brandUp} />
+    </group>)}
+    <StageBrand />
+    <Screen media="stage-floor" width={26} height={14}
+      position={[0,STAGE.deckH+.025,STAGE.wallZ+9]} rotation={[-Math.PI/2,0,0]}
+      frame={false} flat brightness={.45} range={150} power={() => showLive() * (.15 + show.mode * .55)} />
+  </group>;
 }
 
 /** Mode-reactive lighting: the movers are the loudest part of the switch. */
@@ -618,7 +318,7 @@ function StageLighting() {
       {/* The rake across the front truss. Nineteen fixtures, evenly spaced,
           throwing down across the array — the reference's signature, and the
           reason its stage reads as lit rather than merely bright. */}
-      {rake.map((x, i) => (
+      {rake.filter((_, i) => quality === "high" || i % 2 === 0).map((x, i) => (
         <MovingHead
           key={`r${x}`}
           position={[x, 13.9, STAGE.wallZ + 4.2]}
@@ -706,88 +406,7 @@ function StageLighting() {
  * plates — at this distance a real light would cost every shader in the scene
  * and look identical.
  */
-function CeilingGrid() {
-  const quality = useVenue((s) => s.quality);
-  /* Density is the effect.
-     At a 4.6 m pitch over eleven columns the fixtures read as a scattering of
-     bright marks; the reference's ceiling is a *field*, close enough that the
-     rows merge into perspective lines running toward the stage. Tightening the
-     pitch and widening the grid is the single change that moves the top third
-     of the arena shot from "dark lid with some lights on it" to the reference
-     image. The extra rows are plain emissive plates — no lighting cost. */
-  const rows = useMemo(() => {
-    const out: number[] = [];
-    for (let z = -278; z > -356; z -= 3.2) out.push(z);
-    return out;
-  }, []);
-  const cols = useMemo(
-    () => [-38, -32, -26, -20, -14, -8, -3, 3, 8, 14, 20, 26, 32, 38],
-    [],
-  );
-  const step = quality === "low" ? 2 : 1;
-  const Y = STAGE.ceiling;
-
-  return (
-    <group>
-      {rows
-        .filter((_, i) => i % step === 0)
-        .map((z) =>
-          cols.map((x) => (
-            <group key={`cf${z}${x}`}>
-              <mesh position={[x, Y - 0.24, z]} rotation={[Math.PI / 2, 0, 0]}>
-                <planeGeometry args={[2.9, 0.4]} />
-                <meshBasicMaterial color="#ffe0ae" toneMapped />
-              </mesh>
-              {/* the housing, so each fixture has a body above it */}
-              <mesh position={[x, Y - 0.08, z]} material={M.charcoal}>
-                <boxGeometry args={[3.2, 0.3, 0.62]} />
-              </mesh>
-            </group>
-          )),
-        )}
-      {/* the bars they are hung from */}
-      {rows
-        .filter((_, i) => i % (step * 2) === 0)
-        .map((z) => (
-          <mesh key={`cb${z}`} position={[0, Y + 0.14, z]} material={M.steel}>
-            <boxGeometry args={[76, 0.16, 0.16]} />
-          </mesh>
-        ))}
-      {/* The slatted soffit the fixtures are set into. Without it they float in
-          a void and the room has no lid; with it, the top of every arena shot
-          is a lit ceiling receding toward the stage — which is the single
-          largest thing the reference does that this venue was not doing. */}
-      <mesh position={[0, Y + 0.55, -318]} rotation={[Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[96, 120]} />
-        {/* a dark *warm* soffit, not black. A ceiling full of tungsten
-            fixtures is never neutral, and the difference between #000 and
-            this is most of what stops the upper frame reading as a hole. */}
-        <meshBasicMaterial color="#1f170c" toneMapped />
-      </mesh>
-      {quality !== "low" &&
-        Array.from({ length: 34 }, (_, i) => (
-          <mesh key={`sl${i}`} position={[0, Y + 0.44, -274 - i * 2.9]} material={M.void}>
-            <boxGeometry args={[90, 0.2, 0.55]} />
-          </mesh>
-        ))}
-      {/* The wash the field lays on the room. Emissive plates look bright and
-          light nothing; without this the ceiling was a lit lid over a dark
-          floor, which is the one combination a real venue never shows. */}
-      <LightPool position={[0, 0.06, -312]} size={[84, 76]} color="#a8814f" opacity={0.1} />
-      {/* a warm cove where the ceiling meets each side wall */}
-      {[-1, 1].map((side) => (
-        <mesh
-          key={`cc${side}`}
-          position={[side * 41, Y - 0.6, -320]}
-          rotation={[0, side > 0 ? -Math.PI / 2 : Math.PI / 2, 0]}
-        >
-          <planeGeometry args={[100, 0.34]} />
-          <meshBasicMaterial color="#8a6f4c" toneMapped />
-        </mesh>
-      ))}
-    </group>
-  );
-}
+function CeilingGrid() { return <HouseCeiling />; }
 
 /**
  * Audience seating.
@@ -797,54 +416,7 @@ function CeilingGrid() {
  * actually asking. Rows are single boxes — at any distance the camera ever
  * reaches, individual chairs are below a pixel.
  */
-function Seating() {
-  const rows = useMemo(() => {
-    const out: number[] = [];
-    for (let z = -302; z > -329; z -= 1.0) out.push(z);
-    return out;
-  }, []);
-
-  return (
-    <group>
-      {[-1, 1].map((side) =>
-        rows.map((z, i) => (
-          <group key={`sr${side}${z}`}>
-            <mesh position={[side * 15.5, 0.52, z]} material={M.charcoal}>
-              <boxGeometry args={[23, 0.56, 0.5]} />
-            </mesh>
-            {/* The top edge of every seat back, catching the ceiling. This is
-                the whole reason the seating is visible at all: unlit charcoal
-                boxes on a dark floor are invisible, and an arena with no
-                legible audience has no scale. */}
-            <mesh position={[side * 15.5, 0.8, z + 0.03]} rotation={[-Math.PI / 2.3, 0, 0]}>
-              <planeGeometry args={[23, 0.07]} />
-              <meshBasicMaterial color={i % 4 === 0 ? "#a5855f" : "#7a624a"} toneMapped />
-            </mesh>
-          </group>
-        )),
-      )}
-      {/* The centre aisle, lit. The reference runs a pale carpeted runway from
-          the steps straight down the room, and it is what gives the shot its
-          one-point perspective. */}
-      <mesh position={[0, 0.02, -315]} rotation={[-Math.PI / 2, 0, 0]} material={M.deck}>
-        <planeGeometry args={[7, 34]} />
-      </mesh>
-      {[-1, 1].map((side) => (
-        <mesh key={`al${side}`} position={[side * 3.5, 0.03, -315]} rotation={[-Math.PI / 2, 0, 0]}>
-          <planeGeometry args={[0.09, 34]} />
-          <meshBasicMaterial color="#c08a4e" toneMapped />
-        </mesh>
-      ))}
-      <ReflectionStreak position={[0, 0.035, -315]} width={6.4} length={32} color="#d3a366" opacity={0.2} />
-      {/* cross aisles either side of the seating blocks */}
-      {[-1, 1].map((side) => (
-        <mesh key={`cx${side}`} position={[side * 28.5, 0.02, -315]} rotation={[-Math.PI / 2, 0, 0]} material={M.deck}>
-          <planeGeometry args={[4, 34]} />
-        </mesh>
-      ))}
-    </group>
-  );
-}
+function Seating() { return <Audience />; }
 
 /** PA, delay towers and control — the scale cues that make a room a venue. */
 function ArenaDressing() {
@@ -869,7 +441,7 @@ function ArenaDressing() {
       ))}
 
       {/* front-of-house control position, out in the room */}
-      <group position={[0, 0, STAGE.front + 50]}>
+      <group position={[20, 0, STAGE.front + 50]}>
         <mesh position={[0, 0.9, 0]} material={M.deck}>
           <boxGeometry args={[9, 1.8, 5]} />
         </mesh>
@@ -887,7 +459,7 @@ function ArenaDressing() {
       </group>
 
       {/* audience barrier at the stage front */}
-      {Array.from({ length: 23 }, (_, i) => (
+      {Array.from({ length: 23 }, (_, i) => i).filter(i => Math.abs(i - 11) > 2).map((i) => (
         <mesh key={i} position={[(i - 11) * 2.4, 0.6, STAGE.front + 7.4]} material={M.steel}>
           <boxGeometry args={[2.3, 1.2, 0.12]} />
         </mesh>

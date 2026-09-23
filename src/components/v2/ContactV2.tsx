@@ -1,6 +1,7 @@
 "use client";
 import { FormEvent, useState } from "react";
-import { CONTACT, contactLinks, LEAD_WEBHOOK_URL } from "@/experience/contact";
+import { CONTACT, contactLinks, LEAD_WEBHOOK_URL, LEAD_WEBHOOK_ENABLED } from "@/experience/contact";
+import Link from "next/link";
 
 /** V2 contact — same lead pipeline as the rest of the site (n8n → sales),
  *  with a mailto fallback so an enquiry is never lost. */
@@ -19,6 +20,7 @@ export default function ContactV2() {
     setStatus("sending");
     try {
       const res = await fetch(LEAD_WEBHOOK_URL, {
+        signal: AbortSignal.timeout(12000),
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -37,6 +39,12 @@ export default function ContactV2() {
   };
 
   const label = { idle: "Send the brief", sending: "Sending…", sent: "Sent — we'll be in touch ✓", error: "Opened your email app" }[status];
+
+  if (!LEAD_WEBHOOK_ENABLED) return <div>
+    <p className="v2-body">Prepare your project brief, then send it by email or WhatsApp.</p>
+    <Link href="/contact" className="v2-btn v2-btn--primary">Prepare project brief</Link>
+    <a href={contactLinks.email()} className="v2-btn">Email {CONTACT.email}</a>
+  </div>;
 
   return (
     <form onSubmit={submit}>
@@ -60,7 +68,7 @@ export default function ContactV2() {
         {label}
       </button>
       <p className="v2-body" style={{ marginTop: 12, fontSize: 13 }}>
-        {status === "error" ? `Delivered to ${CONTACT.email}` : "Goes straight to our team."}
+        {status === "error" ? `Please send the draft from your email app to ${CONTACT.email}. Delivery is not confirmed.` : "Goes straight to our team."}
       </p>
     </form>
   );

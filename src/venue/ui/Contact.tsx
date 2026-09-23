@@ -2,7 +2,7 @@
 import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useVenue } from "../systems/store";
-import { CONTACT, contactLinks, LEAD_WEBHOOK_URL } from "@/experience/contact";
+import { CONTACT, contactLinks, LEAD_WEBHOOK_URL, LEAD_WEBHOOK_ENABLED } from "@/experience/contact";
 
 /**
  * The contact experience.
@@ -35,7 +35,8 @@ export function ContactPanel() {
   const progress = useVenue((s) => s.progress);
   const entered = useVenue((s) => s.entered);
   const panelOpen = useVenue((s) => s.activePavilion);
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error" | "ready">("idle");
+  const [draft, setDraft] = useState("");
 
   const pastVenue = useVenue((s) => s.pastVenue);
   // Late on purpose. The finale runs its own cues on the wall between 0.952
@@ -57,9 +58,12 @@ export function ContactPanel() {
       .filter((l) => l !== null)
       .join("\n");
 
+    setDraft(`Name: ${data.get("name")}\nEmail: ${data.get("email")}\nPhone: ${data.get("phone") ?? ""}\n\n${message}`);
+    if (!LEAD_WEBHOOK_ENABLED) { setStatus("ready"); return; }
     setStatus("sending");
     try {
       const res = await fetch(LEAD_WEBHOOK_URL, {
+        signal: AbortSignal.timeout(12000),
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -79,11 +83,6 @@ export function ContactPanel() {
       // The pipeline is unreachable — hand the brief to the mail client so the
       // enquiry still reaches us.
       setStatus("error");
-      window.location.href = `mailto:${CONTACT.email}?subject=${encodeURIComponent(
-        "Event enquiry — livegridav.com",
-      )}&body=${encodeURIComponent(
-        `Name: ${data.get("name")}\nEmail: ${data.get("email")}\nPhone: ${data.get("phone")}\n\n${message}`,
-      )}`;
     }
   };
 
@@ -96,6 +95,7 @@ export function ContactPanel() {
         transform: `translateY(${visible ? 0 : 24}px)`,
       }}
       aria-hidden={!visible}
+      inert={!visible}
       aria-label="Start a project"
     >
       <div className="v-contact-card">
@@ -180,7 +180,7 @@ export function ContactPanel() {
               disabled={status === "sending"}
               tabIndex={visible ? 0 : -1}
             >
-              {status === "sending" ? "Sending…" : "Send enquiry"}
+              {status === "sending" ? "Sending…" : LEAD_WEBHOOK_ENABLED ? "Send enquiry" : "Prepare enquiry"}
             </button>
             {status !== "idle" && (
               <p
@@ -190,12 +190,16 @@ export function ContactPanel() {
               >
                 {status === "sent"
                   ? "Thank you — we've got it and we'll come back to you."
-                  : status === "error"
-                    ? "We couldn't reach the form service, so we've opened your mail client instead."
+                  : status === "error" || status === "ready"
+                    ? "Your draft is ready, not sent. Choose email or WhatsApp below, then send it to our team."
                     : ""}
               </p>
             )}
           </div>
+          {(status === "ready" || status === "error") && <div className="v-contact-actions">
+            <a className="v-btn" href={`${contactLinks.email()}&body=${encodeURIComponent(draft)}`}>Open email draft</a>
+            <a className="v-btn" href={contactLinks.whatsapp(draft)} target="_blank" rel="noopener noreferrer">Open WhatsApp draft</a>
+          </div>}
         </form>
 
         <div className="v-contact-details">

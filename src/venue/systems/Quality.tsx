@@ -38,8 +38,8 @@ export function detectQuality(): { tier: QualityTier; mobile: boolean; dpr: numb
 }
 
 const TARGET_DPR: Record<QualityTier, [number, number]> = {
-  low: [0.6, 1],
-  medium: [0.75, 1.35],
+  low: [0.85, 1],
+  medium: [1, 1.35],
   high: [1, 1.8],
 };
 
@@ -61,7 +61,7 @@ export function QualityGovernor() {
   }, [quality, setDpr]);
 
   useFrame((_, dt) => {
-    if (dt <= 0 || dt > 0.5) return;
+    if (dt <= 0 || dt > 0.5 || document.hidden || !useVenue.getState().loaded) return;
     cooldown.current -= dt;
     const s = samples.current;
     s.push(1 / dt);
@@ -83,10 +83,15 @@ export function QualityGovernor() {
       }
       cooldown.current = 3;
       s.length = 0;
-    } else if (fps > 57 && dpr.current < max - 0.01 && demotions.current === 0) {
+    } else if (fps > 57 && dpr.current < max - 0.01) {
       dpr.current = Math.min(max, dpr.current + 0.12);
       setDpr(dpr.current);
       cooldown.current = 4;
+      s.length = 0;
+    } else if (fps > 58 && quality !== "high") {
+      demotions.current = Math.max(0, demotions.current - 1);
+      setQuality(quality === "low" ? "medium" : "high");
+      cooldown.current = 12;
       s.length = 0;
     }
   });

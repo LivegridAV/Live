@@ -50,6 +50,7 @@ const fragment = /* glsl */ `
   uniform vec3  uAccent;
   uniform float uBright;
   uniform float uOn;
+  uniform float uAlpha;
   uniform float uLayers;     // depth planes, by quality tier
   uniform float uFlow;       // metres per second the world travels toward you
   uniform vec3  uBoxMin;     // the virtual volume, in world space
@@ -505,11 +506,15 @@ const fragment = /* glsl */ `
        right, vault and floor remain windows onto one image, with no restart at
        a physical seam. The procedural planes stay in front, so the plate reads
        as a destination rather than wallpaper. */
-    float panoU = atan(rd.x, -rd.z) / 6.28318530718 + 0.5;
-    float panoV = asin(clamp(rd.y, -1.0, 1.0)) / 3.14159265359 + 0.5;
-    vec3 plate = texture2D(uBackdrop, vec2(panoU, panoV)).rgb;
+    // The supplied plate is a wide forward-facing composition, not a 360°
+    // equirectangular panorama. Map its full field to the tunnel's view; using
+    // 2π here enlarged only its centre pixels into a soft, oversized portal.
+    float panoU = atan(rd.x, -rd.z) / 2.8 + 0.5;
+    float panoV = asin(clamp(rd.y, -1.0, 1.0)) / 1.45 + 0.5;
+    vec2 plateUV = vec2(panoU + sin(uTime * 0.13) * 0.012, panoV + cos(uTime * 0.13) * 0.008);
+    vec3 plate = texture2D(uBackdrop, plateUV).rgb;
     plate *= 0.78 + 0.22 * fade;
-    col = mix(col, plate + col * 0.28, uBackdropMix * 0.84);
+    col = mix(col, plate + col * 0.08, uBackdropMix * 0.96);
 
     /* The physical panel the world is being shown on. Emitters are measured
        in world metres rather than UVs, so every surface of an installation
@@ -534,7 +539,7 @@ const fragment = /* glsl */ `
     col *= uBright * uOn * emitter;
     col += vec3(0.004, 0.0075, 0.008) * (1.0 - emitter) * (0.25 + 0.75 * uOn);
 
-    gl_FragColor = vec4(col, 1.0);
+    gl_FragColor = vec4(col, uAlpha);
     #include <tonemapping_fragment>
     #include <colorspace_fragment>
   }
@@ -578,6 +583,7 @@ export function createImmersiveMaterial(o: ImmersiveOptions) {
       uAccent: { value: new THREE.Color(o.accent ?? "#5fd9cc").convertSRGBToLinear() },
       uBright: { value: o.brightness ?? 1 },
       uOn: { value: 1 },
+      uAlpha: { value: 1 },
       uLayers: { value: o.layers ?? 10 },
       uFlow: { value: o.flow ?? 5.5 },
       uBoxMin: { value: new THREE.Vector3(...o.boxMin) },

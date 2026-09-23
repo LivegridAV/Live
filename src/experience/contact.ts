@@ -27,3 +27,7 @@ export const contactLinks = {
 export const LEAD_WEBHOOK_URL =
   process.env.NEXT_PUBLIC_LEAD_WEBHOOK_URL ??
   "https://n8n.livegridav.com/webhook/livegridav-lead-capture";
+
+// The default endpoint failed its production CORS preflight on 2026-09-24.
+// Re-enable only after OPTIONS/POST delivery has been verified on the real host.
+export const LEAD_WEBHOOK_ENABLED = process.env.NEXT_PUBLIC_LEAD_WEBHOOK_ENABLED === "true";

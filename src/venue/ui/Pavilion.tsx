@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef } from "react";
 import { useVenue } from "../systems/store";
+import { trapDialogFocus } from "./focusTrap";
 import {
   PAVILIONS,
   PARTNER_BAY,
@@ -51,6 +52,8 @@ export function PavilionPrompt() {
   return (
     <aside
       className="v-prompt"
+      aria-hidden={!visible}
+      inert={!visible}
       /* A control strip, not a content card. The stand explains itself on its
          own kiosk in the room (see data/media.ts, painter `kioskInfo`); what
          is left for the DOM is the thing HTML is actually better at — a real
@@ -59,7 +62,7 @@ export function PavilionPrompt() {
       style={{
         opacity: visible ? 1 : 0,
         pointerEvents: visible ? "auto" : "none",
-        transform: `translateY(${visible ? 0 : 14}px)`,
+        transform: `translateY(calc(-50% + ${visible ? 0 : 14}px))`,
       }}
     >
       <span className="v-prompt-no">
@@ -68,7 +71,7 @@ export function PavilionPrompt() {
       <h2>{near.headline}</h2>
       <div className="v-prompt-act">
         <button type="button" className="v-btn v-btn--primary" onClick={() => open(near.id)}>
-          Explore this pavilion
+          Explore service
         </button>
       </div>
     </aside>
@@ -94,6 +97,7 @@ export function PavilionPanel() {
     const barWidth = window.innerWidth - document.documentElement.clientWidth;
     document.body.style.overflow = "hidden";
     if (barWidth > 0) document.body.style.paddingRight = `${barWidth}px`;
+    const releaseFocus = bodyRef.current ? trapDialogFocus(bodyRef.current) : undefined;
     closeRef.current?.focus();
 
     const onKey = (e: KeyboardEvent) => {
@@ -105,6 +109,7 @@ export function PavilionPanel() {
       document.body.style.overflow = prevOverflow;
       document.body.style.paddingRight = prevPad;
       window.removeEventListener("keydown", onKey);
+      releaseFocus?.();
     };
   }, [activePavilion, close]);
 
@@ -182,7 +187,7 @@ export function PavilionPanel() {
               Send a brief
             </Link>
             <button type="button" className="v-btn" onClick={close}>
-              Back to the venue
+              Back to the experience
             </button>
           </div>
         </div>

@@ -46,7 +46,7 @@ export default function PageShell({ children }: { children: ReactNode }) {
             <Wordmark className="text-xl" accent="glow" />
           </Link>
 
-          <div className="lg-glass-pill hidden items-center gap-5 px-5 py-2 md:flex">
+          <div className="lg-glass-pill hidden items-center gap-5 px-5 py-2 lg:flex">
             {NAV.map((l) => (
               <Link
                 key={l.href}
@@ -68,7 +68,7 @@ export default function PageShell({ children }: { children: ReactNode }) {
             aria-label="Toggle menu"
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="lg-glass-pill flex h-10 w-10 items-center justify-center text-text md:hidden"
+            className="lg-glass-pill flex h-10 w-10 items-center justify-center text-text lg:hidden"
           >
             <div className="space-y-1.5">
               <span className="block h-0.5 w-6 bg-current" />
@@ -84,7 +84,7 @@ export default function PageShell({ children }: { children: ReactNode }) {
               animate={{ height: "auto", opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.25 }}
-              className="lg-glass-nav overflow-hidden md:hidden"
+              className="lg-glass-nav overflow-hidden lg:hidden"
             >
               <div className="flex flex-col gap-1 px-6 py-4">
                 {NAV.map((l) => (
@@ -120,7 +120,7 @@ export default function PageShell({ children }: { children: ReactNode }) {
 function ShellFooter() {
   return (
     <footer className="border-t border-ink-soft bg-ink text-text-inv">
-      <div className="mx-auto flex max-w-[1180px] flex-col gap-12 px-6 py-16 md:flex-row md:justify-between md:px-12">
+      <div className="mx-auto flex max-w-[1180px] flex-col gap-12 px-6 py-16 lg:flex-row lg:justify-between md:px-12">
         <div className="max-w-xs">
           <div className="flex items-center gap-3">
             <SignalGrid cell={16} gap={3} palette="dark" animate={false} glow={false} />

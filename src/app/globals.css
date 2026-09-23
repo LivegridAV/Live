@@ -122,7 +122,7 @@ body {
   font-size: 20px; font-weight: 600; letter-spacing: -0.02em;
   color: var(--text-inv); opacity: 0.5; animation: lgFadeIn 1s ease 2.2s both;
 }
-.lg-intro-brand span { color: var(--glow); }
+.lg-intro-brand span { color: #3fd6c8; }
 @keyframes lgFadeIn { from { opacity: 0; } to { opacity: 1; } }
 .lg-intro-boot {
   font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.18em;
@@ -159,7 +159,7 @@ body {
   transition: color 0.2s, border-color 0.2s;
 }
 .lg-chip.is-on { color: var(--glow); border-color: color-mix(in srgb, var(--glow) 40%, transparent); }
-.lg-chip-cta { color: var(--ink); background: var(--glow); border-color: var(--glow); font-weight: 700; }
+.lg-chip-cta { color: var(--ink); background: var(--glow); border-color: var(--glow); font-weight: 600; }
 .lg-chip-cta:hover { box-shadow: 0 0 18px color-mix(in srgb, var(--glow) 50%, transparent); }
 @media (max-width: 767px) {
   .lg-hud-top { padding: 12px 16px; }
@@ -248,7 +248,7 @@ body {
 }
 .lg-preset:hover { border-color: var(--ink-soft); color: var(--text-inv); }
 .lg-preset.is-active {
-  color: var(--ink); background: var(--glow); border-color: var(--glow); font-weight: 700;
+  color: var(--ink); background: var(--glow); border-color: var(--glow); font-weight: 600;
 }
 .lg-console-themes { display: flex; gap: 8px; padding: 6px 12px 10px; }
 .lg-theme-dot {
@@ -307,7 +307,7 @@ body {
 .lg-pillar { width: 190px; text-align: center; display: grid; gap: 6px; justify-items: center; }
 .lg-pillar-value {
   font-size: 44px; font-weight: 600; letter-spacing: -0.03em; color: var(--text-inv);
-  text-shadow: 0 0 22px color-mix(in srgb, var(--glow) 45%, transparent);
+  text-shadow: none;
 }
 .lg-pillar-value span { color: var(--glow); }
 .lg-pillar-label {
@@ -340,11 +340,11 @@ body {
 .lg-block-title {
   font-size: clamp(30px, 4.5vw, 52px); font-weight: 600; line-height: 1.06;
   letter-spacing: -0.03em; color: var(--text-inv);
-  text-shadow: 0 2px 30px rgba(4, 9, 8, 0.9);
+  text-shadow: none;
 }
 .lg-block-copy {
   font-size: 15px; line-height: 1.6; color: color-mix(in srgb, var(--text-inv) 75%, transparent);
-  max-width: 42ch; text-shadow: 0 1px 12px rgba(4, 9, 8, 0.9);
+  max-width: 42ch; text-shadow: none;
 }
 
 /* ── finale ── */
@@ -356,9 +356,9 @@ body {
 .lg-finale-title {
   font-size: clamp(26px, 4.2vw, 46px); font-weight: 600; line-height: 1.12;
   letter-spacing: -0.02em; color: var(--text-inv);
-  text-shadow: 0 2px 34px rgba(4, 9, 8, 0.95);
+  text-shadow: none;
 }
-.lg-finale-title span { color: var(--glow); text-shadow: 0 0 34px color-mix(in srgb, var(--glow) 55%, transparent); }
+.lg-finale-title span { color: var(--glow); text-shadow: none; }
 .lg-finale-ctas { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
 .lg-finale-foot { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.18em; color: var(--faint); text-transform: uppercase; }
 
@@ -370,7 +370,7 @@ body {
   -webkit-backdrop-filter: var(--lg-glass-blur);
   backdrop-filter: var(--lg-glass-blur);
   box-shadow: var(--lg-glass-lift);
-  text-shadow: var(--lg-glass-text);
+  text-shadow: none;
   transition: all 0.2s ease; display: inline-block;
   position: relative; isolation: isolate;
 }
@@ -409,11 +409,11 @@ body {
 .lg-hero-title {
   font-size: clamp(34px, 5.4vw, 66px); line-height: 1.02;
   /* layered shadow so the headline stays legible over bright LED content */
-  text-shadow: 0 2px 18px rgba(3, 6, 5, 0.95), 0 1px 40px rgba(3, 6, 5, 0.8);
+  text-shadow: none;
 }
 .lg-accent {
   color: var(--glow);
-  text-shadow: 0 0 42px color-mix(in srgb, var(--glow) 55%, transparent);
+  text-shadow: none;
 }
 .lg-hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 4px; }
 .lg-btn-ghost { background: transparent; border-color: transparent; color: var(--glow); }
@@ -425,7 +425,7 @@ body {
 .lg-hero-stats div { display: grid; gap: 2px; }
 .lg-hero-stats dt {
   font-size: 26px; font-weight: 600; letter-spacing: -0.02em; color: var(--text-inv);
-  text-shadow: 0 0 18px color-mix(in srgb, var(--glow) 40%, transparent);
+  text-shadow: none;
 }
 .lg-hero-stats dd {
   font-family: var(--font-mono); font-size: 9px; letter-spacing: 0.18em;
@@ -848,7 +848,7 @@ body {
     inset 0 1px 0 rgba(236, 255, 252, 0.16),
     inset 0 -1px 0 rgba(0, 0, 0, 0.30),
     0 16px 38px rgba(0, 0, 0, 0.32);
-  --lg-glass-text: 0 1px 2px rgba(2, 8, 8, 0.58);
+  --lg-glass-text: none;
 }
 
 .lg-glass {
@@ -857,7 +857,7 @@ body {
   backdrop-filter: var(--lg-glass-blur);
   border: 1px solid var(--lg-glass-edge);
   box-shadow: var(--lg-glass-lift);
-  text-shadow: var(--lg-glass-text);
+  text-shadow: none;
 }
 
 /* the fixed page header, as one floating pane rather than a solid bar */
@@ -875,7 +875,7 @@ body {
   backdrop-filter: var(--lg-glass-blur);
   border: 1px solid var(--lg-glass-edge);
   box-shadow: var(--lg-glass-lift);
-  text-shadow: var(--lg-glass-text);
+  text-shadow: none;
 }
 
 /* Translucent card material for the service catalogue: warm graphite, a

@@ -3,30 +3,14 @@ import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 import { M } from "../three/materials";
 import { ImmersiveVolume, type Surface } from "../three/ImmersiveVolume";
-import { Haze } from "../three/rig";
 import { LightPool } from "../three/environment";
 import { useVenue } from "../systems/store";
 
-/**
- * The four-sided immersive LED tunnel — the venue's first signature moment.
- *
- * It is a vaulted tunnel, not a box: a flat LED floor with a continuous LED
- * arch springing from both edges of it. The reference the client supplied is
- * built the same way, and the reason is not decorative — an arch gives the eye
- * no corner to find, so the room stops having a shape and the content becomes
- * the only thing there is. There is deliberately no frame around any panel, no
- * cabinet line, and no gap where the floor meets the arch.
- *
- * What the surfaces show is not a video. It is one virtual world that exists
- * in the venue's own coordinates, far wider and far deeper than the room, and
- * each surface is a window onto it from the visitor's exact eye position (see
- * `three/immersive.ts`). So structures cross from floor to arch without a
- * break, and walking forward moves you through the world rather than past a
- * picture of one.
- */
+/** Four-sided LED room: walls, ceiling and floor share the same world-space
+ * shader and master clock. The rectangular architecture follows the reference. */
 
 export const TUNNEL = {
-  /** the vault springs from ±RADIUS, so the tunnel is twice this wide */
+  /** Half-width of the rectangular room. */
   radius: 3.0,
   /** crown height as a multiple of the radius */
   rise: 1.55,
@@ -49,11 +33,13 @@ function tunnelPhase(camZ: number) {
   return Math.min(1, Math.max(0, (TUNNEL.from - camZ) / DEPTH));
 }
 
-/** The arched profile of the aperture, as a 2D path. */
+/** The rectangular profile of the aperture, as a 2D path. */
 function archPath(radius: number, rise: number) {
   const path = new THREE.Path();
   path.moveTo(-radius, 0);
-  path.absellipse(0, 0, radius, radius * rise, Math.PI, 0, true, 0);
+  path.lineTo(-radius, radius * rise);
+  path.lineTo(radius, radius * rise);
+  path.lineTo(radius, 0);
   path.lineTo(-radius, 0);
   return path;
 }
@@ -63,9 +49,7 @@ function archPath(radius: number, rise: number) {
  * the top of the tunnel into a fifteen-metre hall from outside the building,
  * which gives the reveal away and makes the architecture read as scenery.
  *
- * The opening is a real arch cut out of the wall rather than a rectangle with
- * an arch inside it — a rectangular opening would leave two triangles of the
- * hall showing in the corners.
+ * The opening matches the four planar LED faces, with a narrow protective rim.
  */
 function Bulkhead({ z, width = 52, height = 15 }: { z: number; width?: number; height?: number }) {
   const geometry = useMemo(() => {
@@ -119,16 +103,33 @@ function ExitReveal() {
 }
 
 export function Tunnel() {
-  const quality = useVenue((s) => s.quality);
+  const mobile = useVenue(s => s.isMobile);
+  const brand = useMemo(() => {
+    const canvas = document.createElement("canvas"); canvas.width = 1536; canvas.height = 512;
+    const ctx = canvas.getContext("2d")!;
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.font = "500 150px Arial"; ctx.fillStyle = "#f5f1e8";
+    ctx.fillText("LivegridAV", 768, 205);
+    ctx.font = "400 30px Arial";
+    ctx.fillText("I M M E R S I V E   W O R L D S", 768, 348);
+    ctx.fillText("R E A L   I M P A C T", 768, 413);
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    return texture;
+  }, []);
+  useEffect(() => () => brand.dispose(), [brand]);
 
   /**
-   * Two surfaces, meeting exactly where the vault springs from the floor.
+   * Four surfaces, meeting exactly at the rectangular room's corners.
    * Everything else the visitor sees in here is content.
    */
   const surfaces = useMemo<Surface[]>(
     () => [
-      { kind: "vault", size: [TUNNEL.radius, DEPTH], position: [0, 0, MID_Z], rise: TUNNEL.rise },
+      { size: [DEPTH, CROWN], position: [-TUNNEL.radius, CROWN / 2, MID_Z], rotation: [0, Math.PI / 2, 0] },
+      { size: [DEPTH, CROWN], position: [TUNNEL.radius, CROWN / 2, MID_Z], rotation: [0, -Math.PI / 2, 0] },
+      { size: [WIDTH, DEPTH], position: [0, CROWN, MID_Z], rotation: [Math.PI / 2, 0, 0] },
       { size: [WIDTH, DEPTH], position: [0, 0.012, MID_Z], rotation: [-Math.PI / 2, 0, 0] },
+      { size: [WIDTH, CROWN], position: [0, CROWN / 2, TUNNEL.to + .02], reveal: true },
     ],
     [],
   );
@@ -138,22 +139,20 @@ export function Tunnel() {
       <Bulkhead z={TUNNEL.from} />
       <Bulkhead z={TUNNEL.to} />
 
-      {/* The structural shell the vault is built into, entirely outside the
-          aperture — from inside the tunnel none of it is visible. */}
-      <mesh position={[0, 0, MID_Z]} rotation={[Math.PI / 2, 0, 0]} scale={[1, 1, TUNNEL.rise]}>
-        <cylinderGeometry
-          args={[TUNNEL.radius + 0.4, TUNNEL.radius + 0.4, DEPTH + 0.3, 40, 1, true, Math.PI / 2, Math.PI]}
-        />
-        <meshStandardMaterial color="#0b0f10" roughness={0.8} metalness={0.12} side={THREE.DoubleSide} />
-      </mesh>
+      {/* The architecture is outside the LED faces, never in the content. */}
+      {[-1, 1].map(side => <mesh key={side} position={[side * (TUNNEL.radius + .13), CROWN / 2, MID_Z]} material={M.charcoal}>
+        <boxGeometry args={[.25, CROWN + .3, DEPTH]} />
+      </mesh>)}
+      <mesh position={[0, CROWN + .13, MID_Z]} material={M.charcoal}><boxGeometry args={[WIDTH + .5, .25, DEPTH]} /></mesh>
 
       {/* ── the environment ── */}
       <ImmersiveVolume
         surfaces={surfaces}
-        backdrop="/media/final/tunnel-world.png"
+        cinematic
+        backdrop={mobile ? "/media/final/cinematic-world-mobile.webp" : "/media/final/cinematic-world.png"}
         pitch={1.2}
-        brightness={1.06}
-        accent="#63d9cc"
+        brightness={0.92}
+        accent="#ccad81"
         flow={6.5}
         doubleSided
         /* The virtual world: three times the width of the room it is shown in,
@@ -167,6 +166,11 @@ export function Tunnel() {
            portal grows as the exit approaches instead of staying a backdrop. */
         portalZ={(p) => TUNNEL.to - 210 + p * 120}
       />
+
+      <mesh position={[-TUNNEL.radius + .014, 2.65, MID_Z - 2]} rotation={[0, Math.PI / 2, 0]}>
+        <planeGeometry args={[4.3, 1.44]} />
+        <meshBasicMaterial map={brand} transparent depthWrite={false} toneMapped={false} />
+      </mesh>
 
       {/* Protective glass deck over the floor LED — the floor is walked on.
           `envMapIntensity` is not a detail here. At roughness 0.05 this pane is
@@ -195,23 +199,8 @@ export function Tunnel() {
       <Threshold z={TUNNEL.to - 0.32} />
       <ExitReveal />
 
-      {/* the tunnel's own atmosphere — light leaving the surfaces needs
-          something to land on, and it is what stops the air reading as vacuum */}
-      {quality !== "low" && (
-        /* Eight billboards nearly four metres across, inside a six-metre
-           tunnel, put the camera *inside* two or three of them at all times —
-           so instead of air you saw a pair of soft pale cones filling the
-           frame. Air in a tunnel this tight has to be small and numerous. */
-        <Haze
-          count={16}
-          area={[5.0, 3.4, DEPTH * 0.9]}
-          position={[0, CROWN * 0.5, MID_Z]}
-          color="#9fc8c4"
-          opacity={0.009}
-          scale={1.5}
-          seed={3}
-        />
-      )}
+      {/* Atmosphere is contained in the shared world shader. No translucent
+          billboard layer sits between the viewer and the fine-pitch artwork. */}
     </group>
   );
 }

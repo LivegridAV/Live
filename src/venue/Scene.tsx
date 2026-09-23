@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
+import { useProgress } from "@react-three/drei";
 import { MediaProvider } from "./media/MediaContext";
 import { CameraRig } from "./systems/CameraRig";
 import { QualityGovernor } from "./systems/Quality";
@@ -19,8 +20,8 @@ import { ZoneGroup } from "./three/ZoneGroup";
 /**
  * Warm-up.
  *
- * Nothing here is downloaded — the venue's content is generated — so "loading"
- * is really shader compilation, and compiling several hundred programs inside
+ * Wait for authored GLBs and textures before shader compilation. Compiling
+ * several hundred programs inside
  * the first animated frame is what would otherwise produce a two second freeze
  * the moment the visitor scrolls. So we force it to happen while the loader is
  * still up, and report honest progress while it does.
@@ -33,15 +34,55 @@ function Warmup() {
   useEffect(() => {
     if (process.env.NODE_ENV === "production") return;
     (window as unknown as Record<string, unknown>).__venue = { gl, scene, camera, journey, show, store: useVenue };
+    const autoReset = gl.info.autoReset;
+    gl.info.autoReset = false;
+    return () => { gl.info.autoReset = autoReset; };
   }, [gl, scene, camera]);
 
   const frame = useRef(0);
   const setLoadPercent = useVenue((s) => s.setLoadPercent);
   const setLoaded = useVenue((s) => s.setLoaded);
   const done = useRef(false);
+  const metrics = useRef({ frames: 0, elapsed: 0 });
+  const longTasks = useRef({ count: 0, maxMs: 0 });
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "development" || !PerformanceObserver.supportedEntryTypes.includes("longtask")) return;
+    const observer = new PerformanceObserver(list => {
+      for (const entry of list.getEntries()) {
+        longTasks.current.count++;
+        longTasks.current.maxMs = Math.max(longTasks.current.maxMs, entry.duration);
+      }
+    });
+    observer.observe({ type: "longtask" });
+    return () => observer.disconnect();
+  }, []);
 
-  useFrame(() => {
+  useFrame((_, dt) => {
+    if (process.env.NODE_ENV === "development" && !document.hidden && dt < .5) {
+      metrics.current.frames++; metrics.current.elapsed += dt;
+      if (metrics.current.elapsed >= 1.5) {
+        const output = document.querySelector<HTMLOutputElement>("[data-render-metrics]");
+        if (output) {
+          output.value = `${Math.round(metrics.current.frames/metrics.current.elapsed)} fps · ${gl.info.render.calls} calls · ${Math.round(gl.info.render.triangles/1000)}k triangles · ${gl.info.memory.textures} textures · ${gl.info.memory.geometries} geometries`;
+          const resources = performance.getEntriesByType("resource") as PerformanceResourceTiming[];
+          output.dataset.mediaRequests = JSON.stringify(resources.filter(r => /\.(png|webp|mp4|webm)(\?|$)/.test(r.name)).map(r => ({url:r.name, bytes:r.transferSize, duration:Math.round(r.duration)})));
+          output.dataset.longTasks = JSON.stringify(longTasks.current);
+          const heap = (performance as Performance & {memory?: {usedJSHeapSize:number}}).memory;
+          output.dataset.heapMb = heap ? (heap.usedJSHeapSize / 1048576).toFixed(1) : "unavailable";
+        }
+        metrics.current = { frames: 0, elapsed: 0 };
+      }
+    }
+    if (process.env.NODE_ENV === "development") gl.info.reset();
     if (done.current) return;
+    // Read the loader in the frame loop. Subscribing the component to its
+    // store triggers a cross-component render update when a GLB suspends.
+    const { active, progress: assetProgress } = useProgress.getState();
+    if (active) {
+      setLoadPercent(Math.min(0.85, assetProgress / 100 * 0.85));
+      frame.current = 0;
+      return;
+    }
     frame.current++;
 
     // Give the media engine a couple of frames to fill its targets first, so
@@ -50,7 +91,7 @@ function Warmup() {
       gl.compile(scene, camera);
     }
 
-    const p = Math.min(1, frame.current / 26);
+    const p = 0.85 + Math.min(1, frame.current / 26) * 0.15;
     setLoadPercent(p);
     if (frame.current >= 26) {
       done.current = true;

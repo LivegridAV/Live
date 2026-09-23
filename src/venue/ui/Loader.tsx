@@ -45,6 +45,7 @@ export function Loader() {
 
   // Ease the number upward so it never jumps, and never shows 100 before it is.
   useEffect(() => {
+    if (entered) return;
     let raf = 0;
     const tick = () => {
       raf = requestAnimationFrame(tick);
@@ -52,7 +53,7 @@ export function Loader() {
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [percent]);
+  }, [percent, entered]);
 
   // Hold the page still until the visitor steps inside. The browser's own
   // scroll restoration would otherwise drop a returning visitor into the middle
@@ -74,7 +75,7 @@ export function Loader() {
   const pct = Math.round(Math.min(shown, percent) * 100);
 
   return (
-    <div className="v-loader" data-done={entered ? "true" : "false"} aria-hidden={entered}>
+    <div className="v-loader" data-done={entered ? "true" : "false"} aria-hidden={entered} inert={entered}>
       <div className="v-loader-inner">
         <SignalMark percent={percent} />
         <p className="v-loader-word">
@@ -95,9 +96,7 @@ export function Loader() {
         ) : null}
 
         <p className="v-loader-note">
-          A walkthrough of a live event experience — entrance, immersive LED
-          tunnel, creative gallery, what we do and a transformable main stage.
-          Scroll to move through it.
+          Explore LivegridAV&apos;s LED, AV, content and live-production capabilities through an interactive experience.
         </p>
       </div>
     </div>

@@ -41,6 +41,7 @@ const fragment = /* glsl */ `
   uniform vec2  uModule;   // cabinet count across / down (technical exhibit only)
   uniform vec2  uRepeat;
   uniform vec2  uOffset;
+  uniform vec2  uFit;
   uniform float uSwap;     // 1 = sample the content with u/v exchanged
   uniform vec2  uFlip;     // 1 = mirror that axis
   uniform vec3  uTint;
@@ -49,6 +50,9 @@ const fragment = /* glsl */ `
   uniform float uDot;      // emitter structure, only ever visible very close
   uniform float uSeam;     // 0 everywhere except the module-construction exhibit
   uniform float uFlat;     // 1 = no off-axis falloff at all (folded/tiled arrays)
+  uniform float uTime;
+  uniform float uMotion;
+  uniform float uWrapX;
 
   varying vec2 vUv;
   varying vec3 vViewDir;
@@ -59,8 +63,26 @@ const fragment = /* glsl */ `
     // built long-side-along-Z but its content has to run *down* the tunnel.
     vec2 src = mix(vUv, vUv.yx, uSwap);
     src = mix(src, 1.0 - src, uFlip);
-    vec2 uv = src * uRepeat + uOffset;
+    vec2 uv = ((src - .5) * uFit + .5) * uRepeat + uOffset;
+    // Global source coordinates keep folded and four-face compositions in sync.
+    // A bounded 24-second camera drift, never a scrolling texture seam.
+    float phase = uTime * 0.261799;
+    if (uWrapX > .5) {
+      // Translation preserves a closed surface's integer repeat count;
+      // zooming would make its first and last texels cease to meet.
+      uv += uMotion * vec2(.012*sin(phase),.004*cos(phase));
+    } else {
+      uv = mix(uv, (uv - 0.5) * (0.976 + 0.012 * sin(phase)) + 0.5
+        + vec2(0.005 * sin(phase), 0.004 * cos(phase)), uMotion);
+    }
     vec3 content = texture2D(uMap, uv).rgb;
+    if (uWrapX > .5) {
+      vec2 periodic = vec2(fract(uv.x),clamp(uv.y,.001,.999));
+      vec3 primary = texture2D(uMap,periodic).rgb;
+      vec3 bridge = texture2D(uMap,vec2(fract(periodic.x+.5),periodic.y)).rgb;
+      float blend = smoothstep(0.0,.13,min(periodic.x,1.0-periodic.x));
+      content = mix(bridge,primary,blend);
+    }
 
     // How much of one LED cell lands inside one screen pixel. Below ~0.1 we
     // are close enough to resolve individual emitters; by ~0.34 the structure
@@ -139,6 +161,9 @@ export interface LEDOptions {
    * so the array reads as one continuous canvas with no step between panels.
    */
   flat?: boolean;
+  fit?: boolean;
+  /** Periodic edge blending for a closed ring/cylinder artwork strip. */
+  wrapX?: boolean;
 }
 
 /**
@@ -168,6 +193,9 @@ export function createLEDMaterial(texture: THREE.Texture, o: LEDOptions) {
     fragmentShader: fragment,
     uniforms: {
       uMap: { value: texture },
+      uTime: { value: 0 },
+      uMotion: { value: 0 },
+      uWrapX: { value: o.wrapX ? 1 : 0 },
       uPitch: { value: new THREE.Vector2(across, down) },
       uModule: {
         value: new THREE.Vector2(
@@ -177,6 +205,7 @@ export function createLEDMaterial(texture: THREE.Texture, o: LEDOptions) {
       },
       uRepeat: { value: new THREE.Vector2(...(o.repeat ?? [1, 1])) },
       uOffset: { value: new THREE.Vector2(...(o.offset ?? [0, 0])) },
+      uFit: { value: new THREE.Vector2(1, 1) },
       uSwap: { value: o.swap ? 1 : 0 },
       uFlip: { value: new THREE.Vector2(o.flip?.[0] ? 1 : 0, o.flip?.[1] ? 1 : 0) },
       uTint: { value: new THREE.Color(o.tint ?? "#ffffff").convertSRGBToLinear() },
