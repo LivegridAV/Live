@@ -6,6 +6,7 @@ import { Truss, HangPoint } from "../three/rig";
 import { LightPool } from "../three/environment";
 import { ReflectionStreak } from "../three/Reflection";
 import { useVenue } from "../systems/store";
+import { LocalPointLight } from "../three/LocalLights";
 
 /**
  * Exhibition architecture.
@@ -101,7 +102,7 @@ export function Vestibule({ from = -29, to = -44 }: { from?: number; to?: number
           frame={false}
         />
       ))}
-      <pointLight position={[0, 3.4, to + 2]} intensity={18} distance={20} decay={2} color="#cdb489" />
+      <LocalPointLight position={[0, 3.4, to + 2]} intensity={18} distance={20} decay={2} color="#cdb489" />
     </group>
   );
 }
@@ -433,7 +434,7 @@ export function Lounge({
       <Poseur position={[2.3, 0, 1.0]} />
       {/* a soft overhead pool, so the pocket reads as lit rather than as lost */}
       <LightPool position={[0.4, 0.05, -0.6]} size={[7.2, 6.4]} color={accent} opacity={0.11} />
-      <pointLight position={[0.4, 3.2, -0.6]} intensity={9} distance={9} decay={2} color="#d7c2a0" />
+      <LocalPointLight position={[0.4, 3.2, -0.6]} intensity={9} distance={9} decay={2} color="#d7c2a0" />
     </group>
   );
 }

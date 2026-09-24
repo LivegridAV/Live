@@ -3,6 +3,8 @@ import assert from "node:assert/strict";
 import { readFileSync, existsSync, readdirSync } from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
+import * as THREE from "three";
+import { warmScene } from "../src/venue/three/warmScene.ts";
 
 const read = file => readFileSync(file, "utf8");
 const files = dir => readdirSync(dir, { withFileTypes: true }).flatMap(e =>
@@ -12,6 +14,57 @@ const resolves = url => {
   const route = decodeURIComponent(url.split(/[?#]/)[0]);
   return [path.join("out", route), path.join("out", `${route}.html`), path.join("out", route, "index.html")].some(existsSync);
 };
+
+test("GPU warm-up waits for compilation and restores hidden zones / renderer state", async () => {
+  const scene = new THREE.Scene();
+  const zone = new THREE.Group(); zone.visible = false;
+  const mesh = new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshBasicMaterial());
+  zone.add(mesh); scene.add(zone);
+  const source = new THREE.PointLight(); source.visible = false; zone.add(source);
+  const spot = new THREE.SpotLight(); spot.castShadow = true; spot.shadow.autoUpdate = false; scene.add(spot);
+  const previous = new THREE.WebGLRenderTarget(2,2);
+  let target = previous, compiled = 0, rendered = 0, disposed = false;
+  const renderer = {
+    compileAsync: async () => { compiled++; },
+    getRenderTarget: () => target,
+    setRenderTarget: value => { target = value; },
+    render: () => {
+      rendered++;
+      assert.equal(compiled, 1);
+      assert.equal(zone.visible, true);
+      assert.equal(mesh.frustumCulled, false);
+      assert.equal(source.visible, false, "virtual sources must never enter the light layout");
+      assert.equal(spot.shadow.autoUpdate, true);
+      assert.equal(target.width, 32);
+      target.addEventListener("dispose", () => { disposed = true; });
+    },
+  };
+  await warmScene(renderer, scene, new THREE.PerspectiveCamera());
+  assert.equal(rendered, 1); assert.equal(compiled, 2);
+  assert.equal(zone.visible, false); assert.equal(mesh.frustumCulled, true);
+  assert.equal(spot.shadow.autoUpdate, false); assert.equal(target, previous); assert.equal(disposed, true);
+  renderer.render = () => { throw new Error("simulated context failure"); };
+  await assert.rejects(warmScene(renderer, scene, new THREE.PerspectiveCamera()), /context failure/);
+  assert.equal(zone.visible, false); assert.equal(target, previous);
+  const beforeCancel = rendered;
+  await warmScene(renderer, scene, new THREE.PerspectiveCamera(), () => true);
+  assert.equal(rendered, beforeCancel, "unmounted scenes are not rendered");
+  mesh.geometry.dispose(); mesh.material.dispose(); previous.dispose(); spot.dispose();
+});
+
+test("exploring cannot change shader light counts or rebuild quality tiers", () => {
+  for (const file of files("src/venue/zones").filter(f=>f.endsWith(".tsx"))) {
+    assert.doesNotMatch(read(file), /<pointLight\b/, `${file}: use the fixed local light pool`);
+  }
+  assert.doesNotMatch(read("src/venue/three/screens.tsx"), /<pointLight\b/);
+  assert.doesNotMatch(read("src/venue/three/environment.tsx"), /stallRef\.current\.visible\s*=/);
+  assert.doesNotMatch(read("src/venue/systems/Quality.tsx"), /setQuality\(/);
+  assert.match(read("src/venue/media/MediaContext.tsx"), /if \(!parent\.visible\) return/);
+  assert.match(read("src/venue/media/engine.ts"), /e\.importance <= \.02 && this\.painted\.has\(e\)/);
+  assert.match(read("src/venue/media/engine.ts"), /image\.decode\(\)\.then/);
+  assert.match(read("src/venue/media/engine.ts"), /finally\(\(\) => THREE\.DefaultLoadingManager\.itemEnd\(source\)\)/);
+  assert.match(read("src/venue/media/MediaContext.tsx"), /new MediaEngine\(gl, profile\.quality, profile\.isMobile\)/);
+});
 
 test("every exported page has valid local navigation and assets", () => {
   assert.ok(pages.length >= 45);

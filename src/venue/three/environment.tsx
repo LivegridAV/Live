@@ -202,7 +202,9 @@ export function LightRig() {
       stallRef.current.target.updateMatrixWorld();
       stallRef.current.color.set("#ffe3ba");
       stallRef.current.intensity = near * 310;
-      stallRef.current.visible = near > 0.01;
+      // Keep the shader's light/shadow counts stable. Zero intensity is dark;
+      // toggling visible recompiles every lit material when entering a stand.
+      stallRef.current.shadow.autoUpdate = near > 0.01;
     }
 
     if (ambRef.current) ambRef.current.intensity = cur.current.amb;
@@ -220,7 +222,7 @@ export function LightRig() {
       <pointLight ref={fillRef} distance={44} decay={2} intensity={14} />
       <pointLight ref={rimRef} distance={34} decay={2} intensity={8} />
       <spotLight ref={stallRef} distance={28} angle={0.85} penumbra={0.65} decay={2}
-        intensity={0} visible={false} castShadow shadow-mapSize={[1024,1024]}
+        intensity={0} castShadow shadow-mapSize={[1024,1024]}
         shadow-bias={-.0002} shadow-normalBias={.035} />
     </>
   );

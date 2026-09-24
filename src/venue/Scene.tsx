@@ -14,8 +14,10 @@ import { Gallery } from "./zones/Gallery";
 import { Boulevard } from "./zones/ServicePavilion";
 import { Arena } from "./zones/Arena";
 import { useVenue } from "./systems/store";
-import { journey, show } from "./systems/journey";
 import { ZoneGroup } from "./three/ZoneGroup";
+import { RenderMetrics } from "./systems/RenderMetrics";
+import { LocalLightPool } from "./three/LocalLights";
+import { warmScene } from "./three/warmScene";
 
 /**
  * Warm-up.
@@ -29,51 +31,18 @@ import { ZoneGroup } from "./three/ZoneGroup";
 function Warmup() {
   const { gl, scene, camera } = useThree();
 
-  // Development-only handle for profiling: draw calls, triangle counts and
-  // live scene inspection from the console without shipping a debug overlay.
-  useEffect(() => {
-    if (process.env.NODE_ENV === "production") return;
-    (window as unknown as Record<string, unknown>).__venue = { gl, scene, camera, journey, show, store: useVenue };
-    const autoReset = gl.info.autoReset;
-    gl.info.autoReset = false;
-    return () => { gl.info.autoReset = autoReset; };
-  }, [gl, scene, camera]);
-
   const frame = useRef(0);
   const setLoadPercent = useVenue((s) => s.setLoadPercent);
   const setLoaded = useVenue((s) => s.setLoaded);
   const done = useRef(false);
-  const metrics = useRef({ frames: 0, elapsed: 0 });
-  const longTasks = useRef({ count: 0, maxMs: 0 });
+  const compiling = useRef(false);
+  const compiled = useRef(false);
+  const alive = useRef(true);
   useEffect(() => {
-    if (process.env.NODE_ENV !== "development" || !PerformanceObserver.supportedEntryTypes.includes("longtask")) return;
-    const observer = new PerformanceObserver(list => {
-      for (const entry of list.getEntries()) {
-        longTasks.current.count++;
-        longTasks.current.maxMs = Math.max(longTasks.current.maxMs, entry.duration);
-      }
-    });
-    observer.observe({ type: "longtask" });
-    return () => observer.disconnect();
+    alive.current = true;
+    return () => { alive.current = false; };
   }, []);
-
-  useFrame((_, dt) => {
-    if (process.env.NODE_ENV === "development" && !document.hidden && dt < .5) {
-      metrics.current.frames++; metrics.current.elapsed += dt;
-      if (metrics.current.elapsed >= 1.5) {
-        const output = document.querySelector<HTMLOutputElement>("[data-render-metrics]");
-        if (output) {
-          output.value = `${Math.round(metrics.current.frames/metrics.current.elapsed)} fps · ${gl.info.render.calls} calls · ${Math.round(gl.info.render.triangles/1000)}k triangles · ${gl.info.memory.textures} textures · ${gl.info.memory.geometries} geometries`;
-          const resources = performance.getEntriesByType("resource") as PerformanceResourceTiming[];
-          output.dataset.mediaRequests = JSON.stringify(resources.filter(r => /\.(png|webp|mp4|webm)(\?|$)/.test(r.name)).map(r => ({url:r.name, bytes:r.transferSize, duration:Math.round(r.duration)})));
-          output.dataset.longTasks = JSON.stringify(longTasks.current);
-          const heap = (performance as Performance & {memory?: {usedJSHeapSize:number}}).memory;
-          output.dataset.heapMb = heap ? (heap.usedJSHeapSize / 1048576).toFixed(1) : "unavailable";
-        }
-        metrics.current = { frames: 0, elapsed: 0 };
-      }
-    }
-    if (process.env.NODE_ENV === "development") gl.info.reset();
+  useFrame(() => {
     if (done.current) return;
     // Read the loader in the frame loop. Subscribing the component to its
     // store triggers a cross-component render update when a GLB suspends.
@@ -87,13 +56,21 @@ function Warmup() {
 
     // Give the media engine a couple of frames to fill its targets first, so
     // compile() sees the textures it will actually sample.
-    if (frame.current === 4) {
-      gl.compile(scene, camera);
+    if (frame.current >= 4 && !compiling.current) {
+      compiling.current = true;
+      // Await GPU readiness, not just shader submission. The old fixed 26-frame
+      // delay let the visitor enter while the driver was still compiling.
+      void warmScene(gl, scene, camera, () => !alive.current).then(() => {
+        if (alive.current) compiled.current = true;
+      }).catch(error => {
+        console.error("Venue shader warm-up failed", error);
+        if (alive.current) compiled.current = true;
+      });
     }
 
-    const p = 0.85 + Math.min(1, frame.current / 26) * 0.15;
+    const p = compiled.current ? 1 : 0.85 + Math.min(1, frame.current / 26) * 0.13;
     setLoadPercent(p);
-    if (frame.current >= 26) {
+    if (frame.current >= 26 && compiled.current) {
       done.current = true;
       setLoaded(true);
     }
@@ -105,12 +82,14 @@ function Warmup() {
 export function Scene() {
   return (
     <MediaProvider>
+      <LocalLightPool>
       <QualityGovernor />
       <ShowCue />
       <VenueEnvironment />
       <LightRig />
       <CameraRig />
       <Warmup />
+      <RenderMetrics />
 
       {/* the building */}
       <Ground />
@@ -132,6 +111,7 @@ export function Scene() {
       </ZoneGroup>
       <Boulevard />
       <Arena />
+      </LocalLightPool>
     </MediaProvider>
   );
 }

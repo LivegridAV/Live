@@ -5,6 +5,7 @@ import { M } from "../three/materials";
 import { ImmersiveVolume, type Surface } from "../three/ImmersiveVolume";
 import { LightPool } from "../three/environment";
 import { useVenue } from "../systems/store";
+import { LocalPointLight } from "../three/LocalLights";
 
 /** Four-sided LED room: walls, ceiling and floor share the same world-space
  * shader and master clock. The rectangular architecture follows the reference. */
@@ -97,7 +98,7 @@ function ExitReveal() {
         <planeGeometry args={[13, 0.18]} />
         <meshBasicMaterial color="#9fb0b4" toneMapped />
       </mesh>
-      <pointLight position={[0, 2.6, TUNNEL.to - 3.4]} intensity={26} distance={22} decay={2} color="#d9b681" />
+      <LocalPointLight position={[0, 2.6, TUNNEL.to - 3.4]} intensity={26} distance={22} decay={2} color="#d9b681" />
     </group>
   );
 }

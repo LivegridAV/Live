@@ -7,10 +7,9 @@ import { useVenue, type QualityTier } from "./store";
  * Device profiling and adaptive resolution.
  *
  * The venue has to run on a laptop on battery and on a phone, so quality is
- * decided twice: once up front from what the device tells us about itself, and
- * then continuously from what it actually delivers. Nothing is switched off
- * wholesale — the tier changes render-target sizes, fixture counts and haze
- * density, and the pixel ratio flexes underneath all of it.
+ * profiled once before warm-up. Keep geometry, shader layers and media targets
+ * stable while exploring; only pixel ratio adapts. Switching tiers at runtime
+ * invalidated the very resources the loader had just warmed.
  */
 
 /** Runs outside the canvas: picks the starting tier before anything is built. */
@@ -46,13 +45,11 @@ const TARGET_DPR: Record<QualityTier, [number, number]> = {
 export function QualityGovernor() {
   const setDpr = useThree((s) => s.setDpr);
   const quality = useVenue((s) => s.quality);
-  const setQuality = useVenue((s) => s.setQuality);
   const isMobile = useVenue((s) => s.isMobile);
 
   const samples = useRef<number[]>([]);
   const dpr = useRef(1);
   const cooldown = useRef(2.5);
-  const demotions = useRef(0);
 
   useEffect(() => {
     const base = Math.min(window.devicePixelRatio || 1, TARGET_DPR[quality][1]);
@@ -77,21 +74,13 @@ export function QualityGovernor() {
       if (dpr.current > min + 0.01) {
         dpr.current = Math.max(min, dpr.current - 0.2);
         setDpr(dpr.current);
-      } else if (quality !== "low" && demotions.current < 2) {
-        demotions.current++;
-        setQuality(quality === "high" ? "medium" : "low");
       }
       cooldown.current = 3;
       s.length = 0;
-    } else if (fps > 57 && dpr.current < max - 0.01) {
-      dpr.current = Math.min(max, dpr.current + 0.12);
+    } else if (fps > 57 && dpr.current < Math.min(max, window.devicePixelRatio || 1) - 0.01) {
+      dpr.current = Math.min(max, window.devicePixelRatio || 1, dpr.current + 0.12);
       setDpr(dpr.current);
       cooldown.current = 4;
-      s.length = 0;
-    } else if (fps > 58 && quality !== "high") {
-      demotions.current = Math.max(0, demotions.current - 1);
-      setQuality(quality === "low" ? "medium" : "high");
-      cooldown.current = 12;
       s.length = 0;
     }
   });

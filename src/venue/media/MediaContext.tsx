@@ -24,7 +24,10 @@ export function MediaProvider({ children }: { children: ReactNode }) {
   const quality = useVenue((s) => s.quality);
   const isMobile = useVenue((s) => s.isMobile);
 
-  const engine = useMemo(() => new MediaEngine(gl), [gl]);
+  const engine = useMemo(() => {
+    const profile = useVenue.getState();
+    return new MediaEngine(gl, profile.quality, profile.isMobile);
+  }, [gl]);
 
   useEffect(() => {
     engine.setMobile(isMobile);
@@ -67,9 +70,12 @@ export function useScreenTexture(
   useFrame(({ camera }) => {
     const mesh = ref.current;
     if (!mesh) return;
+    for (let parent: THREE.Object3D | null = mesh; parent; parent = parent.parent) {
+      if (!parent.visible) return;
+    }
     mesh.getWorldPosition(pos.current);
     const d = pos.current.distanceTo(camera.position);
-    if (d >= range) return; // out of range: the engine keeps it ticking slowly
+    if (d >= range) return;
     let importance = 1 - d / range;
 
     // Surfaces turned away from the camera still tick, just far more slowly.

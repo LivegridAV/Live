@@ -20,8 +20,8 @@ import { mediaSlate } from "./fallback";
  * target, not two. Each frame the engine spends a fixed budget on whichever
  * media the camera can actually see (screens report their importance via
  * `touch`), so an arena full of LED still refreshes at the frame rate where it
- * matters and idles everywhere else. Nothing ever freezes: off-screen media
- * still ticks over slowly so there is no pop when it comes back into view.
+ * matters and sleeps everywhere else. The shared clock keeps running, so a
+ * returning screen refreshes directly to the current show time.
  */
 
 interface BaseEntry {
@@ -124,12 +124,11 @@ function tuneSampling(t: THREE.Texture, maxAnisotropy: number, mip = true) {
  * share of the frame rather than the same share as a sign.
  */
 const FRAME_BUDGET_MP: Record<QualityTier, number> = { low: 0.9, medium: 1.8, high: 3.4 };
-/** Idle media still refreshes this often so it never looks frozen on return. */
-const IDLE_INTERVAL = 0.5;
 
 export class MediaEngine {
   private renderer: THREE.WebGLRenderer;
   private entries = new Map<string, Entry>();
+  private painted = new WeakSet<Entry>();
   private scene = new THREE.Scene();
   private camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
   private quad: THREE.Mesh;
@@ -154,8 +153,10 @@ export class MediaEngine {
    * surfaces upload one GPU texture rather than one texture per media id. */
   private imageAssets = new Map<string, ImageAsset>();
 
-  constructor(renderer: THREE.WebGLRenderer) {
+  constructor(renderer: THREE.WebGLRenderer, quality: QualityTier = "high", isMobile = false) {
     this.renderer = renderer;
+    this.quality = quality;
+    this.isMobile = isMobile;
     const geo = new THREE.PlaneGeometry(2, 2);
     this.quad = new THREE.Mesh(geo, new THREE.MeshBasicMaterial());
     this.scene.add(this.quad);
@@ -301,14 +302,17 @@ export class MediaEngine {
     asset.images.set(source, image);
     image.decoding = "async";
     image.crossOrigin = "anonymous";
-    image.onload = () => {
+    // Decode before the loader barrier opens, not during the first scroll.
+    // A promise per request also balances superseded requests correctly.
+    THREE.DefaultLoadingManager.itemStart(source);
+    image.src = source;
+    void image.decode().then(() => {
       if (request !== asset.request || asset.source !== source) return;
       this.applyImageAsset(asset, image);
-    };
-    image.onerror = () => {
+    }).catch(() => {
+      THREE.DefaultLoadingManager.itemError(source);
       if (process.env.NODE_ENV !== "production") console.warn(`[venue] image media failed to load: ${source}`);
-    };
-    image.src = source;
+    }).finally(() => THREE.DefaultLoadingManager.itemEnd(source));
   }
 
   private applyImageAsset(asset: ImageAsset, image: HTMLImageElement) {
@@ -544,7 +548,10 @@ export class MediaEngine {
         continue; // the browser drives video decoding for us
       }
       e.since += dt;
-      const interval = e.importance > 0.02 ? e.interval / Math.max(0.35, e.importance) : IDLE_INTERVAL;
+      // Paint the first frame once; then sleep while hidden. Elapsed time keeps
+      // advancing, so visible screens resume at the current show time.
+      if (e.importance <= .02 && this.painted.has(e)) continue;
+      const interval = e.interval / Math.max(0.35, e.importance);
       if (e.since >= interval) due.push(e);
     }
     due.sort((a, b) => b.importance - a.importance);
@@ -578,6 +585,7 @@ export class MediaEngine {
   }
 
   private renderShader(e: ShaderEntry) {
+    this.painted.add(e);
     // Both terms are shared inside a group, so grouped surfaces are always on
     // the same frame of the same animation.
     e.material.uniforms.uTime.value = this.elapsed + e.material.uniforms.uSeed.value;
@@ -588,6 +596,7 @@ export class MediaEngine {
   }
 
   private paintCanvas(e: CanvasEntry) {
+    this.painted.add(e);
     const p: PaintCtx = {
       ctx: e.ctx,
       w: e.canvas.width,

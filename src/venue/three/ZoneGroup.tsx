@@ -41,6 +41,6 @@ export function ZoneGroup({
     // just passed through it.
     const visible = z <= from + ahead && z >= to - behind;
     if (g.visible !== visible) g.visible = visible;
-  });
+  }, -2);
   return <group ref={ref}>{children}</group>;
 }

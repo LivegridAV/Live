@@ -7,6 +7,7 @@ import { createLEDMaterial, createProjectionMaterial, type LEDOptions } from "./
 import { useVenue } from "../systems/store";
 import { show } from "../systems/journey";
 import { MEDIA } from "../data/media";
+import { LocalPointLight } from "./LocalLights";
 
 /**
  * The LED product range.
@@ -137,7 +138,7 @@ function Spill({
   const quality = useVenue((s) => s.quality);
   if (quality === "low") return null;
   return (
-    <pointLight
+    <LocalPointLight
       position={[0, 0, offset]}
       intensity={intensity}
       color={color}
@@ -295,7 +296,7 @@ export function CurvedScreen({
         />
       </mesh>
       {spill > 0 && (
-        <pointLight position={[0, 0, 0]} intensity={spill} color={spillColor} distance={radius * 4} decay={2} />
+        <LocalPointLight position={[0, 0, 0]} intensity={spill} color={spillColor} distance={radius * 4} decay={2} />
       )}
     </group>
   );
@@ -341,7 +342,7 @@ export function CylinderScreen({
         <cylinderGeometry args={[radius, radius, height, segments, 1, true]} />
       </mesh>
       {spill > 0 && (
-        <pointLight intensity={spill} color={spillColor} distance={radius * 8} decay={2} />
+        <LocalPointLight intensity={spill} color={spillColor} distance={radius * 8} decay={2} />
       )}
     </group>
   );
@@ -389,7 +390,7 @@ export function RingScreen({
           </mesh>
         );
       })}
-      {spill > 0 && <pointLight intensity={spill} color={spillColor} distance={radius * 6} decay={2} />}
+      {spill > 0 && <LocalPointLight intensity={spill} color={spillColor} distance={radius * 6} decay={2} />}
     </group>
   );
 }
@@ -507,7 +508,7 @@ export function PillarScreen({
       })}
 
       {spill > 0 && (
-        <pointLight
+        <LocalPointLight
           position={[0, height * 0.55, 0]}
           intensity={spill}
           color={spillColor}

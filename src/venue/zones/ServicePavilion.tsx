@@ -5,6 +5,7 @@ import * as THREE from "three";
 import { PAVILIONS, PARTNER_BAY } from "../data/pavilions";
 import { PillarScreen, Screen } from "../three/screens";
 import { ZoneGroup } from "../three/ZoneGroup";
+import { LocalPointLight } from "../three/LocalLights";
 import { useVenue } from "../systems/store";
 import { ExpoAsset } from "../three/ExpoAsset";
 import { prepareArchitecture } from "../three/architecturalFinish";
@@ -47,7 +48,7 @@ function ExhibitionBuilding({ p }: { p: Stand }) {
           position={[a.x, a.y, a.z]} rotation={[0,a.rotation ?? 0,0]} range={72} pitch={1.2} brightness={0.96}
           frame={false} flat />;
       })}
-      <pointLight position={[0, 5.8, -2.4]} color="#ffe1b6" intensity={80} distance={15} decay={2} />
+      <LocalPointLight position={[0, 5.8, -2.4]} color="#ffe1b6" intensity={80} distance={15} decay={2} />
       <mesh position={[0, 3.8, 1]} onClick={(e) => { e.stopPropagation(); open(p.id); }}
         onPointerOver={() => { document.body.style.cursor = "pointer"; }}
         onPointerOut={() => { document.body.style.cursor = ""; }}>

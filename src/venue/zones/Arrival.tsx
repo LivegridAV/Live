@@ -8,6 +8,7 @@ import { Haze } from "../three/rig";
 import { LightPool, getPoolTexture } from "../three/environment";
 import { ReflectionStreak } from "../three/Reflection";
 import { useVenue } from "../systems/store";
+import { LocalPointLight } from "../three/LocalLights";
 
 /**
  * Arrival — outside a premium event entrance, at night.
@@ -252,7 +253,7 @@ function EntranceArch() {
         opacity={0.1}
       />
       <LightPool position={[0, 0.035, 3.4]} size={[19, 13]} color="#c79a62" opacity={0.17} pulse={0.25} />
-      <pointLight position={[0, 4.2, 1.6]} intensity={28} distance={20} decay={2} color="#d9b681" />
+      <LocalPointLight position={[0, 4.2, 1.6]} intensity={28} distance={20} decay={2} color="#d9b681" />
     </group>
   );
 }
@@ -310,7 +311,7 @@ function EntranceHall() {
       <mesh position={[0, 0.01, mid]} rotation={[-Math.PI / 2, 0, 0]} material={M.deck}>
         <planeGeometry args={[PORTAL_W, Math.abs(to - from)]} />
       </mesh>
-      <pointLight position={[0, PORTAL_H * 0.7, mid]} intensity={22} distance={16} decay={2} color="#d7b47e" />
+      <LocalPointLight position={[0, PORTAL_H * 0.7, mid]} intensity={22} distance={16} decay={2} color="#d7b47e" />
 
       {/* a soft bloom in the opening — now a glow rather than a panel */}
       <mesh ref={ref} position={[0, PORTAL_H / 2, -0.9]} renderOrder={2}>

@@ -96,7 +96,7 @@ export function CameraRig() {
       camera.fov += (fovTarget - camera.fov) * Math.min(1, d * 5);
       camera.updateProjectionMatrix();
     }
-  });
+  }, -3);
 
   return null;
 }
