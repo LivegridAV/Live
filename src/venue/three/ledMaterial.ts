@@ -24,17 +24,20 @@ const vertex = /* glsl */ `
   varying vec2 vUv;
   varying vec3 vViewDir;
   varying vec3 vNormalV;
+  #include <clipping_planes_pars_vertex>
   void main() {
     vUv = uv;
-    vec4 mv = modelViewMatrix * vec4(position, 1.0);
-    vViewDir = normalize(-mv.xyz);
+    vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+    vViewDir = normalize(-mvPosition.xyz);
     vNormalV = normalize(normalMatrix * normal);
-    gl_Position = projectionMatrix * mv;
+    gl_Position = projectionMatrix * mvPosition;
+    #include <clipping_planes_vertex>
   }
 `;
 
 const fragment = /* glsl */ `
   precision highp float;
+  #include <clipping_planes_pars_fragment>
 
   uniform sampler2D uMap;
   uniform vec2  uPitch;    // emitters across / down
@@ -52,6 +55,8 @@ const fragment = /* glsl */ `
   uniform float uFlat;     // 1 = no off-axis falloff at all (folded/tiled arrays)
   uniform float uTime;
   uniform float uMotion;
+  uniform float uFlow;
+  uniform float uMirror;
   uniform float uWrapX;
 
   varying vec2 vUv;
@@ -59,6 +64,7 @@ const fragment = /* glsl */ `
   varying vec3 vNormalV;
 
   void main() {
+    #include <clipping_planes_fragment>
     // Content UVs are independent of the physical panel UVs: a tunnel wall is
     // built long-side-along-Z but its content has to run *down* the tunnel.
     vec2 src = mix(vUv, vUv.yx, uSwap);
@@ -75,13 +81,33 @@ const fragment = /* glsl */ `
       uv = mix(uv, (uv - 0.5) * (0.976 + 0.012 * sin(phase)) + 0.5
         + vec2(0.005 * sin(phase), 0.004 * cos(phase)), uMotion);
     }
+    if (uMirror > .5) uv.x = 1.0 - abs(mod(uv.x, 2.0) - 1.0);
+    // One deformation in master-atlas coordinates, shared by all four faces.
+    // It returns to the same pose every 24 seconds, without a scrolling cut.
+    if (uFlow > .5 && uFlow < 1.5) {
+      float edge = sin(3.14159265 * uv.y);
+      if (uMirror > .5) edge *= sin(3.14159265 * uv.x);
+      uv.x += .019 * edge * sin(uv.y * 9.42477796 + phase);
+      uv.y += .009 * edge * sin(uv.x * 6.28318531 - phase);
+    }
     vec3 content = texture2D(uMap, uv).rgb;
+    if (uFlow > 1.5 && uFlow < 2.5) {
+      // Flow only in bright, neutral water; the green canopy remains anchored.
+      float water = smoothstep(.12, .45, min(content.r, content.b))
+        * (1.0 - smoothstep(.03, .16, content.g - content.b));
+      vec2 ripple = vec2(.0015 * sin(uv.y * 140.0 + phase * 4.0),
+        .003 * sin(uv.y * 70.0 - phase * 8.0));
+      content = mix(content, texture2D(uMap, uv + ripple).rgb, water * .7);
+    }
     if (uWrapX > .5) {
       vec2 periodic = vec2(fract(uv.x),clamp(uv.y,.001,.999));
       vec3 primary = texture2D(uMap,periodic).rgb;
       vec3 bridge = texture2D(uMap,vec2(fract(periodic.x+.5),periodic.y)).rgb;
       float blend = smoothstep(0.0,.13,min(periodic.x,1.0-periodic.x));
-      content = mix(bridge,primary,blend);
+      // Preserve the authored imagery on the reference pillars. Adjacent
+      // quarters already meet exactly; crossfading a second image ghosts it.
+      if (uFlow > .5 && uMirror < .5) content = primary;
+      else if (uFlow < .5) content = mix(bridge,primary,blend);
     }
 
     // How much of one LED cell lands inside one screen pixel. Below ~0.1 we
@@ -164,6 +190,7 @@ export interface LEDOptions {
   fit?: boolean;
   /** Periodic edge blending for a closed ring/cylinder artwork strip. */
   wrapX?: boolean;
+  mirrorX?: boolean;
 }
 
 /**
@@ -195,6 +222,8 @@ export function createLEDMaterial(texture: THREE.Texture, o: LEDOptions) {
       uMap: { value: texture },
       uTime: { value: 0 },
       uMotion: { value: 0 },
+      uFlow: { value: 0 },
+      uMirror: { value: o.mirrorX ? 1 : 0 },
       uWrapX: { value: o.wrapX ? 1 : 0 },
       uPitch: { value: new THREE.Vector2(across, down) },
       uModule: {
@@ -217,6 +246,7 @@ export function createLEDMaterial(texture: THREE.Texture, o: LEDOptions) {
     },
     side: o.doubleSided ? THREE.DoubleSide : THREE.FrontSide,
     toneMapped: true,
+    clipping: true,
   });
 }
 

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useProgress } from "@react-three/drei";
 import { MediaProvider } from "./media/MediaContext";
@@ -8,8 +8,7 @@ import { QualityGovernor } from "./systems/Quality";
 import { ShowCue } from "./systems/ShowCue";
 import { LightRig, VenueEnvironment } from "./three/environment";
 import { ArenaPortal, ArenaShell, Ground, HallShell } from "./zones/Architecture";
-import { Arrival } from "./zones/Arrival";
-import { Tunnel } from "./zones/Tunnel";
+import { EntranceP01 } from "./zones/EntranceP01";
 import { Gallery } from "./zones/Gallery";
 import { Boulevard } from "./zones/ServicePavilion";
 import { Arena } from "./zones/Arena";
@@ -18,6 +17,9 @@ import { ZoneGroup } from "./three/ZoneGroup";
 import { RenderMetrics } from "./systems/RenderMetrics";
 import { LocalLightPool } from "./three/LocalLights";
 import { warmScene } from "./three/warmScene";
+import { StallDimensions } from "./three/StallDimensions";
+import { EXHIBITION_RANGES } from "./data/placements";
+import { PlacementInspection, placementInspectionEnabled } from "./systems/PlacementInspection";
 
 /**
  * Warm-up.
@@ -79,7 +81,7 @@ function Warmup() {
   return null;
 }
 
-export function Scene() {
+export function Scene({inspection=false}:{inspection?:boolean}) {
   return (
     <MediaProvider>
       <LocalLightPool>
@@ -87,11 +89,13 @@ export function Scene() {
       <ShowCue />
       <VenueEnvironment />
       <LightRig />
-      <CameraRig />
+      {!inspection && (placementInspectionEnabled()?<PlacementInspection />:<CameraRig />)}
       <Warmup />
       <RenderMetrics />
+      <StallDimensions />
 
       {/* the building */}
+      <group>
       <Ground />
       <HallShell />
       <ArenaPortal />
@@ -100,17 +104,15 @@ export function Scene() {
       {/* The journey. Each zone is switched off once the camera is well past
           it — the fog hides every boundary, and the draw-call saving is what
           makes a 375 m venue affordable on a laptop. */}
-      <ZoneGroup from={60} to={-14} ahead={40} behind={46}>
-        <Arrival />
+      <ZoneGroup from={0} to={-28.4} ahead={80} behind={40}>
+        <Suspense fallback={null}><EntranceP01 /></Suspense>
       </ZoneGroup>
-      <ZoneGroup from={2} to={-30} ahead={64} behind={30}>
-        <Tunnel />
-      </ZoneGroup>
-      <ZoneGroup from={-26} to={-102} ahead={70} behind={40}>
+      <ZoneGroup from={-26} to={EXHIBITION_RANGES.gallery.to} ahead={70} behind={40}>
         <Gallery />
       </ZoneGroup>
       <Boulevard />
       <Arena />
+      </group>
       </LocalLightPool>
     </MediaProvider>
   );

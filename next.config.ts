@@ -7,6 +7,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 const nextConfig: NextConfig = {
+  allowedDevOrigins: ["127.0.0.1", "localhost"],
   // Fully static site — the 3D experience is all client-side and there are
   // no server routes, so export to plain HTML/JS for edge hosting (Cloudflare
   // Pages). Produces an `out/` folder on `next build`.

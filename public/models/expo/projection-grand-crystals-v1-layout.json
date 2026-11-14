@@ -1,0 +1,535 @@
+{
+  "version": "grand-v1",
+  "asset": "projection-grand-crystals-v1.glb",
+  "sha256": "c5e6410112d71b2359fb096ce709bd34a0b132d4cce31cff10a91ff27dc9339a",
+  "units": "metres",
+  "bounds": {
+    "min": [
+      -3.7405388355255127,
+      0.03500000014901161,
+      -2.625527858734131
+    ],
+    "max": [
+      3.6999404430389404,
+      8.497659683227539,
+      2.5878946781158447
+    ]
+  },
+  "projectionDomain": {
+    "min": [
+      -4.0,
+      0
+    ],
+    "max": [
+      4.0,
+      8.55
+    ]
+  },
+  "placement": {
+    "position": [
+      0,
+      0.915,
+      -2.8
+    ],
+    "scale": [
+      1,
+      1,
+      1
+    ]
+  },
+  "crystals": [
+    {
+      "name": "highest off centre crystal",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        -0.48,
+        -0.35
+      ],
+      "width": 1.0,
+      "depth": 1.15,
+      "height": 8.5,
+      "lean": [
+        -0.12,
+        -0.04
+      ],
+      "tip": [
+        -0.8320082231249323,
+        8.5,
+        -0.5487559448569143
+      ],
+      "spin": -0.1,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "short oblique truncated cap",
+      "capWidth": 0.5
+    },
+    {
+      "name": "central luminous blue fork",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        0.5,
+        0.1
+      ],
+      "width": 1.22,
+      "depth": 1.15,
+      "height": 7.65,
+      "lean": [
+        0.4,
+        -0.16
+      ],
+      "tip": [
+        0.6550751091119152,
+        7.65,
+        -0.20616515888699258
+      ],
+      "spin": -0.15,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "short oblique truncated cap",
+      "capWidth": 0.5124
+    },
+    {
+      "name": "rear narrow silver spear",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        1.0,
+        -1.2
+      ],
+      "width": 0.6,
+      "depth": 0.85,
+      "height": 6.95,
+      "lean": [
+        -0.08,
+        0.05
+      ],
+      "tip": [
+        0.8600000000000001,
+        6.95,
+        -1.2009999999999998
+      ],
+      "spin": 0.13,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "left broken champagne tower",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        -1.9,
+        -0.25
+      ],
+      "width": 1.08,
+      "depth": 1.1,
+      "height": 6.0,
+      "lean": [
+        0.18,
+        -0.1
+      ],
+      "tip": [
+        -1.9891934198661083,
+        6.0,
+        -0.551129307622706
+      ],
+      "spin": 0.1,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "short oblique truncated cap",
+      "capWidth": 0.6696000000000001
+    },
+    {
+      "name": "left layered rear fracture",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        -2.55,
+        -1.0
+      ],
+      "width": 0.62,
+      "depth": 0.76,
+      "height": 5.3,
+      "lean": [
+        0.12,
+        0.02
+      ],
+      "tip": [
+        -2.4919999999999995,
+        5.3,
+        -1.0256
+      ],
+      "spin": -0.14,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "left leaning fractured mass",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        -2.85,
+        0.6
+      ],
+      "width": 0.82,
+      "depth": 0.95,
+      "height": 4.6,
+      "lean": [
+        -0.22,
+        -0.1
+      ],
+      "tip": [
+        -3.152,
+        4.6,
+        0.443
+      ],
+      "spin": -0.24,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "outer left rock spear",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        -3.45,
+        0.45
+      ],
+      "width": 0.62,
+      "depth": 0.85,
+      "height": 3.05,
+      "lean": [
+        0.08,
+        -0.05
+      ],
+      "tip": [
+        -3.432,
+        3.05,
+        0.34900000000000003
+      ],
+      "spin": 0.18,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "right high silver spire",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        1.85,
+        -0.72
+      ],
+      "width": 1.02,
+      "depth": 1.12,
+      "height": 6.4,
+      "lean": [
+        -0.12,
+        -0.04
+      ],
+      "tip": [
+        1.4985338053067243,
+        6.4,
+        -0.9869082927929577
+      ],
+      "spin": 0.2,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "short oblique truncated cap",
+      "capWidth": 0.6324
+    },
+    {
+      "name": "right warm stepped crystal",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        2.65,
+        0.23
+      ],
+      "width": 1.0,
+      "depth": 1.0,
+      "height": 4.85,
+      "lean": [
+        -0.24,
+        -0.05
+      ],
+      "tip": [
+        2.31,
+        4.85,
+        0.12
+      ],
+      "spin": -0.1,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "right outer low crystal",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        3.36,
+        0.5
+      ],
+      "width": 0.72,
+      "depth": 0.88,
+      "height": 3.1,
+      "lean": [
+        -0.05,
+        0.03
+      ],
+      "tip": [
+        3.238,
+        3.1,
+        0.4772
+      ],
+      "spin": 0.12,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "left inner low split",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        -1.14,
+        1.2
+      ],
+      "width": 0.92,
+      "depth": 0.96,
+      "height": 3.2,
+      "lean": [
+        -0.15,
+        0.1
+      ],
+      "tip": [
+        -1.382,
+        3.2,
+        1.2424
+      ],
+      "spin": 0.12,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "right inner low split",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        1.43,
+        1.28
+      ],
+      "width": 1.1,
+      "depth": 1.0,
+      "height": 3.45,
+      "lean": [
+        0.2,
+        -0.07
+      ],
+      "tip": [
+        1.5199999999999998,
+        3.45,
+        1.15
+      ],
+      "spin": -0.12,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "front low blue lamella",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        -0.2,
+        2.05
+      ],
+      "width": 1.1,
+      "depth": 1.0,
+      "height": 1.95,
+      "lean": [
+        0.1,
+        0.04
+      ],
+      "tip": [
+        -0.21000000000000002,
+        1.95,
+        2.03
+      ],
+      "spin": -0.15,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "rear radial crystal",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        -0.3,
+        -2.1
+      ],
+      "width": 1.2,
+      "depth": 1.1,
+      "height": 3.25,
+      "lean": [
+        0.0,
+        0.0
+      ],
+      "tip": [
+        -0.42,
+        3.25,
+        -2.166
+      ],
+      "spin": 0.22,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "interlocking radial foot 0",
+      "kind": "compact interlocking faceted rock",
+      "centreXZ": [
+        -2.5,
+        1.4
+      ],
+      "width": 1.3,
+      "depth": 0.95,
+      "height": 1.65,
+      "warmFaces": true,
+      "frontRoleOverrides": null
+    },
+    {
+      "name": "interlocking radial foot 1",
+      "kind": "compact interlocking faceted rock",
+      "centreXZ": [
+        -0.95,
+        1.9
+      ],
+      "width": 1.2,
+      "depth": 1.0,
+      "height": 1.6,
+      "warmFaces": false,
+      "frontRoleOverrides": null
+    },
+    {
+      "name": "interlocking radial foot 2",
+      "kind": "compact interlocking faceted rock",
+      "centreXZ": [
+        1.05,
+        1.9
+      ],
+      "width": 1.3,
+      "depth": 1.1,
+      "height": 1.85,
+      "warmFaces": true,
+      "frontRoleOverrides": null
+    },
+    {
+      "name": "interlocking radial foot 3",
+      "kind": "compact interlocking faceted rock",
+      "centreXZ": [
+        2.85,
+        1.05
+      ],
+      "width": 0.95,
+      "depth": 1.0,
+      "height": 1.7,
+      "warmFaces": false,
+      "frontRoleOverrides": null
+    },
+    {
+      "name": "interlocking radial foot 4",
+      "kind": "compact interlocking faceted rock",
+      "centreXZ": [
+        -1.4,
+        -2.1
+      ],
+      "width": 1.2,
+      "depth": 1.0,
+      "height": 2.1,
+      "warmFaces": false,
+      "frontRoleOverrides": null
+    },
+    {
+      "name": "interlocking radial foot 5",
+      "kind": "compact interlocking faceted rock",
+      "centreXZ": [
+        1.6,
+        -2.0
+      ],
+      "width": 1.2,
+      "depth": 1.05,
+      "height": 2.25,
+      "warmFaces": true,
+      "frontRoleOverrides": null
+    },
+    {
+      "name": "large left diagonal ice fold",
+      "kind": "closed off-axis folded lamella",
+      "outline": [
+        [
+          -3.4,
+          2.45,
+          1.0
+        ],
+        [
+          -2.6,
+          1.9,
+          1.4
+        ],
+        [
+          -1.3,
+          0.45,
+          2.0
+        ],
+        [
+          -1.65,
+          0.15,
+          2.05
+        ],
+        [
+          -3.25,
+          1.55,
+          1.5
+        ]
+      ],
+      "thickness": 0.18
+    },
+    {
+      "name": "large right descending ivory fold",
+      "kind": "closed off-axis folded lamella",
+      "outline": [
+        [
+          0.65,
+          3.1,
+          1.2
+        ],
+        [
+          1.4,
+          2.7,
+          1.45
+        ],
+        [
+          3.3,
+          0.55,
+          1.3
+        ],
+        [
+          3.5,
+          0.12,
+          1.4
+        ],
+        [
+          2.1,
+          0.65,
+          1.9
+        ]
+      ],
+      "thickness": 0.17
+    }
+  ],
+  "provenance": "Original closed fractured maquette meshes; reused original authored solid/facet constructors. No reference-image pixels or external model."
+}

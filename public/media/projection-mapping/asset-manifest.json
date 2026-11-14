@@ -1,0 +1,47 @@
+{
+  "created": "2026-10-16",
+  "assets": [
+    {
+      "file": "applications-original.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2916156,
+      "sha256": "0480338a7edd87cf8a3de76739ff6ca5561ecd3684c79bfd428d8fb0f8db74e6"
+    },
+    {
+      "file": "applications.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 554868,
+      "sha256": "bd156ecfc2ea48bdaab173210f9c12c314bb7bd28d706e96ef3e5466c01f21bc"
+    },
+    {
+      "file": "forest-original.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 3575187,
+      "sha256": "bc90ec53b2bd7f434afc021b86cd21c13e55a8e89ba598b6f5fc597ed5b8b59c"
+    },
+    {
+      "file": "forest.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 781440,
+      "sha256": "261e0a7f1cd94baa8786813085ad77f5fd10d03582f28aaa66791a6b0e072fc9"
+    },
+    {
+      "file": "hero-original.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 3179206,
+      "sha256": "124f9e82e6db3d2282e464cb6414ca5456dd80c304b2f422699743e84aa7a1ca"
+    },
+    {
+      "file": "hero.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 646056,
+      "sha256": "4c7e4c2bff1e9ba233ba174c19868794fd181b465230b22e363f722179072c4c"
+    }
+  ]
+}

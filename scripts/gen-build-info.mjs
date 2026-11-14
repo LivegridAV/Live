@@ -25,5 +25,17 @@ const info = {
 };
 
 mkdirSync("public", { recursive: true });
-writeFileSync("public/build-info.json", JSON.stringify(info, null, 2) + "\n");
+// Next loads its configuration in multiple build workers. On Windows a brief
+// overlapping open can lock this shared metadata file; retry only those errors.
+const content = JSON.stringify(info, null, 2) + "\n";
+const pause = new Int32Array(new SharedArrayBuffer(4));
+for (let attempt = 0; ; attempt++) {
+  try {
+    writeFileSync("public/build-info.json", content);
+    break;
+  } catch (error) {
+    if (attempt >= 7 || !["UNKNOWN", "EBUSY", "EPERM", "EACCES"].includes(error.code)) throw error;
+    Atomics.wait(pause, 0, 0, 50 * (attempt + 1));
+  }
+}
 console.log("build-info:", info.shortCommit, info.branch, info.builtAt);

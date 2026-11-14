@@ -2,6 +2,22 @@
 
 Third-party 3D assets used on the LiveGridAV site, with their licenses.
 
+## Grand stall visitor assets — October 2026
+
+The `grand-*-visitors.glb` and `projection-grand-visitors-v1.glb` files reuse
+textured, static business avatars from the Microsoft Rocketbox Avatar Library.
+Copyright (c) 2020 Microsoft. Licensed under the MIT License. The full notice is
+in [technical-humans-LICENSE.txt](expo/technical-humans-LICENSE.txt), with source
+and preparation details in [technical-humans-provenance.json](expo/technical-humans-provenance.json).
+New placements preserve native human proportions; no person is scaled with a stall shell.
+
+The grand stall architecture, joinery, furnishings and curved-leaf planting are
+bespoke Blender geometry, built using the retained project helpers. Existing
+surface atlases and licensed CC0 surface records remain alongside their media.
+The rental globe uses the retained NASA Earth Observatory map, whose source is
+recorded in `/media/led-rental-2026/asset-manifest.json`. Existing screen artwork
+is display content only; reference images are not substituted for 3D stalls.
+
 ## tiger.glb — anamorphic hero (homepage 3D experience)
 - **Title:** "Running Tiger"
 - **Author:** francescolima74
@@ -18,18 +34,6 @@ Third-party 3D assets used on the LiveGridAV site, with their licenses.
   animation; the mesh, skeleton and textures are unchanged from the CC-BY source.
   The original "Run" animation remains available from the Sketchfab source above
   under the same CC-BY licence. Working source file: `Tiger.blend` (tracked in-repo).
-
-## lion.glb — anamorphic hero (visual-final World 01, staging)
-- **Title:** "Realistic Lion 3D model"
-- **Author:** mohamed.salaah880
-- **Source:** https://sketchfab.com/3d-models/1826fce5708d42388f6a750e6e7e3d06
-- **License:** CC Attribution (CC-BY 4.0) — https://creativecommons.org/licenses/by/4.0/
-- **Use:** maned male lion as the anamorphic subject emerging from the LED corner on
-  the /visual-final staging route. Re-scaled/normalized and re-exported as GLB for R3F.
-- **Note:** the user's preferred subject is a *photoreal lioness* ("Lion walk cycle",
-  creatureanimator, Sketchfab **Free Standard** license). That model must be
-  license-cleared (Free Standard restricts redistribution of the raw asset) or
-  replaced before it ships to production; this CC-BY maned lion is the safe interim.
 
 ## led-panel.glb / led-panel.webp — LED cabinet (equipment page)
 - Original asset created in-house (Blender) for LiveGridAV. No third-party license.

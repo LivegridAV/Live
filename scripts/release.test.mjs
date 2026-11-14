@@ -15,7 +15,7 @@ const resolves = url => {
   return [path.join("out", route), path.join("out", `${route}.html`), path.join("out", route, "index.html")].some(existsSync);
 };
 
-test("GPU warm-up waits for compilation and restores hidden zones / renderer state", async () => {
+test("GPU warm-up restores hidden zones and renderer state on completion, failure and cancellation", async () => {
   const scene = new THREE.Scene();
   const zone = new THREE.Group(); zone.visible = false;
   const mesh = new THREE.Mesh(new THREE.BoxGeometry(), new THREE.MeshBasicMaterial());
@@ -25,7 +25,8 @@ test("GPU warm-up waits for compilation and restores hidden zones / renderer sta
   const previous = new THREE.WebGLRenderTarget(2,2);
   let target = previous, compiled = 0, rendered = 0, disposed = false;
   const renderer = {
-    compileAsync: async () => { compiled++; },
+    compile: () => { compiled++; },
+    compileAsync: () => { throw new Error("timer-based compile must not run during mutable startup"); },
     getRenderTarget: () => target,
     setRenderTarget: value => { target = value; },
     render: () => {
@@ -46,9 +47,13 @@ test("GPU warm-up waits for compilation and restores hidden zones / renderer sta
   renderer.render = () => { throw new Error("simulated context failure"); };
   await assert.rejects(warmScene(renderer, scene, new THREE.PerspectiveCamera()), /context failure/);
   assert.equal(zone.visible, false); assert.equal(target, previous);
-  const beforeCancel = rendered;
+  const beforeCancel = rendered, compiledBeforeCancel=compiled;
   await warmScene(renderer, scene, new THREE.PerspectiveCamera(), () => true);
   assert.equal(rendered, beforeCancel, "unmounted scenes are not rendered");
+  assert.equal(compiled, compiledBeforeCancel, "unmounted scenes do not start more shader work");
+  renderer.compile = () => { throw new Error("simulated compile failure"); };
+  await assert.rejects(warmScene(renderer, scene, new THREE.PerspectiveCamera()), /compile failure/);
+  assert.equal(zone.visible, false); assert.equal(target, previous);
   mesh.geometry.dispose(); mesh.material.dispose(); previous.dispose(); spot.dispose();
 });
 

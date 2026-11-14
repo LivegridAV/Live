@@ -2,6 +2,9 @@
 import { useRef, type ReactNode } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { useVenue } from "../systems/store";
+import { GRAND } from "../data/grand";
+import { placementInspectionEnabled } from "../systems/PlacementInspection";
 
 /**
  * Distance gating along the venue's axis.
@@ -36,7 +39,11 @@ export function ZoneGroup({
   useFrame(({ camera }) => {
     const g = ref.current;
     if (!g) return;
-    const z = camera.position.z;
+    if(placementInspectionEnabled()){g.visible=true;return;}
+    const visit=useVenue.getState().stallVisit;
+    // Side/section cameras may stand beyond the stall's Z range. Keep the
+    // visited physical volume mounted using its fixed centre, not camera Z.
+    const z = visit?GRAND.placements[visit.stall].root[2]:camera.position.z;
     // Visible while the camera is approaching the zone, inside it, or has only
     // just passed through it.
     const visible = z <= from + ahead && z >= to - behind;

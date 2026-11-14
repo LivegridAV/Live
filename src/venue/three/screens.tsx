@@ -47,7 +47,7 @@ interface BaseProps {
 function ledKey(o: LEDOptions) {
   return [
     o.width, o.height, o.pitch, o.cabinet, o.brightness, o.tint, o.dot, o.doubleSided,
-    o.swap, o.flip?.[0], o.flip?.[1], o.flat, o.fit, o.wrapX,
+    o.swap, o.flip?.[0], o.flip?.[1], o.flat, o.fit, o.wrapX, o.mirrorX,
     o.repeat?.[0], o.repeat?.[1], o.offset?.[0], o.offset?.[1],
   ].join("|");
 }
@@ -76,8 +76,11 @@ function useLED(
   }, [texture, key, isBrand]);
   const reduced = useVenue((s) => s.reducedMotion);
   useFrame(({ clock }) => {
-    material.uniforms.uTime.value = clock.elapsedTime;
-    material.uniforms.uMotion.value = !reduced && MEDIA[media]?.kind === "image" && !media.startsWith("av-") ? 1 : 0;
+    material.uniforms.uTime.value = reduced ? 0 : clock.elapsedTime;
+    const descriptor = MEDIA[media];
+    const motion = descriptor?.kind === "image" ? descriptor.motion : undefined;
+    material.uniforms.uMotion.value = !reduced && descriptor?.kind === "image" && !motion && !media.startsWith("av-") ? 1 : 0;
+    material.uniforms.uFlow.value = motion === "ribbon" ? 1 : motion === "waterfall" ? 2 : motion === "still" ? 3 : 0;
     const image = texture.image as { width?: number; height?: number } | undefined;
     if (opts.fit && MEDIA[media]?.kind === "image" && image?.width && image?.height) {
       const ratio = (opts.width / opts.height) / (image.width / image.height);
@@ -165,6 +168,7 @@ export interface ScreenProps extends BaseProps {
   /** no off-axis falloff — for panels whose neighbours sit at another angle */
   flat?: boolean;
   wrapX?: boolean;
+  mirrorX?: boolean;
   /**
    * A lit reveal around the panel edge, as a colour.
    *
@@ -199,6 +203,7 @@ export function Screen({
   flip,
   flat,
   wrapX,
+  mirrorX,
   edge,
   edgeWidth = 0.09,
 }: ScreenProps) {
@@ -219,6 +224,7 @@ export function Screen({
       flip,
       flat,
       wrapX,
+      mirrorX,
       fit: !uv,
       repeat: uv ? [uv[0], uv[1]] : [1, 1],
       offset: uv ? [uv[2], uv[3]] : [0, 0],
@@ -261,6 +267,10 @@ export interface CurvedScreenProps extends BaseProps {
   /** face the concave side (true) or the convex side */
   inward?: boolean;
   segments?: number;
+  flip?: [boolean, boolean];
+  uv?: [number, number, number, number];
+  /** Reflect the outer artwork crop into the return, without a hard UV seam. */
+  mirrorX?: boolean;
 }
 
 export function CurvedScreen({
@@ -278,12 +288,16 @@ export function CurvedScreen({
   range = 70,
   spill = 0,
   spillColor = "#8fb9b2",
+  flip,
+  uv,
+  mirrorX,
 }: CurvedScreenProps) {
   const mesh = useRef<THREE.Mesh>(null);
   const material = useLED(
     media,
     mesh,
-    { width: radius * arc, height, pitch, brightness, tint, cabinet: 0.5, doubleSided: true },
+    { width: radius * arc, height, pitch, brightness, tint, cabinet: 0.5, doubleSided: true, flip, mirrorX,
+      repeat:uv?[uv[0],uv[1]]:[1,1],offset:uv?[uv[2],uv[3]]:[0,0] },
     range,
   );
   usePowerState(material);
@@ -317,12 +331,14 @@ export function CylinderScreen({
   spill = 0,
   spillColor = "#c49a62",
   segments = 56,
-}: BaseProps & { radius: number; height: number; segments?: number }) {
+  mirrorArtwork = false,
+}: BaseProps & { radius: number; height: number; segments?: number; mirrorArtwork?: boolean }) {
   const mesh = useRef<THREE.Mesh>(null);
   const material = useLED(
     media,
     mesh,
-    { width: 2 * Math.PI * radius, height, pitch, brightness, tint, cabinet: 0.5, wrapX: MEDIA[media]?.kind === "image" },
+    { width: 2 * Math.PI * radius, height, pitch, brightness, tint, cabinet: 0.5,
+      wrapX: MEDIA[media]?.kind === "image", mirrorX: mirrorArtwork, repeat: [mirrorArtwork ? 2 : 1, 1] },
     range,
   );
   usePowerState(material);
@@ -364,13 +380,16 @@ export function RingScreen({
   spillColor = "#7fb3aa",
   segments = 64,
   inward = false,
-}: BaseProps & { radius: number; height: number; segments?: number; inward?: boolean }) {
+  repeats = 4,
+  mirrorArtwork = false,
+}: BaseProps & { radius: number; height: number; segments?: number; inward?: boolean; repeats?: number; mirrorArtwork?: boolean }) {
   const mesh = useRef<THREE.Mesh>(null);
   const material = useLED(
     media,
     mesh,
     { width: 2 * Math.PI * radius, height, pitch, brightness, tint, cabinet: 0.6, doubleSided: true,
-      wrapX: MEDIA[media]?.kind === "image", repeat: MEDIA[media]?.kind === "image" ? [4,1] : [1,1] },
+      wrapX: MEDIA[media]?.kind === "image", mirrorX: mirrorArtwork,
+      repeat: MEDIA[media]?.kind === "image" ? [repeats * (mirrorArtwork ? 2 : 1),1] : [1,1] },
     range,
   );
   usePowerState(material);
@@ -395,132 +414,76 @@ export function RingScreen({
   );
 }
 
-/* ── LED pillar (four-sided column) ────────────────────── */
+/* ── anamorphic 90° corner ─────────────────────────────── */
 
-/**
- * A four-sided LED totem, mapped the way a real one is.
- *
- * This used to be a single `boxGeometry`, and that was the whole problem with
- * the pillars. Three.js gives every face of a box its own 0..1 UV, so a box
- * does not wrap content around a column — it shows the *same image four
- * times*, once per face, and a visitor walking past sees a texture that
- * restarts at every corner. No amount of art direction fixes that, because it
- * is a mapping fault rather than a content fault.
- *
- * So the column is built as four separate faces, and each is handed its own
- * slice of one unwrapped master canvas:
- *
- *      u:  0 ────── FRONT ────── RIGHT ────── BACK ────── LEFT ────── 1
- *
- * Going round the column in that order is not arbitrary — it is the order the
- * faces physically meet, so the right edge of one slice is drawn against the
- * left edge of the next with nothing between them. Slice widths follow the
- * real perimeter, so a rectangular column keeps a constant pixel density
- * instead of stretching its narrow faces.
- *
- * `flat` is set on every face for the same reason it is set on the anamorphic
- * corner: four faces of a column are seen at four different angles by
- * definition, and any off-axis falloff would put a brightness step on each of
- * the four corners — which is precisely the "visible joint" the venue claims
- * not to have.
- *
- * Content still has to be authored to wrap (see `pillarWrap` in
- * `media/programs.ts`, which is periodic in u by construction). This component
- * supplies the geometry; the programme supplies the continuity.
- */
-export function PillarScreen({
-  media,
-  width,
-  height,
-  depth,
-  position = [0, 0, 0],
-  rotation = [0, 0, 0],
-  pitch = 5.2,
-  brightness = 1,
-  tint,
-  range = 80,
-  spill = 0,
-  spillColor = "#84b5ad",
-  plinth = true,
-}: BaseProps & { width: number; height: number; depth: number; plinth?: boolean }) {
-  const perimeter = 2 * (width + depth);
-  // face: [physical width, position, rotation about Y]
-  const faces: { w: number; pos: Vec3; rotY: number }[] = [
-    { w: width, pos: [0, 0, depth / 2], rotY: 0 },
-    { w: depth, pos: [width / 2, 0, 0], rotY: Math.PI / 2 },
-    { w: width, pos: [0, 0, -depth / 2], rotY: Math.PI },
-    { w: depth, pos: [-width / 2, 0, 0], rotY: -Math.PI / 2 },
-  ];
-
-  const base = plinth ? 0.12 : 0;
-  const midY = base + height / 2;
-
-  let u = 0;
-  return (
-    <group position={position} rotation={rotation}>
-      {plinth && (
-        <>
-          {/* base plate, with a lit reveal so the column stands on something */}
-          <mesh position={[0, 0.06, 0]}>
-            <boxGeometry args={[width + 0.16, 0.12, depth + 0.16]} />
-            <meshStandardMaterial color="#0c1011" roughness={0.55} metalness={0.75} />
-          </mesh>
-          <mesh position={[0, 0.125, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-            <planeGeometry args={[width + 0.16, depth + 0.16]} />
-            <meshBasicMaterial color={spillColor} toneMapped />
-          </mesh>
-          {/* top cap */}
-          <mesh position={[0, base + height + 0.06, 0]}>
-            <boxGeometry args={[width + 0.12, 0.12, depth + 0.12]} />
-            <meshStandardMaterial color="#0c1011" roughness={0.5} metalness={0.8} />
-          </mesh>
-        </>
-      )}
-
-      {/* the column's own dark core, so a dimmed face is never see-through */}
-      <mesh position={[0, midY, 0]}>
-        <boxGeometry args={[width - 0.02, height - 0.02, depth - 0.02]} />
-        <meshStandardMaterial color="#070a0b" roughness={0.7} metalness={0.4} />
-      </mesh>
-
-      {faces.map((f, i) => {
-        const span = f.w / perimeter;
-        const offset = u;
-        u += span;
-        return (
-          <Screen
-            key={i}
-            media={media}
-            width={f.w}
-            height={height}
-            position={[f.pos[0], midY, f.pos[2]]}
-            rotation={[0, f.rotY, 0]}
-            uv={[span, 1, offset, 0]}
-            wrapX
-            pitch={pitch}
-            brightness={brightness}
-            tint={tint}
-            range={range}
-            frame={false}
-            flat
-          />
-        );
-      })}
-
-      {spill > 0 && (
-        <LocalPointLight
-          position={[0, height * 0.55, 0]}
-          intensity={spill}
-          color={spillColor}
-          distance={height * 2.4}
-          decay={2}
-        />
-      )}
-    </group>
-  );
+export interface CornerProjector {
+  position: Vec3;
+  look: Vec3;
+  fov: number;
+  aspect: number;
+  /** Projected LED bounds: left, bottom, width, height in the hero frame. */
+  bounds: [number, number, number, number];
 }
 
-/* ── anamorphic 90° corner ─────────────────────────────── */
+/** One fixed perspective field sampled by both physical faces of an LED fold. */
+export function ProjectedCornerScreen({media,leftWidth,rightWidth,height,bottom,projector,
+  position=[0,0,0],uv=[1,1,0,0],leftCutout}:{
+  media:string;leftWidth:number;rightWidth:number;height:number;bottom:number;
+  projector:CornerProjector;position?:Vec3;uv?:[number,number,number,number];
+  /** The studio occupies this lower left opening; it contains no LED panel. */
+  leftCutout?:{right:number;top:number};
+}) {
+  const mesh=useRef<THREE.Mesh>(null);
+  const material=useLED(media,mesh,{width:leftWidth+rightWidth,height,pitch:1.2,
+    brightness:1,flat:true,repeat:[uv[0],uv[1]],offset:[uv[2],uv[3]]},100);
+  const cutRight=leftCutout?.right,cutTop=leftCutout?.top;
+  const geometry=useMemo(()=>{
+    const g=new THREE.BufferGeometry();
+    const positions:number[]=[],uvs:number[]=[],indices:number[]=[];
+    const quad=(corners:Vec3[],coords:number[])=>{
+      const start=positions.length/3;
+      corners.forEach(p=>positions.push(...p));uvs.push(...coords);
+      indices.push(start,start+1,start+2,start,start+2,start+3);
+    };
+    const left=(x0:number,x1:number,y0:number,y1:number)=>quad(
+      [[x0,y0,0],[x1,y0,0],[x1,y1,0],[x0,y1,0]],
+      [(x0+leftWidth)/leftWidth*.5,(y0-bottom)/height,(x1+leftWidth)/leftWidth*.5,(y0-bottom)/height,
+        (x1+leftWidth)/leftWidth*.5,(y1-bottom)/height,(x0+leftWidth)/leftWidth*.5,(y1-bottom)/height]);
+    if(cutRight!==undefined&&cutTop!==undefined){
+      left(-leftWidth,0,cutTop,bottom+height);
+      left(cutRight,0,bottom,cutTop);
+    }else left(-leftWidth,0,bottom,bottom+height);
+    quad([[0,bottom,0],[0,bottom,-rightWidth],[0,bottom+height,-rightWidth],[0,bottom+height,0]],
+      [.5,0,1,0,1,1,.5,1]);
+    g.setAttribute("position",new THREE.Float32BufferAttribute(positions,3));
+    g.setAttribute("uv",new THREE.Float32BufferAttribute(uvs,2));
+    g.setIndex(indices);g.computeVertexNormals();g.computeBoundingSphere();
+    return g;
+  },[leftWidth,rightWidth,height,bottom,cutRight,cutTop]);
+  useMemo(()=>{
+    const camera=new THREE.PerspectiveCamera(projector.fov,projector.aspect,.1,400);
+    camera.position.set(...projector.position);camera.lookAt(...projector.look);camera.updateMatrixWorld();
+    material.uniforms.uProjector={value:new THREE.Matrix4().multiplyMatrices(camera.projectionMatrix,camera.matrixWorldInverse)};
+    material.uniforms.uProjectorBounds={value:new THREE.Vector4(...projector.bounds)};
+    if(material.userData.fixedCornerProjection) return;
+    material.userData.fixedCornerProjection=true;
+    material.vertexShader=material.vertexShader
+      .replace("varying vec2 vUv;","varying vec2 vUv;\nuniform mat4 uProjector;\nvarying vec4 vSourceClip;")
+      .replace("vUv = uv;","vUv = uv;\nvSourceClip = uProjector * modelMatrix * vec4(position, 1.0);");
+    material.fragmentShader=material.fragmentShader
+      .replace("varying vec2 vUv;","varying vec2 vUv;\nvarying vec4 vSourceClip;\nuniform vec4 uProjectorBounds;")
+      .replace("vec2 src = mix(vUv, vUv.yx, uSwap);",`vec2 hero = vSourceClip.xy / vSourceClip.w * .5 + .5;
+        vec2 src = (hero - uProjectorBounds.xy) / uProjectorBounds.zw;`)
+      .replace("vec3 content = texture2D(uMap, uv).rgb;",`// Only the lake moves; the sculptural head stays anchored to the mark.
+        float lake = 1.0 - smoothstep(.03, .24, uv.y);
+        vec2 ripple = lake * vec2(.0014*sin(uv.y*100.0+phase*4.0),.001*sin(uv.x*80.0-phase*3.0));
+        vec3 content = texture2D(uMap, uv+ripple).rgb;`);
+    material.needsUpdate=true;
+  },[material,projector]);
+  usePowerState(material);
+  useEffect(()=>()=>geometry.dispose(),[geometry]);
+  return <mesh ref={mesh} position={position} geometry={geometry} material={material}/>;
+}
 
 /**
  * Two panels folded at 90°, each carrying half of a single image rendered from

@@ -1,0 +1,491 @@
+{
+  "version": 10,
+  "asset": "projection-botanical-v10.glb",
+  "authoringAxes": "native Three XYZ front +Z",
+  "provenance": "Original procedural botanical meshes and native mathematical PBR maps; no external assets or attachment pixels.",
+  "nativeBoothDomain": {
+    "min": [
+      -7.2,
+      0.1,
+      -4.5
+    ],
+    "max": [
+      7.2,
+      7.2,
+      5
+    ]
+  },
+  "bounds": {
+    "min": [
+      -7.077930450439453,
+      0.10000000149011612,
+      -1.7648314237594604
+    ],
+    "max": [
+      7.13490104675293,
+      6.263655662536621,
+      4.1843461990356445
+    ]
+  },
+  "plants": [
+    {
+      "name": "low broad multi stem entrance ficus",
+      "speciesType": "Ficus microcarpa inspired bushy oval crown",
+      "anchor": [
+        -6.6,
+        0.1,
+        3.4
+      ],
+      "targetHeight": 2.5,
+      "newPolygonCount": 86914
+    },
+    {
+      "name": "second layered entrance ficus",
+      "speciesType": "small multi stem rounded ficus",
+      "anchor": [
+        -6.45,
+        0.1,
+        1.2
+      ],
+      "targetHeight": 2.08,
+      "newPolygonCount": 7058
+    },
+    {
+      "name": "inner left full layered areca",
+      "speciesType": "upright multi stem areca bamboo leaf sprays",
+      "anchor": [
+        -3.2,
+        0.1,
+        -0.6
+      ],
+      "targetHeight": 2.95,
+      "newPolygonCount": 5894
+    },
+    {
+      "name": "left inner layered feather palm",
+      "speciesType": "three arcing feathered palm fronds with individual pinnae",
+      "anchor": [
+        -3.2,
+        0.595,
+        -0.6
+      ],
+      "targetHeight": 2.72,
+      "newPolygonCount": 1280
+    },
+    {
+      "name": "inner left broad leaf layer",
+      "speciesType": "layered broad tropical understory leaf sprays",
+      "anchor": [
+        -3.2,
+        0.1,
+        -0.6
+      ],
+      "targetHeight": 2.35,
+      "newPolygonCount": 816
+    },
+    {
+      "name": "inner right fine bamboo",
+      "speciesType": "fine stemmed bamboo",
+      "anchor": [
+        3.4,
+        0.1,
+        -0.55
+      ],
+      "targetHeight": 2.65,
+      "newPolygonCount": 6399
+    },
+    {
+      "name": "right inner layered feather palm",
+      "speciesType": "three arcing feathered palm fronds with individual pinnae",
+      "anchor": [
+        3.4,
+        0.585,
+        -0.55
+      ],
+      "targetHeight": 2.65,
+      "newPolygonCount": 1220
+    },
+    {
+      "name": "inner right broad leaf layer",
+      "speciesType": "layered broad tropical understory leaf sprays",
+      "anchor": [
+        3.4,
+        0.1,
+        -0.55
+      ],
+      "targetHeight": 2.35,
+      "newPolygonCount": 816
+    },
+    {
+      "name": "right entrance layered palm",
+      "speciesType": "upright multi stem areca bamboo leaf sprays",
+      "anchor": [
+        6.7,
+        0.1,
+        3.25
+      ],
+      "targetHeight": 2.15,
+      "newPolygonCount": 5292
+    },
+    {
+      "name": "right entrance layered feather palm",
+      "speciesType": "three arcing feathered palm fronds with individual pinnae",
+      "anchor": [
+        6.7,
+        0.695,
+        3.25
+      ],
+      "targetHeight": 1.98,
+      "newPolygonCount": 1170
+    },
+    {
+      "name": "right entrance broad leaf layer",
+      "speciesType": "layered broad tropical understory leaf sprays",
+      "anchor": [
+        6.7,
+        0.1,
+        3.25
+      ],
+      "targetHeight": 1.85,
+      "newPolygonCount": 816
+    },
+    {
+      "name": "left gallery outer lush branching mass",
+      "speciesType": "irregular branching mixed climbing foliage mass",
+      "anchor": [
+        -5.98,
+        0.1,
+        0.65
+      ],
+      "targetHeight": 6.28,
+      "newPolygonCount": 40654,
+      "attachment": {
+        "nativeCenterXZ": [
+          -5.98,
+          0.65
+        ],
+        "massWidth": 0.78,
+        "massDepth": 0.38,
+        "bottomY": 0.35,
+        "topY": 6.28,
+        "branchLeaders": 8,
+        "irregularClusterLevels": 22
+      }
+    },
+    {
+      "name": "left inner scattered lower column growth",
+      "speciesType": "irregular branching mixed climbing foliage mass",
+      "anchor": [
+        -3.86,
+        0.1,
+        0.0
+      ],
+      "targetHeight": 1.95,
+      "newPolygonCount": 3837,
+      "attachment": {
+        "nativeCenterXZ": [
+          -3.86,
+          0.0
+        ],
+        "massWidth": 0.24,
+        "massDepth": 0.25,
+        "bottomY": 0.45,
+        "topY": 1.95,
+        "branchLeaders": 3,
+        "irregularClusterLevels": 7
+      }
+    },
+    {
+      "name": "right inner restrained back return growth",
+      "speciesType": "irregular branching mixed climbing foliage mass",
+      "anchor": [
+        5.04,
+        0.1,
+        -1.65
+      ],
+      "targetHeight": 6.23,
+      "newPolygonCount": 27336,
+      "attachment": {
+        "nativeCenterXZ": [
+          5.04,
+          -1.65
+        ],
+        "massWidth": 0.4,
+        "massDepth": 0.25,
+        "bottomY": 0.4,
+        "topY": 6.23,
+        "branchLeaders": 6,
+        "irregularClusterLevels": 20
+      }
+    },
+    {
+      "name": "right outer full depth foliage mass",
+      "speciesType": "irregular branching mixed climbing foliage mass",
+      "anchor": [
+        6.84,
+        0.1,
+        0.65
+      ],
+      "targetHeight": 6.23,
+      "newPolygonCount": 33282,
+      "attachment": {
+        "nativeCenterXZ": [
+          6.84,
+          0.65
+        ],
+        "massWidth": 0.6,
+        "massDepth": 0.3,
+        "bottomY": 1.5,
+        "topY": 6.23,
+        "branchLeaders": 8,
+        "irregularClusterLevels": 21
+      }
+    },
+    {
+      "name": "left entrance low fern",
+      "speciesType": "fine pinnate fern",
+      "anchor": [
+        -6.0,
+        0.1,
+        3.72
+      ],
+      "targetHeight": 0.57,
+      "newPolygonCount": 2424
+    },
+    {
+      "name": "right lounge low fern",
+      "speciesType": "fine pinnate fern",
+      "anchor": [
+        6.65,
+        0.1,
+        0.75
+      ],
+      "targetHeight": 0.58,
+      "newPolygonCount": 2424
+    },
+    {
+      "name": "counter ivory orchids",
+      "speciesType": "small ivory orchid arrangement",
+      "anchor": [
+        -3.45,
+        1.2,
+        3.05
+      ],
+      "targetHeight": 0.32,
+      "newPolygonCount": 724
+    },
+    {
+      "name": "cafe ivory orchids",
+      "speciesType": "small ivory orchid arrangement",
+      "anchor": [
+        5.15,
+        0.75,
+        3.05
+      ],
+      "targetHeight": 0.26,
+      "newPolygonCount": 724
+    },
+    {
+      "name": "left combined flowering shrub",
+      "speciesType": "flowering mixed foliage in coordinated vessel",
+      "anchor": [
+        -3.85,
+        0.64,
+        -0.05
+      ],
+      "targetHeight": 1.3,
+      "newPolygonCount": 2772
+    },
+    {
+      "name": "left combined fine fern",
+      "speciesType": "fine pinnate fern",
+      "anchor": [
+        -3.85,
+        0.1,
+        -0.05
+      ],
+      "targetHeight": 1.18,
+      "newPolygonCount": 2040
+    },
+    {
+      "name": "left combined broad greenery",
+      "speciesType": "layered broad tropical understory leaf sprays",
+      "anchor": [
+        -3.85,
+        0.1,
+        -0.05
+      ],
+      "targetHeight": 1.18,
+      "newPolygonCount": 816
+    },
+    {
+      "name": "right combined conifer",
+      "speciesType": "true branched miniature conifer with individual curved needles",
+      "anchor": [
+        3.85,
+        0.73,
+        -0.05
+      ],
+      "targetHeight": 1.45,
+      "newPolygonCount": 10040
+    },
+    {
+      "name": "right combined fine fern",
+      "speciesType": "fine pinnate fern",
+      "anchor": [
+        3.85,
+        0.1,
+        -0.05
+      ],
+      "targetHeight": 1.15,
+      "newPolygonCount": 2040
+    },
+    {
+      "name": "right combined broad greenery",
+      "speciesType": "layered broad tropical understory leaf sprays",
+      "anchor": [
+        3.85,
+        0.1,
+        -0.05
+      ],
+      "targetHeight": 1.18,
+      "newPolygonCount": 816
+    },
+    {
+      "name": "stage miniature conifer -1.405",
+      "speciesType": "true branched miniature conifer with individual curved needles",
+      "anchor": [
+        -1.405,
+        1.37,
+        0.557
+      ],
+      "targetHeight": 1.92,
+      "newPolygonCount": 10040
+    },
+    {
+      "name": "stage miniature conifer 0",
+      "speciesType": "true branched miniature conifer with individual curved needles",
+      "anchor": [
+        0,
+        1.37,
+        1.0
+      ],
+      "targetHeight": 1.87,
+      "newPolygonCount": 10040
+    },
+    {
+      "name": "stage miniature conifer 1.405",
+      "speciesType": "true branched miniature conifer with individual curved needles",
+      "anchor": [
+        1.405,
+        1.37,
+        0.557
+      ],
+      "targetHeight": 1.95,
+      "newPolygonCount": 10040
+    },
+    {
+      "name": "bar miniature green arrangement",
+      "speciesType": "broadleaf shrub in coordinated vessel",
+      "anchor": [
+        -2.60044,
+        1.048,
+        0.58168
+      ],
+      "targetHeight": 1.28,
+      "newPolygonCount": 819
+    },
+    {
+      "name": "bar miniature green arrangement",
+      "speciesType": "broadleaf shrub in coordinated vessel",
+      "anchor": [
+        2.60044,
+        1.048,
+        0.58168
+      ],
+      "targetHeight": 1.28,
+      "newPolygonCount": 819
+    }
+  ],
+  "leafCount": 31787,
+  "materialBatches": 11,
+  "triangles": 512980,
+  "ambientOcclusion": {
+    "layer": "Col",
+    "samples": 16,
+    "radius": 0.085,
+    "objects": 11,
+    "occluderTriangles": 512980,
+    "corners": 1071704,
+    "evaluatedPositions": 474715,
+    "rays": 7595440,
+    "skipped": {
+      "non_mesh": 0,
+      "character": 0,
+      "distant_hall": 0,
+      "non_opaque_or_emissive": 0
+    },
+    "budgetReached": false,
+    "seconds": 43.153,
+    "minimum": 0.7,
+    "mean": 0.88365
+  },
+  "vertices": 474992,
+  "bytes": 33502080,
+  "sha256": "50ecdc0c3945fca7c9061a4033a40a376dd79cdac795f21889ac2a19e9113123",
+  "materials": [
+    "Projection Botanical V10 | planter champagne brushed metal",
+    "Projection Botanical V10 | soil dark coarse planting substrate",
+    "Projection Botanical V10 | bark textured natural warm grey trunks",
+    "Projection Botanical V10 | bark slender olive brown stems",
+    "Projection Botanical V10 | foliage mature ficus with fine reticulated veins",
+    "Projection Botanical V10 | foliage slender areca and bamboo",
+    "Projection Botanical V10 | foliage broad glossy tropical understory",
+    "Projection Botanical V10 | foliage small climbing leaves",
+    "Projection Botanical V10 | foliage fine fern pinnae",
+    "Projection Botanical V10 | ivory thin porcelain orchid petals",
+    "Projection Botanical V10 | orchid quiet ochre throat"
+  ],
+  "maps": [
+    {
+      "file": "public\\media\\projection-mapping-v10\\botanical\\leaf-atlas-basecolor.png",
+      "sha256": "6dd1aa285215dff572ec8d9cd0428f47b10f5b0c9c3606d0c049c98cf7e01082"
+    },
+    {
+      "file": "public\\media\\projection-mapping-v10\\botanical\\leaf-atlas-normal.png",
+      "sha256": "0037073d9dec2f82203fc406a92d5347ca337cdc6f1cd250aacce80f1224683e"
+    },
+    {
+      "file": "public\\media\\projection-mapping-v10\\botanical\\leaf-atlas-roughness.png",
+      "sha256": "782399ded3b012d9ab3ecd05d01779e7762bff253e8d5602fda3bc179bb2f207"
+    },
+    {
+      "file": "public\\media\\projection-mapping-v10\\botanical\\bark-basecolor.png",
+      "sha256": "16e5f70ac995870c34cc0a82775e8762b3dc23009ce3fbebb0471d64e3287bf4"
+    },
+    {
+      "file": "public\\media\\projection-mapping-v10\\botanical\\bark-normal.png",
+      "sha256": "47e9c90262ec2b524039c4aa87794476f661e20b215c8ea90167b6b00973ece2"
+    },
+    {
+      "file": "public\\media\\projection-mapping-v10\\botanical\\champagne-brushing-normal.png",
+      "sha256": "94a11a98694485e31f2b0c73c6315e7cfe1754ba8e41e06cbaa644ac20d515a7"
+    },
+    {
+      "file": "public\\media\\projection-mapping-v10\\botanical\\soil-basecolor.png",
+      "sha256": "7e17f73b805fb17b8329ffca9ada8280d4b0129a59fdc5a456549ab4b25bc9a8"
+    }
+  ],
+  "apertureProtection": "Irregular depth-based planting placement preserves central image and caption sightlines; small natural corner intrusions are reference-appropriate.",
+  "qualityChanges": [
+    "Smaller curved asymmetrical ficus leaves and 50% denser mixed climbing blades.",
+    "V10 adds warm olive/chartreuse mature/new-growth albedos, local roughness variation and richer raised veins.",
+    "V10 climbing density1.70 instead of1.50; broader upright palm sprays stay within the fitted planting zones.",
+    "Leaf midribs roll individually with varied twist, curl, edge asymmetry and directional growth.",
+    "Full-stall review enlarges ficus/climbing blade length and width1.35x for1.82x physical covered area without adding woody lattice.",
+    "Miniature conifer needle width1.70x preserves branch positions and topology while producing solid green mass at the full viewport.",
+    "Above-pot ficus height scales .64 around soil level; crown X/Z expands8% while pot/anchor remain fixed.",
+    "Existing planting locations and organic PBR maps retained; natural shorter ficus clears service wording."
+  ],
+  "runtimeGuidance": "Preserve exported standard PBR textures, metalness, roughness, normal maps and opaque double-sided leaf materials."
+}

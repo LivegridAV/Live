@@ -1,5 +1,7 @@
 # LiveGridAV V2 — Final Release
 
+> Historical release record. The auxiliary `/design-v2` and `/visual-final` preview routes and their exclusive code/media were removed on 2026-10-18 at the user's request. The route counts and V2 hero assets below describe this older release, not the current venue homepage.
+
 **Release:** LiveGridAV V2 (multipage site + grounded anamorphic tiger hero)
 **Date:** 2026-09-10
 **Release tag:** `livegridav-v2-production`

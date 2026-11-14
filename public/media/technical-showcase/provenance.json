@@ -1,0 +1,19 @@
+{
+  "reference": "User-supplied ChatGPT Image Sep 23, 2026, 12_29_33 AM (5).png",
+  "implementation": "src/venue/media/technicalPainters.ts",
+  "method": "Native Canvas2D technical interfaces with photographic content crops from existing repository artwork. No whole-room photographic overlay, new generated image, or baked physical booth.",
+  "image_source": "/media/final/technical-control.png",
+  "source_dimensions": [1672, 941],
+  "source_coordinates": "Top-left origin, pixel rectangles [x,y,width,height].",
+  "stage_program_crop": [1398, 150, 245, 172],
+  "camera_crops": [
+    [1153,151,116,80], [1277,151,114,80],
+    [1153,262,116,80], [1277,262,114,80],
+    [1153,373,116,81], [1277,373,114,81],
+    [1400,373,117,81], [1525,373,117,81]
+  ],
+  "engineering_drawing_crop": [21,174,658,550],
+  "motion": "Deterministic 24-second cue playhead and VU meter phases. Running 25fps illustrative timecode. Camera photographs remain stable. These are simulated interfaces, not live video feeds or operational show-control software.",
+  "loading": "One cached HTMLImageElement shared by painters, loaded on first draw or optional preloadTechnicalArtwork(). Native vector stage/engineering fallback remains visible before the source is ready.",
+  "acceptance": "Reference-guided technical screen content rendered on actual 3D surfaces; not represented as a pixel-identical reproduction."
+}

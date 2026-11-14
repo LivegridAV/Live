@@ -1,0 +1,151 @@
+{
+  "date": "2026-10-17",
+  "method": "Built-in image_gen isolated artwork plus deterministic native resampling, roof grading and fine particle overlay. No reference-booth image pixels.",
+  "assets": [
+    {
+      "file": "application-0-architecture.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 189848,
+      "sha256": "ad00b2127c92b2a03d35a513688afce3d87bd80893592b2194236ba68f981d00"
+    },
+    {
+      "file": "application-1-concert.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 114128,
+      "sha256": "7c1c627f7903a4fcae3ce61404bc80f561a4af0d541f6b4ce1a69bd408d8ae2e"
+    },
+    {
+      "file": "application-2-product-car.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 168686,
+      "sha256": "f51b1e724e3cc8693b0c7f7e2a0ad6b779ff65c6082b788aec769ef696aacd40"
+    },
+    {
+      "file": "application-3-interactive.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 336420,
+      "sha256": "a363f29c395393e0fed2fd5d3eb3cc72e1c78027bf67e2089ed69308ade0d9a4"
+    },
+    {
+      "file": "application-4-landmark.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 238832,
+      "sha256": "0b9c93baa21b2320d1a83d78d3475777fbcc32b2c2a377290703128fb63ea269"
+    },
+    {
+      "file": "application-5-brand-palace.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 278446,
+      "sha256": "e69c33b82e0047d8b53e184dbc7eca29c104ce272839884088f172213869a60c"
+    },
+    {
+      "file": "application-6-interior.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 137418,
+      "sha256": "786eb396235cefadae13a718fadfe4753ba7d389d534be32d4d62db2f6096d1a"
+    },
+    {
+      "file": "application-7-event-exhibition.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 218418,
+      "sha256": "eedb67d288b235ced39620a345648a93b0396dd3fe88277684a648eda56193fd"
+    },
+    {
+      "file": "applications-native.png",
+      "width": 2048,
+      "height": 2304,
+      "bytes": 10848837,
+      "sha256": "96585a976689899cf67ed29e7639756ba859a5130db312d7b81e7d871a0948d2"
+    },
+    {
+      "file": "applications.webp",
+      "width": 2048,
+      "height": 2304,
+      "bytes": 1700336,
+      "sha256": "db20ff201339fe039912abfbbc3d6f68b96baedcee9d0876cc908bf703979894"
+    },
+    {
+      "file": "blue-particulate-original.png",
+      "width": 2022,
+      "height": 778,
+      "bytes": 2463145,
+      "sha256": "f651de774b204ea63d0c0f2dd7903a3914385aee0ee35308cd9746c197302bc4"
+    },
+    {
+      "file": "event-original.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2450407,
+      "sha256": "2142b44f1f0ba32a4440e101cf81cb0d895764375b07c3f4be69aa2e5457d21b"
+    },
+    {
+      "file": "interactive-original.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 3019498,
+      "sha256": "b265bf493392b67dbac917a7d8c49500b6afbf032c6653c95a7478ba12c0577f"
+    },
+    {
+      "file": "landmark-original.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2738864,
+      "sha256": "23bc8213f961f591288b7580c2c651adb6e8dc1b8be29259587090d314a601c2"
+    },
+    {
+      "file": "rear-blue-particulate.webp",
+      "width": 2560,
+      "height": 1024,
+      "bytes": 773678,
+      "sha256": "74c23a3475c54892a2465a20e820bc4ff174703cc3f4a1903313d6f4cbb4450b"
+    },
+    {
+      "file": "roof-cyan-particulate-native.png",
+      "width": 1536,
+      "height": 1536,
+      "bytes": 3497192,
+      "sha256": "2d08bd4771d55e9ecb78896510cbfd78d6dcd6823c8a3f6d94c11d2ee50c9802"
+    },
+    {
+      "file": "roof-cyan-particulate.webp",
+      "width": 1536,
+      "height": 1536,
+      "bytes": 760676,
+      "sha256": "89dfe974f3141ee3fe71eb8d5b97b92be22e27dd785257e18ec36bcea3506b88"
+    },
+    {
+      "file": "crystal-caustic-original.png",
+      "width": 1448,
+      "height": 1086,
+      "bytes": 2982908,
+      "sha256": "2bceb3b993784a0d9b389e37d76f49f373d591f51f811ce9e4243d662e6c3af9"
+    },
+    {
+      "file": "crystal-caustic-native.png",
+      "width": 2048,
+      "height": 1536,
+      "bytes": 7969026,
+      "sha256": "f6479868b96258e421e8540f133294c4b5c4847a592a4c14066da340a47d51d6"
+    },
+    {
+      "file": "crystal-caustic.webp",
+      "width": 2048,
+      "height": 1536,
+      "bytes": 983450,
+      "sha256": "b212720742e813b91ef270e0810d78b99dfba83f78b5eca028c445051b0a2ca6"
+    }
+  ],
+  "crystal": {
+    "method": "One original built-in image_gen optical caustic field, resampled to2048×1536 with a .92 scale/+3 highlight shoulder; no painted geometry.",
+    "prompt": "crystal-prompt.json",
+    "loop": "Native painter24-second bounded drift; cached blue-only grade retains neutral and gold values."
+  }
+}

@@ -7,7 +7,7 @@ import {
   type VideoMedia,
   type ImageMedia,
 } from "../data/media";
-import { SHADER_PROGRAMS, VERT, HEAVY_PROGRAMS, type ShaderProgramId } from "./programs";
+import { SHADER_PROGRAMS, VERT, type ShaderProgramId } from "./programs";
 import { PAINTERS, type PaintCtx } from "./painters";
 import type { QualityTier, StageMode } from "../systems/store";
 import { mediaSlate } from "./fallback";
@@ -238,7 +238,6 @@ export class MediaEngine {
   private size(d: ShaderMedia | CanvasMedia): [number, number] {
     const [w, h] = d.res ?? [320, 320];
     let s = QUALITY_SCALE[this.quality];
-    if (d.kind === "shader" && HEAVY_PROGRAMS.includes(this.programFor(d))) s *= 0.75;
     if (this.isMobile) s *= 0.8;
     // Technical drawings and labels should not dissolve into low-resolution
     // UI when the governor trims expensive procedural effects.
@@ -603,7 +602,7 @@ export class MediaEngine {
       h: e.canvas.height,
       t: this.elapsed,
       accent: e.desc.accent ?? "#3fd6c8",
-      variant: 0,
+      variant: e.desc.variant ?? 0,
       text: e.desc.text,
     };
     e.ctx.save();

@@ -1,0 +1,587 @@
+{
+  "version": 8,
+  "asset": "projection-interior-details-v8.glb",
+  "authoringAxes": "native Three XYZ front +Z",
+  "placement": {
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "rotation": [
+      0,
+      0,
+      0
+    ],
+    "scale": 1,
+    "parentRoot": [
+      10.2,
+      0,
+      -189
+    ],
+    "parentRotation": [
+      0,
+      -1.5707963267948966,
+      0
+    ],
+    "parentScale": 3
+  },
+  "items": [
+    {
+      "id": "central-cafe-chair-left",
+      "kind": "cream upholstered high cafe chair",
+      "position": [
+        -0.7,
+        0.1,
+        1.52
+      ],
+      "yaw": -1.5707963267948966,
+      "seatTop": 0.76,
+      "height": 1.045,
+      "bounds": {
+        "min": [
+          -0.9777997732162476,
+          0.09899932146072388,
+          1.2371717691421509
+        ],
+        "max": [
+          -0.4699999690055847,
+          1.1449999809265137,
+          1.8028281927108765
+        ]
+      }
+    },
+    {
+      "id": "central-cafe-chair-right",
+      "kind": "cream upholstered high cafe chair",
+      "position": [
+        0.7,
+        0.1,
+        1.52
+      ],
+      "yaw": 1.5707963267948966,
+      "seatTop": 0.76,
+      "height": 1.045,
+      "bounds": {
+        "min": [
+          0.4699999690055847,
+          0.09899932146072388,
+          1.2371717691421509
+        ],
+        "max": [
+          0.9777997732162476,
+          1.1449999809265137,
+          1.8028281927108765
+        ]
+      }
+    },
+    {
+      "id": "central-cafe-table",
+      "kind": "small round cafe table",
+      "position": [
+        0,
+        0.1,
+        1.52
+      ],
+      "radius": 0.33,
+      "topY": 1.1,
+      "bounds": {
+        "min": [
+          -0.3319999873638153,
+          0.10000000149011612,
+          1.187999963760376
+        ],
+        "max": [
+          0.3319999873638153,
+          1.100000023841858,
+          1.8519999980926514
+        ]
+      }
+    },
+    {
+      "id": "central-forecourt-champagne",
+      "kind": "plant vessel",
+      "position": [
+        -0.48,
+        0.1,
+        2.65
+      ],
+      "radius": 0.21,
+      "height": 0.56,
+      "rimY": 0.66,
+      "soilY": 0.64,
+      "plantTopTarget": 1.3,
+      "finish": "champagne",
+      "bounds": {
+        "min": [
+          -0.6916800141334534,
+          0.10000000149011612,
+          2.4383199214935303
+        ],
+        "max": [
+          -0.2683199942111969,
+          0.6600000262260437,
+          2.861680030822754
+        ]
+      }
+    },
+    {
+      "id": "central-forecourt-black",
+      "kind": "plant vessel",
+      "position": [
+        0.52,
+        0.1,
+        2.48
+      ],
+      "radius": 0.22,
+      "height": 0.65,
+      "rimY": 0.75,
+      "soilY": 0.73,
+      "plantTopTarget": 1.45,
+      "finish": "black ceramic with champagne lip",
+      "bounds": {
+        "min": [
+          0.2982400059700012,
+          0.10000000149011612,
+          2.258239984512329
+        ],
+        "max": [
+          0.7417600154876709,
+          0.75,
+          2.7017600536346436
+        ]
+      }
+    },
+    {
+      "id": "bar-right-black",
+      "kind": "plant vessel",
+      "position": [
+        2.32,
+        0.1,
+        1.48
+      ],
+      "radius": 0.18,
+      "height": 0.54,
+      "rimY": 0.64,
+      "soilY": 0.62,
+      "plantTopTarget": 1.18,
+      "finish": "black ceramic with champagne lip",
+      "bounds": {
+        "min": [
+          2.1385600566864014,
+          0.10000000149011612,
+          1.2985600233078003
+        ],
+        "max": [
+          2.5014400482177734,
+          0.6399999856948853,
+          1.6614400148391724
+        ]
+      }
+    },
+    {
+      "id": "stage-mini-conifer-0",
+      "kind": "plant vessel",
+      "position": [
+        -0.95,
+        1.25,
+        -0.04
+      ],
+      "radius": 0.075,
+      "height": 0.14,
+      "rimY": 1.3900000000000001,
+      "soilY": 1.37,
+      "plantTopTarget": 1.85,
+      "finish": "black ceramic with champagne lip",
+      "bounds": {
+        "min": [
+          -1.0255999565124512,
+          1.25,
+          -0.11559999734163284
+        ],
+        "max": [
+          -0.8744000196456909,
+          1.3899999856948853,
+          0.035599999129772186
+        ]
+      }
+    },
+    {
+      "id": "stage-mini-conifer-1",
+      "kind": "plant vessel",
+      "position": [
+        0.5,
+        1.25,
+        -0.04
+      ],
+      "radius": 0.075,
+      "height": 0.14,
+      "rimY": 1.3900000000000001,
+      "soilY": 1.37,
+      "plantTopTarget": 1.9000000000000001,
+      "finish": "champagne",
+      "bounds": {
+        "min": [
+          0.4244000017642975,
+          1.25,
+          -0.11559999734163284
+        ],
+        "max": [
+          0.5756000280380249,
+          1.3899999856948853,
+          0.035599999129772186
+        ]
+      }
+    },
+    {
+      "id": "stage-mini-conifer-2",
+      "kind": "plant vessel",
+      "position": [
+        1.8,
+        1.25,
+        -0.04
+      ],
+      "radius": 0.075,
+      "height": 0.14,
+      "rimY": 1.3900000000000001,
+      "soilY": 1.37,
+      "plantTopTarget": 1.9500000000000002,
+      "finish": "black ceramic with champagne lip",
+      "bounds": {
+        "min": [
+          1.7244000434875488,
+          1.25,
+          -0.11559999734163284
+        ],
+        "max": [
+          1.875599980354309,
+          1.3899999856948853,
+          0.035599999129772186
+        ]
+      }
+    },
+    {
+      "id": "cafe-bud-pot",
+      "kind": "plant vessel",
+      "position": [
+        0,
+        1.1,
+        1.52
+      ],
+      "radius": 0.045,
+      "height": 0.12,
+      "rimY": 1.2200000000000002,
+      "soilY": 1.2100000000000002,
+      "plantTopTarget": 1.42,
+      "finish": "champagne",
+      "bounds": {
+        "min": [
+          -0.04535999894142151,
+          1.100000023841858,
+          1.4746400117874146
+        ],
+        "max": [
+          0.04535999894142151,
+          1.2200000286102295,
+          1.5653599500656128
+        ]
+      }
+    },
+    {
+      "id": "cafe-espresso",
+      "kind": "porcelain espresso cup and saucer",
+      "position": [
+        -0.18,
+        1.1,
+        1.65
+      ],
+      "bounds": {
+        "min": [
+          -0.2370000034570694,
+          1.100000023841858,
+          1.593000054359436
+        ],
+        "max": [
+          -0.11702435463666916,
+          1.1729999780654907,
+          1.7070000171661377
+        ]
+      }
+    },
+    {
+      "id": "bar-espresso-left",
+      "kind": "porcelain espresso cup and saucer",
+      "position": [
+        -0.78,
+        0.95,
+        0.62
+      ],
+      "bounds": {
+        "min": [
+          -0.8370000123977661,
+          0.949999988079071,
+          0.5630000233650208
+        ],
+        "max": [
+          -0.7170243859291077,
+          1.0230000019073486,
+          0.6769999861717224
+        ]
+      }
+    },
+    {
+      "id": "bar-espresso-right",
+      "kind": "porcelain espresso cup and saucer",
+      "position": [
+        0.78,
+        0.95,
+        0.61
+      ],
+      "bounds": {
+        "min": [
+          0.7229999899864197,
+          0.949999988079071,
+          0.5529999732971191
+        ],
+        "max": [
+          0.8429756164550781,
+          1.0230000019073486,
+          0.6669999957084656
+        ]
+      }
+    },
+    {
+      "id": "bar-water-carafe",
+      "kind": "clear glass water carafe",
+      "position": [
+        2.1,
+        0.95,
+        0.51
+      ],
+      "bounds": {
+        "min": [
+          2.052000045776367,
+          0.949999988079071,
+          0.4620000123977661
+        ],
+        "max": [
+          2.1480000019073486,
+          1.2289999723434448,
+          0.5580000281333923
+        ]
+      }
+    },
+    {
+      "id": "reception-water-carafe",
+      "kind": "clear glass water carafe",
+      "position": [
+        -2.5,
+        1.2,
+        3.04
+      ],
+      "bounds": {
+        "min": [
+          -2.5480000972747803,
+          1.2000000476837158,
+          2.992000102996826
+        ],
+        "max": [
+          -2.4519999027252197,
+          1.4789999723434448,
+          3.0880000591278076
+        ]
+      }
+    },
+    {
+      "id": "reception-espresso",
+      "kind": "porcelain espresso cup and saucer",
+      "position": [
+        -3.0,
+        1.2,
+        3.13
+      ],
+      "bounds": {
+        "min": [
+          -3.056999921798706,
+          1.2000000476837158,
+          3.072999954223633
+        ],
+        "max": [
+          -2.9370243549346924,
+          1.2730000019073486,
+          3.187000036239624
+        ]
+      }
+    },
+    {
+      "id": "cafe-napkin-and-spoon",
+      "kind": "tabletop service props",
+      "bounds": {
+        "min": [
+          0.0925000011920929,
+          1.1019999980926514,
+          1.4900000095367432
+        ],
+        "max": [
+          0.20750001072883606,
+          1.118499994277954,
+          1.6500000953674316
+        ]
+      }
+    }
+  ],
+  "vessels": [
+    {
+      "id": "central-forecourt-champagne",
+      "position": [
+        -0.48,
+        0.1,
+        2.65
+      ],
+      "radius": 0.21,
+      "height": 0.56,
+      "rimY": 0.66,
+      "soilY": 0.64,
+      "plantTopTarget": 1.3,
+      "finish": "champagne"
+    },
+    {
+      "id": "central-forecourt-black",
+      "position": [
+        0.52,
+        0.1,
+        2.48
+      ],
+      "radius": 0.22,
+      "height": 0.65,
+      "rimY": 0.75,
+      "soilY": 0.73,
+      "plantTopTarget": 1.45,
+      "finish": "black ceramic with champagne lip"
+    },
+    {
+      "id": "bar-right-black",
+      "position": [
+        2.32,
+        0.1,
+        1.48
+      ],
+      "radius": 0.18,
+      "height": 0.54,
+      "rimY": 0.64,
+      "soilY": 0.62,
+      "plantTopTarget": 1.18,
+      "finish": "black ceramic with champagne lip"
+    },
+    {
+      "id": "stage-mini-conifer-0",
+      "position": [
+        -0.95,
+        1.25,
+        -0.04
+      ],
+      "radius": 0.075,
+      "height": 0.14,
+      "rimY": 1.3900000000000001,
+      "soilY": 1.37,
+      "plantTopTarget": 1.85,
+      "finish": "black ceramic with champagne lip"
+    },
+    {
+      "id": "stage-mini-conifer-1",
+      "position": [
+        0.5,
+        1.25,
+        -0.04
+      ],
+      "radius": 0.075,
+      "height": 0.14,
+      "rimY": 1.3900000000000001,
+      "soilY": 1.37,
+      "plantTopTarget": 1.9000000000000001,
+      "finish": "champagne"
+    },
+    {
+      "id": "stage-mini-conifer-2",
+      "position": [
+        1.8,
+        1.25,
+        -0.04
+      ],
+      "radius": 0.075,
+      "height": 0.14,
+      "rimY": 1.3900000000000001,
+      "soilY": 1.37,
+      "plantTopTarget": 1.9500000000000002,
+      "finish": "black ceramic with champagne lip"
+    },
+    {
+      "id": "cafe-bud-pot",
+      "position": [
+        0,
+        1.1,
+        1.52
+      ],
+      "radius": 0.045,
+      "height": 0.12,
+      "rimY": 1.2200000000000002,
+      "soilY": 1.2100000000000002,
+      "plantTopTarget": 1.42,
+      "finish": "champagne"
+    }
+  ],
+  "materialRoles": [
+    "Projection Interior V8 | ivory woven upholstery",
+    "Projection Interior V8 | ivory upholstery tailored seam",
+    "Projection Interior V8 | matte black architectural slender seating frame",
+    "Projection Interior V8 | soft satin champagne metal details",
+    "Projection Interior V8 | polished black stone tabletop",
+    "Projection Interior V8 | dark granular planting soil",
+    "Projection Interior V8 | black satin ceramic planter body",
+    "Projection Interior V8 | warm ivory porcelain cups",
+    "Projection Interior V8 | dark coffee liquid",
+    "Projection Interior V8 | clear glass drinking vessels",
+    "Projection Interior V8 | soft ivory paper napkins"
+  ],
+  "ambientOcclusion": {
+    "layer": "Col",
+    "samples": 32,
+    "radius": 0.1,
+    "objects": 10,
+    "occluderTriangles": 22716,
+    "corners": 42328,
+    "evaluatedPositions": 12254,
+    "rays": 392128,
+    "skipped": {
+      "non_mesh": 0,
+      "character": 0,
+      "distant_hall": 0,
+      "non_opaque_or_emissive": 1
+    },
+    "budgetReached": false,
+    "seconds": 1.236,
+    "minimum": 0.601,
+    "mean": 0.90666
+  },
+  "stats": {
+    "bytes": 592480,
+    "meshes": 11,
+    "vertices": 13798,
+    "triangles": 23836,
+    "bounds": {
+      "min": [
+        -3.056999921798706,
+        0.09899932146072388,
+        -0.11559999734163284
+      ],
+      "max": [
+        2.5014400482177734,
+        1.4789999723434448,
+        3.187000036239624
+      ]
+    }
+  },
+  "bytes": 592480,
+  "sha256": "12aa06eeb04f4af97f02c5c742fff63d2c0580e16e6501a56770acee92ef5241",
+  "provenance": "Original bespoke Blender hospitality geometry; no attached image pixels or downloaded furniture models."
+}

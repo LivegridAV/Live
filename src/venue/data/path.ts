@@ -1,4 +1,9 @@
 import * as THREE from "three";
+import { ANAMORPHIC_VIEW } from "./anamorphic";
+import { TECHNICAL_VIEW } from "./technical";
+import { PROJECTION_VIEW } from "./projection";
+import { RENTAL2026_VIEWS } from "./ledRental2026";
+import { PLACEMENTS, transformOldWorldToNew, type InstallationId } from "./placements";
 
 /**
  * The camera path through the venue.
@@ -21,130 +26,74 @@ export interface Keyframe {
   fov: number;
 }
 
-export const KEYFRAMES: Keyframe[] = [
-  /* ── Arrival ─────────────────────────────────────────────
-     Establish the building wide, then break the centre line: the camera
-     drifts left, swings right past the entrance blades and only lines up on
-     the portal at the last moment. Travelling straight down the middle from
-     the first frame is what made the old opening read as a fly-through. */
-  { p: 0.0, pos: [0, 2.45, 24], look: [0, 5.0, 0], fov: 48 },
-  { p: 0.03, pos: [-3.4, 2.25, 17.5], look: [1.6, 4.4, -2], fov: 50 },
-  { p: 0.062, pos: [2.8, 1.95, 10.6], look: [-1.2, 3.4, -6], fov: 52 },
-  { p: 0.095, pos: [0.2, 1.82, 4.6], look: [0, 2.7, -10], fov: 50 },
+/** The arena retains its original 61-frame tangent multiplier and boundary neighbours, independent of exhibition edits. */
+const ARENA_BASELINE_FRAMES:Keyframe[]=[
+  {"p":0.767,"pos":[0,2.2,-228],"look":[0,4,-246],"fov":56},
+  {"p":0.789,"pos":[0,2.2,-229],"look":[0,4.8,-249],"fov":56},
+  {"p":0.812,"pos":[0,2.05,-237],"look":[0,4.8,-252],"fov":54},
+  {"p":0.83,"pos":[0,2.6,-248],"look":[0,8.5,-266],"fov":60},
+  {"p":0.846,"pos":[0,3.2,-256],"look":[0,12,-284],"fov":64},
+  {"p":0.862,"pos":[0,4.2,-276],"look":[0,11,-338],"fov":56},
+  {"p":0.884,"pos":[-2.6,4.6,-288],"look":[0,10,-346],"fov":52},
+  {"p":0.906,"pos":[2.2,5,-297],"look":[0,9.4,-350],"fov":48},
+  {"p":0.932,"pos":[0,3.5,-297],"look":[0,7.2,-353],"fov":52},
+  {"p":0.95,"pos":[0,3.8,-301],"look":[0,7.2,-353],"fov":53},
+  {"p":0.968,"pos":[0,6.6,-311],"look":[0,9.2,-353],"fov":42},
+  {"p":0.986,"pos":[0,8.2,-307],"look":[0,9.8,-353],"fov":40},
+  {"p":1,"pos":[0,7,-309],"look":[0,8.8,-353],"fov":39},
+];
+export const ARENA_PATH_START=.812;
+const FROZEN_CONNECTION_START=.789, ORIGINAL_TANGENT_MULTIPLIER=60, ORIGINAL_ARENA_FRAME_OFFSET=48;
+const receptionPosition=transformOldWorldToNew("R",[-1.445,2.448,-64]);
+const receptionLook=transformOldWorldToNew("R",[1.05,4.56,-83.79]);
+/** Forum positions are tied to installation anchors, never imported pivots. */
+const forum=(id:InstallationId,x:number,y:number,offsetZ:number):[number,number,number]=>[x,y,PLACEMENTS[id].root[2]+offsetZ];
+const focus=(id:InstallationId,y:number):[number,number,number]=>[PLACEMENTS[id].root[0],y,PLACEMENTS[id].root[2]];
 
-  /* Entry portal — the frame passes around the viewer. */
-  { p: 0.122, pos: [0, 1.74, -0.8], look: [0, 2.25, -14], fov: 52 },
 
-  /* ── Four-sided LED tunnel (-3.4 → -28.4) ────────────────
-     Small lateral offsets only. Inside a projected environment the parallax
-     does the work; swinging the camera about would fight the illusion. */
-  { p: 0.15, pos: [0, 1.74, -4.6], look: [0, 2.0, -22], fov: 64 },
-  { p: 0.186, pos: [-0.52, 1.82, -10.5], look: [0.35, 1.95, -30], fov: 68 },
-  { p: 0.222, pos: [0.56, 1.88, -16.5], look: [-0.3, 2.0, -34], fov: 68 },
-  { p: 0.256, pos: [-0.26, 1.8, -22.5], look: [0.16, 2.1, -38], fov: 65 },
-  { p: 0.282, pos: [0, 1.82, -27.6], look: [0, 2.45, -40], fov: 60 },
-
-  /* ── Vestibule, then the hall reveal ────────────────────
-     The tilt up at -37 is the reveal: the ceiling leaves the frame and a
-     fifteen-metre hall arrives. */
-  { p: 0.3, pos: [0, 2.0, -31.5], look: [0, 3.3, -44], fov: 56 },
-  { p: 0.318, pos: [0, 2.4, -37], look: [-1.6, 6.8, -52], fov: 58 },
-  { p: 0.34, pos: [3, 2.6, -38.5], look: [-9, 5.7, -50], fov: 56 },
-
-  /* ── Creative LED gallery ────────────────────────────────
-     Each installation gets a shape: come at it, go through or beside it, then
-     turn out of it toward the next. The camera is inside the pillar cluster
-     at 0.376 and directly under the ring at 0.496 — those two moments are
-     what make the gallery feel walked rather than watched. */
-  { p: 0.36, pos: [-2.3, 2.2, -45.5], look: [-9.8, 3.4, -50.5], fov: 52 },
-  { p: 0.376, pos: [-6.6, 1.95, -49.5], look: [-11.6, 3.2, -55.5], fov: 55 },
-  { p: 0.392, pos: [-4.0, 2.15, -54.5], look: [3.2, 3.2, -59], fov: 52 },
-  { p: 0.41, pos: [1.2, 2.05, -57.5], look: [8.6, 3.0, -60.5], fov: 50 },
-  { p: 0.428, pos: [5.2, 2.0, -61.5], look: [9.8, 2.6, -66], fov: 52 },
-  /* The close pass on the cylinder.
-     These two sit about two metres off its surface, which is the point — but at
-     that distance a 13.8 m circumference rendered at 1280 px is ~90 texels per
-     metre and the content goes soft, so the media manifest sizes this surface
-     from its *closest approach* rather than from how big it is on screen from
-     the aisle. Widening the lens at 0.446 keeps some room in the frame; pulling
-     the camera back instead put it a metre from the blades stand's backdrop. */
-  { p: 0.446, pos: [-4, 2.6, -61], look: [6, 4, -73], fov: 66 },
-  { p: 0.462, pos: [-4, 2.8, -64], look: [6, 4.3, -75], fov: 68 },
-  { p: 0.48, pos: [1.4, 2.4, -75], look: [-3.2, 6.0, -78], fov: 56 },
-  { p: 0.496, pos: [-3.2, 2.5, -78.6], look: [-3.2, 7.6, -80.2], fov: 62 },
-  { p: 0.512, pos: [-4.2, 2.1, -82], look: [-9.6, 2.3, -85], fov: 50 },
-  { p: 0.528, pos: [-6.2, 1.88, -81.6], look: [-10.2, 1.7, -84.4], fov: 50 },
-  { p: 0.544, pos: [-2.6, 2.1, -88.5], look: [6.9, 2.9, -91], fov: 52 },
-  { p: 0.556, pos: [2.6, 2.05, -92], look: [-8.6, 2.7, -94], fov: 52 },
-  /* The anamorphic viewing point. The corner is rendered for exactly this
-     position, so the keyframe is not a composition choice — it is the mark. */
-  { p: 0.566, pos: [-1.7, 1.78, -94.1], look: [-6.6, 2.4, -99], fov: 50 },
-
-  /* ── Service boulevard: eight pavilions ─────────────────
-     Alternating sides with a transition keyframe between each, so the camera
-     crosses the aisle instead of sliding along it. The `p` of each pavilion
-     keyframe matches its entry in data/pavilions.ts — that is what puts the
-     stall light, the prompt and the camera on the same beat. */
-  { p: 0.578, pos: [-1.1, 2.0, -100.5], look: [0, 3.1, -112], fov: 54 },
-  { p: 0.592, pos: [4.5, 2.8, -105.5], look: [-14, 4.2, -117], fov: 62 },
-  { p: 0.605, pos: [4.8, 2.9, -111], look: [-14, 4.1, -120], fov: 63 },
-  { p: 0.617, pos: [9, 3.0, -120], look: [-14, 4.0, -122], fov: 64 },
-  { p: 0.63, pos: [4.8, 2.9, -122], look: [-14, 4.0, -128], fov: 62 },
-  { p: 0.642, pos: [4, 2.8, -128.5], look: [-14, 4.0, -134], fov: 60 },
-  { p: 0.655, pos: [-0.6, 2.4, -140], look: [2.4, 3.0, -149], fov: 56 },
-  { p: 0.667, pos: [-3.5, 2.8, -149.5], look: [14, 4.2, -154.5], fov: 60 },
-  { p: 0.68, pos: [0.6, 2.3, -159], look: [-2.4, 3.0, -166], fov: 54 },
-  { p: 0.692, pos: [1, 2.8, -165.5], look: [-14, 3.8, -169.5], fov: 58 },
-  { p: 0.705, pos: [-0.6, 2.16, -177], look: [2.4, 3.0, -184], fov: 54 },
-  { p: 0.717, pos: [-1, 2.8, -184.5], look: [14, 3.8, -188.5], fov: 58 },
-  { p: 0.73, pos: [0.6, 2.16, -192], look: [-2.4, 3.0, -199], fov: 54 },
-  { p: 0.742, pos: [1, 2.8, -199.5], look: [-14, 3.8, -203.5], fov: 58 },
-  { p: 0.755, pos: [-0.6, 2.16, -207], look: [2.4, 3.0, -214], fov: 54 },
-  { p: 0.767, pos: [-1, 2.8, -214.5], look: [14, 3.8, -218.5], fov: 58 },
-
-  /* ── Sound & lighting partner bay ───────────────────────── */
-  { p: 0.789, pos: [-1, 2.8, -228], look: [14, 3.8, -232], fov: 58 },
-
-  /* ── Arena approach and portal ──────────────────────────
-     The portal is established from a distance, then the camera flies through
-     it; the reveal on the far side is a tilt up into a room three times the
-     height of the one just left. */
-  { p: 0.812, pos: [0, 2.05, -237], look: [0, 4.8, -252], fov: 54 },
-  { p: 0.83, pos: [0, 2.6, -248], look: [0, 8.5, -266], fov: 60 },
-  { p: 0.846, pos: [0, 3.2, -256], look: [0, 12.0, -284], fov: 64 },
-
-  /* ── Main arena: the stage grows until it owns the frame ──
-     The set is sixty-plus metres wide, so the approach is about the array
-     *filling* the frame rather than about closing distance: the camera comes
-     down the centre aisle and the elevation keeps opening sideways past the
-     edges of the picture. An earlier cut held the stage small until 0.91,
-     which is the one mistake an arena sequence cannot survive.
-
-     The camera also climbs, from eye height on the floor to five metres up by
-     the hero mark. That is not a flourish: the house ceiling is the top third
-     of this composition, and from floor level it sits above the top of the
-     frame no matter how wide the lens goes. */
-  { p: 0.862, pos: [0, 4.2, -276], look: [0, 11.0, -338], fov: 56 },
-  { p: 0.884, pos: [-2.6, 4.6, -288], look: [0, 10.0, -346], fov: 52 },
-  { p: 0.906, pos: [2.2, 5.0, -297], look: [0, 9.4, -350], fov: 48 },
-
-  /* ── Main stage ─────────────────────────────────────────
-     Hero position: fifty metres out on the centre line, five metres up. From
-     here the array runs edge to edge, the centre canvas alone is a third of
-     the picture width, the lit ceiling recedes across the top and the seating
-     falls away underneath — the whole room in one frame, which is the shot
-     the reference is built around. */
-  { p: 0.932, pos: [0, 3.5, -297], look: [0, 7.2, -353], fov: 52 },
-  { p: 0.95, pos: [0, 3.8, -301], look: [0, 7.2, -353], fov: 53 },
-
-  /* ── Finale ─────────────────────────────────────────────
-     The camera keeps rising and moves in. Nothing else in the venue leaves
-     the ground, so the lift reads as the show ending. */
-  { p: 0.968, pos: [0, 6.6, -311], look: [0, 9.2, -353], fov: 42 },
-  { p: 0.986, pos: [0, 8.2, -307], look: [0, 9.8, -353], fov: 40 },
-
-  /* ── Contact settle ─────────────────────────────────────── */
-  { p: 1.0, pos: [0, 7.0, -309], look: [0, 8.8, -353], fov: 39 },
+export const KEYFRAMES:Keyframe[]=[
+  {p:0,pos:[0,1.7,8],look:[0,5.2,-14.4],fov:52},
+  {p:.03,pos:[-.25,1.7,6],look:[0,4.8,-14.4],fov:54},
+  {p:.062,pos:[.25,1.7,3],look:[0,4.2,-16],fov:56},
+  {p:.095,pos:[.2,1.7,1],look:[0,3.2,-19],fov:54},
+  {p:.122,pos:[0,1.7,-5],look:[0,3,-22],fov:56},
+  {p:.15,pos:[0,1.7,-12],look:[0,3,-26],fov:62},
+  {p:.186,pos:[-.52,1.7,-16.8],look:[.35,3,-30],fov:66},
+  {p:.222,pos:[.56,1.7,-20],look:[-.3,2.5,-34],fov:66},
+  {p:.256,pos:[-.26,1.7,-24],look:[.16,2.1,-38],fov:64},
+  {p:.282,pos:[0,1.7,-27.6],look:[0,2.45,-40],fov:60},
+  {p:.3,pos:[0,1.82,-31.5],look:[0,3.3,-44],fov:56},
+  {p:.318,pos:forum("P1",0,1.82,6.695),look:focus("P1",6.5),fov:58},
+  {p:.34,pos:forum("P1",1.5,1.82,3.695),look:focus("P1",6.5),fov:52},
+  {p:.354,pos:forum("P2",0,1.82,.195),look:focus("P2",5.9),fov:52},
+  {p:.366,pos:forum("P3",-1.2,1.82,6.695),look:focus("P3",5.3),fov:54},
+  {p:.376,pos:forum("P4",-1,1.82,2.195),look:focus("P4",4.8),fov:56},
+  {p:.4,pos:forum("R",0,1.82,-6.805),look:focus("R",4.3),fov:60},
+  {p:.42,pos:[receptionPosition[0],1.82,receptionPosition[2]],look:receptionLook,fov:64.924},
+  {p:.446,pos:receptionPosition,look:receptionLook,fov:64.924},
+  {p:.462,pos:receptionPosition,look:receptionLook,fov:64.924},
+  {p:.48,pos:forum("R",4,2.1,-9.805),look:focus("R",4),fov:62},
+  {p:.5,pos:forum("R",1,2.1,-18.805),look:focus("R",4),fov:58},
+  {p:.52,pos:forum("S1",0,2.1,29.15),look:focus("S1",4.5),fov:56},
+  {p:.536,pos:forum("S1",0,2.15,6.15),look:focus("S1",5.6),fov:48},
+  {p:.552,pos:ANAMORPHIC_VIEW.position,look:ANAMORPHIC_VIEW.look,fov:ANAMORPHIC_VIEW.fov},
+  {p:.568,pos:ANAMORPHIC_VIEW.position,look:ANAMORPHIC_VIEW.look,fov:ANAMORPHIC_VIEW.fov},
+  {p:.58,pos:forum("S1",-1,2.15,-19.35),look:focus("S1",5.6),fov:44},
+  {p:.59,pos:forum("S2",-4,2.4,-13.85),look:focus("S2",5),fov:45},
+  {p:.605,pos:RENTAL2026_VIEWS.front.position,look:RENTAL2026_VIEWS.front.look,fov:RENTAL2026_VIEWS.front.fov},
+  {p:.622,pos:RENTAL2026_VIEWS.front.position,look:RENTAL2026_VIEWS.front.look,fov:RENTAL2026_VIEWS.front.fov},
+  {p:.635,pos:forum("S2",-3,2.3,-19.85),look:focus("S2",4.5),fov:52},
+  {p:.647,pos:forum("S3",0,2.2,31.28),look:focus("S3",3.5),fov:54},
+  {p:.659,pos:forum("S3",3,2.2,10.28),look:focus("S3",3.5),fov:45},
+  {p:.672,pos:TECHNICAL_VIEW.position,look:TECHNICAL_VIEW.look,fov:TECHNICAL_VIEW.fov},
+  {p:.69,pos:TECHNICAL_VIEW.position,look:TECHNICAL_VIEW.look,fov:TECHNICAL_VIEW.fov},
+  {p:.702,pos:forum("S3",1,2.2,-13.72),look:focus("S3",3.4),fov:48},
+  {p:.708,pos:forum("S4",-3,2.7,-10.72),look:focus("S4",6.5),fov:45},
+  {p:.718,pos:PROJECTION_VIEW.position,look:PROJECTION_VIEW.look,fov:PROJECTION_VIEW.fov},
+  {p:.738,pos:PROJECTION_VIEW.position,look:PROJECTION_VIEW.look,fov:PROJECTION_VIEW.fov},
+  {p:.754,pos:forum("S4",-2,2.2,-18.72),look:forum("S4",16,4,-5.72),fov:52},
+  {p:.767,pos:forum("S4",0,2.2,-36.72),look:[0,3.8,-244],fov:54},
+  ...ARENA_BASELINE_FRAMES.filter(frame=>frame.p>=FROZEN_CONNECTION_START),
 ];
 
 /* ── Hermite interpolation with Catmull-Rom tangents ───── */
@@ -176,17 +125,36 @@ function hermite(
 /** Pre-baked vectors so sampling allocates nothing per frame. */
 const POS = KEYFRAMES.map((k) => new THREE.Vector3(...k.pos));
 const LOOK = KEYFRAMES.map((k) => new THREE.Vector3(...k.look));
+const ARENA_POS=ARENA_BASELINE_FRAMES.map(frame=>new THREE.Vector3(...frame.pos));
+const ARENA_LOOK=ARENA_BASELINE_FRAMES.map(frame=>new THREE.Vector3(...frame.look));
 
 /** Catmull-Rom tangents, scaled to the (uneven) progress spacing. */
 function tangents(points: THREE.Vector3[]) {
-  return points.map((_, i) => {
+  return points.map((point, i) => {
     const prev = points[Math.max(0, i - 1)];
     const next = points[Math.min(points.length - 1, i + 1)];
+    if ((i > 0 && point.equals(prev)) || (i < points.length - 1 && point.equals(next))) {
+      return new THREE.Vector3();
+    }
     return new THREE.Vector3().subVectors(next, prev).multiplyScalar(0.5);
   });
 }
-const POS_T = tangents(POS);
-const LOOK_T = tangents(LOOK);
+const ARENA_POS_T=tangents(ARENA_POS),ARENA_LOOK_T=tangents(ARENA_LOOK);
+/** Component-monotone derivatives keep the exhibition dolly inside each authored waypoint corridor. */
+function exhibitionTangents(points:THREE.Vector3[],frozenTangents:THREE.Vector3[]){
+  return points.map((point,i)=>{
+    const frozen=ARENA_BASELINE_FRAMES.findIndex(frame=>frame.p===KEYFRAMES[i].p);
+    if(KEYFRAMES[i].p>=FROZEN_CONNECTION_START&&frozen>=0)return frozenTangents[frozen].clone().multiplyScalar(ORIGINAL_TANGENT_MULTIPLIER);
+    const prev=Math.max(0,i-1),next=Math.min(points.length-1,i+1),out=new THREE.Vector3();
+    for(const axis of ["x","y","z"] as const){
+      const before=(point[axis]-points[prev][axis])/Math.max(1e-8,KEYFRAMES[i].p-KEYFRAMES[prev].p);
+      const after=(points[next][axis]-point[axis])/Math.max(1e-8,KEYFRAMES[next].p-KEYFRAMES[i].p);
+      out[axis]=i===0?after:i===points.length-1?before:before*after>0?2*before*after/(before+after):0;
+    }
+    return out;
+  });
+}
+const POS_T=exhibitionTangents(POS,ARENA_POS_T),LOOK_T=exhibitionTangents(LOOK,ARENA_LOOK_T);
 
 const _m0 = new THREE.Vector3();
 const _m1 = new THREE.Vector3();
@@ -206,35 +174,19 @@ const _outLook = new THREE.Vector3();
  * Sample the path. Mutates and returns shared vectors — copy them if you need
  * to keep the values past the current frame.
  */
-export function samplePath(progress: number, out: PathSample): PathSample {
-  const p = THREE.MathUtils.clamp(progress, 0, 1);
-
-  // Locate the segment. Linear scan is fine: ~35 keyframes, and the camera
-  // moves monotonically so the branch predictor loves it.
-  let i = 0;
-  while (i < KEYFRAMES.length - 2 && KEYFRAMES[i + 1].p < p) i++;
-
-  const a = KEYFRAMES[i];
-  const b = KEYFRAMES[i + 1];
-  const span = Math.max(1e-6, b.p - a.p);
-  const t = THREE.MathUtils.clamp((p - a.p) / span, 0, 1);
-
-  // Tangents are in "per keyframe index" space; rescale to this segment's
-  // progress width so uneven keyframe spacing still produces smooth speed.
-  const scale = span * (KEYFRAMES.length - 1);
-
-  _m0.copy(POS_T[i]).multiplyScalar(scale);
-  _m1.copy(POS_T[i + 1]).multiplyScalar(scale);
-  hermite(_outPos, POS[i], POS[i + 1], _m0, _m1, t);
-
-  _m0.copy(LOOK_T[i]).multiplyScalar(scale);
-  _m1.copy(LOOK_T[i + 1]).multiplyScalar(scale);
-  hermite(_outLook, LOOK[i], LOOK[i + 1], _m0, _m1, t);
-
-  out.pos.copy(_outPos);
-  out.look.copy(_outLook);
-  out.fov = THREE.MathUtils.lerp(a.fov, b.fov, smooth(t));
-  out.segment = i;
+export function samplePath(progress:number,out:PathSample):PathSample{
+  const p=THREE.MathUtils.clamp(progress,0,1),frozen=p>=FROZEN_CONNECTION_START;
+  const frames=frozen?ARENA_BASELINE_FRAMES:KEYFRAMES,positions=frozen?ARENA_POS:POS,looks=frozen?ARENA_LOOK:LOOK;
+  const positionTangents=frozen?ARENA_POS_T:POS_T,lookTangents=frozen?ARENA_LOOK_T:LOOK_T;
+  let i=0;while(i<frames.length-2&&frames[i+1].p<p)i++;
+  const a=frames[i],b=frames[i+1],span=Math.max(1e-6,b.p-a.p),t=THREE.MathUtils.clamp((p-a.p)/span,0,1);
+  const scale=span*(frozen?ORIGINAL_TANGENT_MULTIPLIER:1);
+  _m0.copy(positionTangents[i]).multiplyScalar(scale);_m1.copy(positionTangents[i+1]).multiplyScalar(scale);
+  hermite(_outPos,positions[i],positions[i+1],_m0,_m1,t);
+  _m0.copy(lookTangents[i]).multiplyScalar(scale);_m1.copy(lookTangents[i+1]).multiplyScalar(scale);
+  hermite(_outLook,looks[i],looks[i+1],_m0,_m1,t);
+  out.pos.copy(_outPos);out.look.copy(_outLook);out.fov=THREE.MathUtils.lerp(a.fov,b.fov,smooth(t));
+  out.segment=frozen?ORIGINAL_ARENA_FRAME_OFFSET+i:i;
   return out;
 }
 

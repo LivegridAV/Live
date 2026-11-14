@@ -1,3 +1,4 @@
+import { EXHIBITION_PROGRESS as EP, placementWorldPoint } from "./placements";
 import { SERVICES, type ServiceDetail } from "@/content/services";
 
 /**
@@ -47,8 +48,8 @@ export const PAVILIONS: Pavilion[] = [
     support: "From technical planning to show-ready systems.",
     services: ["av-engineering"],
     side: -1,
-    z: -112,
-    p: 0.592,
+    z: placementWorldPoint("S3",[6,0,0])[2],
+    p: 0.675,
     screens: ["av-signal-diagram", "av-led-plan", "av-rack-status"],
     accent: "#8fa3b8",
     form: "console",
@@ -60,9 +61,9 @@ export const PAVILIONS: Pavilion[] = [
     doing: "Content & Visual Production",
     support: "Motion, 3D and anamorphic content built for the exact canvas.",
     services: ["content-design", "3d-anamorphic", "presentation-content"],
-    side: 1,
-    z: -153,
-    p: 0.667,
+    side: -1,
+    z: placementWorldPoint("S1",[0,0,0])[2],
+    p: EP.anamorphic.overview,
     screens: ["content-motion", "content-3d", "content-anamorphic"],
     accent: "#d9a05f",
     form: "gallery",
@@ -74,9 +75,9 @@ export const PAVILIONS: Pavilion[] = [
     doing: "LED Display Solutions",
     support: "Screen technology, system engineering and creative application.",
     services: ["led-display-rental"],
-    side: -1,
-    z: -168,
-    p: 0.692,
+    side: 1,
+    z: placementWorldPoint("S2",[0,0,0])[2],
+    p: EP.rental.overview,
     screens: ["led-formats", "led-pitch", "led-install"],
     accent: "#c3cbd2",
     form: "rack",
@@ -84,13 +85,13 @@ export const PAVILIONS: Pavilion[] = [
   {
     id: "spatial",
     no: "06",
-    headline: "Spatial Experiences",
-    doing: "Projection Mapping & Spatial",
-    support: "Projection mapping and immersive rooms — architecture as the screen.",
+    headline: "Projection Mapping",
+    doing: "Projection Mapping",
+    support: "Transform spaces into stories.",
     services: ["projection-mapping", "immersive-experiences"],
     side: 1,
-    z: -187,
-    p: 0.717,
+    z: placementWorldPoint("S4",[0,0,0])[2],
+    p: EP.projection.overview,
     screens: ["mapping-facade", "immersive-room", "mapping-warp"],
     accent: "#b98a6a",
     form: "vault",
@@ -103,8 +104,8 @@ export const PAVILIONS: Pavilion[] = [
     support: "VJ, timeline and console operation — cued, previewed, programmed.",
     services: ["show-control-media-server"],
     side: -1,
-    z: -122,
-    p: 0.617,
+    z: placementWorldPoint("S3",[0,0,0])[2],
+    p: 0.681,
     screens: ["sc-cues", "sc-preview", "sc-program", "sc-sources"],
     accent: "#7f9aa8",
     form: "control",
@@ -117,8 +118,8 @@ export const PAVILIONS: Pavilion[] = [
     support: "Multi-camera, multiview, program and stream — run as one.",
     services: ["live-production", "broadcast-streaming"],
     side: -1,
-    z: -132,
-    p: 0.642,
+    z: placementWorldPoint("S3",[-6,0,0])[2],
+    p: 0.687,
     screens: ["lp-multiview", "lp-program", "lp-stream"],
     accent: "#a8705f",
     form: "broadcast",
@@ -167,6 +168,12 @@ export const PARTNER_BAY = {
   screens: ["partner-bay"],
   accent: "#c08a54",
 };
+
+/** Physical service exhibits currently installed in the walkthrough.
+ * The full catalog above also serves the normal service pages. */
+export const VENUE_PAVILIONS = PAVILIONS
+  .filter(p => ["av-engineering", "show-control", "live-production", "led-solutions", "spatial"].includes(p.id))
+  .sort((a,b) => a.p-b.p);
 
 /* ── lookups ───────────────────────────────────────────── */
 

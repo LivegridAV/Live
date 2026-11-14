@@ -1,0 +1,880 @@
+{
+  "version": "projection-finish-v2",
+  "asset": "projection-finish-v2-crystals.glb",
+  "sha256": "b186b8af2d5ae8ab644611920866fa7b8b7b555692349da4690890d97653075a",
+  "units": "metres",
+  "bounds": {
+    "min": [
+      -3.727454423904419,
+      0.03500000014901161,
+      -2.5955729484558105
+    ],
+    "max": [
+      3.6898434162139893,
+      8.495354652404785,
+      2.581200361251831
+    ]
+  },
+  "stats": {
+    "file": "projection-finish-v2-crystals.glb",
+    "bytes": 294472,
+    "meshes": 7,
+    "vertices": 3754,
+    "triangles": 5206,
+    "bounds": {
+      "min": [
+        -3.727454423904419,
+        0.03500000014901161,
+        -2.5955729484558105
+      ],
+      "max": [
+        3.6898434162139893,
+        8.495354652404785,
+        2.581200361251831
+      ]
+    },
+    "stageRadius": 3.9,
+    "maximumRadius": 3.7982471790751924
+  },
+  "projectionDomain": {
+    "min": [
+      -4.0,
+      0
+    ],
+    "max": [
+      4.0,
+      8.55
+    ]
+  },
+  "placement": {
+    "position": [
+      0,
+      0.915,
+      -2.8
+    ],
+    "scale": [
+      1,
+      1,
+      1
+    ]
+  },
+  "reservedEnvelope": {
+    "width": 7.44,
+    "height": 8.46,
+    "depth": 5.21
+  },
+  "majorLandmarks": 5,
+  "crystals": [
+    {
+      "name": "v2 highest off centre silver and ivory fracture",
+      "kind": "broad full width folded architectural prism",
+      "centreXZ": [
+        -0.5,
+        -0.38
+      ],
+      "width": 1.3,
+      "depth": 1.35,
+      "roofHeights": [
+        8.5,
+        8.08,
+        7.1,
+        7.32,
+        8.1
+      ],
+      "lean": [
+        -0.15,
+        -0.07
+      ],
+      "spin": -0.075,
+      "structuralSections": 3,
+      "whiteCrownBase": null,
+      "frontRoles": [
+        "Projection Crystals | ivory sculpted return",
+        "Projection Crystals | white projected sculpted facade | pale blue secondary facet"
+      ],
+      "lowerFrontRoles": [
+        "Projection Crystals | white projected sculpted facade",
+        "Projection Crystals | white projected sculpted facade | pale blue secondary facet"
+      ],
+      "closedSolid": true
+    },
+    {
+      "name": "v2 central notched blue folded monolith",
+      "kind": "broad full width folded architectural prism",
+      "centreXZ": [
+        0.64,
+        0.05
+      ],
+      "width": 1.36,
+      "depth": 1.31,
+      "roofHeights": [
+        6.8,
+        7.67,
+        7.18,
+        7.36,
+        6.96
+      ],
+      "lean": [
+        0.22,
+        -0.13
+      ],
+      "spin": -0.1,
+      "structuralSections": 3,
+      "whiteCrownBase": null,
+      "frontRoles": [
+        "Projection Crystals | white projected sculpted facade | pale blue secondary facet",
+        "Projection Crystals | white projected sculpted facade"
+      ],
+      "lowerFrontRoles": [
+        "Projection Crystals | white projected sculpted facade",
+        "Projection Crystals | white projected sculpted facade | pale blue secondary facet"
+      ],
+      "closedSolid": true
+    },
+    {
+      "name": "v2 left champagne split broad tower",
+      "kind": "broad full width folded architectural prism",
+      "centreXZ": [
+        -1.92,
+        -0.34
+      ],
+      "width": 1.28,
+      "depth": 1.3,
+      "roofHeights": [
+        5.42,
+        6.1,
+        5.6,
+        5.47,
+        5.84
+      ],
+      "lean": [
+        0.13,
+        -0.1
+      ],
+      "spin": 0.085,
+      "structuralSections": 3,
+      "whiteCrownBase": null,
+      "frontRoles": [
+        "Projection Crystals | mapped amber primary facet",
+        "Projection Crystals | white projected sculpted facade"
+      ],
+      "lowerFrontRoles": [
+        "Projection Crystals | white projected sculpted facade",
+        "Projection Crystals | mapped amber primary facet"
+      ],
+      "closedSolid": true
+    },
+    {
+      "name": "v2 right rear rising ivory oblique tower",
+      "kind": "broad full width folded architectural prism",
+      "centreXZ": [
+        1.8,
+        -0.76
+      ],
+      "width": 1.2,
+      "depth": 1.3,
+      "roofHeights": [
+        5.96,
+        6.45,
+        5.7,
+        5.94,
+        6.17
+      ],
+      "lean": [
+        -0.1,
+        -0.08
+      ],
+      "spin": 0.13,
+      "structuralSections": 3,
+      "whiteCrownBase": null,
+      "frontRoles": [
+        "Projection Crystals | white projected sculpted facade",
+        "Projection Crystals | ivory sculpted return"
+      ],
+      "lowerFrontRoles": [
+        "Projection Crystals | white projected sculpted facade | pale blue secondary facet",
+        "Projection Crystals | white projected sculpted facade"
+      ],
+      "closedSolid": true
+    },
+    {
+      "name": "v2 right foreground champagne cut mass",
+      "kind": "broad full width folded architectural prism",
+      "centreXZ": [
+        2.58,
+        0.25
+      ],
+      "width": 1.2,
+      "depth": 1.2,
+      "roofHeights": [
+        4.17,
+        4.98,
+        4.43,
+        4.19,
+        4.72
+      ],
+      "lean": [
+        -0.14,
+        -0.06
+      ],
+      "spin": -0.1,
+      "structuralSections": 3,
+      "whiteCrownBase": null,
+      "frontRoles": [
+        "Projection Crystals | mapped amber primary facet",
+        "Projection Crystals | white projected sculpted facade | pale blue secondary facet"
+      ],
+      "lowerFrontRoles": [
+        "Projection Crystals | white projected sculpted facade",
+        "Projection Crystals | mapped amber primary facet"
+      ],
+      "closedSolid": true
+    },
+    {
+      "name": "v2 outer left descending white shard",
+      "kind": "broad full width folded architectural prism",
+      "centreXZ": [
+        -2.93,
+        0.3
+      ],
+      "width": 0.9,
+      "depth": 1.1,
+      "roofHeights": [
+        3.58,
+        4.42,
+        3.9,
+        3.75,
+        4.12
+      ],
+      "lean": [
+        -0.12,
+        -0.04
+      ],
+      "spin": -0.16,
+      "structuralSections": 3,
+      "whiteCrownBase": null,
+      "frontRoles": [
+        "Projection Crystals | white projected sculpted facade",
+        "Projection Crystals | white projected sculpted facade | pale blue secondary facet"
+      ],
+      "lowerFrontRoles": null,
+      "closedSolid": true
+    },
+    {
+      "name": "v2 leftmost low broken ivory block",
+      "kind": "broad full width folded architectural prism",
+      "centreXZ": [
+        -3.31,
+        0.45
+      ],
+      "width": 0.65,
+      "depth": 0.98,
+      "roofHeights": [
+        2.34,
+        3.02,
+        2.62,
+        2.49,
+        2.8
+      ],
+      "lean": [
+        0.06,
+        -0.03
+      ],
+      "spin": 0.12,
+      "structuralSections": 3,
+      "whiteCrownBase": null,
+      "frontRoles": [
+        "Projection Crystals | ivory sculpted return",
+        "Projection Crystals | white projected sculpted facade"
+      ],
+      "lowerFrontRoles": null,
+      "closedSolid": true
+    },
+    {
+      "name": "v2 rightmost low folded return",
+      "kind": "broad full width folded architectural prism",
+      "centreXZ": [
+        3.33,
+        0.53
+      ],
+      "width": 0.68,
+      "depth": 0.98,
+      "roofHeights": [
+        2.32,
+        3.04,
+        2.62,
+        2.55,
+        2.83
+      ],
+      "lean": [
+        -0.05,
+        0.02
+      ],
+      "spin": 0.1,
+      "structuralSections": 3,
+      "whiteCrownBase": null,
+      "frontRoles": [
+        "Projection Crystals | white projected sculpted facade",
+        "Projection Crystals | ivory sculpted return"
+      ],
+      "lowerFrontRoles": null,
+      "closedSolid": true
+    },
+    {
+      "name": "v2 left inner broad diagonal face",
+      "kind": "broad full width folded architectural prism",
+      "centreXZ": [
+        -1.19,
+        1.07
+      ],
+      "width": 1.18,
+      "depth": 1.1,
+      "roofHeights": [
+        2.4,
+        3.38,
+        2.83,
+        2.6,
+        3.05
+      ],
+      "lean": [
+        -0.1,
+        0.02
+      ],
+      "spin": 0.075,
+      "structuralSections": 3,
+      "whiteCrownBase": null,
+      "frontRoles": [
+        "Projection Crystals | white projected sculpted facade",
+        "Projection Crystals | white projected sculpted facade | pale blue secondary facet"
+      ],
+      "lowerFrontRoles": [
+        "Projection Crystals | ivory sculpted return",
+        "Projection Crystals | white projected sculpted facade"
+      ],
+      "closedSolid": true
+    },
+    {
+      "name": "v2 right inner stepped amber cleft",
+      "kind": "broad full width folded architectural prism",
+      "centreXZ": [
+        1.42,
+        1.21
+      ],
+      "width": 1.2,
+      "depth": 1.12,
+      "roofHeights": [
+        2.47,
+        3.64,
+        3.0,
+        2.72,
+        3.22
+      ],
+      "lean": [
+        0.12,
+        -0.02
+      ],
+      "spin": -0.1,
+      "structuralSections": 3,
+      "whiteCrownBase": null,
+      "frontRoles": [
+        "Projection Crystals | mapped amber primary facet",
+        "Projection Crystals | ivory sculpted return"
+      ],
+      "lowerFrontRoles": [
+        "Projection Crystals | white projected sculpted facade",
+        "Projection Crystals | mapped amber primary facet"
+      ],
+      "closedSolid": true
+    },
+    {
+      "name": "v2 foremost low folded white crystal",
+      "kind": "broad full width folded architectural prism",
+      "centreXZ": [
+        -0.13,
+        1.93
+      ],
+      "width": 1.23,
+      "depth": 1.1,
+      "roofHeights": [
+        1.34,
+        2.11,
+        1.63,
+        1.42,
+        1.84
+      ],
+      "lean": [
+        0.06,
+        0.0
+      ],
+      "spin": -0.11,
+      "structuralSections": 3,
+      "whiteCrownBase": null,
+      "frontRoles": [
+        "Projection Crystals | ivory sculpted return",
+        "Projection Crystals | white projected sculpted facade"
+      ],
+      "lowerFrontRoles": null,
+      "closedSolid": true
+    },
+    {
+      "name": "v2 radial interlocking foot 00",
+      "kind": "compact interlocking faceted rock",
+      "centreXZ": [
+        -2.42,
+        1.37
+      ],
+      "width": 1.28,
+      "depth": 0.98,
+      "height": 1.8,
+      "warmFaces": true,
+      "frontRoleOverrides": null
+    },
+    {
+      "name": "v2 radial interlocking foot 01",
+      "kind": "compact interlocking faceted rock",
+      "centreXZ": [
+        -0.95,
+        1.87
+      ],
+      "width": 1.18,
+      "depth": 0.98,
+      "height": 1.7,
+      "warmFaces": false,
+      "frontRoleOverrides": null
+    },
+    {
+      "name": "v2 radial interlocking foot 02",
+      "kind": "compact interlocking faceted rock",
+      "centreXZ": [
+        1.03,
+        1.89
+      ],
+      "width": 1.26,
+      "depth": 1.08,
+      "height": 1.9,
+      "warmFaces": true,
+      "frontRoleOverrides": null
+    },
+    {
+      "name": "v2 radial interlocking foot 03",
+      "kind": "compact interlocking faceted rock",
+      "centreXZ": [
+        2.82,
+        1.06
+      ],
+      "width": 0.98,
+      "depth": 1.02,
+      "height": 1.73,
+      "warmFaces": false,
+      "frontRoleOverrides": null
+    },
+    {
+      "name": "v2 radial interlocking foot 04",
+      "kind": "compact interlocking faceted rock",
+      "centreXZ": [
+        -1.38,
+        -2.08
+      ],
+      "width": 1.24,
+      "depth": 1.04,
+      "height": 2.26,
+      "warmFaces": false,
+      "frontRoleOverrides": null
+    },
+    {
+      "name": "v2 radial interlocking foot 05",
+      "kind": "compact interlocking faceted rock",
+      "centreXZ": [
+        1.57,
+        -2.0
+      ],
+      "width": 1.22,
+      "depth": 1.08,
+      "height": 2.35,
+      "warmFaces": true,
+      "frontRoleOverrides": null
+    },
+    {
+      "name": "v2 radial interlocking foot 06",
+      "kind": "compact interlocking faceted rock",
+      "centreXZ": [
+        -0.25,
+        -1.99
+      ],
+      "width": 1.28,
+      "depth": 1.1,
+      "height": 3.12,
+      "warmFaces": false,
+      "frontRoleOverrides": null
+    },
+    {
+      "name": "v2 left descending diagonal ivory fold",
+      "kind": "closed off-axis folded lamella",
+      "outline": [
+        [
+          -3.36,
+          3.02,
+          0.98
+        ],
+        [
+          -2.66,
+          2.53,
+          1.44
+        ],
+        [
+          -1.12,
+          0.39,
+          2.03
+        ],
+        [
+          -1.47,
+          0.15,
+          2.1
+        ],
+        [
+          -3.22,
+          1.88,
+          1.52
+        ]
+      ],
+      "thickness": 0.16
+    },
+    {
+      "name": "v2 central broken oblique white shield",
+      "kind": "closed off-axis folded lamella",
+      "outline": [
+        [
+          -1.23,
+          0.12,
+          1.8
+        ],
+        [
+          -1.25,
+          3.55,
+          0.78
+        ],
+        [
+          -0.83,
+          4.1,
+          0.56
+        ],
+        [
+          -0.45,
+          3.57,
+          0.91
+        ],
+        [
+          0.35,
+          0.48,
+          2.12
+        ],
+        [
+          0.13,
+          0.12,
+          2.23
+        ]
+      ],
+      "thickness": 0.18
+    },
+    {
+      "name": "v2 right diagonal ascending ivory fold",
+      "kind": "closed off-axis folded lamella",
+      "outline": [
+        [
+          0.7,
+          3.11,
+          1.2
+        ],
+        [
+          1.41,
+          2.76,
+          1.46
+        ],
+        [
+          3.31,
+          0.56,
+          1.35
+        ],
+        [
+          3.49,
+          0.12,
+          1.45
+        ],
+        [
+          2.11,
+          0.66,
+          1.95
+        ]
+      ],
+      "thickness": 0.17
+    },
+    {
+      "name": "v2 highest integral ivory hinge 0",
+      "kind": "closed off-axis folded lamella",
+      "outline": [
+        [
+          -1.4085519313812256,
+          3.160463809967041,
+          0.1433122307062149
+        ],
+        [
+          -1.345754861831665,
+          3.1295361518859863,
+          0.1433122307062149
+        ],
+        [
+          -0.32715925574302673,
+          5.1977362632751465,
+          0.4891313314437866
+        ],
+        [
+          -0.3899563252925873,
+          5.228663921356201,
+          0.4891313314437866
+        ]
+      ],
+      "thickness": 0.036
+    },
+    {
+      "name": "v2 highest integral ivory hinge 1",
+      "kind": "closed off-axis folded lamella",
+      "outline": [
+        [
+          -0.3252185583114624,
+          5.223853588104248,
+          0.4891313314437866
+        ],
+        [
+          -0.3918970227241516,
+          5.2025465965271,
+          0.4891313314437866
+        ],
+        [
+          0.17104887962341309,
+          3.4408464431762695,
+          0.02447371929883957
+        ],
+        [
+          0.2377273142337799,
+          3.462153434753418,
+          0.02447371929883957
+        ]
+      ],
+      "thickness": 0.036
+    }
+  ],
+  "materialRoles": {
+    "Projection Crystals | crystal brushed silver facet": {
+      "vertices": 232,
+      "triangles": 116
+    },
+    "Projection Crystals | ivory sculpted return": {
+      "vertices": 410,
+      "triangles": 219
+    },
+    "Projection Crystals | white projected sculpted facade | pale blue secondary facet": {
+      "vertices": 191,
+      "triangles": 95
+    },
+    "Projection Crystals | dark crystal recessed joint": {
+      "vertices": 161,
+      "triangles": 125
+    },
+    "Projection Crystals | crystal champagne gold facet": {
+      "vertices": 288,
+      "triangles": 528
+    },
+    "Projection Crystals | white projected sculpted facade": {
+      "vertices": 2357,
+      "triangles": 4066
+    },
+    "Projection Crystals | mapped amber primary facet": {
+      "vertices": 115,
+      "triangles": 57
+    }
+  },
+  "closedSolidAudit": [
+    {
+      "name": "Projection Crystals | V12 | v2 highest off centre silver and ivory fracture",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | V12 | v2 central notched blue folded monolith",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | V12 | v2 left champagne split broad tower",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | V12 | v2 right rear rising ivory oblique tower",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | V12 | v2 right foreground champagne cut mass",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | V12 | v2 outer left descending white shard",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | V12 | v2 leftmost low broken ivory block",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | V12 | v2 rightmost low folded return",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | V12 | v2 left inner broad diagonal face",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | V12 | v2 right inner stepped amber cleft",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | V12 | v2 foremost low folded white crystal",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | V12 | v2 radial interlocking foot 00",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | V12 | v2 radial interlocking foot 01",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | V12 | v2 radial interlocking foot 02",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | V12 | v2 radial interlocking foot 03",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | V12 | v2 radial interlocking foot 04",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | V12 | v2 radial interlocking foot 05",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | V12 | v2 radial interlocking foot 06",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | V12 | v2 left descending diagonal ivory fold",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | V12 | v2 central broken oblique white shield",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | V12 | v2 right diagonal ascending ivory fold",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | V12 | v2 highest integral ivory hinge 0",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | V12 | v2 highest integral ivory hinge 1",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | v2 narrow dark shadow cleft behind champagne reeds",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | v2 dimensional champagne flute 00",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | v2 dimensional champagne flute 01",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | v2 dimensional champagne flute 02",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | v2 dimensional champagne flute 03",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | v2 dimensional champagne flute 04",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | v2 dimensional champagne flute 05",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | v2 dimensional champagne flute 06",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | v2 dimensional champagne flute 07",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | v2 dimensional champagne flute 08",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | v2 dimensional champagne flute 09",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | v2 dimensional champagne flute 10",
+      "closed": true,
+      "nonManifoldEdges": 0
+    },
+    {
+      "name": "Projection Crystals | v2 dimensional champagne flute 11",
+      "closed": true,
+      "nonManifoldEdges": 0
+    }
+  ],
+  "provenance": "Original native closed oblique pentagonal prisms, compact radial solids, closed folded plates and dimensional metal reeds. The broad cut tops and physical face normals are geometry. Existing projection role suffixes retained; no image pixels or external model.",
+  "reference": "October 16 hero and October 17 four angle reference images; reconstructed visual proportions, not recovered CAD dimensions."
+}

@@ -1,0 +1,125 @@
+{
+  "purpose": "Actual 3D PBR surface maps for the technical showcase; no photographic scene overlays.",
+  "preparedAt": "2026-10-15T23:02:05.543Z",
+  "channels": {
+    "color": "sRGB albedo",
+    "normal": "OpenGL tangent normal; resized normals renormalized, lossless WebP",
+    "orm": "R=ambient occlusion,G=linear roughness,B=0. Metalness is a physical material constant."
+  },
+  "processing": "Albedo encoded WebP quality94. All normal/ORM data lossless WebP. Source maps resampled to1024², floor albedo2048². Floor roughness remapped numerically to0.62–0.90 so a material multiplier can preserve polished yet softened reflections. No painted lighting or fake highlights.",
+  "assets": [
+    {
+      "name": "wool",
+      "provider": "Poly Haven",
+      "asset": "poly_wool_herringbone",
+      "source": "https://polyhaven.com/a/poly_wool_herringbone",
+      "downloads": {
+        "color": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/poly_wool_herringbone/poly_wool_herringbone_diff_1k.jpg",
+        "normal": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/poly_wool_herringbone/poly_wool_herringbone_nor_gl_1k.jpg",
+        "rough": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/poly_wool_herringbone/poly_wool_herringbone_rough_1k.jpg",
+        "ao": "https://dl.polyhaven.org/file/ph-assets/Textures/jpg/1k/poly_wool_herringbone/poly_wool_herringbone_ao_1k.jpg"
+      },
+      "license": "CC0-1.0",
+      "licenseUrl": "https://polyhaven.com/license",
+      "physicalSampleHeightMetres": 0.3,
+      "outputs": [
+        {
+          "file": "wool-color.webp",
+          "bytes": 463710,
+          "sha256": "39ed6499a4b5d150018f288786c611c2fa1b7eeaac67fd63bfc51152dc29c08b"
+        },
+        {
+          "file": "wool-normal.webp",
+          "bytes": 1623818,
+          "sha256": "f2c0e0f751f10549783c5fb1b29fc00ac117bccad798a8d408782ef48d7e7734"
+        },
+        {
+          "file": "wool-orm.webp",
+          "bytes": 1569374,
+          "sha256": "c1bf27f0304abd92fb03b84aa71ca5610f86aea5690a6a6a3ce7d602fac25bca"
+        }
+      ]
+    },
+    {
+      "name": "cast",
+      "provider": "ambientCG",
+      "asset": "Metal029",
+      "source": "https://ambientcg.com/a/Metal029",
+      "download": "https://ambientcg.com/get?file=Metal029_1K-JPG.zip",
+      "archiveSha256": "c2a233b93b3ab044f744a8356bea4f72c62e190a9d020114787f9b61007ed5a5",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://docs.ambientcg.com/license/",
+      "outputs": [
+        {
+          "file": "cast-color.webp",
+          "bytes": 262980,
+          "sha256": "1464d0480f66d513b33dbd47165075f8a43c2ea1d052dcec9cbeb15402a12820"
+        },
+        {
+          "file": "cast-normal.webp",
+          "bytes": 968894,
+          "sha256": "5cb1ec78f73727866fcd6e46a825369954f469553699562d1803699dd009dfe8"
+        },
+        {
+          "file": "cast-orm.webp",
+          "bytes": 749150,
+          "sha256": "43ee618257e88f8da2ecc15ba4d2bd6f6f53b7894c6409552bad89345f4c6878"
+        }
+      ]
+    },
+    {
+      "name": "floor",
+      "provider": "ambientCG",
+      "asset": "Marble024",
+      "source": "https://ambientcg.com/a/Marble024",
+      "download": "https://ambientcg.com/get?file=Marble024_2K-JPG.zip",
+      "archiveSha256": "dee83a5fd4b963d8b47e4057cf5756694eb29003fa67bb39a217f0537f568349",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://docs.ambientcg.com/license/",
+      "outputs": [
+        {
+          "file": "floor-color.webp",
+          "bytes": 241582,
+          "sha256": "7d00df37add6dcd704f24090c051cb4a01653edaaf349a39028c69a8b4949f0f"
+        },
+        {
+          "file": "floor-normal.webp",
+          "bytes": 198402,
+          "sha256": "961fe3777921e30003d75a3901364f26ac2c75a20dbfa550dcb832d75d43a988"
+        },
+        {
+          "file": "floor-orm.webp",
+          "bytes": 178436,
+          "sha256": "77daa451b973d216be232846afefec2b4fb3eb6b93ff7ccc25fbf2576b139d26"
+        }
+      ]
+    },
+    {
+      "name": "steel",
+      "provider": "ambientCG",
+      "asset": "Metal009",
+      "source": "https://ambientcg.com/a/Metal009",
+      "download": "https://ambientcg.com/get?file=Metal009_1K-JPG.zip",
+      "archiveSha256": "1b1970219b40fe707e7194b28702f1a65b0d227bbea56da69dfbc8d8b5cfcb5e",
+      "license": "CC0-1.0",
+      "licenseUrl": "https://docs.ambientcg.com/license/",
+      "outputs": [
+        {
+          "file": "steel-color.webp",
+          "bytes": 81214,
+          "sha256": "22d7a682f91e102dd675eace5842a6d56c140d1f69f9bf0b05aafb7ded59ecb4"
+        },
+        {
+          "file": "steel-normal.webp",
+          "bytes": 636060,
+          "sha256": "300bb650be7e795e69ccf64d4f311803c93b349b4ebc70cfe5372e6e6f43863c"
+        },
+        {
+          "file": "steel-orm.webp",
+          "bytes": 386452,
+          "sha256": "c22a250be05b24a1b0fff8d88c126015931081bb7e8bad3f96bedb4a047434db"
+        }
+      ]
+    }
+  ]
+}

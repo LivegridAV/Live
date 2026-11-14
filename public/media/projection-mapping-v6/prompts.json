@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-17",
+  "reference": "C:/Users/VJNir/AppData/Local/Temp/codex-clipboard-9b0cc574-b6fa-41e9-afc8-1133772084b9.png",
+  "purpose": "Isolated original screen artwork only; no reference booth pixels or full-image overlay.",
+  "prompts": [
+    {
+      "key": "projection_v6_cosmic",
+      "prompt": "Use case: stylized-concept. Asset type: high resolution isolated LED content texture for a curved rear display in a luxury projection-mapping exhibition. Generate ONLY the screen artwork, never the physical screen, frame, booth, sculpture, architecture, people, text, logos or borders. Extremely wide panoramic 2.6:1 composition. Dark deep navy and rich cobalt-blue field of very fine luminous suspended mineral dust and tiny sharp dense irregular blue-white star particles, like an underwater galaxy. The upper middle and central horizontal band has layered cloudy blue light, delicately branching mist and bright very fine light-catching speckles; intentional large deep-navy negative spaces remain at lower corners and outer edges. The leftmost18% and rightmost18% are quiet dark readable areas with tiny sparse particles for later vector text. Sophisticated cinematic blue grading, not turquoise or green. Fine high-resolution detail at every scale, naturally irregular distribution, delicate depth of field on distant dust but many crisp pinprick lights. The broad cloud is continuous across the image, without visible seams, horizontal scanlines, repeating noise, coarse cellular patterns or geometric texture. No large lens flares, no giant stars, no galaxy spiral, no planets, no horizon, no terrestrial scenery. Understated premium blue projection content on black, physically plausible luminous particulate. Compose the blue cloudy central band subtly rising from lower left to upper right. Output a clean full-bleed wide raster artwork suitable for a9 m LED wall, with no typography.",
+      "mode": "built-in image_gen",
+      "transparent_background": false
+    },
+    {
+      "key": "projection_v6_landmark",
+      "prompt": "Use case: photorealistic-natural. Asset type: isolated16:9 portfolio photograph for an architectural projection mapping application monitor. Professional night photograph of a grand historic neoclassical triumphal landmark arch with three portals, sculpted stone friezes, carved figures, ornate Corinthian columns and a broad central arched vault, viewed straight on from a slight distance. A sophisticated projection-mapping show follows the actual carved stone geometry in luminous royal blue, icy cyan and warm restrained gold, bright white highlights along columns and arch contours. Rich black night sky, barely visible spectators near its foot for scale, realistic camera and natural detail. The arch fills about78% of the frame width with the complete top and ground visible. Distinct European triumphal-arch landmark architecture: no onion domes, no palace, no Indian architecture. No logos, text, captions, watermark, monitor frame, booth, GUI or borders. Bright detailed professionally photographed projection mapping with realistic contrast and elegant dark surroundings. Wide landscape16:9.",
+      "mode": "built-in image_gen",
+      "transparent_background": false
+    },
+    {
+      "key": "projection_v6_interactive",
+      "prompt": "Use case: photorealistic-natural. Asset type: isolated wide16:9 portfolio photograph for an interactive projection mapping monitor, no screen frame or typography. A premium immersive interactive gallery after dark, four adult visitors in realistic dark business casual clothing seen in silhouette from behind at medium distance. One visitor gently reaches toward the luminous environment. Full-height cyan-blue projected forests of delicate light branches, falling particles and fine flowing water textures wrap the physical gallery walls; subtle projected responses extend onto the polished dark floor around their feet. Clearly an indoor interactive cultural installation with depth, tangible visitors, realistic camera and believable light spilling onto their shoulders. Elegant cool blue/cyan highlights with rich nearblack negative space; no oversaturation, no people posing at camera, no fantasy costumes, no scenery outdoors. The visitors occupy about35% of frame height. Professional event photographer, fine photographic detail, clean architecture, wide shot. No text, logos, captions, watermarks, booth, GUI, monitor bezels or borders.",
+      "mode": "built-in image_gen",
+      "transparent_background": false
+    },
+    {
+      "key": "projection_v6_event",
+      "prompt": "Use case: photorealistic-natural. Asset type: isolated wide16:9 portfolio photograph for an events and exhibitions display monitor. A professional architectural photographer documenting a busy premium evening exhibition reception inside a tall contemporary event hall. Natural crowd of about25 real adult attendees in dark suits and cocktail wear mingle between immersive projection walls and a small branded-event stage (without any readable logos). Deep-blue, soft violet and white projection mapping lights animate tall sculptural wall panels; tables and real guests create layered foreground and middle depth. Elegant sophisticated event, not a rock concert: no guitarists, no giant laser fan, no orange pyrotechnics. A few warm practical pendant lights balance the luminous blue. Realistic candid human proportions, natural gestures, believable facial details, photoreal camera exposure, crisp professional low-light photograph with rich black areas. Wide16:9 frame. No added text, labels, logos, watermarks, screen frame, booth, UI or borders.",
+      "mode": "built-in image_gen",
+      "transparent_background": false
+    }
+  ]
+}

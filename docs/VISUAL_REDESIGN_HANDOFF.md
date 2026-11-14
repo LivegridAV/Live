@@ -1,5 +1,7 @@
 # Visual Redesign — Handoff / Continuation
 
+> Historical handoff. On 2026-10-18, the auxiliary `/design-v2` and `/visual-final` previews and their exclusive implementations/media were permanently removed at the user's request. The current homepage uses `src/venue/`; the redesigned stalls remain. References below describe the earlier release and are not current route instructions.
+
 _Last updated: 2026-09-06. Reflects repository truth at packaging time._
 
 ## Repository truth

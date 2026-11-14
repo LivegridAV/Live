@@ -1,0 +1,362 @@
+{
+  "version": 7,
+  "asset": "projection-botanical-v7.glb",
+  "authoringAxes": "native Three XYZ front +Z",
+  "provenance": "Original procedural botanical meshes and native mathematical PBR maps; no external assets or attachment pixels.",
+  "nativeBoothDomain": {
+    "min": [
+      -7.2,
+      0.1,
+      -4.5
+    ],
+    "max": [
+      7.2,
+      7.8,
+      5
+    ]
+  },
+  "bounds": {
+    "min": [
+      -7.163049697875977,
+      0.10000000149011612,
+      -1.188935399055481
+    ],
+    "max": [
+      7.1697163581848145,
+      6.065979480743408,
+      4.380328178405762
+    ]
+  },
+  "plants": [
+    {
+      "name": "dense multi stem entrance ficus",
+      "speciesType": "Ficus microcarpa inspired broad clustered crown",
+      "anchor": [
+        -6.6,
+        0.1,
+        3.4
+      ],
+      "targetHeight": 2.98,
+      "newPolygonCount": 62438
+    },
+    {
+      "name": "inner left layered areca",
+      "speciesType": "upright multi stem areca bamboo leaf sprays",
+      "anchor": [
+        -3.2,
+        0.1,
+        -0.6
+      ],
+      "targetHeight": 2.65,
+      "newPolygonCount": 4670
+    },
+    {
+      "name": "inner left broad leaf layer",
+      "speciesType": "layered broad tropical understory leaf sprays",
+      "anchor": [
+        -3.2,
+        0.1,
+        -0.6
+      ],
+      "targetHeight": 2.35,
+      "newPolygonCount": 816
+    },
+    {
+      "name": "inner right fine bamboo",
+      "speciesType": "fine stemmed bamboo",
+      "anchor": [
+        3.4,
+        0.1,
+        -0.55
+      ],
+      "targetHeight": 2.65,
+      "newPolygonCount": 6449
+    },
+    {
+      "name": "inner right broad leaf layer",
+      "speciesType": "layered broad tropical understory leaf sprays",
+      "anchor": [
+        3.4,
+        0.1,
+        -0.55
+      ],
+      "targetHeight": 2.35,
+      "newPolygonCount": 816
+    },
+    {
+      "name": "right entrance layered palm",
+      "speciesType": "upright multi stem areca bamboo leaf sprays",
+      "anchor": [
+        6.7,
+        0.1,
+        3.25
+      ],
+      "targetHeight": 2.15,
+      "newPolygonCount": 5292
+    },
+    {
+      "name": "right entrance broad leaf layer",
+      "speciesType": "layered broad tropical understory leaf sprays",
+      "anchor": [
+        6.7,
+        0.1,
+        3.25
+      ],
+      "targetHeight": 1.85,
+      "newPolygonCount": 816
+    },
+    {
+      "name": "left gallery outer fine vine",
+      "speciesType": "fine climbing evergreen vine",
+      "anchor": [
+        -4.95,
+        0.1,
+        -0.75
+      ],
+      "targetHeight": 6.0,
+      "newPolygonCount": 18614,
+      "attachment": {
+        "galleryCenter": [
+          -4.95,
+          0,
+          -0.75
+        ],
+        "galleryYaw": 0.32,
+        "side": -1,
+        "localCenterX": -1.18,
+        "localFront": 0.202,
+        "minimumApertureAbsX": 1.06,
+        "nativeXRange": null,
+        "startY": 0.42,
+        "topY": 6.02
+      }
+    },
+    {
+      "name": "left gallery inner fine vine",
+      "speciesType": "fine climbing evergreen vine",
+      "anchor": [
+        -4.95,
+        0.1,
+        -0.75
+      ],
+      "targetHeight": 6.0,
+      "newPolygonCount": 17958,
+      "attachment": {
+        "galleryCenter": [
+          -4.95,
+          0,
+          -0.75
+        ],
+        "galleryYaw": 0.32,
+        "side": 1,
+        "localCenterX": 1.18,
+        "localFront": 0.202,
+        "minimumApertureAbsX": 1.06,
+        "nativeXRange": null,
+        "startY": 0.42,
+        "topY": 6.02
+      }
+    },
+    {
+      "name": "right gallery inner dense vine",
+      "speciesType": "fine climbing evergreen vine",
+      "anchor": [
+        6.15,
+        0.1,
+        -0.75
+      ],
+      "targetHeight": 6.0,
+      "newPolygonCount": 17426,
+      "attachment": {
+        "galleryCenter": [
+          6.15,
+          0,
+          -0.75
+        ],
+        "galleryYaw": -0.3,
+        "side": -1,
+        "localCenterX": -1.12,
+        "localFront": 0.15,
+        "minimumApertureAbsX": 1.0,
+        "nativeXRange": null,
+        "startY": 0.42,
+        "topY": 6.02
+      }
+    },
+    {
+      "name": "right gallery outer narrow foliage wrap",
+      "speciesType": "fine climbing evergreen vine",
+      "anchor": [
+        6.15,
+        0.1,
+        -0.75
+      ],
+      "targetHeight": 6.0,
+      "newPolygonCount": 12802,
+      "attachment": {
+        "galleryCenter": [
+          6.15,
+          0,
+          -0.75
+        ],
+        "galleryYaw": -0.3,
+        "side": 1,
+        "localCenterX": 1.04,
+        "localFront": 0.18,
+        "minimumApertureAbsX": 1.0,
+        "nativeXRange": [
+          7.0,
+          7.17
+        ],
+        "startY": 1.5,
+        "topY": 6.132
+      }
+    },
+    {
+      "name": "stage left fine fern",
+      "speciesType": "fine pinnate fern",
+      "anchor": [
+        -2.6,
+        0.1,
+        0.55
+      ],
+      "targetHeight": 1.05,
+      "newPolygonCount": 2296
+    },
+    {
+      "name": "stage left mixed broad greenery",
+      "speciesType": "layered broad tropical understory leaf sprays",
+      "anchor": [
+        -2.6,
+        0.1,
+        0.55
+      ],
+      "targetHeight": 1.15,
+      "newPolygonCount": 816
+    },
+    {
+      "name": "stage right fine fern",
+      "speciesType": "fine pinnate fern",
+      "anchor": [
+        2.6,
+        0.1,
+        0.55
+      ],
+      "targetHeight": 0.98,
+      "newPolygonCount": 2384
+    },
+    {
+      "name": "stage right mixed broad greenery",
+      "speciesType": "layered broad tropical understory leaf sprays",
+      "anchor": [
+        2.6,
+        0.1,
+        0.55
+      ],
+      "targetHeight": 1.12,
+      "newPolygonCount": 816
+    },
+    {
+      "name": "reception side low fern",
+      "speciesType": "fine pinnate fern",
+      "anchor": [
+        -2.85,
+        0.1,
+        1.45
+      ],
+      "targetHeight": 0.6,
+      "newPolygonCount": 2424
+    },
+    {
+      "name": "left entrance low fern",
+      "speciesType": "fine pinnate fern",
+      "anchor": [
+        -6.0,
+        0.1,
+        3.72
+      ],
+      "targetHeight": 0.57,
+      "newPolygonCount": 2424
+    },
+    {
+      "name": "right lounge low fern",
+      "speciesType": "fine pinnate fern",
+      "anchor": [
+        6.65,
+        0.1,
+        0.75
+      ],
+      "targetHeight": 0.58,
+      "newPolygonCount": 2424
+    },
+    {
+      "name": "counter ivory orchids",
+      "speciesType": "small ivory orchid arrangement",
+      "anchor": [
+        -3.15,
+        1.2,
+        3.05
+      ],
+      "targetHeight": 0.32,
+      "newPolygonCount": 724
+    },
+    {
+      "name": "cafe ivory orchids",
+      "speciesType": "small ivory orchid arrangement",
+      "anchor": [
+        5.15,
+        0.75,
+        3.05
+      ],
+      "targetHeight": 0.26,
+      "newPolygonCount": 724
+    }
+  ],
+  "leafCount": 9903,
+  "materialBatches": 11,
+  "triangles": 327204,
+  "vertices": 274985,
+  "bytes": 16908540,
+  "sha256": "e203a190ed8181a2bde909e72fe56f7011f3ce66404cebc674d721605a4ee114",
+  "materials": [
+    "Projection Botanical V7 | planter champagne brushed metal",
+    "Projection Botanical V7 | soil dark coarse planting substrate",
+    "Projection Botanical V7 | bark textured natural warm grey trunks",
+    "Projection Botanical V7 | bark slender olive brown stems",
+    "Projection Botanical V7 | foliage mature ficus with fine reticulated veins",
+    "Projection Botanical V7 | foliage slender areca and bamboo",
+    "Projection Botanical V7 | foliage broad glossy tropical understory",
+    "Projection Botanical V7 | foliage small climbing leaves",
+    "Projection Botanical V7 | foliage fine fern pinnae",
+    "Projection Botanical V7 | ivory thin porcelain orchid petals",
+    "Projection Botanical V7 | orchid quiet ochre throat"
+  ],
+  "maps": [
+    {
+      "file": "public\\media\\projection-mapping-v7\\botanical\\leaf-atlas-basecolor.png",
+      "sha256": "2b2fc4e1fac8032c9c719addc00ddc736e514ca9122a2b0ed84d290537f73023"
+    },
+    {
+      "file": "public\\media\\projection-mapping-v7\\botanical\\leaf-atlas-normal.png",
+      "sha256": "bc652e4dbaaeef6a35dbe50d12251e49c5f2ff166d0eb82e435d94dc526ab2a0"
+    },
+    {
+      "file": "public\\media\\projection-mapping-v7\\botanical\\bark-basecolor.png",
+      "sha256": "16e5f70ac995870c34cc0a82775e8762b3dc23009ce3fbebb0471d64e3287bf4"
+    },
+    {
+      "file": "public\\media\\projection-mapping-v7\\botanical\\bark-normal.png",
+      "sha256": "47e9c90262ec2b524039c4aa87794476f661e20b215c8ea90167b6b00973ece2"
+    },
+    {
+      "file": "public\\media\\projection-mapping-v7\\botanical\\champagne-brushing-normal.png",
+      "sha256": "94a11a98694485e31f2b0c73c6315e7cfe1754ba8e41e06cbaa644ac20d515a7"
+    },
+    {
+      "file": "public\\media\\projection-mapping-v7\\botanical\\soil-basecolor.png",
+      "sha256": "7e17f73b805fb17b8329ffca9ada8280d4b0129a59fdc5a456549ab4b25bc9a8"
+    }
+  ],
+  "apertureProtection": "True whole-leaf exclusion outside left1.95/right1.85m apertures; outer right foliage wrap X7.00..7.17 inside the wall recess.",
+  "runtimeGuidance": "Preserve exported standard PBR textures, metalness, roughness, normal maps and opaque double-sided leaf materials."
+}

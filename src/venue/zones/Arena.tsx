@@ -6,7 +6,7 @@ import { HouseCeiling } from "./HouseCeiling";
 import { Audience } from "./Audience";
 import { ExpoAsset } from "../three/ExpoAsset";
 import { M } from "../three/materials";
-import { PillarScreen, Screen } from "../three/screens";
+import { Screen } from "../three/screens";
 import { Haze, HangPoint, LineArray, MovingHead, SubStack, Truss } from "../three/rig";
 import { LightPool } from "../three/environment";
 import { ReflectionStreak } from "../three/Reflection";
@@ -97,24 +97,6 @@ function Approach() {
   const quality = useVenue((s) => s.quality);
   return (
     <group position={[0,0,-8]}>
-      {/* Keep the complete run-in beyond the partner stand's footprint. The
-          eight-metre group offset clears its hero camera sightline. */}
-      {[-1, 1].map((side) =>
-        [0, 1, 2].map((i) => (
-          <PillarScreen
-            key={`${side}-${i}`}
-            media="approach-pillar"
-            width={1.15}
-            depth={1.15}
-            height={9.5 - i * 1.1}
-            position={[side * (5.4 + i * 0.8), 0, -234 - i * 2.6]}
-            pitch={2.6}
-            brightness={1.0}
-            range={70}
-          />
-        )),
-      )}
-
       {/* large portrait displays, against the hall walls the way a real
           concourse lines them */}
       {[-1, 1].map((side) =>

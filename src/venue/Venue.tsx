@@ -14,6 +14,10 @@ import { StageModeSwitch } from "./ui/StageMode";
 import { ContactPanel } from "./ui/Contact";
 import { GuideControls } from "./ui/Guide";
 import { ReviewControls } from "./ui/ReviewControls";
+import { StallVisitControls } from "./ui/StallVisit";
+import { ReviewRecorder } from "./ui/ReviewRecorder";
+import { EntranceFinishes } from "./ui/EntranceFinishes";
+import { EntranceWalkthrough } from "./ui/EntranceWalkthrough";
 
 /**
  * The venue walkthrough.
@@ -54,6 +58,8 @@ function ScrollTrack() {
 
 export default function Venue() {
   const [webgl] = useState(probeWebGL);
+  const entered=useVenue(s=>s.entered);
+  const [capture]=useState(()=>new URLSearchParams(location.search).get("capture")==="1");
   const [profile] = useState(detectQuality);
 
   useEffect(() => {
@@ -64,7 +70,7 @@ export default function Venue() {
   }, [profile, webgl]);
 
   return (
-    <div className="venue">
+    <div className="venue" data-capture={capture&&entered?true:undefined}>
       {webgl && (
         <div className="venue-canvas">
           <Canvas
@@ -102,6 +108,7 @@ export default function Venue() {
       <Loader />
       <Nav />
       <ZoneHud />
+      <StallVisitControls />
       <ProgressRail />
       <ScrollCue />
       <PavilionPrompt />
@@ -110,6 +117,9 @@ export default function Venue() {
       <ContactPanel />
       <GuideControls />
       <ReviewControls />
+      <ReviewRecorder />
+      <EntranceFinishes />
+      <EntranceWalkthrough />
     </div>
   );
 }

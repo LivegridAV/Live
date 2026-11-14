@@ -1,9 +1,12 @@
 "use client";
-import { useMemo } from "react";
-import { useVenue } from "../systems/store";
+import { useEffect, useMemo } from "react";
+import { useVenue, type ProjectionAngle } from "../systems/store";
 import { NAV_STOPS, ZONES, zoneAt, zoneLocal } from "../data/zones";
 import { scrollToProgress } from "../systems/ScrollRig";
-import { PAVILIONS, PARTNER_BAY, PAVILION_RANGE } from "../data/pavilions";
+import { VENUE_PAVILIONS, PAVILION_RANGE } from "../data/pavilions";
+import { inProjectionShowcase } from "../data/projection";
+import { inRental2026 } from "../data/ledRental2026";
+import { EXHIBITION_PROGRESS as EP } from "../data/placements";
 
 /**
  * The ambient HUD.
@@ -21,36 +24,31 @@ export function ZoneHud() {
 
   const zone = useMemo(() => zoneAt(progress), [progress]);
   const local = zoneLocal(progress, zone);
-  // Keep the exhibit's name in the visitor's sightline, including the overhead
-  // ring shot where a floor-mounted physical placard is necessarily off-camera.
-  const galleryTitle = progress < 0.39 ? "Four-sided LED pillars"
-    : progress < 0.435 ? "Vertical LED blades"
-    : progress < 0.478 ? "Cylindrical LED"
-    : progress < 0.515 ? "Suspended LED rings"
-    : progress < 0.537 ? "LED bar counter"
-    : progress < 0.55 ? "Curved LED"
-    : progress < 0.562 ? "Creative LED shapes"
-    : "Anamorphic corner LED";
-
+  const pillarFrame = progress >= EP.pillars.start && progress < EP.pillars.end;
+  const receptionFrame = zone.id === "reception";
+  const studioFrame=zone.id==="gallery-finish";
+  const technicalFrame=zone.id==="technical";
+  const projectionFrame=inProjectionShowcase(progress);
+  const rentalFrame=inRental2026(progress);
   // Present the moment a zone begins — the arrival headline in particular has
   // to be readable on the very first frame — and fade out as the camera leaves.
   const pastVenue = useVenue((s) => s.pastVenue);
   const opacity =
-    entered && !activePavilion && !pastVenue && ![...PAVILIONS, PARTNER_BAY].some(p => Math.abs(progress - p.p) < PAVILION_RANGE * 1.5)
-      ? zone.id === "gallery" ? 1 : Math.min(1, Math.min(local + 0.4, 1 - local) / 0.16)
+    entered && !activePavilion && !pastVenue && (studioFrame || technicalFrame || rentalFrame || projectionFrame || !VENUE_PAVILIONS.some(p => Math.abs(progress - p.p) < PAVILION_RANGE * 1.5))
+      ? projectionFrame || rentalFrame ? 1 : Math.min(1, Math.min(local + 0.4, 1 - local) / 0.16)
       : 0;
 
   return (
-    <div className="v-hud" data-zone={zone.id} aria-live="polite">
+    <div className="v-hud" data-zone={rentalFrame ? "led-rental" : projectionFrame ? "projection" : zone.id} data-reception={pillarFrame || receptionFrame || studioFrame || technicalFrame || rentalFrame || projectionFrame || undefined} aria-live="polite">
       <div
         className="v-hud-fade"
         style={{ opacity, transform: `translateY(${(1 - opacity) * 10}px)` }}
       >
         <div className="v-hud-zone">
           <span className="v-hud-dot" />
-          <span className="v-mono">{zone.label}</span>
+          <span className="v-mono">{projectionFrame ? "Projection Mapping" : zone.label}</span>
         </div>
-        <h2 className="v-hud-title">{zone.id === "gallery" ? galleryTitle : zone.title}</h2>
+        <h2 className="v-hud-title">{rentalFrame ? "LED Rental Solutions · For every vision" : projectionFrame ? "Projection Mapping · Transform spaces into stories" : pillarFrame ? "Four-sided LED pillars" : receptionFrame ? "Reception · Curved LED" : studioFrame ? "Anamorphic · Content Studio" : zone.title}</h2>
         <p className="v-hud-line">{zone.line}</p>
       </div>
     </div>
@@ -62,7 +60,7 @@ export function ProgressRail() {
   const zone = useVenue((s) => s.zone);
   const entered = useVenue((s) => s.entered);
   const pastVenue = useVenue((s) => s.pastVenue);
-  if (!entered || pastVenue) return null;
+  if (!entered || pastVenue || inRental2026(progress) || inProjectionShowcase(progress) || zone === "reception" || zone === "gallery-finish" || zone === "technical") return null;
 
   return (
     <nav className="v-rail" aria-label="Jump to a part of the experience">
@@ -101,4 +99,48 @@ export function ScrollCue() {
       <span className="v-scrollcue-rail" />
     </div>
   );
+}
+
+/** Real camera positions; the top angle opens the architectural roof cutaway. */
+export function ProjectionViews(){
+  const entered=useVenue(s=>s.entered),progress=useVenue(s=>s.progress);
+  const angle=useVenue(s=>s.projectionAngle),setAngle=useVenue(s=>s.setProjectionAngle);
+  const panel=useVenue(s=>s.activePavilion),past=useVenue(s=>s.pastVenue);
+  useEffect(()=>{
+    const view=new URLSearchParams(location.search).get("view");
+    if(view&&["front","left","right","top"].includes(view))setAngle(view as ProjectionAngle);
+  },[setAngle]);
+  if(!entered||past||panel||!inProjectionShowcase(progress))return null;
+  return <nav className="v-projection-views" aria-label="Projection stall views">
+    {(["front","left","right","top"] as const).map(view=><button key={view} type="button"
+      aria-pressed={view===angle} onClick={()=>{
+        scrollToProgress(EP.projection.overview,"instant");
+        setAngle(view);
+        const url=new URL(location.href);
+        if(["projection","projection-mapping","spatial"].includes(url.searchParams.get("shot")??"")){
+          url.searchParams.set("view",view);history.replaceState(history.state,"",url);
+        }
+      }}>{view==="top"?"Top · cutaway":`${view} view`}</button>)}
+  </nav>;
+}
+
+/** Camera positions inspect the authored pavilion; the top view opens its roof. */
+export function RentalViews(){
+  const entered=useVenue(s=>s.entered),progress=useVenue(s=>s.progress);
+  const angle=useVenue(s=>s.rentalAngle),setAngle=useVenue(s=>s.setRentalAngle);
+  const rotate=useVenue(s=>s.rentalModelsRotate),setRotate=useVenue(s=>s.setRentalModelsRotate);
+  const panel=useVenue(s=>s.activePavilion),past=useVenue(s=>s.pastVenue);
+  useEffect(()=>{
+    const query=new URLSearchParams(location.search),view=query.get("view");
+    if(["led-rental","rentals"].includes(query.get("shot")??"")&&view&&["front","left","right","top"].includes(view))setAngle(view as ProjectionAngle);
+  },[setAngle]);
+  if(!entered||past||panel||!inRental2026(progress))return null;
+  return <nav className="v-projection-views v-rental-views" aria-label="LED rental stall views">
+    {(["front","left","right","top"] as const).map(view=><button key={view} type="button" aria-pressed={view===angle} onClick={()=>{
+      scrollToProgress(EP.rental.overview,"instant");setAngle(view);
+      const url=new URL(location.href);
+      if(["led-rental","rentals"].includes(url.searchParams.get("shot")??"")){url.searchParams.set("view",view);history.replaceState(history.state,"",url);}
+    }}>{view==="top"?"Top · cutaway":`${view} view`}</button>)}
+    <button type="button" aria-pressed={rotate} onClick={()=>setRotate(!rotate)}>Rotate models</button>
+  </nav>;
 }

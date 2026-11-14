@@ -1,0 +1,1762 @@
+{
+  "version": "reference-shape-v2-20261018",
+  "assetNames": [
+    "grand-anamorphic-shape-v2-shell",
+    "grand-anamorphic-shape-v2-interior",
+    "grand-anamorphic-shape-v2-visitors"
+  ],
+  "assets": {
+    "grand-anamorphic-shape-v2-shell": {
+      "sha256": "ca18cab2ea6d740429951cb845300ee028310e69e81ec5427223829129100ec1",
+      "bytes": 2775060,
+      "bounds": {
+        "min": [
+          -12.0,
+          0.0,
+          -8.0
+        ],
+        "max": [
+          12.0,
+          12.821000099182129,
+          8.0
+        ]
+      }
+    },
+    "grand-anamorphic-shape-v2-interior": {
+      "sha256": "dd7c21ab71051034ba1ab875cc2e257af135148f778dc0958e2a3547d35b14aa",
+      "bytes": 10836412,
+      "bounds": {
+        "min": [
+          -11.92886734008789,
+          0.11999999731779099,
+          -7.784999847412109
+        ],
+        "max": [
+          11.648778915405273,
+          5.574999809265137,
+          7.979996681213379
+        ]
+      }
+    },
+    "grand-anamorphic-shape-v2-visitors": {
+      "sha256": "bc031652029473f0e3e03b71774a5adcacbb728089c2cebed8efe9965e41ce29",
+      "bytes": 21168360,
+      "bounds": {
+        "min": [
+          -11.467668533325195,
+          0.11999999731779099,
+          -7.393457889556885
+        ],
+        "max": [
+          10.420783996582031,
+          1.9488599300384521,
+          6.253361225128174
+        ]
+      }
+    }
+  },
+  "units": "metres",
+  "root": [
+    -18,
+    0,
+    -113
+  ],
+  "rootRotation": [
+    0,
+    1.5707963267948966,
+    0
+  ],
+  "bounds": {
+    "min": [
+      -12,
+      0,
+      -8
+    ],
+    "max": [
+      12,
+      12.821,
+      8
+    ]
+  },
+  "architecturalDimensions": {
+    "width": 24,
+    "depth": 16,
+    "height": 12.701,
+    "floor": 0.12,
+    "fasciaTop": 12.821,
+    "lowestOverheadUnderside": 6.072000026702881,
+    "clearHeight": 5.952000026702881
+  },
+  "mainCorner": {
+    "fold": [
+      7.0,
+      0,
+      1.7
+    ],
+    "leftWidth": 10.0,
+    "rightWidth": 6.2,
+    "bottom": 0.8,
+    "top": 11.7,
+    "headerTop": 12.821
+  },
+  "contentStudio": {
+    "bounds": {
+      "min": [
+        -11.7,
+        0.12,
+        -7.7
+      ],
+      "max": [
+        -3.22,
+        8.34,
+        7.5
+      ]
+    },
+    "actualInteriorDepth": 15.2,
+    "actualInteriorWidth": 8.48,
+    "floorTop": 0.12,
+    "canopyBottom": 6.72,
+    "ceilingTop": 8.34,
+    "entranceFasciaTop": 11.55,
+    "entranceLintelUnderside": 9.26,
+    "rearSoffitUnderside": 6.6
+  },
+  "shapeHierarchy": {
+    "heroCrownTop": 12.821,
+    "leftPortalTop": 11.55,
+    "galleryTop": 10.38,
+    "galleryPlane": "oblique connected return from right LED end within 16m reservation",
+    "galleryYaw": 0.7853981633974483,
+    "galleryFrontX": 7.0,
+    "galleryFromZ": -4.56,
+    "galleryToZ": -7.600559159102154,
+    "galleryEndX": 10.040559159102155,
+    "occupiedRoof": 8.34,
+    "portalPlane": {
+      "left": [
+        -7.5,
+        7.7
+      ],
+      "right": [
+        -6.0,
+        0.0
+      ],
+      "yaw": 1.3784007252789743,
+      "width": 7.844743462982075,
+      "normal": [
+        0.9815489870809552,
+        0,
+        0.191210841639147
+      ]
+    },
+    "canopyClearance": {
+      "centerXZ": [
+        -7.25,
+        0.8
+      ],
+      "outerRadiiXZ": [
+        4.18,
+        4.1
+      ],
+      "frontmostZ": 4.8999999999999995,
+      "bladeMinimumZ": 5.342051637853251,
+      "bladeGapZ": 0.4420516378532513,
+      "heroGapX": 0.07000000000000028
+    },
+    "reference": "ChatGPT Image Sep 23, 2026, 12_29_33 AM (4).png"
+  },
+  "apertures": [
+    {
+      "name": "studio-front-portrait",
+      "x": -7.088233826224818,
+      "y": 3.65,
+      "z": 6.506716874277297,
+      "w": 2.02,
+      "h": 3.78,
+      "position": [
+        -7.088233826224818,
+        3.65,
+        6.506716874277297
+      ],
+      "rotation": [
+        0,
+        1.3784007252789743,
+        0
+      ],
+      "mediaHint": "studio-coastal-portrait"
+    },
+    {
+      "name": "gallery-upper-portrait",
+      "x": 7.840042856049618,
+      "y": 7.06,
+      "z": -4.992749350086167,
+      "w": 1.46,
+      "h": 2.54,
+      "position": [
+        7.840042856049618,
+        7.06,
+        -4.992749350086167
+      ],
+      "rotation": [
+        0,
+        0.7853981633974483,
+        0
+      ],
+      "mediaHint": "gallery-ice-vortex"
+    },
+    {
+      "name": "gallery-middle-0",
+      "x": 7.72690577105977,
+      "y": 4.67,
+      "z": -4.87961226509632,
+      "w": 1.28,
+      "h": 1.4,
+      "position": [
+        7.72690577105977,
+        4.67,
+        -4.87961226509632
+      ],
+      "rotation": [
+        0,
+        0.7853981633974483,
+        0
+      ],
+      "mediaHint": "gallery-human"
+    },
+    {
+      "name": "gallery-middle-1",
+      "x": 8.730997400344668,
+      "y": 4.67,
+      "z": -5.883703894381218,
+      "w": 1.28,
+      "h": 1.4,
+      "position": [
+        8.730997400344668,
+        4.67,
+        -5.883703894381218
+      ],
+      "rotation": [
+        0,
+        0.7853981633974483,
+        0
+      ],
+      "mediaHint": "gallery-silver-object"
+    },
+    {
+      "name": "gallery-middle-2",
+      "x": 9.735089029629567,
+      "y": 4.67,
+      "z": -6.887795523666115,
+      "w": 1.28,
+      "h": 1.4,
+      "position": [
+        9.735089029629567,
+        4.67,
+        -6.887795523666115
+      ],
+      "rotation": [
+        0,
+        0.7853981633974483,
+        0
+      ],
+      "mediaHint": "gallery-landscape"
+    },
+    {
+      "name": "gallery-lower-orb",
+      "x": 7.7622611101190975,
+      "y": 3.12,
+      "z": -4.914967604155647,
+      "w": 1.38,
+      "h": 1.4,
+      "position": [
+        7.7622611101190975,
+        3.12,
+        -4.914967604155647
+      ],
+      "rotation": [
+        0,
+        0.7853981633974483,
+        0
+      ],
+      "mediaHint": "gallery-orb"
+    },
+    {
+      "name": "gallery-lower-landscape",
+      "x": 8.844134485334516,
+      "y": 3.12,
+      "z": -5.996840979371065,
+      "w": 1.5,
+      "h": 1.4,
+      "position": [
+        8.844134485334516,
+        3.12,
+        -5.996840979371065
+      ],
+      "rotation": [
+        0,
+        0.7853981633974483,
+        0
+      ],
+      "mediaHint": "gallery-alpine"
+    },
+    {
+      "name": "studio-rear-landscape",
+      "x": -11.654,
+      "y": 4.12,
+      "z": 4.1,
+      "w": 5.6,
+      "h": 2.8,
+      "position": [
+        -11.654,
+        4.12,
+        4.1
+      ],
+      "rotation": [
+        0,
+        1.5707963267948966,
+        0
+      ],
+      "mediaHint": "studio-brighter-reality"
+    },
+    {
+      "name": "studio-rear-service-landscape",
+      "x": -7.4,
+      "y": 4.12,
+      "z": -7.654,
+      "w": 5.6,
+      "h": 2.8,
+      "position": [
+        -7.4,
+        4.12,
+        -7.654
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "studio-brighter-reality"
+    },
+    {
+      "name": "studio-left-small-screen",
+      "x": -11.654,
+      "y": 3.05,
+      "z": -3.9,
+      "w": 1.6,
+      "h": 2.2,
+      "position": [
+        -11.654,
+        3.05,
+        -3.9
+      ],
+      "rotation": [
+        0,
+        1.5707963267948966,
+        0
+      ],
+      "mediaHint": "studio-forest"
+    }
+  ],
+  "screens": [
+    {
+      "name": "studio-front-portrait",
+      "x": -7.088233826224818,
+      "y": 3.65,
+      "z": 6.506716874277297,
+      "w": 2.02,
+      "h": 3.78,
+      "position": [
+        -7.088233826224818,
+        3.65,
+        6.506716874277297
+      ],
+      "rotation": [
+        0,
+        1.3784007252789743,
+        0
+      ],
+      "mediaHint": "studio-coastal-portrait"
+    },
+    {
+      "name": "gallery-upper-portrait",
+      "x": 7.840042856049618,
+      "y": 7.06,
+      "z": -4.992749350086167,
+      "w": 1.46,
+      "h": 2.54,
+      "position": [
+        7.840042856049618,
+        7.06,
+        -4.992749350086167
+      ],
+      "rotation": [
+        0,
+        0.7853981633974483,
+        0
+      ],
+      "mediaHint": "gallery-ice-vortex"
+    },
+    {
+      "name": "gallery-middle-0",
+      "x": 7.72690577105977,
+      "y": 4.67,
+      "z": -4.87961226509632,
+      "w": 1.28,
+      "h": 1.4,
+      "position": [
+        7.72690577105977,
+        4.67,
+        -4.87961226509632
+      ],
+      "rotation": [
+        0,
+        0.7853981633974483,
+        0
+      ],
+      "mediaHint": "gallery-human"
+    },
+    {
+      "name": "gallery-middle-1",
+      "x": 8.730997400344668,
+      "y": 4.67,
+      "z": -5.883703894381218,
+      "w": 1.28,
+      "h": 1.4,
+      "position": [
+        8.730997400344668,
+        4.67,
+        -5.883703894381218
+      ],
+      "rotation": [
+        0,
+        0.7853981633974483,
+        0
+      ],
+      "mediaHint": "gallery-silver-object"
+    },
+    {
+      "name": "gallery-middle-2",
+      "x": 9.735089029629567,
+      "y": 4.67,
+      "z": -6.887795523666115,
+      "w": 1.28,
+      "h": 1.4,
+      "position": [
+        9.735089029629567,
+        4.67,
+        -6.887795523666115
+      ],
+      "rotation": [
+        0,
+        0.7853981633974483,
+        0
+      ],
+      "mediaHint": "gallery-landscape"
+    },
+    {
+      "name": "gallery-lower-orb",
+      "x": 7.7622611101190975,
+      "y": 3.12,
+      "z": -4.914967604155647,
+      "w": 1.38,
+      "h": 1.4,
+      "position": [
+        7.7622611101190975,
+        3.12,
+        -4.914967604155647
+      ],
+      "rotation": [
+        0,
+        0.7853981633974483,
+        0
+      ],
+      "mediaHint": "gallery-orb"
+    },
+    {
+      "name": "gallery-lower-landscape",
+      "x": 8.844134485334516,
+      "y": 3.12,
+      "z": -5.996840979371065,
+      "w": 1.5,
+      "h": 1.4,
+      "position": [
+        8.844134485334516,
+        3.12,
+        -5.996840979371065
+      ],
+      "rotation": [
+        0,
+        0.7853981633974483,
+        0
+      ],
+      "mediaHint": "gallery-alpine"
+    },
+    {
+      "name": "studio-rear-landscape",
+      "x": -11.654,
+      "y": 4.12,
+      "z": 4.1,
+      "w": 5.6,
+      "h": 2.8,
+      "position": [
+        -11.654,
+        4.12,
+        4.1
+      ],
+      "rotation": [
+        0,
+        1.5707963267948966,
+        0
+      ],
+      "mediaHint": "studio-brighter-reality"
+    },
+    {
+      "name": "studio-rear-service-landscape",
+      "x": -7.4,
+      "y": 4.12,
+      "z": -7.654,
+      "w": 5.6,
+      "h": 2.8,
+      "position": [
+        -7.4,
+        4.12,
+        -7.654
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "studio-brighter-reality"
+    },
+    {
+      "name": "studio-left-small-screen",
+      "x": -11.654,
+      "y": 3.05,
+      "z": -3.9,
+      "w": 1.6,
+      "h": 2.2,
+      "position": [
+        -11.654,
+        3.05,
+        -3.9
+      ],
+      "rotation": [
+        0,
+        1.5707963267948966,
+        0
+      ],
+      "mediaHint": "studio-forest"
+    }
+  ],
+  "water": {
+    "y": 0.595,
+    "polygonXZ": [
+      [
+        -0.8,
+        1.82
+      ],
+      [
+        -0.8,
+        7.5
+      ],
+      [
+        9.2,
+        7.5
+      ],
+      [
+        9.2,
+        -4.65
+      ],
+      [
+        7.25,
+        -4.65
+      ],
+      [
+        7.25,
+        1.82
+      ]
+    ],
+    "outerPolygonXZ": [
+      [
+        -0.8,
+        1.82
+      ],
+      [
+        -0.8,
+        7.5
+      ],
+      [
+        9.2,
+        7.5
+      ],
+      [
+        9.2,
+        -4.65
+      ],
+      [
+        7.25,
+        -4.65
+      ],
+      [
+        7.25,
+        1.82
+      ]
+    ]
+  },
+  "waterJets": [],
+  "typography": [
+    {
+      "body": "LivegridAV",
+      "position": [
+        -7.178281385247414,
+        10.41,
+        7.324589380915142
+      ],
+      "yaw": 1.3784007252789743,
+      "availableWidth": 6.984743462982075,
+      "measuredWidth": 4.32758816331625,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1
+    },
+    {
+      "body": "CONTENT STUDIO",
+      "position": [
+        -7.170530972466307,
+        9.65,
+        7.305723244540078
+      ],
+      "yaw": 1.3784007252789743,
+      "availableWidth": 6.944743462982075,
+      "measuredWidth": 3.062692948617041,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1
+    },
+    {
+      "body": "IDEAS",
+      "position": [
+        -7.285588909575303,
+        8.25,
+        7.436129038537977
+      ],
+      "yaw": 1.3784007252789743,
+      "availableWidth": 1.84,
+      "measuredWidth": 0.6838238313794136,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1
+    },
+    {
+      "body": "CONTENT",
+      "position": [
+        -7.285588909575303,
+        7.78,
+        7.436129038537977
+      ],
+      "yaw": 1.3784007252789743,
+      "availableWidth": 1.84,
+      "measuredWidth": 1.1717340387403965,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1
+    },
+    {
+      "body": "EXPERIENCES",
+      "position": [
+        -7.285588909575303,
+        7.3100000000000005,
+        7.436129038537977
+      ],
+      "yaw": 1.3784007252789743,
+      "availableWidth": 1.84,
+      "measuredWidth": 1.5921132639050484,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1
+    },
+    {
+      "body": "REALITY",
+      "position": [
+        -7.285588909575303,
+        6.84,
+        7.436129038537977
+      ],
+      "yaw": 1.3784007252789743,
+      "availableWidth": 1.84,
+      "measuredWidth": 0.9520768001675606,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1
+    },
+    {
+      "body": "LivegridAV",
+      "position": [
+        7.425678282274301,
+        9.46,
+        -4.586870057685089
+      ],
+      "yaw": 0.7853981633974483,
+      "availableWidth": 3.6599999999999997,
+      "measuredWidth": 2.5906648337841034,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1
+    },
+    {
+      "body": "VISUALS FOR A BRIGHTER TOMORROW",
+      "position": [
+        7.41365746699413,
+        8.89,
+        -4.570606601717797
+      ],
+      "yaw": 0.7853981633974483,
+      "availableWidth": 3.6999999999999997,
+      "measuredWidth": 2.775459974538535,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1
+    },
+    {
+      "body": "CONTENT",
+      "position": [
+        8.534421715174808,
+        8.02,
+        -5.684299782086611
+      ],
+      "yaw": 0.7853981633974483,
+      "availableWidth": 2.22,
+      "measuredWidth": 0.7133220848627388,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1
+    },
+    {
+      "body": "PRODUCTION",
+      "position": [
+        8.534421715174808,
+        7.619999999999999,
+        -5.684299782086611
+      ],
+      "yaw": 0.7853981633974483,
+      "availableWidth": 2.22,
+      "measuredWidth": 0.9925277270376682,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1
+    },
+    {
+      "body": "VIRTUAL PRODUCTION",
+      "position": [
+        8.534421715174808,
+        7.22,
+        -5.684299782086611
+      ],
+      "yaw": 0.7853981633974483,
+      "availableWidth": 2.22,
+      "measuredWidth": 1.6964042587205768,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1
+    },
+    {
+      "body": "LIVE EXPERIENCES",
+      "position": [
+        8.534421715174808,
+        6.819999999999999,
+        -5.684299782086611
+      ],
+      "yaw": 0.7853981633974483,
+      "availableWidth": 2.22,
+      "measuredWidth": 1.3343582190573215,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1
+    },
+    {
+      "body": "LED SOLUTIONS",
+      "position": [
+        8.534421715174808,
+        6.42,
+        -5.684299782086611
+      ],
+      "yaw": 0.7853981633974483,
+      "availableWidth": 2.22,
+      "measuredWidth": 1.1741505898535252,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1
+    },
+    {
+      "body": "STORIES",
+      "position": [
+        9.496086937588514,
+        3.62,
+        -6.645965004500315
+      ],
+      "yaw": 0.7853981633974483,
+      "availableWidth": 0.94,
+      "measuredWidth": 0.5528281009756029,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1
+    },
+    {
+      "body": "THAT MOVE",
+      "position": [
+        9.496086937588514,
+        3.2800000000000002,
+        -6.645965004500315
+      ],
+      "yaw": 0.7853981633974483,
+      "availableWidth": 0.94,
+      "measuredWidth": 0.8160711301025003,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1
+    },
+    {
+      "body": "PEOPLE",
+      "position": [
+        9.496086937588514,
+        2.94,
+        -6.645965004500315
+      ],
+      "yaw": 0.7853981633974483,
+      "availableWidth": 0.94,
+      "measuredWidth": 0.4892041524872184,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1
+    },
+    {
+      "body": "CREATIVE",
+      "position": [
+        9.12839141137151,
+        1.65,
+        -6.278269478283311
+      ],
+      "yaw": 0.7853981633974483,
+      "availableWidth": 1.48,
+      "measuredWidth": 0.6772312149405479,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1
+    },
+    {
+      "body": "TECHNOLOGY",
+      "position": [
+        9.12839141137151,
+        1.3399999999999999,
+        -6.278269478283311
+      ],
+      "yaw": 0.7853981633974483,
+      "availableWidth": 1.48,
+      "measuredWidth": 0.9837868583854288,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1
+    },
+    {
+      "body": "HUMAN IMPACT",
+      "position": [
+        9.12839141137151,
+        1.0299999999999998,
+        -6.278269478283311
+      ],
+      "yaw": 0.7853981633974483,
+      "availableWidth": 1.48,
+      "measuredWidth": 1.167497738264501,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1
+    },
+    {
+      "body": "LivegridAV",
+      "position": [
+        -9.55,
+        0.72,
+        -6.11
+      ],
+      "yaw": 0,
+      "availableWidth": 4.7,
+      "measuredWidth": 1.6191655807197094,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1
+    },
+    {
+      "body": "LivegridAV",
+      "position": [
+        -9.866,
+        0.72,
+        5.75
+      ],
+      "yaw": 1.5707963267948966,
+      "availableWidth": 3.12,
+      "measuredWidth": 1.5602867063134909,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1
+    },
+    {
+      "body": "LivegridAV",
+      "position": [
+        -5.1276726722717285,
+        0.7099999785423279,
+        7.754621982574463
+      ],
+      "yaw": 1.3784007252789743,
+      "availableWidth": 2.9,
+      "measuredWidth": 1.942998744547367,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1
+    },
+    {
+      "body": "LIVE IDEAS   LIVING WORLDS",
+      "position": [
+        0.55,
+        0.28,
+        7.545
+      ],
+      "yaw": 0,
+      "availableWidth": 5.6,
+      "measuredWidth": 2.476982120424509,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1
+    }
+  ],
+  "roles": [
+    {
+      "role": "platform",
+      "bounds": {
+        "min": [
+          -12.0,
+          0.0,
+          -8.0
+        ],
+        "max": [
+          12.0,
+          0.11999999731779099,
+          8.0
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "side-left",
+      "bounds": {
+        "min": [
+          -12.0,
+          0.11999988555908203,
+          -8.0
+        ],
+        "max": [
+          -11.700000762939453,
+          8.34000015258789,
+          7.800000190734863
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "rear-boundary",
+      "bounds": {
+        "min": [
+          -11.699999809265137,
+          0.11999988555908203,
+          -8.0
+        ],
+        "max": [
+          -3.1999998092651367,
+          8.34000015258789,
+          -7.699999809265137
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "fascia-brand",
+      "bounds": {
+        "min": [
+          -7.7185540199279785,
+          9.223999977111816,
+          -0.14535166323184967
+        ],
+        "max": [
+          -2.9206249713897705,
+          11.549999237060547,
+          7.74072790145874
+        ]
+      },
+      "overhead": true
+    },
+    {
+      "role": "studio-return",
+      "bounds": {
+        "min": [
+          -3.2199997901916504,
+          0.11999988555908203,
+          -7.699999809265137
+        ],
+        "max": [
+          -2.9800000190734863,
+          8.34000015258789,
+          1.1999998092651367
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "entrance-portal-post",
+      "bounds": {
+        "min": [
+          -7.674129486083984,
+          0.11999988555908203,
+          -0.0792887806892395
+        ],
+        "max": [
+          -4.949999809265137,
+          11.550000190734863,
+          7.7792887687683105
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "entry-brand-blade",
+      "bounds": {
+        "min": [
+          -7.611220836639404,
+          0.11999988555908203,
+          5.344346523284912
+        ],
+        "max": [
+          -6.889017105102539,
+          9.260000228881836,
+          7.601781368255615
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "corner-display-cabinets",
+      "bounds": {
+        "min": [
+          -3.0,
+          0.12000000476837158,
+          -4.5
+        ],
+        "max": [
+          7.079999923706055,
+          11.699999809265137,
+          1.78000009059906
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "corner-crown",
+      "bounds": {
+        "min": [
+          -3.0,
+          11.699999809265137,
+          -4.5
+        ],
+        "max": [
+          7.049999713897705,
+          12.821000099182129,
+          1.75
+        ]
+      },
+      "overhead": true
+    },
+    {
+      "role": "gallery-wall",
+      "bounds": {
+        "min": [
+          6.670487880706787,
+          0.11999988555908203,
+          -7.930070877075195
+        ],
+        "max": [
+          10.221578598022461,
+          10.380000114440918,
+          -4.37898063659668
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "studio-canopy",
+      "bounds": {
+        "min": [
+          -11.699999809265137,
+          6.072000026702881,
+          -7.699999809265137
+        ],
+        "max": [
+          -3.069999933242798,
+          9.260000228881836,
+          7.722562789916992
+        ]
+      },
+      "overhead": true
+    },
+    {
+      "role": "architectural-lighting",
+      "bounds": {
+        "min": [
+          -11.661999702453613,
+          6.548999786376953,
+          -7.671999931335449
+        ],
+        "max": [
+          -3.3379998207092285,
+          8.17199993133545,
+          5.25
+        ]
+      },
+      "overhead": true
+    },
+    {
+      "role": "rear-gallery-screen",
+      "bounds": {
+        "min": [
+          -11.78499984741211,
+          2.6649999618530273,
+          1.244999885559082
+        ],
+        "max": [
+          -11.654999732971191,
+          5.574999809265137,
+          6.954999923706055
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "rear-service-gallery-screen",
+      "bounds": {
+        "min": [
+          -10.255000114440918,
+          2.6649999618530273,
+          -7.784999847412109
+        ],
+        "max": [
+          -4.545000076293945,
+          5.574999809265137,
+          -7.654999732971191
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "side-gallery-screen",
+      "bounds": {
+        "min": [
+          -11.78499984741211,
+          1.8949999809265137,
+          -4.755000114440918
+        ],
+        "max": [
+          -11.654999732971191,
+          4.204999923706055,
+          -3.0450000762939453
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "rear-service-counter",
+      "bounds": {
+        "min": [
+          -10.130000114440918,
+          0.12000000476837158,
+          -7.099999904632568
+        ],
+        "max": [
+          -4.2699995040893555,
+          1.5898196697235107,
+          -6.099999904632568
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "rear-lounge",
+      "bounds": {
+        "min": [
+          -11.129999160766602,
+          0.14261552691459656,
+          -2.489912986755371
+        ],
+        "max": [
+          -6.179999828338623,
+          1.2100000381469727,
+          1.7300000190734863
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "inner-consultation",
+      "bounds": {
+        "min": [
+          -6.104999542236328,
+          0.14261552691459656,
+          -3.7300000190734863
+        ],
+        "max": [
+          -3.930000066757202,
+          1.2100000381469727,
+          -0.16074500977993011
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "left-consultation-service",
+      "bounds": {
+        "min": [
+          -10.850000381469727,
+          0.12000000476837158,
+          2.369999885559082
+        ],
+        "max": [
+          -9.850000381469727,
+          1.5672773122787476,
+          6.029999732971191
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "front-reception",
+      "bounds": {
+        "min": [
+          -6.143869400024414,
+          0.12000000476837158,
+          4.495752811431885
+        ],
+        "max": [
+          -4.51692008972168,
+          1.5723472833633423,
+          7.979996204376221
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "basin",
+      "bounds": {
+        "min": [
+          -0.8375001549720764,
+          0.11999999731779099,
+          -4.6875
+        ],
+        "max": [
+          9.237500190734863,
+          0.6499999761581421,
+          7.546800136566162
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "natural-rocks",
+      "bounds": {
+        "min": [
+          -0.6899998188018799,
+          0.4500085711479187,
+          -2.1935555934906006
+        ],
+        "max": [
+          8.549793243408203,
+          3.7699999809265137,
+          7.079954147338867
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "botanical",
+      "bounds": {
+        "min": [
+          -11.92886734008789,
+          0.11999999731779099,
+          5.148380279541016
+        ],
+        "max": [
+          -9.956014633178711,
+          3.5366082191467285,
+          7.198423385620117
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "botanical",
+      "bounds": {
+        "min": [
+          -11.790523529052734,
+          0.11999999731779099,
+          -5.700923442840576
+        ],
+        "max": [
+          -9.829055786132812,
+          3.390287160873413,
+          -3.7741446495056152
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "botanical",
+      "bounds": {
+        "min": [
+          -11.623266220092773,
+          0.11999999731779099,
+          -7.5106377601623535
+        ],
+        "max": [
+          -9.915504455566406,
+          2.9404067993164062,
+          -5.887750148773193
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "botanical",
+      "bounds": {
+        "min": [
+          -4.638937950134277,
+          0.11999999731779099,
+          -7.5060319900512695
+        ],
+        "max": [
+          -2.9533731937408447,
+          2.8196334838867188,
+          -5.930004119873047
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "botanical",
+      "bounds": {
+        "min": [
+          9.643525123596191,
+          0.11999999731779099,
+          -7.36331033706665
+        ],
+        "max": [
+          11.642105102539062,
+          3.444788694381714,
+          -5.376034259796143
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "botanical",
+      "bounds": {
+        "min": [
+          9.731995582580566,
+          0.11999999731779099,
+          -4.488874912261963
+        ],
+        "max": [
+          11.648778915405273,
+          3.1825003623962402,
+          -2.7922446727752686
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "botanical",
+      "bounds": {
+        "min": [
+          10.164887428283691,
+          0.11999999731779099,
+          -1.930250644683838
+        ],
+        "max": [
+          11.498520851135254,
+          2.2169227600097656,
+          -0.5052288174629211
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "visitors",
+      "bounds": {
+        "min": [
+          -11.467670440673828,
+          0.11999999731779099,
+          -7.393457889556885
+        ],
+        "max": [
+          10.420783996582031,
+          1.9488599300384521,
+          6.253361701965332
+        ]
+      },
+      "overhead": false
+    }
+  ],
+  "humans": [
+    {
+      "asset": "Business_Female_01",
+      "pose": "idle",
+      "position": [
+        -6.508253101364957,
+        0.12,
+        6.0084214209656785
+      ],
+      "height": 1.73921,
+      "yaw": -1.3784007252789743,
+      "textured": true,
+      "bounds": {
+        "min": [
+          -6.644372463226318,
+          0.11999999731779099,
+          5.744666576385498
+        ],
+        "max": [
+          -6.338831424713135,
+          1.8592100143432617,
+          6.253361701965332
+        ]
+      }
+    },
+    {
+      "asset": "Business_Male_01",
+      "pose": "idle",
+      "position": [
+        -8.6,
+        0.12,
+        -7.25
+      ],
+      "height": 1.7840349999999998,
+      "yaw": -0.0,
+      "textured": true,
+      "bounds": {
+        "min": [
+          -8.893780708312988,
+          0.11999999731779099,
+          -7.393457889556885
+        ],
+        "max": [
+          -8.307140350341797,
+          1.904034972190857,
+          -7.046663284301758
+        ]
+      }
+    },
+    {
+      "asset": "Business_Female_01",
+      "pose": "talk",
+      "position": [
+        -4.8,
+        0.12,
+        -5.7
+      ],
+      "height": 1.82886,
+      "yaw": -0.4363323129985824,
+      "textured": true,
+      "bounds": {
+        "min": [
+          -5.151545524597168,
+          0.11999999731779099,
+          -5.902109622955322
+        ],
+        "max": [
+          -4.5303778648376465,
+          1.9488599300384521,
+          -5.480438709259033
+        ]
+      }
+    },
+    {
+      "asset": "Business_Male_02",
+      "pose": "talk",
+      "position": [
+        -11.1,
+        0.12,
+        4.2
+      ],
+      "height": 1.73921,
+      "yaw": -1.5707963267948966,
+      "textured": true,
+      "bounds": {
+        "min": [
+          -11.467670440673828,
+          0.11999999731779099,
+          3.889930009841919
+        ],
+        "max": [
+          -10.961438179016113,
+          1.8592100143432617,
+          4.486901760101318
+        ]
+      }
+    },
+    {
+      "asset": "Business_Female_04",
+      "pose": "talk",
+      "position": [
+        -10.8,
+        0.12,
+        2.0
+      ],
+      "height": 1.7840349999999998,
+      "yaw": 1.2217304763960306,
+      "textured": true,
+      "bounds": {
+        "min": [
+          -11.011324882507324,
+          0.11999999731779099,
+          1.7384295463562012
+        ],
+        "max": [
+          -10.556655883789062,
+          1.904034972190857,
+          2.3290317058563232
+        ]
+      }
+    },
+    {
+      "asset": "Business_Male_02",
+      "pose": "idle",
+      "position": [
+        8.8,
+        0.12,
+        2.8
+      ],
+      "height": 1.82886,
+      "yaw": 1.2217304763960306,
+      "textured": true,
+      "bounds": {
+        "min": [
+          8.630990028381348,
+          0.11999999731779099,
+          2.514873504638672
+        ],
+        "max": [
+          9.051127433776855,
+          1.9488599300384521,
+          3.0852291584014893
+        ]
+      }
+    },
+    {
+      "asset": "Business_Female_01",
+      "pose": "idle",
+      "position": [
+        10.2,
+        0.12,
+        3.0
+      ],
+      "height": 1.73921,
+      "yaw": -0.8726646259971648,
+      "textured": true,
+      "bounds": {
+        "min": [
+          10.020904541015625,
+          0.11999999731779099,
+          2.7603533267974854
+        ],
+        "max": [
+          10.420783996582031,
+          1.8592100143432617,
+          3.187897205352783
+        ]
+      }
+    }
+  ],
+  "plants": [
+    {
+      "position": [
+        -11.0,
+        0.12,
+        6.1
+      ],
+      "height": 3.35,
+      "potRadius": 0.28,
+      "leaves": 1064
+    },
+    {
+      "position": [
+        -10.8,
+        0.12,
+        -4.8
+      ],
+      "height": 3.2,
+      "potRadius": 0.28,
+      "leaves": 1064
+    },
+    {
+      "position": [
+        -10.8,
+        0.12,
+        -6.75
+      ],
+      "height": 2.7,
+      "potRadius": 0.28,
+      "leaves": 1064
+    },
+    {
+      "position": [
+        -3.8,
+        0.12,
+        -6.7
+      ],
+      "height": 2.65,
+      "potRadius": 0.28,
+      "leaves": 1064
+    },
+    {
+      "position": [
+        10.6,
+        0.12,
+        -6.35
+      ],
+      "height": 3.3,
+      "potRadius": 0.28,
+      "leaves": 1064
+    },
+    {
+      "position": [
+        10.65,
+        0.12,
+        -3.7
+      ],
+      "height": 3.0,
+      "potRadius": 0.28,
+      "leaves": 1064
+    },
+    {
+      "position": [
+        10.8,
+        0.12,
+        -1.2
+      ],
+      "height": 2.0,
+      "potRadius": 0.28,
+      "leaves": 1064
+    }
+  ],
+  "views": {
+    "entry": {
+      "position": [
+        -2.8,
+        1.77,
+        8.8
+      ],
+      "look": [
+        -10.8,
+        3.7,
+        3.0
+      ],
+      "worldPosition": [
+        -9.2,
+        1.77,
+        -110.2
+      ],
+      "worldLook": [
+        -15.0,
+        3.7,
+        -102.2
+      ]
+    },
+    "interior": {
+      "position": [
+        -8.5,
+        1.77,
+        -0.3
+      ],
+      "look": [
+        -10.8,
+        3.7,
+        3.0
+      ],
+      "worldPosition": [
+        -18.3,
+        1.77,
+        -104.5
+      ],
+      "worldLook": [
+        -15.0,
+        3.7,
+        -102.2
+      ]
+    },
+    "out": {
+      "position": [
+        -8.5,
+        1.77,
+        -0.3
+      ],
+      "look": [
+        -2.8,
+        1.77,
+        8.8
+      ],
+      "worldPosition": [
+        -18.3,
+        1.77,
+        -104.5
+      ],
+      "worldLook": [
+        -9.2,
+        1.77,
+        -110.2
+      ]
+    }
+  },
+  "routes": [
+    {
+      "id": "studio-oblique-occupied-entry",
+      "width": 2,
+      "centerline": [
+        [
+          -2.8,
+          0.12,
+          8.8
+        ],
+        [
+          -2.8,
+          0.12,
+          3
+        ],
+        [
+          -8.5,
+          0.12,
+          3
+        ],
+        [
+          -8.5,
+          0.12,
+          -4.8
+        ]
+      ],
+      "clearEnvelopesXZ": [
+        [
+          -3.8,
+          -1.8,
+          3,
+          8.8
+        ],
+        [
+          -9.5,
+          -1.8,
+          2,
+          4
+        ],
+        [
+          -9.5,
+          -7.5,
+          -4.8,
+          3
+        ]
+      ],
+      "measurement": "2m L-shaped principal route reaches the genuine oblique side portal, then the occupied room, without passing through LED or reception"
+    }
+  ],
+  "provenance": {
+    "architecture": "Original bespoke Blender geometry; selected corner artwork remains runtime media",
+    "humans": "Microsoft Rocketbox MIT; technical-humans-LICENSE.txt",
+    "plants": "Original branch and curved-leaf geometry; no downloaded models"
+  },
+  "notes": [
+    "Reference-shaped 79 degree side-entry portal, projecting dense reed oval and connected oblique gallery replace the full-height generic box",
+    "Same-volume studio interior; no camera-ray or nonuniform room-depth compression",
+    "Native staff heights ~1.74\u20131.83m; counter top1.175m",
+    "No display is placed inside the main corner notch/occupied studio volume",
+    "Reference is a perspective image; geometry is an authored reconstruction, not recovered CAD"
+  ]
+}

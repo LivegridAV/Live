@@ -9,6 +9,12 @@
       "autoPort": true
     },
     {
+      "name": "export-preview",
+      "runtimeExecutable": "C:\\Program Files\\nodejs\\node.exe",
+      "runtimeArgs": ["scripts\\serve-export.mjs"],
+      "port": 4310
+    },
+    {
       "name": "static-export",
       "runtimeExecutable": "python",
       "runtimeArgs": ["-m", "http.server", "4321", "--directory", "out"],

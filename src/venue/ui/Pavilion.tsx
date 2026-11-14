@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { useVenue } from "../systems/store";
 import { trapDialogFocus } from "./focusTrap";
 import {
-  PAVILIONS,
+  VENUE_PAVILIONS,
   PARTNER_BAY,
   PAVILION_RANGE,
   pavilionById,
@@ -12,6 +12,8 @@ import {
 } from "../data/pavilions";
 import { journey } from "../systems/journey";
 import { contactLinks } from "@/experience/contact";
+import { inProjectionShowcase } from "../data/projection";
+import { inRental2026 } from "../data/ledRental2026";
 
 /**
  * Service interaction (brief §22).
@@ -23,7 +25,7 @@ import { contactLinks } from "@/experience/contact";
  * still links to its own crawlable route for anyone who wants the full page.
  */
 
-const ALL = [...PAVILIONS, PARTNER_BAY];
+const ALL = VENUE_PAVILIONS;
 
 export function PavilionPrompt() {
   const progress = useVenue((s) => s.progress);
@@ -31,6 +33,7 @@ export function PavilionPrompt() {
   const activePavilion = useVenue((s) => s.activePavilion);
   const open = useVenue((s) => s.openPavilion);
   const pastVenue = useVenue((s) => s.pastVenue);
+  const zone = useVenue((s) => s.zone);
 
   const near = useMemo(() => {
     let best: (typeof ALL)[number] | null = null;
@@ -45,7 +48,8 @@ export function PavilionPrompt() {
     return bestD < PAVILION_RANGE * 1.5 ? best : null;
   }, [progress]);
 
-  const visible = entered && near && !activePavilion && !pastVenue;
+  const technical = zone === "technical" || inRental2026(progress) || inProjectionShowcase(progress);
+  const visible = entered && near && technical && !activePavilion && !pastVenue;
 
   if (!near) return null;
 
@@ -59,6 +63,7 @@ export function PavilionPrompt() {
          is left for the DOM is the thing HTML is actually better at — a real
          button, reachable by keyboard, that opens the full accessible panel. */
       data-side={near.side}
+      data-technical={technical || undefined}
       style={{
         opacity: visible ? 1 : 0,
         pointerEvents: visible ? "auto" : "none",
@@ -71,7 +76,7 @@ export function PavilionPrompt() {
       <h2>{near.headline}</h2>
       <div className="v-prompt-act">
         <button type="button" className="v-btn v-btn--primary" onClick={() => open(near.id)}>
-          Explore service
+          {technical ? `Explore ${near.headline}` : "Explore service"}
         </button>
       </div>
     </aside>

@@ -1,0 +1,1917 @@
+{
+  "version": "grand-v1",
+  "asset": "projection-grand-v1.glb",
+  "sha256": "284c1d19676974ff7103519812f8482e9e6a3aebb10428eb6d49fa460c4d476c",
+  "units": "metres",
+  "runtimeScale": 1,
+  "root": [
+    18,
+    0,
+    -205
+  ],
+  "rootRotation": [
+    0,
+    -1.5707963267948966,
+    0
+  ],
+  "floorTop": 0.12,
+  "deckPolygonXZ": [
+    [
+      -12,
+      -8
+    ],
+    [
+      12,
+      -8
+    ],
+    [
+      12,
+      7.25
+    ],
+    [
+      11.25,
+      8
+    ],
+    [
+      -11.25,
+      8
+    ],
+    [
+      -12,
+      7.25
+    ]
+  ],
+  "architecture": {
+    "width": 24,
+    "depth": 16,
+    "height": 12.701,
+    "top": 12.821,
+    "hClear": 9.555843238830567,
+    "clearHeightMeasurement": {
+      "method": "Lowest evaluated projector chassis/optic vertex over the interior minus finished-floor datum; ringundersides and ceiling lie higher. Entrance jambs and sidewall trim are excluded as perimeterarchitecture.",
+      "lowestProjectorVertexY": 9.675843238830566,
+      "projectors": [
+        {
+          "id": "central",
+          "bounds": {
+            "min": [
+              -0.40799999237060547,
+              9.906673431396484,
+              2.0510365962982178
+            ],
+            "max": [
+              0.40799999237060547,
+              10.930000305175781,
+              2.7607176303863525
+            ]
+          }
+        },
+        {
+          "id": "left",
+          "bounds": {
+            "min": [
+              -5.088796615600586,
+              9.675843238830566,
+              0.8600261211395264
+            ],
+            "max": [
+              -4.256938934326172,
+              10.930000305175781,
+              1.5489039421081543
+            ]
+          }
+        },
+        {
+          "id": "right",
+          "bounds": {
+            "min": [
+              4.256938934326172,
+              9.675843238830566,
+              0.8600261211395264
+            ],
+            "max": [
+              5.088796615600586,
+              10.930000305175781,
+              1.5489039421081543
+            ]
+          }
+        }
+      ],
+      "floorY": 0.12
+    },
+    "reception": {
+      "center": [
+        -7.0,
+        0.12,
+        6.0
+      ],
+      "width": 6.2,
+      "depth": 1.05,
+      "height": 1.1,
+      "top": 1.22
+    },
+    "stage": {
+      "center": [
+        0,
+        0.95,
+        -2.8
+      ],
+      "radius": 3.9,
+      "top": 0.95
+    },
+    "galleries": [
+      {
+        "side": -1,
+        "center": [
+          -8.72,
+          0,
+          -1.35
+        ],
+        "yaw": 0.25,
+        "width": 4.63,
+        "clearInnerEdge": 6.43
+      },
+      {
+        "side": 1,
+        "center": [
+          8.72,
+          0,
+          -1.35
+        ],
+        "yaw": -0.25,
+        "width": 4.63,
+        "clearInnerEdge": 6.43
+      }
+    ],
+    "ceilingRings": [
+      {
+        "center": [
+          0,
+          10.3,
+          -0.7
+        ],
+        "outerRadiusX": 6.8,
+        "outerRadiusZ": 4.6,
+        "radialBand": 0.34,
+        "depth": 0.18
+      },
+      {
+        "center": [
+          0,
+          10.48,
+          -0.7
+        ],
+        "outerRadiusX": 4.45,
+        "outerRadiusZ": 3.25,
+        "radialBand": 0.28,
+        "depth": 0.18
+      }
+    ],
+    "seating": [
+      {
+        "position": [
+          9.25,
+          0.12,
+          2.5
+        ],
+        "yaw": -1.5,
+        "width": 0.91,
+        "depth": 0.8,
+        "seatTop": 0.604,
+        "height": 1.08
+      },
+      {
+        "position": [
+          9.25,
+          0.12,
+          5.2
+        ],
+        "yaw": -1.7,
+        "width": 0.91,
+        "depth": 0.8,
+        "seatTop": 0.604,
+        "height": 1.08
+      },
+      {
+        "position": [
+          7.65,
+          0.12,
+          4.5
+        ],
+        "yaw": 0.3,
+        "width": 0.91,
+        "depth": 0.8,
+        "seatTop": 0.604,
+        "height": 1.08
+      },
+      {
+        "position": [
+          -8.1,
+          0.12,
+          1.0
+        ],
+        "yaw": 0.2,
+        "width": 0.91,
+        "depth": 0.8,
+        "seatTop": 0.604,
+        "height": 1.08
+      },
+      {
+        "position": [
+          -6.5,
+          0.12,
+          1.0
+        ],
+        "yaw": -0.2,
+        "width": 0.91,
+        "depth": 0.8,
+        "seatTop": 0.604,
+        "height": 1.08
+      },
+      {
+        "position": [
+          -7.25,
+          0.12,
+          3.0
+        ],
+        "yaw": 3.141592653589793,
+        "width": 0.91,
+        "depth": 0.8,
+        "seatTop": 0.604,
+        "height": 1.08
+      }
+    ],
+    "facade": {
+      "archControlPoints": [
+        [
+          -10.25,
+          0.12,
+          6.28
+        ],
+        [
+          -10.12,
+          3.2,
+          6.36
+        ],
+        [
+          -9.88,
+          7.2,
+          6.66
+        ],
+        [
+          -9.15,
+          9.35,
+          7.04
+        ],
+        [
+          -7.8,
+          10.65,
+          7.25
+        ],
+        [
+          -4.5,
+          10.92,
+          7.35
+        ],
+        [
+          0,
+          10.9,
+          7.4
+        ],
+        [
+          4.8,
+          10.82,
+          7.35
+        ],
+        [
+          8.3,
+          10.35,
+          7.19
+        ],
+        [
+          9.8,
+          8.7,
+          6.9
+        ],
+        [
+          10.28,
+          4.2,
+          6.64
+        ],
+        [
+          10.45,
+          0.12,
+          6.45
+        ]
+      ],
+      "top": 12.821,
+      "sharedArchAndTrimCurve": true
+    },
+    "serviceReturns": {
+      "left": {
+        "center": [
+          -11,
+          5.43,
+          7.05
+        ],
+        "usableWidth": 1.4,
+        "connectedToSideReturn": true
+      },
+      "right": {
+        "center": [
+          11,
+          5.43,
+          7.05
+        ],
+        "usableWidth": 1.4,
+        "connectedToSideReturn": true
+      }
+    }
+  },
+  "modelPlacement": {
+    "position": [
+      0,
+      0.915,
+      -2.8
+    ],
+    "scale": [
+      1,
+      1,
+      1
+    ],
+    "asset": "projection-grand-crystals-v1.glb"
+  },
+  "apertures": [
+    {
+      "id": "projection-application-0",
+      "type": "plane",
+      "x": -8.714557647705078,
+      "y": 9.220000267028809,
+      "z": -1.3286839723587036,
+      "w": 4.05,
+      "h": 1.8,
+      "width": 4.05,
+      "height": 1.8,
+      "rotation": [
+        0,
+        0.25,
+        0
+      ],
+      "mediaHint": "projection-application-0"
+    },
+    {
+      "id": "projection-application-1",
+      "type": "plane",
+      "x": -8.714557647705078,
+      "y": 6.889999866485596,
+      "z": -1.3286839723587036,
+      "w": 4.05,
+      "h": 1.8,
+      "width": 4.05,
+      "height": 1.8,
+      "rotation": [
+        0,
+        0.25,
+        0
+      ],
+      "mediaHint": "projection-application-1"
+    },
+    {
+      "id": "projection-application-2",
+      "type": "plane",
+      "x": -8.714557647705078,
+      "y": 4.559999942779541,
+      "z": -1.3286839723587036,
+      "w": 4.05,
+      "h": 1.8,
+      "width": 4.05,
+      "height": 1.8,
+      "rotation": [
+        0,
+        0.25,
+        0
+      ],
+      "mediaHint": "projection-application-2"
+    },
+    {
+      "id": "projection-application-3",
+      "type": "plane",
+      "x": -8.714557647705078,
+      "y": 2.2300000190734863,
+      "z": -1.3286839723587036,
+      "w": 4.05,
+      "h": 1.8,
+      "width": 4.05,
+      "height": 1.8,
+      "rotation": [
+        0,
+        0.25,
+        0
+      ],
+      "mediaHint": "projection-application-3"
+    },
+    {
+      "id": "projection-application-4",
+      "type": "plane",
+      "x": 8.714557647705078,
+      "y": 9.220000267028809,
+      "z": -1.3286839723587036,
+      "w": 4.05,
+      "h": 1.8,
+      "width": 4.05,
+      "height": 1.8,
+      "rotation": [
+        0,
+        -0.25,
+        0
+      ],
+      "mediaHint": "projection-application-4"
+    },
+    {
+      "id": "projection-application-5",
+      "type": "plane",
+      "x": 8.714557647705078,
+      "y": 6.889999866485596,
+      "z": -1.3286839723587036,
+      "w": 4.05,
+      "h": 1.8,
+      "width": 4.05,
+      "height": 1.8,
+      "rotation": [
+        0,
+        -0.25,
+        0
+      ],
+      "mediaHint": "projection-application-5"
+    },
+    {
+      "id": "projection-application-6",
+      "type": "plane",
+      "x": 8.714557647705078,
+      "y": 4.559999942779541,
+      "z": -1.3286839723587036,
+      "w": 4.05,
+      "h": 1.8,
+      "width": 4.05,
+      "height": 1.8,
+      "rotation": [
+        0,
+        -0.25,
+        0
+      ],
+      "mediaHint": "projection-application-6"
+    },
+    {
+      "id": "projection-application-7",
+      "type": "plane",
+      "x": 8.714557647705078,
+      "y": 2.2300000190734863,
+      "z": -1.3286839723587036,
+      "w": 4.05,
+      "h": 1.8,
+      "width": 4.05,
+      "height": 1.8,
+      "rotation": [
+        0,
+        -0.25,
+        0
+      ],
+      "mediaHint": "projection-application-7"
+    },
+    {
+      "id": "projection-backdrop",
+      "type": "curved",
+      "x": 0,
+      "y": 6.400000095367432,
+      "z": 9.329999923706055,
+      "w": 19.442407910063313,
+      "h": 7.9,
+      "radius": 17.0,
+      "arc": 1.143671053533136,
+      "rotation": [
+        0,
+        3.141592653589793,
+        0
+      ],
+      "flipU": true,
+      "chordWidth": 18.4,
+      "mediaHint": "projection-backdrop"
+    },
+    {
+      "id": "projection-ceiling-outer",
+      "type": "ellipse",
+      "x": 0,
+      "y": 10.735,
+      "z": -0.7,
+      "w": 17.4,
+      "h": 11,
+      "radiusX": 8.7,
+      "radiusZ": 5.5,
+      "innerFraction": 0.38,
+      "rotation": [
+        1.5707963267948966,
+        0,
+        0
+      ],
+      "mediaHint": "projection-ceiling"
+    },
+    {
+      "id": "projection-ceiling-inner",
+      "type": "ellipse",
+      "x": 0,
+      "y": 10.488,
+      "z": -0.7,
+      "w": 8.34,
+      "h": 5.9399999999999995,
+      "radiusX": 4.17,
+      "radiusZ": 2.9699999999999998,
+      "innerFraction": 0.01,
+      "rotation": [
+        1.5707963267948966,
+        0,
+        0
+      ],
+      "mediaHint": "projection-ceiling"
+    },
+    {
+      "id": "projection-kiosk",
+      "type": "plane",
+      "x": 4.5,
+      "y": 1.4300000000000002,
+      "z": 5.859999999999999,
+      "w": 1.22,
+      "h": 0.7,
+      "width": 1.22,
+      "height": 0.7,
+      "rotation": [
+        -0.57,
+        0,
+        0
+      ],
+      "mediaHint": "projection-kiosk"
+    }
+  ],
+  "projectors": [
+    {
+      "id": "projection-grand-v1-|-central-projector",
+      "position": [
+        0,
+        10.02,
+        2.1
+      ],
+      "lens": [
+        0,
+        10.02,
+        2.1
+      ],
+      "target": [
+        0,
+        7.0,
+        -2.8
+      ],
+      "width": 2.0,
+      "height": 2.7,
+      "radius": 1.55,
+      "color": "#c7e9ff",
+      "opacity": 0.042
+    },
+    {
+      "id": "projection-grand-v1-|-left-projector",
+      "position": [
+        -4.6,
+        9.82,
+        1.0
+      ],
+      "lens": [
+        -4.6,
+        9.82,
+        1.0
+      ],
+      "target": [
+        -2.7,
+        4.6,
+        -2.6
+      ],
+      "width": 2.0,
+      "height": 2.7,
+      "radius": 1.25,
+      "color": "#c7e9ff",
+      "opacity": 0.042
+    },
+    {
+      "id": "projection-grand-v1-|-right-projector",
+      "position": [
+        4.6,
+        9.82,
+        1.0
+      ],
+      "lens": [
+        4.6,
+        9.82,
+        1.0
+      ],
+      "target": [
+        2.7,
+        4.6,
+        -2.6
+      ],
+      "width": 2.0,
+      "height": 2.7,
+      "radius": 1.25,
+      "color": "#c7e9ff",
+      "opacity": 0.042
+    }
+  ],
+  "typography": [
+    {
+      "body": "SPACES",
+      "position": [
+        -11.68,
+        8.1,
+        7.192
+      ],
+      "yaw": 0,
+      "capHeight": 0.24,
+      "width": 1.146412996067364,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1,
+      "bounds": {
+        "min": [
+          -11.660405158996582,
+          8.100000381469727,
+          7.190979480743408
+        ],
+        "max": [
+          -10.513992309570312,
+          8.34000015258789,
+          7.193020343780518
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "PEOPLE",
+      "position": [
+        -11.68,
+        7.64,
+        7.192
+      ],
+      "yaw": 0,
+      "capHeight": 0.24,
+      "width": 1.1251984121607832,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1,
+      "bounds": {
+        "min": [
+          -11.649555206298828,
+          7.639999866485596,
+          7.190979480743408
+        ],
+        "max": [
+          -10.524356842041016,
+          7.87999963760376,
+          7.193020343780518
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "BRANDS",
+      "position": [
+        -11.68,
+        7.18,
+        7.192
+      ],
+      "yaw": 0,
+      "capHeight": 0.24,
+      "width": 1.2696517188660015,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1,
+      "bounds": {
+        "min": [
+          -11.649555206298828,
+          7.179999828338623,
+          7.190979480743408
+        ],
+        "max": [
+          -10.379903793334961,
+          7.419999599456787,
+          7.193020343780518
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "EMOTIONS",
+      "position": [
+        -11.68,
+        6.72,
+        7.192
+      ],
+      "yaw": 0,
+      "capHeight": 0.19940145464075623,
+      "width": 1.4,
+      "uniformFit": 0.8308393943364843,
+      "horizontalAspectRatio": 1,
+      "bounds": {
+        "min": [
+          -11.654705047607422,
+          6.71999979019165,
+          7.191152095794678
+        ],
+        "max": [
+          -10.254705429077148,
+          6.919401168823242,
+          7.192847728729248
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "RENTAL",
+      "position": [
+        -11.68,
+        4.9,
+        7.192
+      ],
+      "yaw": 0,
+      "capHeight": 0.24,
+      "width": 1.2185941809555914,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1,
+      "bounds": {
+        "min": [
+          -11.64853572845459,
+          4.900000095367432,
+          7.190945148468018
+        ],
+        "max": [
+          -10.429941177368164,
+          5.139999866485596,
+          7.193054676055908
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "SOLUTIONS",
+      "position": [
+        -11.68,
+        4.44,
+        7.192
+      ],
+      "yaw": 0,
+      "capHeight": 0.18647944709639275,
+      "width": 1.4,
+      "uniformFit": 0.7769976962349698,
+      "horizontalAspectRatio": 1,
+      "bounds": {
+        "min": [
+          -11.664774894714355,
+          4.440000057220459,
+          7.191206932067871
+        ],
+        "max": [
+          -10.264775276184082,
+          4.626479625701904,
+          7.192792892456055
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "EXPERIENCES",
+      "position": [
+        -11.68,
+        3.9800000000000004,
+        7.192
+      ],
+      "yaw": 0,
+      "capHeight": 0.16504392901163745,
+      "width": 1.4,
+      "uniformFit": 0.6876830375484894,
+      "horizontalAspectRatio": 1,
+      "bounds": {
+        "min": [
+          -11.659063339233398,
+          3.9800000190734863,
+          7.191298007965088
+        ],
+        "max": [
+          -10.259063720703125,
+          4.145043849945068,
+          7.192701816558838
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "IDEAS",
+      "position": [
+        10.32,
+        8.1,
+        7.192
+      ],
+      "yaw": 0,
+      "capHeight": 0.24,
+      "width": 0.8777457406136047,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1,
+      "bounds": {
+        "min": [
+          10.350444793701172,
+          8.100000381469727,
+          7.190979480743408
+        ],
+        "max": [
+          11.228190422058105,
+          8.34000015258789,
+          7.193020343780518
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "MAPPED",
+      "position": [
+        10.32,
+        7.64,
+        7.192
+      ],
+      "yaw": 0,
+      "capHeight": 0.24,
+      "width": 1.3379246457476144,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1,
+      "bounds": {
+        "min": [
+          10.35146427154541,
+          7.639999866485596,
+          7.190945148468018
+        ],
+        "max": [
+          11.689388275146484,
+          7.87999963760376,
+          7.193054676055908
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "BIGGER",
+      "position": [
+        10.32,
+        7.18,
+        7.192
+      ],
+      "yaw": 0,
+      "capHeight": 0.24,
+      "width": 1.1243885808417156,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1,
+      "bounds": {
+        "min": [
+          10.350444793701172,
+          7.179999828338623,
+          7.190979480743408
+        ],
+        "max": [
+          11.474833488464355,
+          7.419999599456787,
+          7.193020343780518
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "BUILDINGS",
+      "position": [
+        10.32,
+        4.9,
+        7.192
+      ],
+      "yaw": 0,
+      "capHeight": 0.20007407816699918,
+      "width": 1.4,
+      "uniformFit": 0.8336419923624966,
+      "horizontalAspectRatio": 1,
+      "bounds": {
+        "min": [
+          10.345379829406738,
+          4.900000095367432,
+          7.1911492347717285
+        ],
+        "max": [
+          11.745380401611328,
+          5.100074291229248,
+          7.192850589752197
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "STAGES",
+      "position": [
+        10.32,
+        4.44,
+        7.192
+      ],
+      "yaw": 0,
+      "capHeight": 0.24,
+      "width": 1.1566154378363407,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1,
+      "bounds": {
+        "min": [
+          10.339594841003418,
+          4.440000057220459,
+          7.190979480743408
+        ],
+        "max": [
+          11.496210098266602,
+          4.679999828338623,
+          7.193020343780518
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "PRODUCTS",
+      "position": [
+        10.32,
+        3.9800000000000004,
+        7.192
+      ],
+      "yaw": 0,
+      "capHeight": 0.19965088867546238,
+      "width": 1.4,
+      "uniformFit": 0.8318787028144267,
+      "horizontalAspectRatio": 1,
+      "bounds": {
+        "min": [
+          10.34532642364502,
+          3.9800000190734863,
+          7.191151142120361
+        ],
+        "max": [
+          11.74532699584961,
+          4.179650783538818,
+          7.1928486824035645
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "INTERIORS",
+      "position": [
+        10.32,
+        3.5200000000000005,
+        7.192
+      ],
+      "yaw": 0,
+      "capHeight": 0.20568724112232262,
+      "width": 1.4,
+      "uniformFit": 0.857030171343011,
+      "horizontalAspectRatio": 1,
+      "bounds": {
+        "min": [
+          10.346092224121094,
+          3.5199999809265137,
+          7.191125392913818
+        ],
+        "max": [
+          11.746091842651367,
+          3.725687265396118,
+          7.192874431610107
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "EXPERIENCES",
+      "position": [
+        10.32,
+        3.0600000000000005,
+        7.192
+      ],
+      "yaw": 0,
+      "capHeight": 0.16504392901163745,
+      "width": 1.4,
+      "uniformFit": 0.6876830375484894,
+      "horizontalAspectRatio": 1,
+      "bounds": {
+        "min": [
+          10.340936660766602,
+          3.059999942779541,
+          7.191298007965088
+        ],
+        "max": [
+          11.740936279296875,
+          3.225043773651123,
+          7.192701816558838
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "livegrid AV",
+      "position": [
+        -3.95,
+        11.31,
+        7.46
+      ],
+      "yaw": 0,
+      "capHeight": 0.76,
+      "width": 3.8213012703711327,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1,
+      "bounds": {
+        "min": [
+          -3.8925626277923584,
+          11.3100004196167,
+          7.457581043243408
+        ],
+        "max": [
+          -0.07126140594482422,
+          12.070000648498535,
+          7.462419033050537
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "PROJECTION MAPPING",
+      "position": [
+        2.5,
+        11.92,
+        7.46
+      ],
+      "yaw": 0,
+      "capHeight": 0.28987643146197717,
+      "width": 5.7,
+      "uniformFit": 0.966254771539924,
+      "horizontalAspectRatio": 1,
+      "bounds": {
+        "min": [
+          2.5367724895477295,
+          11.920000076293945,
+          7.458767414093018
+        ],
+        "max": [
+          8.236772537231445,
+          12.20987606048584,
+          7.461232662200928
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "TRANSFORM SPACES INTO STORIES",
+      "position": [
+        2.52,
+        11.44,
+        7.46
+      ],
+      "yaw": 0,
+      "capHeight": 0.18,
+      "width": 4.915900032785572,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1,
+      "bounds": {
+        "min": [
+          2.524979829788208,
+          11.4399995803833,
+          7.459234714508057
+        ],
+        "max": [
+          7.440879821777344,
+          11.619999885559082,
+          7.460765361785889
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "ANY",
+      "position": [
+        9.3,
+        12.24,
+        7.26
+      ],
+      "yaw": 0,
+      "capHeight": 0.19,
+      "width": 0.5606034041419431,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1,
+      "bounds": {
+        "min": [
+          9.302915573120117,
+          12.239999771118164,
+          7.259165287017822
+        ],
+        "max": [
+          9.863518714904785,
+          12.429999351501465,
+          7.26083517074585
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "SURFACE",
+      "position": [
+        9.3,
+        11.93,
+        7.26
+      ],
+      "yaw": 0,
+      "capHeight": 0.19,
+      "width": 1.1508001246616515,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1,
+      "bounds": {
+        "min": [
+          9.315512657165527,
+          11.930000305175781,
+          7.25919246673584
+        ],
+        "max": [
+          10.466313362121582,
+          12.119999885559082,
+          7.260807991027832
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "A CANVAS",
+      "position": [
+        9.3,
+        11.620000000000001,
+        7.26
+      ],
+      "yaw": 0,
+      "capHeight": 0.19,
+      "width": 1.3518307456511265,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1,
+      "bounds": {
+        "min": [
+          9.302821159362793,
+          11.619999885559082,
+          7.25919246673584
+        ],
+        "max": [
+          10.654651641845703,
+          11.809999465942383,
+          7.260807991027832
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "ARCHITECTURAL MAPPING",
+      "position": [
+        0,
+        8.06,
+        0.05
+      ],
+      "yaw": 0,
+      "capHeight": 0.19,
+      "width": 3.4116150476471496,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1,
+      "galleryParent": {
+        "position": [
+          -8.72,
+          0,
+          -1.35
+        ],
+        "yaw": 0.25
+      },
+      "bounds": {
+        "min": [
+          -10.368247985839844,
+          8.0600004196167,
+          -1.7224100828170776
+        ],
+        "max": [
+          -7.062291622161865,
+          8.25,
+          -0.8767973780632019
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "STAGE EXPERIENCES",
+      "position": [
+        0,
+        5.73,
+        0.05
+      ],
+      "yaw": 0,
+      "capHeight": 0.19,
+      "width": 2.577240873069998,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1,
+      "galleryParent": {
+        "position": [
+          -8.72,
+          0,
+          -1.35
+        ],
+        "yaw": 0.25
+      },
+      "bounds": {
+        "min": [
+          -9.954961776733398,
+          5.730000019073486,
+          -1.6215118169784546
+        ],
+        "max": [
+          -7.457441329956055,
+          5.920000076293945,
+          -0.9823265075683594
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "PRODUCT MAPPING",
+      "position": [
+        0,
+        3.4000000000000004,
+        0.05
+      ],
+      "yaw": 0,
+      "capHeight": 0.19,
+      "width": 2.5300538026342503,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1,
+      "galleryParent": {
+        "position": [
+          -8.72,
+          0,
+          -1.35
+        ],
+        "yaw": 0.25
+      },
+      "bounds": {
+        "min": [
+          -9.930859565734863,
+          3.4000000953674316,
+          -1.6159918308258057
+        ],
+        "max": [
+          -7.479059219360352,
+          3.5900001525878906,
+          -0.9884808659553528
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "INTERACTIVE SPACES",
+      "position": [
+        0,
+        1.0700000000000005,
+        0.05
+      ],
+      "yaw": 0,
+      "capHeight": 0.19,
+      "width": 2.6839114799837964,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1,
+      "galleryParent": {
+        "position": [
+          -8.72,
+          0,
+          -1.35
+        ],
+        "yaw": 0.25
+      },
+      "bounds": {
+        "min": [
+          -10.002477645874023,
+          1.0700000524520874,
+          -1.6357697248458862
+        ],
+        "max": [
+          -7.401602745056152,
+          1.2600001096725464,
+          -0.9701937437057495
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "LANDMARKS",
+      "position": [
+        0,
+        8.06,
+        0.05
+      ],
+      "yaw": 0,
+      "capHeight": 0.19,
+      "width": 1.598492269011156,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1,
+      "galleryParent": {
+        "position": [
+          8.72,
+          0,
+          -1.35
+        ],
+        "yaw": -0.25
+      },
+      "bounds": {
+        "min": [
+          7.938620567321777,
+          8.0600004196167,
+          -1.4986464977264404
+        ],
+        "max": [
+          9.48781967163086,
+          8.25,
+          -1.1016075611114502
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "BRAND EXPERIENCES",
+      "position": [
+        0,
+        5.73,
+        0.05
+      ],
+      "yaw": 0,
+      "capHeight": 0.19,
+      "width": 2.6667281462558368,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1,
+      "galleryParent": {
+        "position": [
+          8.72,
+          0,
+          -1.35
+        ],
+        "yaw": -0.25
+      },
+      "bounds": {
+        "min": [
+          7.421107292175293,
+          5.730000019073486,
+          -1.6307893991470337
+        ],
+        "max": [
+          10.005332946777344,
+          5.920000076293945,
+          -0.9694646596908569
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "INTERIORS",
+      "position": [
+        0,
+        3.4000000000000004,
+        0.05
+      ],
+      "yaw": 0,
+      "capHeight": 0.19,
+      "width": 1.3291332502534339,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1,
+      "galleryParent": {
+        "position": [
+          8.72,
+          0,
+          -1.35
+        ],
+        "yaw": -0.25
+      },
+      "bounds": {
+        "min": [
+          8.069112777709961,
+          3.4000000953674316,
+          -1.4653263092041016
+        ],
+        "max": [
+          9.35732650756836,
+          3.5900001525878906,
+          -1.1349278688430786
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "EVENTS & EXHIBITIONS",
+      "position": [
+        0,
+        1.0700000000000005,
+        0.05
+      ],
+      "yaw": 0,
+      "capHeight": 0.19,
+      "width": 2.9809706679417207,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1,
+      "galleryParent": {
+        "position": [
+          8.72,
+          0,
+          -1.35
+        ],
+        "yaw": -0.25
+      },
+      "bounds": {
+        "min": [
+          7.2688703536987305,
+          1.0700000524520874,
+          -1.6696618795394897
+        ],
+        "max": [
+          10.157569885253906,
+          1.2600001096725464,
+          -0.9305922985076904
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "livegrid AV",
+      "position": [
+        -1.98,
+        0.5,
+        0.55
+      ],
+      "yaw": 0,
+      "capHeight": 0.37,
+      "width": 1.860370355312262,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1,
+      "bounds": {
+        "min": [
+          -8.95203685760498,
+          0.6200000047683716,
+          6.548822402954102
+        ],
+        "max": [
+          -7.0916666984558105,
+          0.9900000095367432,
+          6.551177501678467
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "RENTAL  |  SOLUTIONS  |  EXPERIENCES",
+      "position": [
+        -2.64,
+        0.22,
+        0.552
+      ],
+      "yaw": 0,
+      "capHeight": 0.1,
+      "width": 1.9617387728142117,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1,
+      "bounds": {
+        "min": [
+          -9.630820274353027,
+          0.3400000035762787,
+          6.551692485809326
+        ],
+        "max": [
+          -7.669081687927246,
+          0.4399999976158142,
+          6.552307605743408
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "EXPLORE",
+      "position": [
+        0,
+        0.74,
+        0.405
+      ],
+      "yaw": 0,
+      "capHeight": 0.14,
+      "width": 0.8638396739960618,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1,
+      "bounds": {
+        "min": [
+          4.072803497314453,
+          0.8600000143051147,
+          6.204404830932617
+        ],
+        "max": [
+          4.936643123626709,
+          1.0,
+          6.20559549331665
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    },
+    {
+      "body": "POSSIBILITIES",
+      "position": [
+        0,
+        0.49,
+        0.405
+      ],
+      "yaw": 0,
+      "capHeight": 0.12,
+      "width": 1.1495223720401555,
+      "uniformFit": 1,
+      "horizontalAspectRatio": 1,
+      "bounds": {
+        "min": [
+          3.928882598876953,
+          0.6100000143051147,
+          6.204489707946777
+        ],
+        "max": [
+          5.078404903411865,
+          0.7300000190734863,
+          6.20551061630249
+        ]
+      },
+      "fontAspectRatioPreserved": true
+    }
+  ],
+  "fixtures": [
+    {
+      "position": [
+        -10,
+        10.92,
+        -6.95
+      ],
+      "kind": "recessed"
+    },
+    {
+      "position": [
+        -8,
+        10.92,
+        -6.95
+      ],
+      "kind": "recessed"
+    },
+    {
+      "position": [
+        -6,
+        10.92,
+        -6.95
+      ],
+      "kind": "recessed"
+    },
+    {
+      "position": [
+        -4,
+        10.92,
+        -6.95
+      ],
+      "kind": "recessed"
+    },
+    {
+      "position": [
+        -2,
+        10.92,
+        -6.95
+      ],
+      "kind": "recessed"
+    },
+    {
+      "position": [
+        0,
+        10.92,
+        -6.95
+      ],
+      "kind": "recessed"
+    },
+    {
+      "position": [
+        2,
+        10.92,
+        -6.95
+      ],
+      "kind": "recessed"
+    },
+    {
+      "position": [
+        4,
+        10.92,
+        -6.95
+      ],
+      "kind": "recessed"
+    },
+    {
+      "position": [
+        6,
+        10.92,
+        -6.95
+      ],
+      "kind": "recessed"
+    },
+    {
+      "position": [
+        8,
+        10.92,
+        -6.95
+      ],
+      "kind": "recessed"
+    },
+    {
+      "position": [
+        10,
+        10.92,
+        -6.95
+      ],
+      "kind": "recessed"
+    },
+    {
+      "position": [
+        -10,
+        10.92,
+        5.5
+      ],
+      "kind": "recessed"
+    },
+    {
+      "position": [
+        -8,
+        10.92,
+        5.5
+      ],
+      "kind": "recessed"
+    },
+    {
+      "position": [
+        -6,
+        10.92,
+        5.5
+      ],
+      "kind": "recessed"
+    },
+    {
+      "position": [
+        -4,
+        10.92,
+        5.5
+      ],
+      "kind": "recessed"
+    },
+    {
+      "position": [
+        -2,
+        10.92,
+        5.5
+      ],
+      "kind": "recessed"
+    },
+    {
+      "position": [
+        0,
+        10.92,
+        5.5
+      ],
+      "kind": "recessed"
+    },
+    {
+      "position": [
+        2,
+        10.92,
+        5.5
+      ],
+      "kind": "recessed"
+    },
+    {
+      "position": [
+        4,
+        10.92,
+        5.5
+      ],
+      "kind": "recessed"
+    },
+    {
+      "position": [
+        6,
+        10.92,
+        5.5
+      ],
+      "kind": "recessed"
+    },
+    {
+      "position": [
+        8,
+        10.92,
+        5.5
+      ],
+      "kind": "recessed"
+    },
+    {
+      "position": [
+        10,
+        10.92,
+        5.5
+      ],
+      "kind": "recessed"
+    }
+  ],
+  "roleBounds": {
+    "architecture": {
+      "min": [
+        -12.0,
+        0.11999988555908203,
+        -8.0
+      ],
+      "max": [
+        12.0,
+        11.059999465942383,
+        7.5
+      ]
+    },
+    "floor": {
+      "min": [
+        -12.0,
+        0.054999999701976776,
+        -8.001999855041504
+      ],
+      "max": [
+        12.0,
+        0.11999999731779099,
+        8.001991271972656
+      ]
+    },
+    "furniture": {
+      "min": [
+        -10.111000061035156,
+        0.11999999731779099,
+        0.54121994972229
+      ],
+      "max": [
+        9.684617042541504,
+        1.755448579788208,
+        6.639999866485596
+      ]
+    },
+    "model-plinth": {
+      "min": [
+        -3.9100000858306885,
+        0.11999999731779099,
+        -6.710000038146973
+      ],
+      "max": [
+        3.909998655319214,
+        0.9599999785423279,
+        1.1100000143051147
+      ]
+    },
+    "overhead": {
+      "min": [
+        -11.887899398803711,
+        0.11022230982780457,
+        -7.800000190734863
+      ],
+      "max": [
+        11.837425231933594,
+        12.821000099182129,
+        7.478000164031982
+      ]
+    },
+    "section-wall": {
+      "min": [
+        11.760000228881836,
+        0.12000036239624023,
+        -8.0
+      ],
+      "max": [
+        12.0,
+        11.059999465942383,
+        7.5
+      ]
+    }
+  },
+  "interaction": {
+    "position": [
+      -7,
+      0.7,
+      6.55
+    ],
+    "rotation": [
+      0,
+      0,
+      0
+    ],
+    "w": 5.8,
+    "h": 1.0
+  },
+  "circulation": {
+    "principalEntry": {
+      "min": [
+        -1,
+        0.12,
+        2.5
+      ],
+      "max": [
+        1,
+        2.2,
+        8
+      ],
+      "width": 2
+    },
+    "sideRoute": {
+      "min": [
+        5.8,
+        0.12,
+        -1.2
+      ],
+      "max": [
+        7.0,
+        2.2,
+        6.6
+      ],
+      "width": 1.2
+    },
+    "status": "Designed route envelopes; exact final asset/furniture intersections separately measured"
+  },
+  "navigation": {
+    "entrance": [
+      0,
+      1.77,
+      9.4
+    ],
+    "interior": [
+      6.4,
+      1.77,
+      1.0
+    ],
+    "interiorLook": [
+      0,
+      4.0,
+      -2.0
+    ],
+    "exitLook": [
+      0,
+      1.77,
+      11
+    ],
+    "route": [
+      [
+        0,
+        1.77,
+        9.4
+      ],
+      [
+        0,
+        1.77,
+        7.7
+      ],
+      [
+        0,
+        1.77,
+        4.6
+      ],
+      [
+        6.4,
+        1.77,
+        4.6
+      ],
+      [
+        6.4,
+        1.77,
+        1
+      ]
+    ]
+  },
+  "cutaway": {
+    "overhead": "grandRole=overhead",
+    "sectionWall": "grandRole=section-wall"
+  },
+  "provenance": "Original procedural Blender architecture and furniture. Earlier projection utility constructors reused; earlier GLBs unchanged. No reference raster on booth surfaces.",
+  "stats": {
+    "bytes": 5590224,
+    "sha256": "284c1d19676974ff7103519812f8482e9e6a3aebb10428eb6d49fa460c4d476c",
+    "bounds": {
+      "min": [
+        -12.0,
+        0.054999999701976776,
+        -8.001999855041504
+      ],
+      "max": [
+        12.0,
+        12.821000099182129,
+        8.001991271972656
+      ]
+    },
+    "meshes": 54,
+    "vertices": 108859,
+    "triangles": 154170
+  }
+}

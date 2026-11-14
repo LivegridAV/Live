@@ -1,0 +1,3227 @@
+{
+  "version": "rental-reference-finish-v2-20261019",
+  "dimensions": {
+    "width": 24,
+    "depth": 16,
+    "height": 10.38,
+    "floor": 0.12,
+    "fasciaTop": 10.5,
+    "reservedMaximumHeight": 12.821
+  },
+  "architecturalDimensions": {
+    "fasciaTop": 10.5,
+    "clearHeight": 8.293,
+    "height": 10.38
+  },
+  "architecture": {
+    "floor": 0.12,
+    "fasciaTop": 10.5,
+    "fasciaBottom": 8.95,
+    "wallTop": 8.9,
+    "width": 24,
+    "depth": 16,
+    "actualHeight": 10.38,
+    "frontage": [
+      {
+        "a": [
+          -11.8,
+          6.4
+        ],
+        "b": [
+          -10.8,
+          7.3
+        ],
+        "yaw": -0.7328151017865063,
+        "frontDepth": 0.34
+      },
+      {
+        "a": [
+          -10.8,
+          7.3
+        ],
+        "b": [
+          5.6,
+          3.8
+        ],
+        "yaw": 0.21026034715968,
+        "frontDepth": 0.34
+      },
+      {
+        "a": [
+          5.6,
+          3.8
+        ],
+        "b": [
+          11.6,
+          6.5
+        ],
+        "yaw": -0.42285392613294076,
+        "frontDepth": 0.34
+      }
+    ],
+    "productBoard": {
+      "a": [
+        -11.35,
+        4.8
+      ],
+      "b": [
+        -3.4,
+        3.1
+      ],
+      "yaw": 0.21066377998456154,
+      "top": 8.85,
+      "perProductStandOff": true
+    },
+    "mainScreen": {
+      "position": [
+        2.1,
+        5.15,
+        -6.95
+      ],
+      "width": 10.6,
+      "height": 7.5
+    },
+    "clearOverhead": 8.413,
+    "floorOpticsBottom": 0.122,
+    "floorOpticsTop": 0.136,
+    "sideOpeningsZ": [
+      -4.0,
+      3.8
+    ],
+    "roof": "actual open four-chord production truss"
+  },
+  "clearOverhead": 8.293,
+  "shellBounds": {
+    "min": [
+      -12.0,
+      0.0,
+      -8.0
+    ],
+    "max": [
+      12.0,
+      10.5,
+      8.0
+    ]
+  },
+  "apertures": [
+    {
+      "id": "main-backdrop",
+      "position": [
+        2.1,
+        5.15,
+        -6.95
+      ],
+      "w": 10.6,
+      "h": 7.5,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "rental2026-backdrop"
+    },
+    {
+      "id": "application-0",
+      "position": [
+        9.0,
+        7.75,
+        -6.9
+      ],
+      "w": 2.5,
+      "h": 1.40625,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "rental2026-application-0"
+    },
+    {
+      "id": "application-1",
+      "position": [
+        9.0,
+        5.75,
+        -6.9
+      ],
+      "w": 2.5,
+      "h": 1.40625,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "rental2026-application-1"
+    },
+    {
+      "id": "application-2",
+      "position": [
+        9.0,
+        3.75,
+        -6.9
+      ],
+      "w": 2.5,
+      "h": 1.40625,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "rental2026-application-2"
+    },
+    {
+      "id": "application-3",
+      "position": [
+        9.0,
+        1.75,
+        -6.9
+      ],
+      "w": 2.5,
+      "h": 1.40625,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "rental2026-application-3"
+    }
+  ],
+  "products": [
+    {
+      "id": "flat",
+      "type": "flat",
+      "width": 1.75,
+      "height": 1.6,
+      "label": [
+        "FLAT LED"
+      ],
+      "boardStandOff": 0.38,
+      "position": [
+        -10.220538560536482,
+        7.05,
+        4.947070782663191
+      ],
+      "baseYaw": 0.21066377998456154,
+      "rotation": [
+        0,
+        0.21066377998456154,
+        0
+      ],
+      "suspensionTop": 8.69,
+      "labelPosition": [
+        -10.268633642317033,
+        5.95,
+        4.722155547277675
+      ]
+    },
+    {
+      "id": "curved",
+      "type": "curved",
+      "width": 2.22,
+      "height": 1.6,
+      "radius": 1.3,
+      "arc": 2.04,
+      "label": [
+        "CURVED LED"
+      ],
+      "boardStandOff": 0.22,
+      "position": [
+        -7.4539960087316475,
+        7.05,
+        4.191865871856312
+      ],
+      "baseYaw": 0.21066377998456154,
+      "rotation": [
+        0,
+        0.21066377998456154,
+        0
+      ],
+      "suspensionTop": 8.69,
+      "labelPosition": [
+        -7.468633642317032,
+        5.95,
+        4.123413408912895
+      ]
+    },
+    {
+      "id": "cylinder",
+      "type": "cylinder",
+      "radius": 0.67,
+      "height": 1.8,
+      "label": [
+        "CYLINDRICAL LED"
+      ],
+      "boardStandOff": 0.9,
+      "position": [
+        -4.611801853902193,
+        7.05,
+        4.2794741641691925
+      ],
+      "baseYaw": 0.21066377998456154,
+      "rotation": [
+        0,
+        0.21066377998456154,
+        0
+      ],
+      "suspensionTop": 8.69,
+      "labelPosition": [
+        -4.768633642317032,
+        5.85,
+        3.546054918346857
+      ]
+    },
+    {
+      "id": "corner",
+      "type": "corner",
+      "side": 1.2,
+      "height": 1.45,
+      "label": [
+        "SEAMLESS",
+        "CORNER LED"
+      ],
+      "boardStandOff": 1.15,
+      "position": [
+        -10.159524591097247,
+        4.25,
+        5.721431522839531
+      ],
+      "baseYaw": 0.21066377998456154,
+      "rotation": [
+        0,
+        0.21066377998456154,
+        0
+      ],
+      "suspensionTop": 8.69,
+      "labelPosition": [
+        -10.368633642317032,
+        3.225,
+        4.7435391950764165
+      ]
+    },
+    {
+      "id": "transparent",
+      "type": "transparent",
+      "width": 1.4,
+      "height": 1.7,
+      "label": [
+        "TRANSPARENT LED"
+      ],
+      "boardStandOff": 0.3,
+      "position": [
+        -7.937267284634064,
+        4.25,
+        4.377015497071072
+      ],
+      "baseYaw": 0.21066377998456154,
+      "rotation": [
+        0,
+        0.21066377998456154,
+        0
+      ],
+      "suspensionTop": 8.69,
+      "labelPosition": [
+        -7.968633642317032,
+        3.1,
+        4.230331647906605
+      ]
+    },
+    {
+      "id": "dna",
+      "type": "dna",
+      "width": 1.0,
+      "height": 2.3,
+      "label": [
+        "DNA LED"
+      ],
+      "boardStandOff": 0.85,
+      "position": [
+        -5.922257306463182,
+        4.25,
+        4.508566969164685
+      ],
+      "baseYaw": 0.21066377998456154,
+      "rotation": [
+        0,
+        0.21066377998456154,
+        0
+      ],
+      "suspensionTop": 8.69,
+      "labelPosition": [
+        -6.068633642317032,
+        2.8000000000000003,
+        3.8240423397305046
+      ]
+    },
+    {
+      "id": "sphere",
+      "type": "sphere",
+      "radius": 0.72,
+      "label": [
+        "SPHERE LED"
+      ],
+      "boardStandOff": 0.9,
+      "position": [
+        -3.911801853902193,
+        4.25,
+        4.129788629577997
+      ],
+      "baseYaw": 0.21066377998456154,
+      "rotation": [
+        0,
+        0.21066377998456154,
+        0
+      ],
+      "suspensionTop": 8.69,
+      "labelPosition": [
+        -4.068633642317032,
+        3.2300000000000004,
+        3.396369383755662
+      ]
+    }
+  ],
+  "fixtures": [
+    {
+      "id": "rental-v2-spot-0-0",
+      "position": [
+        -10.35,
+        8.413,
+        -6.438000000000001
+      ],
+      "target": [
+        -10.35,
+        0.12,
+        -6.9
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-0-1",
+      "position": [
+        -7.75,
+        8.413,
+        -6.438000000000001
+      ],
+      "target": [
+        -7.75,
+        0.12,
+        -6.9
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-0-2",
+      "position": [
+        -5.15,
+        8.413,
+        -6.438000000000001
+      ],
+      "target": [
+        -5.15,
+        0.12,
+        -6.9
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-0-3",
+      "position": [
+        -2.55,
+        8.413,
+        -6.438000000000001
+      ],
+      "target": [
+        -2.55,
+        0.12,
+        -6.9
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-0-4",
+      "position": [
+        0.05,
+        8.413,
+        -6.438000000000001
+      ],
+      "target": [
+        0.05,
+        0.12,
+        -6.9
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-0-5",
+      "position": [
+        2.65,
+        8.413,
+        -6.438000000000001
+      ],
+      "target": [
+        2.65,
+        0.12,
+        -6.9
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-0-6",
+      "position": [
+        5.25,
+        8.413,
+        -6.438000000000001
+      ],
+      "target": [
+        5.25,
+        0.12,
+        -6.9
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-0-7",
+      "position": [
+        7.85,
+        8.413,
+        -6.438000000000001
+      ],
+      "target": [
+        7.85,
+        0.12,
+        -6.9
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-0-8",
+      "position": [
+        10.45,
+        8.413,
+        -6.438000000000001
+      ],
+      "target": [
+        10.45,
+        0.12,
+        -6.9
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-1-0",
+      "position": [
+        -10.35,
+        8.413,
+        -3.038
+      ],
+      "target": [
+        -10.35,
+        0.12,
+        -3.5
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-1-1",
+      "position": [
+        -7.75,
+        8.413,
+        -3.038
+      ],
+      "target": [
+        -7.75,
+        0.12,
+        -3.5
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-1-2",
+      "position": [
+        -5.15,
+        8.413,
+        -3.038
+      ],
+      "target": [
+        -5.15,
+        0.12,
+        -3.5
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-1-3",
+      "position": [
+        -2.55,
+        8.413,
+        -3.038
+      ],
+      "target": [
+        -2.55,
+        0.12,
+        -3.5
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-1-4",
+      "position": [
+        0.05,
+        8.413,
+        -3.038
+      ],
+      "target": [
+        0.05,
+        0.12,
+        -3.5
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-1-5",
+      "position": [
+        2.65,
+        8.413,
+        -3.038
+      ],
+      "target": [
+        2.65,
+        0.12,
+        -3.5
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-1-6",
+      "position": [
+        5.25,
+        8.413,
+        -3.038
+      ],
+      "target": [
+        5.25,
+        0.12,
+        -3.5
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-1-7",
+      "position": [
+        7.85,
+        8.413,
+        -3.038
+      ],
+      "target": [
+        7.85,
+        0.12,
+        -3.5
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-1-8",
+      "position": [
+        10.45,
+        8.413,
+        -3.038
+      ],
+      "target": [
+        10.45,
+        0.12,
+        -3.5
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-2-0",
+      "position": [
+        -10.35,
+        8.413,
+        0.41200000000000003
+      ],
+      "target": [
+        -10.35,
+        0.12,
+        -0.04999999999999999
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-2-1",
+      "position": [
+        -7.75,
+        8.413,
+        0.41200000000000003
+      ],
+      "target": [
+        -7.75,
+        0.12,
+        -0.04999999999999999
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-2-2",
+      "position": [
+        -5.15,
+        8.413,
+        0.41200000000000003
+      ],
+      "target": [
+        -5.15,
+        0.12,
+        -0.04999999999999999
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-2-3",
+      "position": [
+        -2.55,
+        8.413,
+        0.41200000000000003
+      ],
+      "target": [
+        -2.55,
+        0.12,
+        -0.04999999999999999
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-2-4",
+      "position": [
+        0.05,
+        8.413,
+        0.41200000000000003
+      ],
+      "target": [
+        0.05,
+        0.12,
+        -0.04999999999999999
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-2-5",
+      "position": [
+        2.65,
+        8.413,
+        0.41200000000000003
+      ],
+      "target": [
+        2.65,
+        0.12,
+        -0.04999999999999999
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-2-6",
+      "position": [
+        5.25,
+        8.413,
+        0.41200000000000003
+      ],
+      "target": [
+        5.25,
+        0.12,
+        -0.04999999999999999
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-2-7",
+      "position": [
+        7.85,
+        8.413,
+        0.41200000000000003
+      ],
+      "target": [
+        7.85,
+        0.12,
+        -0.04999999999999999
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-2-8",
+      "position": [
+        10.45,
+        8.413,
+        0.41200000000000003
+      ],
+      "target": [
+        10.45,
+        0.12,
+        -0.04999999999999999
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-3-0",
+      "position": [
+        -10.35,
+        8.413,
+        3.262
+      ],
+      "target": [
+        -10.35,
+        0.12,
+        2.8
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-3-1",
+      "position": [
+        -7.75,
+        8.413,
+        3.262
+      ],
+      "target": [
+        -7.75,
+        0.12,
+        2.8
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-3-2",
+      "position": [
+        -5.15,
+        8.413,
+        3.262
+      ],
+      "target": [
+        -5.15,
+        0.12,
+        2.8
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-3-3",
+      "position": [
+        -2.55,
+        8.413,
+        3.262
+      ],
+      "target": [
+        -2.55,
+        0.12,
+        2.8
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-3-4",
+      "position": [
+        0.05,
+        8.413,
+        3.262
+      ],
+      "target": [
+        0.05,
+        0.12,
+        2.8
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-3-5",
+      "position": [
+        2.65,
+        8.413,
+        3.262
+      ],
+      "target": [
+        2.65,
+        0.12,
+        2.8
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-3-6",
+      "position": [
+        5.25,
+        8.413,
+        3.262
+      ],
+      "target": [
+        5.25,
+        0.12,
+        2.8
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-3-7",
+      "position": [
+        7.85,
+        8.413,
+        3.262
+      ],
+      "target": [
+        7.85,
+        0.12,
+        2.8
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-3-8",
+      "position": [
+        10.45,
+        8.413,
+        3.262
+      ],
+      "target": [
+        10.45,
+        0.12,
+        2.8
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-4-0",
+      "position": [
+        -10.35,
+        8.413,
+        5.512
+      ],
+      "target": [
+        -10.35,
+        0.12,
+        5.05
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-4-1",
+      "position": [
+        -7.75,
+        8.413,
+        5.512
+      ],
+      "target": [
+        -7.75,
+        0.12,
+        5.05
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    },
+    {
+      "id": "rental-v2-spot-4-2",
+      "position": [
+        -5.15,
+        8.413,
+        5.512
+      ],
+      "target": [
+        -5.15,
+        0.12,
+        5.05
+      ],
+      "color": "#ffe3c3",
+      "type": "spot",
+      "lensArea": [
+        0.135,
+        0.152
+      ],
+      "physical": true
+    }
+  ],
+  "typography": [
+    {
+      "body": "livegrid AV",
+      "position": [
+        -8.07269499178778,
+        9.194999999999999,
+        6.753741376459216
+      ],
+      "height": 0.99,
+      "width": 4.977747707457133,
+      "yaw": 0.21026034715968,
+      "uniformScale": true
+    },
+    {
+      "body": "LED RENTAL SOLUTIONS",
+      "position": [
+        0.30730500821222123,
+        9.84,
+        4.9653267423128735
+      ],
+      "height": 0.2033999625542839,
+      "width": 4.6,
+      "yaw": 0.21026034715968,
+      "uniformScale": true
+    },
+    {
+      "body": "FOR EVERY VISION",
+      "position": [
+        0.30730500821222123,
+        9.43,
+        4.9653267423128735
+      ],
+      "height": 0.205,
+      "width": 3.550781039690968,
+      "yaw": 0.21026034715968,
+      "uniformScale": true
+    },
+    {
+      "body": "STAGES",
+      "position": [
+        8.404406142261506,
+        10.22,
+        5.103653017196654
+      ],
+      "height": 0.135,
+      "width": 0.6665419429135371,
+      "yaw": -0.42285392613294076,
+      "uniformScale": true
+    },
+    {
+      "body": "EVENTS",
+      "position": [
+        8.404406142261506,
+        10.037,
+        5.103653017196654
+      ],
+      "height": 0.135,
+      "width": 0.6628072170712874,
+      "yaw": -0.42285392613294076,
+      "uniformScale": true
+    },
+    {
+      "body": "EXHIBITIONS",
+      "position": [
+        8.404406142261506,
+        9.854000000000001,
+        5.103653017196654
+      ],
+      "height": 0.135,
+      "width": 1.139419991720641,
+      "yaw": -0.42285392613294076,
+      "uniformScale": true
+    },
+    {
+      "body": "BRANDS",
+      "position": [
+        8.404406142261506,
+        9.671000000000001,
+        5.103653017196654
+      ],
+      "height": 0.135,
+      "width": 0.7301250030642008,
+      "yaw": -0.42285392613294076,
+      "uniformScale": true
+    },
+    {
+      "body": "FIXED INSTALLATIONS",
+      "position": [
+        8.404406142261506,
+        9.488000000000001,
+        5.103653017196654
+      ],
+      "height": 0.135,
+      "width": 2.002275923763945,
+      "yaw": -0.42285392613294076,
+      "uniformScale": true
+    },
+    {
+      "body": "AND MORE",
+      "position": [
+        8.404406142261506,
+        9.305,
+        5.103653017196654
+      ],
+      "height": 0.135,
+      "width": 1.0128835202617141,
+      "yaw": -0.42285392613294076,
+      "uniformScale": true
+    },
+    {
+      "body": "IDEAS",
+      "position": [
+        11.916,
+        4.44,
+        5.69
+      ],
+      "height": 0.19,
+      "width": 0.8026050735049773,
+      "yaw": 1.5707963267948966,
+      "uniformScale": true
+    },
+    {
+      "body": "IN",
+      "position": [
+        11.916,
+        4.130000000000001,
+        5.69
+      ],
+      "height": 0.19,
+      "width": 0.26248619796136485,
+      "yaw": 1.5707963267948966,
+      "uniformScale": true
+    },
+    {
+      "body": "MOTION",
+      "position": [
+        11.916,
+        3.8200000000000003,
+        5.69
+      ],
+      "height": 0.19,
+      "width": 1.1668462250954736,
+      "yaw": 1.5707963267948966,
+      "uniformScale": true
+    },
+    {
+      "body": "TECHNOLOGY",
+      "position": [
+        11.916,
+        2.75,
+        5.71
+      ],
+      "height": 0.13,
+      "width": 1.1867701511178208,
+      "yaw": 1.5707963267948966,
+      "uniformScale": true
+    },
+    {
+      "body": "PEOPLE",
+      "position": [
+        11.916,
+        2.53,
+        5.71
+      ],
+      "height": 0.13,
+      "width": 0.6094824732537576,
+      "yaw": 1.5707963267948966,
+      "uniformScale": true
+    },
+    {
+      "body": "BIGGER",
+      "position": [
+        11.916,
+        2.31,
+        5.71
+      ],
+      "height": 0.13,
+      "width": 0.6090438146225959,
+      "yaw": 1.5707963267948966,
+      "uniformScale": true
+    },
+    {
+      "body": "POSSIBILITIES",
+      "position": [
+        11.916,
+        2.09,
+        5.71
+      ],
+      "height": 0.13,
+      "width": 1.1347577693400304,
+      "yaw": 1.5707963267948966,
+      "uniformScale": true
+    },
+    {
+      "body": "CORPORATE EVENTS",
+      "position": [
+        10.4,
+        7.685,
+        -6.88
+      ],
+      "height": 0.1091373420276538,
+      "width": 1.3,
+      "yaw": 0,
+      "uniformScale": true
+    },
+    {
+      "body": "LIVE EXPERIENCES",
+      "position": [
+        10.4,
+        5.685,
+        -6.88
+      ],
+      "height": 0.12119739618274149,
+      "width": 1.3,
+      "yaw": 0,
+      "uniformScale": true
+    },
+    {
+      "body": "BRAND ACTIVATIONS",
+      "position": [
+        10.4,
+        3.685,
+        -6.88
+      ],
+      "height": 0.11095666776245584,
+      "width": 1.3,
+      "yaw": 0,
+      "uniformScale": true
+    },
+    {
+      "body": "RETAIL & SHOWROOMS",
+      "position": [
+        10.4,
+        1.685,
+        -6.88
+      ],
+      "height": 0.10033967534835442,
+      "width": 1.3,
+      "yaw": 0,
+      "uniformScale": true
+    },
+    {
+      "body": "FLAT LED",
+      "position": [
+        -10.268633642317033,
+        5.95,
+        4.722155547277675
+      ],
+      "height": 0.2,
+      "width": 1.1772112856972703,
+      "yaw": 0.21066377998456154,
+      "uniformScale": true
+    },
+    {
+      "body": "CURVED LED",
+      "position": [
+        -7.468633642317032,
+        5.95,
+        4.123413408912895
+      ],
+      "height": 0.2,
+      "width": 1.6093974190064155,
+      "yaw": 0.21066377998456154,
+      "uniformScale": true
+    },
+    {
+      "body": "CYLINDRICAL LED",
+      "position": [
+        -4.768633642317032,
+        5.85,
+        3.546054918346857
+      ],
+      "height": 0.19029262860369467,
+      "width": 2.15,
+      "yaw": 0.21066377998456154,
+      "uniformScale": true
+    },
+    {
+      "body": "SEAMLESS",
+      "position": [
+        -10.368633642317032,
+        3.225,
+        4.7435391950764165
+      ],
+      "height": 0.2,
+      "width": 1.2967077048304376,
+      "yaw": 0.21066377998456154,
+      "uniformScale": true
+    },
+    {
+      "body": "CORNER LED",
+      "position": [
+        -10.368633642317032,
+        2.9850000000000003,
+        4.7435391950764165
+      ],
+      "height": 0.2,
+      "width": 1.6344986753566484,
+      "yaw": 0.21066377998456154,
+      "uniformScale": true
+    },
+    {
+      "body": "TRANSPARENT LED",
+      "position": [
+        -7.968633642317032,
+        3.1,
+        4.230331647906605
+      ],
+      "height": 0.17535843736422443,
+      "width": 2.15,
+      "yaw": 0.21066377998456154,
+      "uniformScale": true
+    },
+    {
+      "body": "DNA LED",
+      "position": [
+        -6.068633642317032,
+        2.8000000000000003,
+        3.8240423397305046
+      ],
+      "height": 0.2,
+      "width": 1.160263545686736,
+      "yaw": 0.21066377998456154,
+      "uniformScale": true
+    },
+    {
+      "body": "SPHERE LED",
+      "position": [
+        -4.068633642317032,
+        3.2300000000000004,
+        3.396369383755662
+      ],
+      "height": 0.2,
+      "width": 1.5169547999516628,
+      "yaw": 0.21066377998456154,
+      "uniformScale": true
+    }
+  ],
+  "furniture": [
+    {
+      "id": "front-left-product-garden",
+      "bounds": {
+        "min": [
+          -11.399999618530273,
+          0.12000000476837158,
+          5.25
+        ],
+        "max": [
+          -3.5999999046325684,
+          0.42149999737739563,
+          6.9710001945495605
+        ]
+      },
+      "position": [
+        -7.5,
+        0.12,
+        6.1
+      ],
+      "size": [
+        7.8,
+        0.3,
+        1.7
+      ],
+      "topY": 0.42
+    },
+    {
+      "id": "front-right-reception",
+      "bounds": {
+        "min": [
+          4.987500190734863,
+          0.11999999731779099,
+          5.162500381469727
+        ],
+        "max": [
+          10.612500190734863,
+          1.2400000095367432,
+          6.454999923706055
+        ]
+      },
+      "position": [
+        7.8,
+        0.12,
+        5.8
+      ],
+      "size": [
+        5.6,
+        1.12,
+        1.25
+      ],
+      "countertopY": 1.24
+    },
+    {
+      "id": "reception-supported-props",
+      "bounds": {
+        "min": [
+          5.3706231117248535,
+          1.2400000095367432,
+          5.441414833068848
+        ],
+        "max": [
+          9.857000350952148,
+          1.6204652786254883,
+          6.150000095367432
+        ]
+      },
+      "supportY": 1.24
+    },
+    {
+      "id": "main rear left sofa",
+      "bounds": {
+        "min": [
+          -0.5749999284744263,
+          0.11814781278371811,
+          -5.174999713897705
+        ],
+        "max": [
+          2.174999952316284,
+          1.2100000381469727,
+          -4.259999752044678
+        ]
+      },
+      "kind": "tailored three-seat sofa",
+      "position": [
+        0.8,
+        0.12,
+        -4.7
+      ],
+      "yaw": 0
+    },
+    {
+      "id": "main rear right sofa",
+      "bounds": {
+        "min": [
+          2.8249998092651367,
+          0.11814781278371811,
+          -5.174999713897705
+        ],
+        "max": [
+          5.574999809265137,
+          1.2100000381469727,
+          -4.259999752044678
+        ]
+      },
+      "kind": "tailored three-seat sofa",
+      "position": [
+        4.2,
+        0.12,
+        -4.7
+      ],
+      "yaw": 0
+    },
+    {
+      "id": "main left inward lounge armchair",
+      "bounds": {
+        "min": [
+          0.4999999403953552,
+          0.11813947558403015,
+          -1.6999999284744263
+        ],
+        "max": [
+          1.5,
+          1.1800000667572021,
+          -0.8349998593330383
+        ]
+      },
+      "kind": "ivory lounge armchair",
+      "position": [
+        1.0,
+        0.12,
+        -1.3
+      ],
+      "yaw": 3.141592653589793
+    },
+    {
+      "id": "main right inward lounge armchair",
+      "bounds": {
+        "min": [
+          4.199999809265137,
+          0.11813947558403015,
+          -1.6999999284744263
+        ],
+        "max": [
+          5.199999809265137,
+          1.1800000667572021,
+          -0.8349998593330383
+        ]
+      },
+      "kind": "ivory lounge armchair",
+      "position": [
+        4.7,
+        0.12,
+        -1.3
+      ],
+      "yaw": 3.141592653589793
+    },
+    {
+      "id": "main left black circular consultation table",
+      "bounds": {
+        "min": [
+          0.3319999873638153,
+          0.11999999731779099,
+          -3.568000078201294
+        ],
+        "max": [
+          1.468000054359436,
+          0.9860000014305115,
+          -2.431999921798706
+        ]
+      },
+      "kind": "black circular hospitality table",
+      "topY": 0.65,
+      "position": [
+        0.9,
+        0.12,
+        -3.0
+      ],
+      "radius": 0.55
+    },
+    {
+      "id": "main right black circular consultation table",
+      "bounds": {
+        "min": [
+          3.631999969482422,
+          0.11999999731779099,
+          -3.568000078201294
+        ],
+        "max": [
+          4.76800012588501,
+          0.9860000014305115,
+          -2.431999921798706
+        ]
+      },
+      "kind": "black circular hospitality table",
+      "topY": 0.65,
+      "position": [
+        4.2,
+        0.12,
+        -3.0
+      ],
+      "radius": 0.55
+    },
+    {
+      "id": "left private consultation sofa",
+      "bounds": {
+        "min": [
+          -8.475000381469727,
+          0.11814781278371811,
+          -2.0
+        ],
+        "max": [
+          -7.559999942779541,
+          1.2100000381469727,
+          0.40000006556510925
+        ]
+      },
+      "kind": "tailored three-seat sofa",
+      "position": [
+        -8.0,
+        0.12,
+        -0.8
+      ],
+      "yaw": 1.5707963267948966
+    },
+    {
+      "id": "left consultation facing adviser",
+      "bounds": {
+        "min": [
+          -5.099999904632568,
+          0.11813947558403015,
+          -1.3000000715255737
+        ],
+        "max": [
+          -4.234999656677246,
+          1.1800000667572021,
+          -0.29999998211860657
+        ]
+      },
+      "kind": "ivory lounge armchair",
+      "position": [
+        -4.7,
+        0.12,
+        -0.8
+      ],
+      "yaw": -1.5707963267948966
+    },
+    {
+      "id": "left black circular consultation table",
+      "bounds": {
+        "min": [
+          -6.9079999923706055,
+          0.11999999731779099,
+          -1.3580000400543213
+        ],
+        "max": [
+          -5.791999816894531,
+          0.9860000014305115,
+          -0.24199999868869781
+        ]
+      },
+      "kind": "black circular hospitality table",
+      "topY": 0.65,
+      "position": [
+        -6.35,
+        0.12,
+        -0.8
+      ],
+      "radius": 0.54
+    },
+    {
+      "id": "right application cafe left chair",
+      "bounds": {
+        "min": [
+          7.484999656677246,
+          0.11813947558403015,
+          -3.6700000762939453
+        ],
+        "max": [
+          8.34999942779541,
+          1.1800000667572021,
+          -2.7300000190734863
+        ]
+      },
+      "kind": "ivory lounge armchair",
+      "position": [
+        7.95,
+        0.12,
+        -3.2
+      ],
+      "yaw": 1.5707963267948966
+    },
+    {
+      "id": "right application cafe right chair",
+      "bounds": {
+        "min": [
+          9.850000381469727,
+          0.11813947558403015,
+          -3.6700000762939453
+        ],
+        "max": [
+          10.71500015258789,
+          1.1800000667572021,
+          -2.7300000190734863
+        ]
+      },
+      "kind": "ivory lounge armchair",
+      "position": [
+        10.25,
+        0.12,
+        -3.2
+      ],
+      "yaw": -1.5707963267948966
+    },
+    {
+      "id": "right black circular hospitality table",
+      "bounds": {
+        "min": [
+          8.631999969482422,
+          0.11999999731779099,
+          -3.6679999828338623
+        ],
+        "max": [
+          9.567999839782715,
+          0.9860000014305115,
+          -2.7320001125335693
+        ]
+      },
+      "kind": "black circular hospitality table",
+      "topY": 0.65,
+      "position": [
+        9.1,
+        0.12,
+        -3.2
+      ],
+      "radius": 0.45
+    },
+    {
+      "id": "middle hospitality rear chair",
+      "bounds": {
+        "min": [
+          6.608506202697754,
+          0.11813947558403015,
+          -0.6109355092048645
+        ],
+        "max": [
+          7.6865081787109375,
+          1.1800000667572021,
+          0.34919822216033936
+        ]
+      },
+      "kind": "ivory lounge armchair",
+      "position": [
+        7.15,
+        0.12,
+        -0.1
+      ],
+      "yaw": 0.12
+    },
+    {
+      "id": "middle hospitality front chair",
+      "bounds": {
+        "min": [
+          6.650000095367432,
+          0.11813947558403015,
+          2.0
+        ],
+        "max": [
+          7.650000095367432,
+          1.1800000667572021,
+          2.865000009536743
+        ]
+      },
+      "kind": "ivory lounge armchair",
+      "position": [
+        7.15,
+        0.12,
+        2.4
+      ],
+      "yaw": 3.141592653589793
+    },
+    {
+      "id": "middle black circular hospitality table",
+      "bounds": {
+        "min": [
+          6.691999912261963,
+          0.11999999731779099,
+          0.6919999718666077
+        ],
+        "max": [
+          7.607999801635742,
+          0.9860000014305115,
+          1.6080000400543213
+        ]
+      },
+      "kind": "black circular hospitality table",
+      "topY": 0.65,
+      "position": [
+        7.15,
+        0.12,
+        1.15
+      ],
+      "radius": 0.44
+    }
+  ],
+  "seats": [
+    {
+      "id": "main rear left sofa",
+      "kind": "sofa",
+      "position": [
+        0.8,
+        0.12,
+        -4.7
+      ],
+      "yaw": 0,
+      "seatTopY": 0.604,
+      "width": 2.75
+    },
+    {
+      "id": "main rear right sofa",
+      "kind": "sofa",
+      "position": [
+        4.2,
+        0.12,
+        -4.7
+      ],
+      "yaw": 0,
+      "seatTopY": 0.604,
+      "width": 2.75
+    },
+    {
+      "id": "main left inward lounge armchair",
+      "kind": "armchair",
+      "position": [
+        1.0,
+        0.12,
+        -1.3
+      ],
+      "yaw": 3.141592653589793,
+      "seatTopY": 0.604
+    },
+    {
+      "id": "main right inward lounge armchair",
+      "kind": "armchair",
+      "position": [
+        4.7,
+        0.12,
+        -1.3
+      ],
+      "yaw": 3.141592653589793,
+      "seatTopY": 0.604
+    },
+    {
+      "id": "left private consultation sofa",
+      "kind": "sofa",
+      "position": [
+        -8.0,
+        0.12,
+        -0.8
+      ],
+      "yaw": 1.5707963267948966,
+      "seatTopY": 0.604,
+      "width": 2.4
+    },
+    {
+      "id": "left consultation facing adviser",
+      "kind": "armchair",
+      "position": [
+        -4.7,
+        0.12,
+        -0.8
+      ],
+      "yaw": -1.5707963267948966,
+      "seatTopY": 0.604
+    },
+    {
+      "id": "right application cafe left chair",
+      "kind": "armchair",
+      "position": [
+        7.95,
+        0.12,
+        -3.2
+      ],
+      "yaw": 1.5707963267948966,
+      "seatTopY": 0.604
+    },
+    {
+      "id": "right application cafe right chair",
+      "kind": "armchair",
+      "position": [
+        10.25,
+        0.12,
+        -3.2
+      ],
+      "yaw": -1.5707963267948966,
+      "seatTopY": 0.604
+    },
+    {
+      "id": "middle hospitality rear chair",
+      "kind": "armchair",
+      "position": [
+        7.15,
+        0.12,
+        -0.1
+      ],
+      "yaw": 0.12,
+      "seatTopY": 0.604
+    },
+    {
+      "id": "middle hospitality front chair",
+      "kind": "armchair",
+      "position": [
+        7.15,
+        0.12,
+        2.4
+      ],
+      "yaw": 3.141592653589793,
+      "seatTopY": 0.604
+    }
+  ],
+  "plants": [
+    {
+      "id": "front display garden specimen 0",
+      "type": "fern",
+      "position": [
+        -10.8,
+        0.42,
+        6.03
+      ],
+      "totalHeight": 0.83,
+      "potHeight": 0.29,
+      "potRadius": 0.23,
+      "leafCount": 264,
+      "targetTop": 1.25,
+      "finish": "satin black ceramic",
+      "potShape": "square",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "front display garden specimen 1",
+      "type": "bush",
+      "position": [
+        -9.85,
+        0.42,
+        6.17
+      ],
+      "totalHeight": 0.8999999999999999,
+      "potHeight": 0.29,
+      "potRadius": 0.23,
+      "leafCount": 648,
+      "targetTop": 1.3199999999999998,
+      "finish": "brushed champagne metal",
+      "potShape": "round",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "front display garden specimen 2",
+      "type": "bush",
+      "position": [
+        -8.9,
+        0.42,
+        6.03
+      ],
+      "totalHeight": 0.97,
+      "potHeight": 0.29,
+      "potRadius": 0.23,
+      "leafCount": 648,
+      "targetTop": 1.39,
+      "finish": "satin black ceramic",
+      "potShape": "square",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "front display garden specimen 3",
+      "type": "fern",
+      "position": [
+        -7.95,
+        0.42,
+        6.17
+      ],
+      "totalHeight": 0.83,
+      "potHeight": 0.29,
+      "potRadius": 0.23,
+      "leafCount": 264,
+      "targetTop": 1.25,
+      "finish": "satin black ceramic",
+      "potShape": "round",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "front display garden specimen 4",
+      "type": "bush",
+      "position": [
+        -7.0,
+        0.42,
+        6.03
+      ],
+      "totalHeight": 0.8999999999999999,
+      "potHeight": 0.29,
+      "potRadius": 0.23,
+      "leafCount": 648,
+      "targetTop": 1.3199999999999998,
+      "finish": "brushed champagne metal",
+      "potShape": "square",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "front display garden specimen 5",
+      "type": "bush",
+      "position": [
+        -6.05,
+        0.42,
+        6.17
+      ],
+      "totalHeight": 0.97,
+      "potHeight": 0.29,
+      "potRadius": 0.23,
+      "leafCount": 648,
+      "targetTop": 1.39,
+      "finish": "satin black ceramic",
+      "potShape": "round",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "front display garden specimen 6",
+      "type": "fern",
+      "position": [
+        -5.1,
+        0.42,
+        6.03
+      ],
+      "totalHeight": 0.83,
+      "potHeight": 0.29,
+      "potRadius": 0.23,
+      "leafCount": 264,
+      "targetTop": 1.25,
+      "finish": "satin black ceramic",
+      "potShape": "square",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "front display garden specimen 7",
+      "type": "bush",
+      "position": [
+        -4.15,
+        0.42,
+        6.17
+      ],
+      "totalHeight": 0.8999999999999999,
+      "potHeight": 0.29,
+      "potRadius": 0.23,
+      "leafCount": 648,
+      "targetTop": 1.3199999999999998,
+      "finish": "brushed champagne metal",
+      "potShape": "round",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "layered living architectural specimen 0",
+      "type": "bush",
+      "position": [
+        -10.95,
+        0.42,
+        6.15
+      ],
+      "totalHeight": 2.75,
+      "potHeight": 0.7,
+      "potRadius": 0.34,
+      "leafCount": 1080,
+      "targetTop": 3.17,
+      "finish": "brushed champagne metal",
+      "potShape": "round",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "layered living architectural specimen 1",
+      "type": "broadleaf",
+      "position": [
+        10.95,
+        0.12,
+        6.9
+      ],
+      "totalHeight": 2.8,
+      "potHeight": 0.7,
+      "potRadius": 0.34,
+      "leafCount": 22,
+      "targetTop": 2.92,
+      "finish": "satin black ceramic",
+      "potShape": "square",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "layered living architectural specimen 2",
+      "type": "palm",
+      "position": [
+        -10.8,
+        0.12,
+        -4.5
+      ],
+      "totalHeight": 2.6,
+      "potHeight": 0.7,
+      "potRadius": 0.34,
+      "leafCount": 510,
+      "targetTop": 2.72,
+      "finish": "satin black ceramic",
+      "potShape": "square",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "layered living architectural specimen 3",
+      "type": "broadleaf",
+      "position": [
+        -3.35,
+        0.12,
+        -6.3
+      ],
+      "totalHeight": 3.0,
+      "potHeight": 0.7,
+      "potRadius": 0.34,
+      "leafCount": 21,
+      "targetTop": 3.12,
+      "finish": "brushed champagne metal",
+      "potShape": "round",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "layered living architectural specimen 4",
+      "type": "broadleaf",
+      "position": [
+        7.45,
+        0.12,
+        -6.3
+      ],
+      "totalHeight": 3.15,
+      "potHeight": 0.7,
+      "potRadius": 0.34,
+      "leafCount": 22,
+      "targetTop": 3.27,
+      "finish": "satin black ceramic",
+      "potShape": "square",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "layered living architectural specimen 5",
+      "type": "bush",
+      "position": [
+        10.95,
+        0.12,
+        -5.75
+      ],
+      "totalHeight": 2.6,
+      "potHeight": 0.7,
+      "potRadius": 0.34,
+      "leafCount": 1080,
+      "targetTop": 2.72,
+      "finish": "brushed champagne metal",
+      "potShape": "round",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "layered living architectural specimen 6",
+      "type": "palm",
+      "position": [
+        10.7,
+        0.12,
+        0.35
+      ],
+      "totalHeight": 2.6,
+      "potHeight": 0.7,
+      "potRadius": 0.34,
+      "leafCount": 510,
+      "targetTop": 2.72,
+      "finish": "satin black ceramic",
+      "potShape": "square",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "layered living architectural specimen 7",
+      "type": "bush",
+      "position": [
+        -3.0,
+        0.12,
+        0.75
+      ],
+      "totalHeight": 1.45,
+      "potHeight": 0.52,
+      "potRadius": 0.28,
+      "leafCount": 648,
+      "targetTop": 1.5699999999999998,
+      "finish": "satin black ceramic",
+      "potShape": "square",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "layered living architectural specimen 8",
+      "type": "broadleaf",
+      "position": [
+        5.85,
+        0.12,
+        0.05
+      ],
+      "totalHeight": 1.65,
+      "potHeight": 0.52,
+      "potRadius": 0.28,
+      "leafCount": 20,
+      "targetTop": 1.77,
+      "finish": "satin black ceramic",
+      "potShape": "square",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "layered living architectural specimen 9",
+      "type": "bush",
+      "position": [
+        2.5,
+        0.12,
+        -5.65
+      ],
+      "totalHeight": 1.2,
+      "potHeight": 0.52,
+      "potRadius": 0.28,
+      "leafCount": 648,
+      "targetTop": 1.3199999999999998,
+      "finish": "satin black ceramic",
+      "potShape": "square",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "layered living architectural specimen 10",
+      "type": "palm",
+      "position": [
+        6.05,
+        0.12,
+        -4.25
+      ],
+      "totalHeight": 1.7,
+      "potHeight": 0.52,
+      "potRadius": 0.28,
+      "leafCount": 510,
+      "targetTop": 1.8199999999999998,
+      "finish": "satin black ceramic",
+      "potShape": "square",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "layered living architectural specimen 11",
+      "type": "bush",
+      "position": [
+        -9.6,
+        0.12,
+        0.55
+      ],
+      "totalHeight": 1.7,
+      "potHeight": 0.52,
+      "potRadius": 0.28,
+      "leafCount": 648,
+      "targetTop": 1.8199999999999998,
+      "finish": "brushed champagne metal",
+      "potShape": "round",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "layered living architectural specimen 12",
+      "type": "broadleaf",
+      "position": [
+        5.15,
+        0.12,
+        3.0
+      ],
+      "totalHeight": 1.4,
+      "potHeight": 0.52,
+      "potRadius": 0.28,
+      "leafCount": 18,
+      "targetTop": 1.52,
+      "finish": "satin black ceramic",
+      "potShape": "square",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "layered living architectural specimen 13",
+      "type": "bush",
+      "position": [
+        10.65,
+        0.12,
+        3.25
+      ],
+      "totalHeight": 1.65,
+      "potHeight": 0.52,
+      "potRadius": 0.28,
+      "leafCount": 648,
+      "targetTop": 1.77,
+      "finish": "satin black ceramic",
+      "potShape": "square",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "layered living architectural specimen 14",
+      "type": "bush",
+      "position": [
+        -10.5,
+        0.12,
+        -6.15
+      ],
+      "totalHeight": 1.95,
+      "potHeight": 0.52,
+      "potRadius": 0.28,
+      "leafCount": 1080,
+      "targetTop": 2.07,
+      "finish": "brushed champagne metal",
+      "potShape": "round",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "layered living architectural specimen 15",
+      "type": "palm",
+      "position": [
+        -9.8,
+        0.12,
+        -2.45
+      ],
+      "totalHeight": 1.85,
+      "potHeight": 0.52,
+      "potRadius": 0.28,
+      "leafCount": 510,
+      "targetTop": 1.9700000000000002,
+      "finish": "satin black ceramic",
+      "potShape": "square",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "layered living architectural specimen 16",
+      "type": "broadleaf",
+      "position": [
+        -2.5,
+        0.12,
+        5.45
+      ],
+      "totalHeight": 1.65,
+      "potHeight": 0.52,
+      "potRadius": 0.28,
+      "leafCount": 19,
+      "targetTop": 1.77,
+      "finish": "satin black ceramic",
+      "potShape": "square",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "layered living architectural specimen 17",
+      "type": "bush",
+      "position": [
+        2.65,
+        0.12,
+        1.45
+      ],
+      "totalHeight": 1.2,
+      "potHeight": 0.52,
+      "potRadius": 0.28,
+      "leafCount": 648,
+      "targetTop": 1.3199999999999998,
+      "finish": "satin black ceramic",
+      "potShape": "square",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "layered living architectural specimen 18",
+      "type": "bush",
+      "position": [
+        4.45,
+        0.12,
+        5.45
+      ],
+      "totalHeight": 1.7,
+      "potHeight": 0.52,
+      "potRadius": 0.28,
+      "leafCount": 648,
+      "targetTop": 1.8199999999999998,
+      "finish": "brushed champagne metal",
+      "potShape": "round",
+      "translationSafeFoliage": true
+    },
+    {
+      "id": "layered living architectural specimen 19",
+      "type": "broadleaf",
+      "position": [
+        4.9,
+        0.12,
+        -5.95
+      ],
+      "totalHeight": 1.45,
+      "potHeight": 0.52,
+      "potRadius": 0.28,
+      "leafCount": 18,
+      "targetTop": 1.5699999999999998,
+      "finish": "satin black ceramic",
+      "potShape": "square",
+      "translationSafeFoliage": true
+    }
+  ],
+  "leafCount": 13340,
+  "reception": {
+    "position": [
+      7.8,
+      0.12,
+      5.8
+    ],
+    "width": 5.6,
+    "depth": 1.25,
+    "countertopY": 1.24,
+    "frontZ": 6.431,
+    "staff": [
+      {
+        "position": [
+          6.65,
+          0.12,
+          4.64
+        ],
+        "yaw": 0
+      },
+      {
+        "position": [
+          8.9,
+          0.12,
+          4.64
+        ],
+        "yaw": 0
+      }
+    ]
+  },
+  "routes": [
+    {
+      "id": "principal",
+      "clearWidth": 2.4,
+      "polygonXZ": [
+        [
+          -1.2,
+          8.5
+        ],
+        [
+          1.2,
+          8.5
+        ],
+        [
+          1.2,
+          0.7
+        ],
+        [
+          -1.2,
+          0.7
+        ]
+      ],
+      "centerline": [
+        [
+          0,
+          8.5
+        ],
+        [
+          0,
+          0.7
+        ]
+      ]
+    }
+  ],
+  "visitorPlacements": [
+    {
+      "id": "reception host",
+      "asset": "Business_Female_01",
+      "pose": "idle",
+      "position": [
+        6.65,
+        0.12,
+        4.64
+      ],
+      "yaw": 0,
+      "nativeScale": 1,
+      "bounds": {
+        "min": [
+          6.383159160614014,
+          0.11999999731779099,
+          4.462383270263672
+        ],
+        "max": [
+          6.916841983795166,
+          1.9129999876022339,
+          4.7766432762146
+        ]
+      }
+    },
+    {
+      "id": "reception colleague",
+      "asset": "Business_Male_01",
+      "pose": "idle",
+      "position": [
+        8.9,
+        0.12,
+        4.64
+      ],
+      "yaw": 0,
+      "nativeScale": 1,
+      "bounds": {
+        "min": [
+          8.604743003845215,
+          0.11999999731779099,
+          4.495820999145508
+        ],
+        "max": [
+          9.194331169128418,
+          1.9129999876022339,
+          4.844358444213867
+        ]
+      }
+    },
+    {
+      "id": "reception visitor",
+      "asset": "Business_Male_02",
+      "pose": "talk",
+      "position": [
+        8.9,
+        0.12,
+        7.3
+      ],
+      "yaw": 3.141592653589793,
+      "nativeScale": 1,
+      "bounds": {
+        "min": [
+          8.60422420501709,
+          0.11999999731779099,
+          6.920958518981934
+        ],
+        "max": [
+          9.219658851623535,
+          1.9129999876022339,
+          7.442848205566406
+        ]
+      }
+    },
+    {
+      "id": "product adviser",
+      "asset": "Business_Male_01",
+      "pose": "talk",
+      "position": [
+        -7.9,
+        0.12,
+        7.45
+      ],
+      "yaw": -0.55,
+      "nativeScale": 1,
+      "bounds": {
+        "min": [
+          -8.333020210266113,
+          0.11999999731779099,
+          7.255902290344238
+        ],
+        "max": [
+          -7.63908052444458,
+          1.9129999876022339,
+          7.712258815765381
+        ]
+      }
+    },
+    {
+      "id": "product visitor",
+      "asset": "Business_Female_01",
+      "pose": "idle",
+      "position": [
+        -6.4,
+        0.12,
+        7.55
+      ],
+      "yaw": 0.7,
+      "nativeScale": 1,
+      "bounds": {
+        "min": [
+          -6.646875381469727,
+          0.11999999731779099,
+          7.322185516357422
+        ],
+        "max": [
+          -6.206369876861572,
+          1.9129999876022339,
+          7.734737873077393
+        ]
+      }
+    },
+    {
+      "id": "product companion",
+      "asset": "Business_Male_02",
+      "pose": "idle",
+      "position": [
+        -10.1,
+        0.12,
+        7.55
+      ],
+      "yaw": 0.5,
+      "nativeScale": 1,
+      "bounds": {
+        "min": [
+          -10.365402221679688,
+          0.11999999731779099,
+          7.365312099456787
+        ],
+        "max": [
+          -9.835895538330078,
+          1.9129999876022339,
+          7.807409286499023
+        ]
+      }
+    },
+    {
+      "id": "left gallery guest",
+      "asset": "Business_Male_01",
+      "pose": "idle",
+      "position": [
+        -2.0,
+        0.12,
+        3.1
+      ],
+      "yaw": -1.2,
+      "nativeScale": 1,
+      "bounds": {
+        "min": [
+          -2.250481367111206,
+          0.11999999731779099,
+          2.8196136951446533
+        ],
+        "max": [
+          -1.8296449184417725,
+          1.9129999876022339,
+          3.3803327083587646
+        ]
+      }
+    },
+    {
+      "id": "lounge host",
+      "asset": "Business_Female_01",
+      "pose": "talk",
+      "position": [
+        5.7,
+        0.12,
+        -1.8
+      ],
+      "yaw": -0.8,
+      "nativeScale": 1,
+      "bounds": {
+        "min": [
+          5.31002950668335,
+          0.11999999731779099,
+          -2.0409724712371826
+        ],
+        "max": [
+          5.935851097106934,
+          1.9129999876022339,
+          -1.6098321676254272
+        ]
+      }
+    },
+    {
+      "id": "application observer",
+      "asset": "Business_Male_02",
+      "pose": "idle",
+      "position": [
+        10.0,
+        0.12,
+        -0.8
+      ],
+      "yaw": 2.7,
+      "nativeScale": 1,
+      "bounds": {
+        "min": [
+          9.727691650390625,
+          0.11999999731779099,
+          -1.0537551641464233
+        ],
+        "max": [
+          10.270648956298828,
+          1.9129999876022339,
+          -0.6221141219139099
+        ]
+      }
+    },
+    {
+      "id": "entrance guest",
+      "asset": "Business_Male_01",
+      "pose": "idle",
+      "position": [
+        2.9,
+        0.12,
+        7.4
+      ],
+      "yaw": -2.6,
+      "nativeScale": 1,
+      "bounds": {
+        "min": [
+          2.637331247329712,
+          0.11999999731779099,
+          7.138106346130371
+        ],
+        "max": [
+          3.1633963584899902,
+          1.9129999876022339,
+          7.59242582321167
+        ]
+      }
+    },
+    {
+      "id": "entrance companion",
+      "asset": "Business_Female_01",
+      "pose": "talk",
+      "position": [
+        4.0,
+        0.12,
+        7.3
+      ],
+      "yaw": 2.5,
+      "nativeScale": 1,
+      "bounds": {
+        "min": [
+          3.7478199005126953,
+          0.11999999731779099,
+          7.118807792663574
+        ],
+        "max": [
+          4.374683380126953,
+          1.9129999876022339,
+          7.52193546295166
+        ]
+      }
+    },
+    {
+      "id": "seated guest 0",
+      "asset": "Business_Male_01",
+      "pose": "lounge-v2",
+      "position": [
+        0.30000000000000004,
+        0.0814998959004879,
+        -4.7
+      ],
+      "yaw": 0,
+      "nativeScale": 1,
+      "bounds": {
+        "min": [
+          -0.0018571019172668457,
+          0.12000000476837158,
+          -4.844178676605225
+        ],
+        "max": [
+          0.6018581986427307,
+          1.635062575340271,
+          -4.078115940093994
+        ]
+      },
+      "seat": "main rear left sofa"
+    },
+    {
+      "id": "seated guest 1",
+      "asset": "Business_Female_01",
+      "pose": "lounge-v2",
+      "position": [
+        4.65,
+        0.09325110249221324,
+        -4.7
+      ],
+      "yaw": 0,
+      "nativeScale": 1,
+      "bounds": {
+        "min": [
+          4.382730960845947,
+          0.11999999731779099,
+          -4.8776164054870605
+        ],
+        "max": [
+          4.917270183563232,
+          1.5845178365707397,
+          -4.077163219451904
+        ]
+      },
+      "seat": "main rear right sofa"
+    },
+    {
+      "id": "seated guest 2",
+      "asset": "Business_Male_02",
+      "pose": "lounge-v2",
+      "position": [
+        4.7,
+        0.07585484057664871,
+        -1.3
+      ],
+      "yaw": 3.141592653589793,
+      "nativeScale": 1,
+      "bounds": {
+        "min": [
+          4.399872779846191,
+          0.11999999731779099,
+          -1.9161431789398193
+        ],
+        "max": [
+          4.999072074890137,
+          1.6376283168792725,
+          -1.1571520566940308
+        ]
+      },
+      "seat": "main right inward lounge armchair"
+    },
+    {
+      "id": "seated guest 3",
+      "asset": "Business_Female_01",
+      "pose": "lounge-v2",
+      "position": [
+        -8.0,
+        0.09325110249221324,
+        -1.1
+      ],
+      "yaw": 1.5707963267948966,
+      "nativeScale": 1,
+      "bounds": {
+        "min": [
+          -8.177617073059082,
+          0.11999999731779099,
+          -1.3672699928283691
+        ],
+        "max": [
+          -7.377163410186768,
+          1.5845178365707397,
+          -0.832730770111084
+        ]
+      },
+      "seat": "left private consultation sofa"
+    },
+    {
+      "id": "seated guest 4",
+      "asset": "Business_Male_01",
+      "pose": "lounge-v2",
+      "position": [
+        -4.7,
+        0.0814998959004879,
+        -0.8
+      ],
+      "yaw": -1.5707963267948966,
+      "nativeScale": 1,
+      "bounds": {
+        "min": [
+          -5.321883678436279,
+          0.12000000476837158,
+          -1.1018571853637695
+        ],
+        "max": [
+          -4.555820941925049,
+          1.635062575340271,
+          -0.4981418251991272
+        ]
+      },
+      "seat": "left consultation facing adviser"
+    },
+    {
+      "id": "seated guest 5",
+      "asset": "Business_Male_02",
+      "pose": "lounge-v2",
+      "position": [
+        7.95,
+        0.07585484057664871,
+        -3.2
+      ],
+      "yaw": 1.5707963267948966,
+      "nativeScale": 1,
+      "bounds": {
+        "min": [
+          7.807151794433594,
+          0.11999999731779099,
+          -3.5001273155212402
+        ],
+        "max": [
+          8.566143035888672,
+          1.6376283168792725,
+          -2.900928020477295
+        ]
+      },
+      "seat": "right application cafe left chair"
+    },
+    {
+      "id": "seated guest 6",
+      "asset": "Business_Female_01",
+      "pose": "lounge-v2",
+      "position": [
+        7.15,
+        0.09325110249221324,
+        -0.1
+      ],
+      "yaw": 0.12,
+      "nativeScale": 1,
+      "bounds": {
+        "min": [
+          6.880252361297607,
+          0.11999999731779099,
+          -0.27496257424354553
+        ],
+        "max": [
+          7.425721168518066,
+          1.5845178365707397,
+          0.531049907207489
+        ]
+      },
+      "seat": "middle hospitality rear chair"
+    },
+    {
+      "id": "seated guest 7",
+      "asset": "Business_Male_01",
+      "pose": "lounge-v2",
+      "position": [
+        7.15,
+        0.0814998959004879,
+        2.4
+      ],
+      "yaw": 3.141592653589793,
+      "nativeScale": 1,
+      "bounds": {
+        "min": [
+          6.848141670227051,
+          0.12000000476837158,
+          1.778116226196289
+        ],
+        "max": [
+          7.451857089996338,
+          1.635062575340271,
+          2.5441789627075195
+        ]
+      },
+      "seat": "middle hospitality front chair"
+    }
+  ],
+  "stats": {
+    "shell": {
+      "file": "grand-rental-finish-v2-shell.glb",
+      "bytes": 2659088,
+      "sha256": "249bae15e1e7c3c7fb3e2a6f6c2455b33856b84be44749081fac55055d24da40",
+      "meshes": 21,
+      "triangles": 58460,
+      "bounds": {
+        "min": [
+          -12.0,
+          0.0,
+          -8.0
+        ],
+        "max": [
+          12.0,
+          10.5,
+          8.0
+        ]
+      }
+    },
+    "interior": {
+      "file": "grand-rental-finish-v2-interior.glb",
+      "bytes": 17720468,
+      "sha256": "a95bf956945e4eb868e3b7446fe13d6d73070b21f877edc0e298f315c9b2fcd6",
+      "meshes": 89,
+      "triangles": 490792,
+      "bounds": {
+        "min": [
+          -11.81283950805664,
+          0.11813947558403015,
+          -7.4118266105651855
+        ],
+        "max": [
+          11.948395729064941,
+          3.11588978767395,
+          7.927959442138672
+        ]
+      }
+    },
+    "hall": {
+      "file": "grand-rental-finish-v2-hall.glb",
+      "bytes": 255840,
+      "sha256": "f359e2307d28c2daf7833b7ffbe1fbac433680c0a5e4350051e28125f4b24470",
+      "meshes": 13,
+      "triangles": 7752,
+      "bounds": {
+        "min": [
+          -16.003719329833984,
+          11.725000381469727,
+          -11.0
+        ],
+        "max": [
+          16.003719329833984,
+          12.461999893188477,
+          12.0
+        ]
+      }
+    },
+    "visitors": {
+      "file": "grand-rental-finish-v2-visitors.glb",
+      "bytes": 19176788,
+      "sha256": "74c0858a1a984ffc4ed16200e01d872278d4d94d9c68f856a82e88f2c30e3aa7",
+      "meshes": 19,
+      "triangles": 152047,
+      "bounds": {
+        "min": [
+          -10.365402221679688,
+          0.11999999731779099,
+          -4.8776164054870605
+        ],
+        "max": [
+          10.270648956298828,
+          1.9129999876022339,
+          7.807409286499023
+        ]
+      }
+    }
+  },
+  "assets": {
+    "grand-rental-finish-v2-shell": {
+      "file": "grand-rental-finish-v2-shell.glb",
+      "bytes": 2659088,
+      "sha256": "249bae15e1e7c3c7fb3e2a6f6c2455b33856b84be44749081fac55055d24da40",
+      "meshes": 21,
+      "triangles": 58460,
+      "bounds": {
+        "min": [
+          -12.0,
+          0.0,
+          -8.0
+        ],
+        "max": [
+          12.0,
+          10.5,
+          8.0
+        ]
+      }
+    },
+    "grand-rental-finish-v2-interior": {
+      "file": "grand-rental-finish-v2-interior.glb",
+      "bytes": 17720468,
+      "sha256": "a95bf956945e4eb868e3b7446fe13d6d73070b21f877edc0e298f315c9b2fcd6",
+      "meshes": 89,
+      "triangles": 490792,
+      "bounds": {
+        "min": [
+          -11.81283950805664,
+          0.11813947558403015,
+          -7.4118266105651855
+        ],
+        "max": [
+          11.948395729064941,
+          3.11588978767395,
+          7.927959442138672
+        ]
+      }
+    },
+    "grand-rental-finish-v2-hall": {
+      "file": "grand-rental-finish-v2-hall.glb",
+      "bytes": 255840,
+      "sha256": "f359e2307d28c2daf7833b7ffbe1fbac433680c0a5e4350051e28125f4b24470",
+      "meshes": 13,
+      "triangles": 7752,
+      "bounds": {
+        "min": [
+          -16.003719329833984,
+          11.725000381469727,
+          -11.0
+        ],
+        "max": [
+          16.003719329833984,
+          12.461999893188477,
+          12.0
+        ]
+      }
+    },
+    "grand-rental-finish-v2-visitors": {
+      "file": "grand-rental-finish-v2-visitors.glb",
+      "bytes": 19176788,
+      "sha256": "74c0858a1a984ffc4ed16200e01d872278d4d94d9c68f856a82e88f2c30e3aa7",
+      "meshes": 19,
+      "triangles": 152047,
+      "bounds": {
+        "min": [
+          -10.365402221679688,
+          0.11999999731779099,
+          -4.8776164054870605
+        ],
+        "max": [
+          10.270648956298828,
+          1.9129999876022339,
+          7.807409286499023
+        ]
+      }
+    }
+  },
+  "floor": "single shared world-mapped venue surface atY0.12, hidden below-floor support",
+  "views": {
+    "entrance": {
+      "position": [
+        0,
+        1.77,
+        8.8
+      ],
+      "look": [
+        2.1,
+        4.5,
+        -6.95
+      ]
+    },
+    "interior": {
+      "position": [
+        0,
+        1.77,
+        0.7
+      ],
+      "look": [
+        2.1,
+        4.5,
+        -6.95
+      ]
+    }
+  },
+  "provenance": {
+    "references": [
+      "Livegrid AV Booth.png",
+      "Livegrid AV Booth Views.png"
+    ],
+    "geometry": "Native Blender reconstruction from reference images; no photo planes or full-stall textures.",
+    "humans": "Microsoft Rocketbox, Copyright (c)2020 Microsoft, MIT; native limb lengths.",
+    "limits": "Image-based visual reconstruction; original CAD, materials and lighting data were unavailable."
+  },
+  "notes": [
+    "Native-metre upholstered furniture and seated-contact metadata.",
+    "Botanical atlas on individually curved leaves with complete petioles.",
+    "Warm reception rope optics and teal garden edge remain above Y=.12.",
+    "Reference front-right reception with champagne rib returns and supported props."
+  ]
+}

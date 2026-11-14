@@ -1,13 +1,22 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
+import { Vector3, Quaternion, PerspectiveCamera, OrthographicCamera } from "three";
 import { useVenue } from "./store";
 import { journey } from "./journey";
+import { baselineCameraForSearch } from "../data/baselineCameras";
 
 /** Opt-in, local-only diagnostics. No telemetry is sent to a server. */
 export function RenderMetrics() {
   const gl = useThree(s => s.gl);
+  const hardware=useMemo(()=>{
+    const context=gl.getContext(),debug=context.getExtension("WEBGL_debug_renderer_info");
+    return {userAgent:navigator.userAgent,logicalCores:navigator.hardwareConcurrency,
+      vendor:debug?context.getParameter(debug.UNMASKED_VENDOR_WEBGL):context.getParameter(context.VENDOR),
+      renderer:debug?context.getParameter(debug.UNMASKED_RENDERER_WEBGL):context.getParameter(context.RENDERER)};
+  },[gl]);
   const enabled = useRef(process.env.NODE_ENV === "development" || new URLSearchParams(location.search).has("perf"));
+  const previousCamera=useRef({position:new Vector3(),quaternion:new Quaternion(),fov:0});
   const sample = useRef({ frames: [] as number[], tasks: [] as {ms: number; progress: number}[], reset: "", elapsed: 0, total:0, maxMs:0, over50:0, over100:0 });
   useEffect(() => {
     const enabled = process.env.NODE_ENV === "development" || new URLSearchParams(location.search).has("perf");
@@ -22,10 +31,29 @@ export function RenderMetrics() {
     observer?.observe({ type: "longtask" });
     return () => { observer?.disconnect(); gl.info.autoReset = autoReset; };
   }, [gl]);
-  useFrame((_, dt) => {
+  useFrame(({camera}, dt) => {
     if (!enabled.current) return;
     const output = document.querySelector<HTMLOutputElement>("[data-render-metrics]");
     if (!output) return;
+    const perspective=camera instanceof PerspectiveCamera;
+    const aspect=perspective?camera.aspect:camera instanceof OrthographicCamera?(camera.right-camera.left)/(camera.top-camera.bottom):1;
+    const lens=perspective?camera.fov:camera.zoom;
+    output.dataset.cameraType=perspective?"perspective":"orthographic";
+    output.dataset.cameraAspect=aspect.toFixed(4);
+    output.dataset.cameraProgress=journey.progress.toFixed(3);
+    const baseline=baselineCameraForSearch(location.search);
+    output.dataset.cameraMode=baseline?"baseline":useVenue.getState().stallVisit?"stall-visit":"journey";
+    output.dataset.cameraSourceId=baseline?.camera.id??"";
+    output.dataset.cameraBaselineShot=baseline?.shot??"";
+    output.dataset.cameraPose=JSON.stringify({position:camera.position.toArray(),quaternion:camera.quaternion.toArray(),fov:perspective?camera.fov:null,aspect,near:camera.near,far:camera.far});
+    output.dataset.renderConditions=JSON.stringify({viewport:{width:window.innerWidth,height:window.innerHeight,devicePixelRatio:window.devicePixelRatio},canvas:{width:gl.domElement.clientWidth,height:gl.domElement.clientHeight},exposure:gl.toneMappingExposure,toneMapping:gl.toneMapping,outputColorSpace:gl.outputColorSpace,hardware});
+    output.dataset.cameraMoving=String(previousCamera.current.position.distanceTo(camera.position)>.0002
+      || Math.abs(previousCamera.current.fov-lens)>.002
+      || 1-Math.min(1,Math.abs(previousCamera.current.quaternion.dot(camera.quaternion))
+        /Math.sqrt(previousCamera.current.quaternion.lengthSq()*camera.quaternion.lengthSq()))>1e-10);
+    previousCamera.current.position.copy(camera.position);
+    previousCamera.current.quaternion.copy(camera.quaternion);
+    previousCamera.current.fov=lens;
     const s = sample.current;
     if (s.reset !== output.dataset.reset) {
       s.reset = output.dataset.reset ?? "";

@@ -1,0 +1,30 @@
+{
+  "source": "User-supplied ChatGPT Image Sep 23, 2026, 12_29_33 AM (3).png",
+  "method": "Built-in image_gen, using the supplied photograph as a visual reference. The generated files contain only flat screen artwork, not photographs of the hall or its architecture.",
+  "prompts": "/media/reception/artwork-prompts.txt",
+  "assets": [
+    {
+      "file": "/media/reception/panorama-reference-art-v1.webp",
+      "original": "/media/reception/panorama-reference-art-v1.png",
+      "width": 2164,
+      "height": 727,
+      "content": "One navy orb and one thin champagne portal over a reflective blue alpine lake. No text or reception architecture."
+    },
+    {
+      "file": "/media/reception/cylinder-reference-art-v1.webp",
+      "original": "/media/reception/cylinder-reference-art-v1.png",
+      "width": 1024,
+      "height": 1536,
+      "content": "Portrait electric-blue and champagne fine light filaments on navy, with open upper-middle area for runtime identity. No text or cylinder geometry."
+    },
+    {
+      "file": "/media/reception/ribbon-reference-art-v1.webp",
+      "original": "/media/reception/ribbon-reference-art-v1.png",
+      "width": 2172,
+      "height": 724,
+      "content": "Horizontal electric-blue and champagne filaments, with open central-right navy field. No text or counter/halo geometry."
+    }
+  ],
+  "processing": "Original generated PNGs preserved. Runtime WebP siblings encoded by Sharp quality 94, effort 6.",
+  "acceptance": "These are reference-guided reconstructions of the displayed artwork. They are not represented as pixel-identical copies of the reference. Architecture, furniture, people and branding are separate actual 3D/runtime objects."
+}

@@ -1,0 +1,831 @@
+{
+  "version": 2026,
+  "asset": "led-rental-2026-interior.glb",
+  "authoringAxes": "native Three XYZ front +Z",
+  "floorTopY": 0.12,
+  "interior": [
+    {
+      "id": "left-product-garden",
+      "position": [
+        -7,
+        0.12,
+        2.5
+      ],
+      "size": [
+        7.4,
+        0.3,
+        2.0
+      ],
+      "bounds": {
+        "min": [
+          -10.7,
+          0.12,
+          1.5
+        ],
+        "max": [
+          -3.3,
+          0.42,
+          3.5
+        ]
+      }
+    },
+    {
+      "id": "front-right-reception",
+      "position": [
+        7.8,
+        0.12,
+        3.5
+      ],
+      "size": [
+        5.2,
+        1.12,
+        1.15
+      ],
+      "countertopY": 1.24,
+      "bounds": {
+        "min": [
+          5.185,
+          0.12,
+          2.91
+        ],
+        "max": [
+          10.415,
+          1.24,
+          4.09
+        ]
+      }
+    },
+    {
+      "id": "rear central left sofa",
+      "kind": "three seat ivory lounge sofa",
+      "position": [
+        -0.7,
+        0.12,
+        -2.9
+      ],
+      "yaw": 0,
+      "seatTopY": 0.604,
+      "bounds": {
+        "min": [
+          -2.0,
+          0.11814781278371811,
+          -3.375
+        ],
+        "max": [
+          0.6000000238418579,
+          1.2100000381469727,
+          -2.4600000381469727
+        ]
+      }
+    },
+    {
+      "id": "rear central right sofa",
+      "kind": "three seat ivory lounge sofa",
+      "position": [
+        3.6,
+        0.12,
+        -2.9
+      ],
+      "yaw": 0,
+      "seatTopY": 0.604,
+      "bounds": {
+        "min": [
+          2.299999713897705,
+          0.11814781278371811,
+          -3.375
+        ],
+        "max": [
+          4.900000095367432,
+          1.2100000381469727,
+          -2.4600000381469727
+        ]
+      }
+    },
+    {
+      "id": "central left inward lounge chair",
+      "kind": "ivory upholstered lounge chair",
+      "position": [
+        -1.0,
+        0.12,
+        0.05
+      ],
+      "yaw": 3.141592653589793,
+      "seatTopY": 0.604,
+      "bounds": {
+        "min": [
+          -1.5,
+          0.11813947558403015,
+          -0.3500000536441803
+        ],
+        "max": [
+          -0.4999999403953552,
+          1.1800000667572021,
+          0.5150001049041748
+        ]
+      }
+    },
+    {
+      "id": "central right inward lounge chair",
+      "kind": "ivory upholstered lounge chair",
+      "position": [
+        3.8,
+        0.12,
+        0.05
+      ],
+      "yaw": 3.141592653589793,
+      "seatTopY": 0.604,
+      "bounds": {
+        "min": [
+          3.299999952316284,
+          0.11813947558403015,
+          -0.3500000536441803
+        ],
+        "max": [
+          4.300000190734863,
+          1.1800000667572021,
+          0.5150001049041748
+        ]
+      }
+    },
+    {
+      "id": "central left round table",
+      "kind": "low black basalt circular coffee table",
+      "position": [
+        -0.55,
+        0.12,
+        -1.45
+      ],
+      "radius": 0.55,
+      "topY": 0.65
+    },
+    {
+      "id": "central right round table",
+      "kind": "low black basalt circular coffee table",
+      "position": [
+        3.42,
+        0.12,
+        -1.45
+      ],
+      "radius": 0.55,
+      "topY": 0.65
+    },
+    {
+      "id": "left middle discussion chair",
+      "kind": "ivory upholstered lounge chair",
+      "position": [
+        -5.25,
+        0.12,
+        -0.42
+      ],
+      "yaw": -1.5707963267948966,
+      "seatTopY": 0.604,
+      "bounds": {
+        "min": [
+          -5.650000095367432,
+          0.11813947558403015,
+          -0.9300000667572021
+        ],
+        "max": [
+          -4.784999847412109,
+          1.1800000667572021,
+          0.09000003337860107
+        ]
+      }
+    },
+    {
+      "id": "left middle guest chair",
+      "kind": "ivory upholstered lounge chair",
+      "position": [
+        -6.8,
+        0.12,
+        -0.42
+      ],
+      "yaw": 1.5707963267948966,
+      "seatTopY": 0.604,
+      "bounds": {
+        "min": [
+          -7.265000343322754,
+          0.11813947558403015,
+          -0.9300000667572021
+        ],
+        "max": [
+          -6.400000095367432,
+          1.1800000667572021,
+          0.09000007808208466
+        ]
+      }
+    },
+    {
+      "id": "left middle discussion table",
+      "kind": "low black basalt circular coffee table",
+      "position": [
+        -6.03,
+        0.12,
+        -0.42
+      ],
+      "radius": 0.39,
+      "topY": 0.65
+    },
+    {
+      "id": "product plinth discussion chair left",
+      "kind": "ivory upholstered lounge chair",
+      "position": [
+        -8.1,
+        0.42,
+        2.15
+      ],
+      "yaw": 1.5707963267948966,
+      "seatTopY": 0.9039999999999999,
+      "bounds": {
+        "min": [
+          -8.565000534057617,
+          0.4181394577026367,
+          1.6800000667572021
+        ],
+        "max": [
+          -7.700000286102295,
+          1.4800000190734863,
+          2.620000123977661
+        ]
+      }
+    },
+    {
+      "id": "product plinth discussion chair right",
+      "kind": "ivory upholstered lounge chair",
+      "position": [
+        -5.4,
+        0.42,
+        2.15
+      ],
+      "yaw": -1.5707963267948966,
+      "seatTopY": 0.9039999999999999,
+      "bounds": {
+        "min": [
+          -5.800000190734863,
+          0.4181394577026367,
+          1.6800000667572021
+        ],
+        "max": [
+          -4.935000419616699,
+          1.4800000190734863,
+          2.620000123977661
+        ]
+      }
+    },
+    {
+      "id": "product plinth discussion coffee table",
+      "kind": "low black basalt circular coffee table",
+      "position": [
+        -6.75,
+        0.42,
+        2.15
+      ],
+      "radius": 0.47,
+      "topY": 0.95
+    },
+    {
+      "id": "right applications cafe chair left",
+      "kind": "ivory upholstered lounge chair",
+      "position": [
+        7.5,
+        0.12,
+        -1.82
+      ],
+      "yaw": -1.5707963267948966,
+      "seatTopY": 0.604,
+      "bounds": {
+        "min": [
+          7.099999904632568,
+          0.11813947558403015,
+          -2.2900002002716064
+        ],
+        "max": [
+          7.964999675750732,
+          1.1800000667572021,
+          -1.350000023841858
+        ]
+      }
+    },
+    {
+      "id": "right applications cafe chair right",
+      "kind": "ivory upholstered lounge chair",
+      "position": [
+        9.0,
+        0.12,
+        -1.82
+      ],
+      "yaw": 1.5707963267948966,
+      "seatTopY": 0.604,
+      "bounds": {
+        "min": [
+          8.53499984741211,
+          0.11813947558403015,
+          -2.2900002002716064
+        ],
+        "max": [
+          9.399999618530273,
+          1.1800000667572021,
+          -1.350000023841858
+        ]
+      }
+    },
+    {
+      "id": "right applications cafe table",
+      "kind": "low black basalt circular coffee table",
+      "position": [
+        8.25,
+        0.12,
+        -1.82
+      ],
+      "radius": 0.38,
+      "topY": 0.65
+    }
+  ],
+  "plants": [
+    {
+      "id": "low left product garden 0",
+      "type": "bush",
+      "position": [
+        -10.2,
+        0.42,
+        2.05
+      ],
+      "totalHeight": 0.78,
+      "potHeight": 0.25,
+      "potRadius": 0.18,
+      "leafCount": 648,
+      "targetTop": 1.2,
+      "finish": "brushed stainless"
+    },
+    {
+      "id": "low left product garden 1",
+      "type": "fern",
+      "position": [
+        -9.35,
+        0.42,
+        2.95
+      ],
+      "totalHeight": 0.8250000000000001,
+      "potHeight": 0.25,
+      "potRadius": 0.18,
+      "leafCount": 264,
+      "targetTop": 1.245,
+      "finish": "satin black ceramic"
+    },
+    {
+      "id": "low left product garden 2",
+      "type": "bush",
+      "position": [
+        -8.45,
+        0.42,
+        3.13
+      ],
+      "totalHeight": 0.87,
+      "potHeight": 0.25,
+      "potRadius": 0.18,
+      "leafCount": 648,
+      "targetTop": 1.29,
+      "finish": "satin black ceramic"
+    },
+    {
+      "id": "low left product garden 3",
+      "type": "fern",
+      "position": [
+        -7.5,
+        0.42,
+        3.13
+      ],
+      "totalHeight": 0.78,
+      "potHeight": 0.25,
+      "potRadius": 0.18,
+      "leafCount": 264,
+      "targetTop": 1.2,
+      "finish": "brushed stainless"
+    },
+    {
+      "id": "low left product garden 4",
+      "type": "bush",
+      "position": [
+        -6.5,
+        0.42,
+        3.13
+      ],
+      "totalHeight": 0.8250000000000001,
+      "potHeight": 0.25,
+      "potRadius": 0.18,
+      "leafCount": 648,
+      "targetTop": 1.245,
+      "finish": "satin black ceramic"
+    },
+    {
+      "id": "low left product garden 5",
+      "type": "fern",
+      "position": [
+        -5.5,
+        0.42,
+        3.13
+      ],
+      "totalHeight": 0.87,
+      "potHeight": 0.25,
+      "potRadius": 0.18,
+      "leafCount": 264,
+      "targetTop": 1.29,
+      "finish": "satin black ceramic"
+    },
+    {
+      "id": "low left product garden 6",
+      "type": "bush",
+      "position": [
+        -4.45,
+        0.42,
+        2.95
+      ],
+      "totalHeight": 0.78,
+      "potHeight": 0.25,
+      "potRadius": 0.18,
+      "leafCount": 648,
+      "targetTop": 1.2,
+      "finish": "brushed stainless"
+    },
+    {
+      "id": "low left product garden 7",
+      "type": "fern",
+      "position": [
+        -3.75,
+        0.42,
+        2.0
+      ],
+      "totalHeight": 0.8250000000000001,
+      "potHeight": 0.25,
+      "potRadius": 0.18,
+      "leafCount": 264,
+      "targetTop": 1.245,
+      "finish": "satin black ceramic"
+    },
+    {
+      "id": "tall architectural feature planting 0",
+      "type": "palm",
+      "position": [
+        -10.55,
+        0.12,
+        -1.7
+      ],
+      "totalHeight": 2.65,
+      "potHeight": 0.52,
+      "potRadius": 0.27,
+      "leafCount": 448,
+      "targetTop": 2.77,
+      "finish": "brushed stainless"
+    },
+    {
+      "id": "tall architectural feature planting 1",
+      "type": "bush",
+      "position": [
+        -10.48,
+        0.12,
+        1.12
+      ],
+      "totalHeight": 2.35,
+      "potHeight": 0.52,
+      "potRadius": 0.27,
+      "leafCount": 999,
+      "targetTop": 2.47,
+      "finish": "satin black ceramic"
+    },
+    {
+      "id": "tall architectural feature planting 2",
+      "type": "broadleaf",
+      "position": [
+        -2.65,
+        0.12,
+        -3.65
+      ],
+      "totalHeight": 3.05,
+      "potHeight": 0.52,
+      "potRadius": 0.27,
+      "leafCount": 22,
+      "targetTop": 3.17,
+      "finish": "satin black ceramic"
+    },
+    {
+      "id": "tall architectural feature planting 3",
+      "type": "broadleaf",
+      "position": [
+        5.62,
+        0.12,
+        -3.64
+      ],
+      "totalHeight": 3.15,
+      "potHeight": 0.52,
+      "potRadius": 0.27,
+      "leafCount": 23,
+      "targetTop": 3.27,
+      "finish": "brushed stainless"
+    },
+    {
+      "id": "tall architectural feature planting 4",
+      "type": "palm",
+      "position": [
+        10.35,
+        0.12,
+        -3.7
+      ],
+      "totalHeight": 2.6,
+      "potHeight": 0.52,
+      "potRadius": 0.27,
+      "leafCount": 473,
+      "targetTop": 2.72,
+      "finish": "satin black ceramic"
+    },
+    {
+      "id": "tall architectural feature planting 5",
+      "type": "broadleaf",
+      "position": [
+        10.4,
+        0.12,
+        0.2
+      ],
+      "totalHeight": 2.7,
+      "potHeight": 0.52,
+      "potRadius": 0.27,
+      "leafCount": 15,
+      "targetTop": 2.8200000000000003,
+      "finish": "satin black ceramic"
+    },
+    {
+      "id": "tall architectural feature planting 6",
+      "type": "broadleaf",
+      "position": [
+        10.42,
+        0.12,
+        4.53
+      ],
+      "totalHeight": 2.55,
+      "potHeight": 0.42,
+      "potRadius": 0.24,
+      "leafCount": 16,
+      "targetTop": 2.67,
+      "finish": "brushed stainless"
+    },
+    {
+      "id": "tall architectural feature planting 7",
+      "type": "bush",
+      "position": [
+        -2.75,
+        0.12,
+        0.76
+      ],
+      "totalHeight": 1.3,
+      "potHeight": 0.42,
+      "potRadius": 0.24,
+      "leafCount": 648,
+      "targetTop": 1.42,
+      "finish": "satin black ceramic"
+    },
+    {
+      "id": "tall architectural feature planting 8",
+      "type": "palm",
+      "position": [
+        5.35,
+        0.12,
+        0.9
+      ],
+      "totalHeight": 1.5,
+      "potHeight": 0.42,
+      "potRadius": 0.24,
+      "leafCount": 510,
+      "targetTop": 1.62,
+      "finish": "satin black ceramic"
+    },
+    {
+      "id": "interior layered green planter 0",
+      "type": "bush",
+      "position": [
+        -2.0,
+        0.12,
+        -3.78
+      ],
+      "totalHeight": 1.2,
+      "potHeight": 0.45,
+      "potRadius": 0.24,
+      "leafCount": 648,
+      "targetTop": 1.3199999999999998,
+      "finish": "brushed stainless"
+    },
+    {
+      "id": "interior layered green planter 1",
+      "type": "fern",
+      "position": [
+        0.9,
+        0.12,
+        -3.75
+      ],
+      "totalHeight": 1.3699999999999999,
+      "potHeight": 0.45,
+      "potRadius": 0.24,
+      "leafCount": 264,
+      "targetTop": 1.4899999999999998,
+      "finish": "satin black ceramic"
+    },
+    {
+      "id": "interior layered green planter 2",
+      "type": "fern",
+      "position": [
+        2.1,
+        0.12,
+        -3.8
+      ],
+      "totalHeight": 1.54,
+      "potHeight": 0.45,
+      "potRadius": 0.24,
+      "leafCount": 264,
+      "targetTop": 1.6600000000000001,
+      "finish": "satin black ceramic"
+    },
+    {
+      "id": "interior layered green planter 3",
+      "type": "bush",
+      "position": [
+        4.98,
+        0.12,
+        -3.8
+      ],
+      "totalHeight": 1.2,
+      "potHeight": 0.45,
+      "potRadius": 0.24,
+      "leafCount": 648,
+      "targetTop": 1.3199999999999998,
+      "finish": "satin black ceramic"
+    },
+    {
+      "id": "interior layered green planter 4",
+      "type": "fern",
+      "position": [
+        -2.5,
+        0.12,
+        -1.65
+      ],
+      "totalHeight": 1.3699999999999999,
+      "potHeight": 0.45,
+      "potRadius": 0.24,
+      "leafCount": 264,
+      "targetTop": 1.4899999999999998,
+      "finish": "brushed stainless"
+    },
+    {
+      "id": "interior layered green planter 5",
+      "type": "fern",
+      "position": [
+        1.25,
+        0.12,
+        -1.35
+      ],
+      "totalHeight": 1.54,
+      "potHeight": 0.45,
+      "potRadius": 0.24,
+      "leafCount": 264,
+      "targetTop": 1.6600000000000001,
+      "finish": "satin black ceramic"
+    },
+    {
+      "id": "interior layered green planter 6",
+      "type": "bush",
+      "position": [
+        5.3,
+        0.12,
+        -1.8
+      ],
+      "totalHeight": 1.2,
+      "potHeight": 0.45,
+      "potRadius": 0.24,
+      "leafCount": 648,
+      "targetTop": 1.3199999999999998,
+      "finish": "satin black ceramic"
+    },
+    {
+      "id": "interior layered green planter 7",
+      "type": "fern",
+      "position": [
+        9.85,
+        0.12,
+        -1.5
+      ],
+      "totalHeight": 1.3699999999999999,
+      "potHeight": 0.45,
+      "potRadius": 0.24,
+      "leafCount": 264,
+      "targetTop": 1.4899999999999998,
+      "finish": "satin black ceramic"
+    },
+    {
+      "id": "interior layered green planter 8",
+      "type": "fern",
+      "position": [
+        6.8,
+        0.12,
+        -3.4
+      ],
+      "totalHeight": 1.54,
+      "potHeight": 0.45,
+      "potRadius": 0.24,
+      "leafCount": 264,
+      "targetTop": 1.6600000000000001,
+      "finish": "brushed stainless"
+    },
+    {
+      "id": "interior layered green planter 9",
+      "type": "bush",
+      "position": [
+        -8.25,
+        0.12,
+        0.45
+      ],
+      "totalHeight": 1.2,
+      "potHeight": 0.45,
+      "potRadius": 0.24,
+      "leafCount": 648,
+      "targetTop": 1.3199999999999998,
+      "finish": "satin black ceramic"
+    },
+    {
+      "id": "interior layered green planter 10",
+      "type": "fern",
+      "position": [
+        -4.15,
+        0.12,
+        -1.2
+      ],
+      "totalHeight": 1.3699999999999999,
+      "potHeight": 0.45,
+      "potRadius": 0.24,
+      "leafCount": 264,
+      "targetTop": 1.4899999999999998,
+      "finish": "satin black ceramic"
+    }
+  ],
+  "leafCount": 11242,
+  "ambientOcclusion": {
+    "layer": "Col",
+    "samples": 12,
+    "radius": 0.12,
+    "objects": 12,
+    "occluderTriangles": 80712,
+    "corners": 158638,
+    "evaluatedPositions": 41747,
+    "rays": 500964,
+    "skipped": {
+      "non_mesh": 0,
+      "character": 0,
+      "distant_hall": 0,
+      "non_opaque_or_emissive": 9
+    },
+    "budgetReached": false,
+    "seconds": 2.169,
+    "minimum": 0.67,
+    "mean": 0.94212
+  },
+  "materialRoles": [
+    "LED Rental 2026 | deep satin black powdercoat",
+    "LED Rental 2026 | fine livegrid teal perimeter reveal",
+    "LED Rental 2026 | concealed warm pearl white perimeter light",
+    "LED Rental 2026 | clean porcelain white brand letters",
+    "LED Rental 2026 | charcoal slender seating frame",
+    "LED Rental 2026 | honed pale silver stone worktop",
+    "LED Rental 2026 | brushed stainless reception metal returns",
+    "LED Rental 2026 | illuminated livegrid teal folded emblem",
+    "LED Rental 2026 | laptop satin silver aluminium",
+    "LED Rental 2026 | dark active laptop display glass",
+    "LED Rental 2026 | natural woody olive stems",
+    "LED Rental 2026 | natural soft ivory blossom petals",
+    "LED Rental 2026 | clear smoked water glass",
+    "LED Rental 2026 | warm ivory finely woven upholstery",
+    "LED Rental 2026 | tailored woven upholstery fine welts",
+    "LED Rental 2026 | dark basalt coffee table tops",
+    "LED Rental 2026 | natural dark granular potting soil",
+    "LED Rental 2026 | black satin ceramic planter",
+    "LED Rental 2026 | living tropical green curved petioles",
+    "LED Rental 2026 | varied textured living foliage",
+    "LED Rental 2026 | broad tropical waxy living foliage"
+  ],
+  "stats": {
+    "bytes": 16236308,
+    "sha256": "587c43c76f70910dfcf2a78107ac067903c311a242fa901ebe55c4eb01cf3333",
+    "meshes": 21,
+    "vertices": 314490,
+    "triangles": 420996,
+    "bounds": {
+      "min": [
+        -10.819999694824219,
+        0.11813947558403015,
+        -4.694540023803711
+      ],
+      "max": [
+        10.7496919631958,
+        3.216386079788208,
+        5.352096080780029
+      ]
+    }
+  },
+  "sha256": "587c43c76f70910dfcf2a78107ac067903c311a242fa901ebe55c4eb01cf3333",
+  "provenance": "Original bespoke Blender reception, furniture, curved leaf meshes and live floral geometry; retained original botanical PBR atlas and CC0 fabric normal map embedded."
+}

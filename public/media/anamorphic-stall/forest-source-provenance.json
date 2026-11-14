@@ -1,0 +1,17 @@
+{
+  "reference": {
+    "file": "reference-gallery.webp",
+    "origin": "User-supplied LivegridAV pillar reference image",
+    "processing": "Lossless WebP transcode retained for reference only; not loaded or rendered by the website"
+  },
+  "generated_artwork": {
+    "tool": "Built-in imagegen; reference-based generation",
+    "shared_constraints": "Flat full-bleed 1024x1536 pillar content. No physical pillar, room, people, perspective, logos, or text.",
+    "ribbon-wrap.png": "Brushed white-silver and champagne-gold flowing silk-metal ribbons with fine parallel striations, rich black-charcoal background and restrained champagne glitter, matching the supplied reference.",
+    "forest-wrap.png": "Photoreal lush forest gorge, daylight canopy, and waterfalls matching the small rear reference column.",
+    "alpine-wrap.png": "Snow-dusted rocky alpine panorama, pale ice-blue sky, and a polished mirror-chrome fluid sculpture in the lower third matching the right reference column.",
+    "delivery": "Desktop WebP and 768px-wide mobile WebP; PNG generation masters retained. Applied to four-face 3D columns throughout the pillar scene."
+  },
+  "architecture": "Reproducible Blender GLB: scripts/blender/rebuild_pillar_gallery.py",
+  "verification": "The entire pillar scene renders the navigable 3D reconstruction. The reference photograph is not used as an overlay."
+}

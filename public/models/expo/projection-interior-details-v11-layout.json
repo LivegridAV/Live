@@ -1,0 +1,593 @@
+{
+  "version": 11,
+  "asset": "projection-interior-details-v11.glb",
+  "authoringAxes": "native Three XYZ front +Z",
+  "placement": {
+    "position": [
+      0,
+      0,
+      0
+    ],
+    "rotation": [
+      0,
+      0,
+      0
+    ],
+    "scale": 1,
+    "parentRoot": [
+      10.2,
+      0,
+      -189
+    ],
+    "parentRotation": [
+      0,
+      -1.5707963267948966,
+      0
+    ],
+    "parentScale": 3
+  },
+  "items": [
+    {
+      "id": "central-forecourt-champagne",
+      "kind": "plant vessel",
+      "position": [
+        -3.85,
+        0.1,
+        -0.05
+      ],
+      "radius": 0.21,
+      "height": 0.56,
+      "rimY": 0.66,
+      "soilY": 0.64,
+      "plantTopTarget": 1.3,
+      "finish": "champagne",
+      "bounds": {
+        "min": [
+          -4.061679840087891,
+          0.10000000149011612,
+          -0.261680006980896
+        ],
+        "max": [
+          -3.638319969177246,
+          0.6600000262260437,
+          0.16167999804019928
+        ]
+      }
+    },
+    {
+      "id": "central-forecourt-black",
+      "kind": "plant vessel",
+      "position": [
+        3.85,
+        0.1,
+        -0.05
+      ],
+      "radius": 0.22,
+      "height": 0.65,
+      "rimY": 0.75,
+      "soilY": 0.73,
+      "plantTopTarget": 1.45,
+      "finish": "black ceramic with champagne lip",
+      "bounds": {
+        "min": [
+          3.6282401084899902,
+          0.10000000149011612,
+          -0.2717599868774414
+        ],
+        "max": [
+          4.071760177612305,
+          0.75,
+          0.17175999283790588
+        ]
+      }
+    },
+    {
+      "id": "stage-mini-conifer-0",
+      "kind": "plant vessel",
+      "position": [
+        -1.405262269060063,
+        1.25,
+        0.5569225085080303
+      ],
+      "radius": 0.075,
+      "height": 0.14,
+      "rimY": 1.3900000000000001,
+      "soilY": 1.37,
+      "plantTopTarget": 1.85,
+      "finish": "black ceramic with champagne lip",
+      "bounds": {
+        "min": [
+          -1.4808622598648071,
+          1.25,
+          0.4813224971294403
+        ],
+        "max": [
+          -1.3296623229980469,
+          1.3899999856948853,
+          0.6325225234031677
+        ]
+      }
+    },
+    {
+      "id": "stage-mini-conifer-1",
+      "kind": "plant vessel",
+      "position": [
+        0.0,
+        1.25,
+        1.0000000000000002
+      ],
+      "radius": 0.075,
+      "height": 0.14,
+      "rimY": 1.3900000000000001,
+      "soilY": 1.37,
+      "plantTopTarget": 1.9000000000000001,
+      "finish": "champagne",
+      "bounds": {
+        "min": [
+          -0.07559999823570251,
+          1.25,
+          0.9243999719619751
+        ],
+        "max": [
+          0.07559999823570251,
+          1.3899999856948853,
+          1.075600028038025
+        ]
+      }
+    },
+    {
+      "id": "stage-mini-conifer-2",
+      "kind": "plant vessel",
+      "position": [
+        1.405262269060063,
+        1.25,
+        0.5569225085080303
+      ],
+      "radius": 0.075,
+      "height": 0.14,
+      "rimY": 1.3900000000000001,
+      "soilY": 1.37,
+      "plantTopTarget": 1.9500000000000002,
+      "finish": "black ceramic with champagne lip",
+      "bounds": {
+        "min": [
+          1.3296623229980469,
+          1.25,
+          0.4813224971294403
+        ],
+        "max": [
+          1.4808622598648071,
+          1.3899999856948853,
+          0.6325225234031677
+        ]
+      }
+    },
+    {
+      "id": "bar-espresso-left",
+      "kind": "porcelain espresso cup and saucer",
+      "position": [
+        -0.9206287684287772,
+        0.95,
+        1.760614064433985
+      ],
+      "bounds": {
+        "min": [
+          -0.977628767490387,
+          0.949999988079071,
+          1.7036141157150269
+        ],
+        "max": [
+          -0.8576531410217285,
+          1.0230000019073486,
+          1.8176140785217285
+        ]
+      }
+    },
+    {
+      "id": "bar-espresso-right",
+      "kind": "porcelain espresso cup and saucer",
+      "position": [
+        0.9206287684287772,
+        0.95,
+        1.760614064433985
+      ],
+      "bounds": {
+        "min": [
+          0.8636287450790405,
+          0.949999988079071,
+          1.7036141157150269
+        ],
+        "max": [
+          0.983604371547699,
+          1.0230000019073486,
+          1.8176140785217285
+        ]
+      }
+    },
+    {
+      "id": "bar-water-carafe",
+      "kind": "clear glass water carafe",
+      "position": [
+        2.442721363408029,
+        0.95,
+        0.827874522608745
+      ],
+      "bounds": {
+        "min": [
+          2.394721269607544,
+          0.949999988079071,
+          0.7798745036125183
+        ],
+        "max": [
+          2.4907214641571045,
+          1.2289999723434448,
+          0.8758745193481445
+        ]
+      }
+    },
+    {
+      "id": "reception-water-carafe",
+      "kind": "clear glass water carafe",
+      "position": [
+        -2.8,
+        1.2,
+        3.04
+      ],
+      "bounds": {
+        "min": [
+          -2.8480000495910645,
+          1.2000000476837158,
+          2.992000102996826
+        ],
+        "max": [
+          -2.752000093460083,
+          1.4789999723434448,
+          3.0880000591278076
+        ]
+      }
+    },
+    {
+      "id": "reception-espresso",
+      "kind": "porcelain espresso cup and saucer",
+      "position": [
+        -3.15,
+        1.2,
+        3.13
+      ],
+      "bounds": {
+        "min": [
+          -3.2070000171661377,
+          1.2000000476837158,
+          3.072999954223633
+        ],
+        "max": [
+          -3.087024450302124,
+          1.2730000019073486,
+          3.187000036239624
+        ]
+      }
+    },
+    {
+      "id": "bar-mixed-flowers-left",
+      "kind": "plant vessel",
+      "position": [
+        -1.2362017582725096,
+        0.95,
+        1.6097067200703983
+      ],
+      "radius": 0.062,
+      "height": 0.12,
+      "rimY": 1.0699999999999998,
+      "soilY": 1.055,
+      "plantTopTarget": 1.42,
+      "finish": "champagne",
+      "bounds": {
+        "min": [
+          -1.2986977100372314,
+          0.949999988079071,
+          1.547210693359375
+        ],
+        "max": [
+          -1.173705816268921,
+          1.0700000524520874,
+          1.672202706336975
+        ]
+      }
+    },
+    {
+      "id": "bar-mixed-flowers-right",
+      "kind": "plant vessel",
+      "position": [
+        1.2362017582725096,
+        0.95,
+        1.6097067200703983
+      ],
+      "radius": 0.062,
+      "height": 0.12,
+      "rimY": 1.0699999999999998,
+      "soilY": 1.055,
+      "plantTopTarget": 1.42,
+      "finish": "champagne",
+      "bounds": {
+        "min": [
+          1.173705816268921,
+          0.949999988079071,
+          1.547210693359375
+        ],
+        "max": [
+          1.2986977100372314,
+          1.0700000524520874,
+          1.672202706336975
+        ]
+      }
+    }
+  ],
+  "vessels": [
+    {
+      "id": "central-forecourt-champagne",
+      "position": [
+        -3.85,
+        0.1,
+        -0.05
+      ],
+      "radius": 0.21,
+      "height": 0.56,
+      "rimY": 0.66,
+      "soilY": 0.64,
+      "plantTopTarget": 1.3,
+      "finish": "champagne"
+    },
+    {
+      "id": "central-forecourt-black",
+      "position": [
+        3.85,
+        0.1,
+        -0.05
+      ],
+      "radius": 0.22,
+      "height": 0.65,
+      "rimY": 0.75,
+      "soilY": 0.73,
+      "plantTopTarget": 1.45,
+      "finish": "black ceramic with champagne lip"
+    },
+    {
+      "id": "stage-mini-conifer-0",
+      "position": [
+        -1.405262269060063,
+        1.25,
+        0.5569225085080303
+      ],
+      "radius": 0.075,
+      "height": 0.14,
+      "rimY": 1.3900000000000001,
+      "soilY": 1.37,
+      "plantTopTarget": 1.85,
+      "finish": "black ceramic with champagne lip"
+    },
+    {
+      "id": "stage-mini-conifer-1",
+      "position": [
+        0.0,
+        1.25,
+        1.0000000000000002
+      ],
+      "radius": 0.075,
+      "height": 0.14,
+      "rimY": 1.3900000000000001,
+      "soilY": 1.37,
+      "plantTopTarget": 1.9000000000000001,
+      "finish": "champagne"
+    },
+    {
+      "id": "stage-mini-conifer-2",
+      "position": [
+        1.405262269060063,
+        1.25,
+        0.5569225085080303
+      ],
+      "radius": 0.075,
+      "height": 0.14,
+      "rimY": 1.3900000000000001,
+      "soilY": 1.37,
+      "plantTopTarget": 1.9500000000000002,
+      "finish": "black ceramic with champagne lip"
+    },
+    {
+      "id": "bar-mixed-flowers-left",
+      "position": [
+        -1.2362017582725096,
+        0.95,
+        1.6097067200703983
+      ],
+      "radius": 0.062,
+      "height": 0.12,
+      "rimY": 1.0699999999999998,
+      "soilY": 1.055,
+      "plantTopTarget": 1.42,
+      "finish": "champagne"
+    },
+    {
+      "id": "bar-mixed-flowers-right",
+      "position": [
+        1.2362017582725096,
+        0.95,
+        1.6097067200703983
+      ],
+      "radius": 0.062,
+      "height": 0.12,
+      "rimY": 1.0699999999999998,
+      "soilY": 1.055,
+      "plantTopTarget": 1.42,
+      "finish": "champagne"
+    }
+  ],
+  "materialRoles": [
+    "Projection Interior V11 | soft satin champagne metal details",
+    "Projection Interior V11 | dark granular planting soil",
+    "Projection Interior V11 | black satin ceramic planter body",
+    "Projection Interior V11 | warm ivory porcelain cups",
+    "Projection Interior V11 | dark coffee liquid",
+    "Projection Interior V11 | clear glass drinking vessels",
+    "Projection Interior V11 | botanical slender olive stems",
+    "Projection Interior V11 | natural living botanical foliage",
+    "Projection Interior V11 | soft ivory botanical flower petals",
+    "Projection Interior V11 | warm ochre botanical flower centers"
+  ],
+  "floralArrangements": [
+    {
+      "id": "bar-mixed-flowers-left",
+      "kind": "complete mixed ivory flowers with small folded living leaves",
+      "position": [
+        -1.2362017582725096,
+        0.95,
+        1.6097067200703983
+      ],
+      "radiusFromStageCenter": 3.3,
+      "angleDegrees": -22,
+      "vesselRadius": 0.062,
+      "rimY": 1.07,
+      "soilY": 1.055,
+      "foliageBounds": {
+        "min": [
+          -1.31951105594635,
+          1.0417591333389282,
+          1.5261085033416748
+        ],
+        "max": [
+          -1.1537933349609375,
+          1.3909821510314941,
+          1.692879557609558
+        ]
+      },
+      "plantTop": 1.3909821510314941,
+      "maximumPlanRadius": 0.08918966808956992,
+      "support": "vessel soil, with stems inserted13mm into soil; vessel stands on the real crescent quartz top atY.95"
+    },
+    {
+      "id": "bar-mixed-flowers-right",
+      "kind": "complete mixed ivory flowers with small folded living leaves",
+      "position": [
+        1.2362017582725096,
+        0.95,
+        1.6097067200703983
+      ],
+      "radiusFromStageCenter": 3.3,
+      "angleDegrees": 22,
+      "vesselRadius": 0.062,
+      "rimY": 1.07,
+      "soilY": 1.055,
+      "foliageBounds": {
+        "min": [
+          1.1573506593704224,
+          1.041756272315979,
+          1.5246771574020386
+        ],
+        "max": [
+          1.3165827989578247,
+          1.3910102844238281,
+          1.692282795906067
+        ]
+      },
+      "plantTop": 1.3910102844238281,
+      "maximumPlanRadius": 0.08973612308688526,
+      "support": "vessel soil, with stems inserted13mm into soil; vessel stands on the real crescent quartz top atY.95"
+    }
+  ],
+  "preservedV10Components": [
+    "central-forecourt-champagne",
+    "central-forecourt-black",
+    "stage-mini-conifer-0",
+    "stage-mini-conifer-1",
+    "stage-mini-conifer-2",
+    "bar-espresso-left",
+    "bar-espresso-right",
+    "bar-water-carafe",
+    "reception-water-carafe",
+    "reception-espresso"
+  ],
+  "removedV8Components": [
+    "central-cafe-chair-left",
+    "central-cafe-chair-right",
+    "central-cafe-table",
+    "cafe-bud-pot",
+    "cafe-espresso",
+    "cafe-napkin-and-spoon",
+    "bar-right-black"
+  ],
+  "supportContract": {
+    "floorY": 0.1,
+    "stage": {
+      "centerXZ": [
+        0,
+        -1.45
+      ],
+      "radius": 2.9,
+      "topY": 1.25
+    },
+    "bar": {
+      "centerXZ": [
+        0,
+        -1.45
+      ],
+      "innerRadius": 3.05,
+      "outerRadius": 3.55,
+      "topY": 0.95,
+      "sectorDegrees": [
+        -65,
+        65
+      ]
+    },
+    "reception": {
+      "center": [
+        -4.3,
+        0.1,
+        3.1
+      ],
+      "width": 3.6,
+      "depth": 0.82,
+      "topY": 1.2
+    }
+  },
+  "ambientOcclusion": {
+    "layer": "Col",
+    "samples": 32,
+    "radius": 0.1,
+    "objects": 9,
+    "occluderTriangles": 38280,
+    "corners": 67400,
+    "evaluatedPositions": 20802,
+    "rays": 665664,
+    "skipped": {
+      "non_mesh": 0,
+      "character": 0,
+      "distant_hall": 0,
+      "non_opaque_or_emissive": 1
+    },
+    "budgetReached": false,
+    "seconds": 2.597,
+    "minimum": 0.6,
+    "mean": 0.87482
+  },
+  "stats": {
+    "bytes": 948804,
+    "meshes": 10,
+    "vertices": 22048,
+    "triangles": 39400,
+    "bounds": {
+      "min": [
+        -4.061679840087891,
+        0.10000000149011612,
+        -0.2717599868774414
+      ],
+      "max": [
+        4.071760177612305,
+        1.4789999723434448,
+        3.187000036239624
+      ]
+    }
+  },
+  "bytes": 948804,
+  "sha256": "1eedfde61056aac7c82fc7e8d49fcfc7d1d4ac2861cd6920b3c61d9499f35d9a",
+  "provenance": "Original bespoke Blender vessels, porcelain/glass drink props and two complete cupped ivory floral arrangements with folded leaves. Every V10 pose is preserved. Proposed16degree floral anchors conflicted with preserved cups;22degree anchors occupy the clear interval toward the outer laptops. No reference image pixels or downloaded models."
+}

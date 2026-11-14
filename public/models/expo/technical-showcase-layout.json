@@ -1,0 +1,1848 @@
+{
+  "version": 1,
+  "root": [
+    -10.2,
+    0,
+    -142
+  ],
+  "worldAnchor": [
+    -10.2,
+    0,
+    -142
+  ],
+  "rootRotation": [
+    0,
+    1.5707963267948966,
+    0
+  ],
+  "bounds": {
+    "xMin": -14.475000381469727,
+    "xMax": 15.475000381469727,
+    "zMin": -8.0,
+    "zMax": 12.800000190734863,
+    "top": 12.28499984741211
+  },
+  "floorTop": 0.09,
+  "bays": [
+    {
+      "id": "av",
+      "center": -7.442564,
+      "z": -2.6,
+      "screenY": 2.998184,
+      "screenH": 3.789398,
+      "width": 6.276266,
+      "yaw": 0.2,
+      "title": "AV ENGINEERING",
+      "subtitle": "DESIGN  |  INTEGRATE  |  DELIVER",
+      "main": "av-drafting",
+      "hint": "tech-engineering",
+      "workstation": "tech-workstation-av",
+      "stationXZScale": 0.711962,
+      "worktopY": 0.98,
+      "monitorCenterY": 1.33,
+      "monitorHeight": 0.5
+    },
+    {
+      "id": "show",
+      "center": -0.360039,
+      "z": -3.8,
+      "screenY": 2.783571,
+      "screenH": 3.312057,
+      "width": 7.252591,
+      "yaw": 0,
+      "title": "SHOW CONTROL",
+      "subtitle": "CUES  |  TIMELINES  |  AUTOMATION",
+      "main": "show-cues",
+      "hint": "tech-show-control",
+      "workstation": "tech-workstation-cues",
+      "stationXZScale": 0.69831,
+      "worktopY": 0.98,
+      "monitorCenterY": 1.33,
+      "monitorHeight": 0.5
+    },
+    {
+      "id": "live",
+      "center": 6.868688,
+      "z": -2.6,
+      "screenY": 2.846261,
+      "screenH": 3.272276,
+      "width": 6.56631,
+      "yaw": -0.2,
+      "title": "LIVE PRODUCTION",
+      "subtitle": "CAPTURE  |  SWITCH  |  STREAM  |  DELIVER",
+      "main": "live-multiview",
+      "hint": "tech-live-production",
+      "workstation": "tech-workstation-production",
+      "stationXZScale": 0.772719,
+      "worktopY": 0.98,
+      "monitorCenterY": 1.33,
+      "monitorHeight": 0.5
+    }
+  ],
+  "frontCounter": {
+    "center": [
+      2.915522,
+      0,
+      10.878415
+    ],
+    "width": 4.212027,
+    "depth": 1.05,
+    "top": 1.35,
+    "yaw": -0.0448004
+  },
+  "screens": [
+    {
+      "id": "av-drafting",
+      "p": [
+        -7.440179968030459,
+        2.998184,
+        -2.588239201065905
+      ],
+      "position": [
+        -7.440179968030459,
+        2.998184,
+        -2.588239201065905
+      ],
+      "x": -7.440179968030459,
+      "y": 2.998184,
+      "z": -2.588239201065905,
+      "width": 6.276266,
+      "height": 3.789398,
+      "w": 6.276266,
+      "h": 3.789398,
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "mediaHint": "tech-engineering"
+    },
+    {
+      "id": "av-monitor-0",
+      "p": [
+        -5.730792756638827,
+        1.33,
+        5.041981340396063
+      ],
+      "position": [
+        -5.730792756638827,
+        1.33,
+        5.041981340396063
+      ],
+      "x": -5.730792756638827,
+      "y": 1.33,
+      "z": 5.041981340396063,
+      "width": 0.74044048,
+      "height": 0.5,
+      "w": 0.74044048,
+      "h": 0.5,
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "mediaHint": "tech-workstation-av"
+    },
+    {
+      "id": "av-monitor-1",
+      "p": [
+        -4.684137515299317,
+        1.33,
+        4.829813819258794
+      ],
+      "position": [
+        -4.684137515299317,
+        1.33,
+        4.829813819258794
+      ],
+      "x": -4.684137515299317,
+      "y": 1.33,
+      "z": 4.829813819258794,
+      "width": 0.8543544,
+      "height": 0.5,
+      "w": 0.8543544,
+      "h": 0.5,
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "mediaHint": "tech-workstation-av"
+    },
+    {
+      "id": "av-monitor-2",
+      "p": [
+        -3.5816606610883674,
+        1.33,
+        4.606330696994204
+      ],
+      "position": [
+        -3.5816606610883674,
+        1.33,
+        4.606330696994204
+      ],
+      "x": -3.5816606610883674,
+      "y": 1.33,
+      "z": 4.606330696994204,
+      "width": 0.74044048,
+      "height": 0.5,
+      "w": 0.74044048,
+      "h": 0.5,
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "mediaHint": "tech-workstation-av"
+    },
+    {
+      "id": "av-monitor-3",
+      "p": [
+        -2.541983121357788,
+        1.33,
+        4.395577625997847
+      ],
+      "position": [
+        -2.541983121357788,
+        1.33,
+        4.395577625997847
+      ],
+      "x": -2.541983121357788,
+      "y": 1.33,
+      "z": 4.395577625997847,
+      "width": 0.74044048,
+      "height": 0.5,
+      "w": 0.74044048,
+      "h": 0.5,
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "mediaHint": "tech-workstation-av"
+    },
+    {
+      "id": "av-laptop",
+      "p": [
+        -2.2106177867274894,
+        1.2275,
+        4.531810442970762
+      ],
+      "position": [
+        -2.2106177867274894,
+        1.2275,
+        4.531810442970762
+      ],
+      "x": -2.2106177867274894,
+      "y": 1.2275,
+      "z": 4.531810442970762,
+      "width": 0.3915791,
+      "height": 0.33,
+      "w": 0.3915791,
+      "h": 0.33,
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "mediaHint": "tech-workstation-av"
+    },
+    {
+      "id": "show-cues",
+      "p": [
+        -0.360039,
+        2.783571,
+        -3.788
+      ],
+      "position": [
+        -0.360039,
+        2.783571,
+        -3.788
+      ],
+      "x": -0.360039,
+      "y": 2.783571,
+      "z": -3.788,
+      "width": 7.252591,
+      "height": 3.312057,
+      "w": 7.252591,
+      "h": 3.312057,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "tech-show-control"
+    },
+    {
+      "id": "show-monitor-0",
+      "p": [
+        -0.9195622800834231,
+        1.33,
+        4.15390932
+      ],
+      "position": [
+        -0.9195622800834231,
+        1.33,
+        4.15390932
+      ],
+      "x": -0.9195622800834231,
+      "y": 1.33,
+      "z": 4.15390932,
+      "width": 0.7262424000000001,
+      "height": 0.5,
+      "w": 0.7262424000000001,
+      "h": 0.5,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "tech-workstation-cues"
+    },
+    {
+      "id": "show-monitor-1",
+      "p": [
+        0.12790271991657676,
+        1.33,
+        4.15390932
+      ],
+      "position": [
+        0.12790271991657676,
+        1.33,
+        4.15390932
+      ],
+      "x": 0.12790271991657676,
+      "y": 1.33,
+      "z": 4.15390932,
+      "width": 0.8379719999999999,
+      "height": 0.5,
+      "w": 0.8379719999999999,
+      "h": 0.5,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "tech-workstation-cues"
+    },
+    {
+      "id": "show-monitor-2",
+      "p": [
+        1.2312325199165766,
+        1.33,
+        4.15390932
+      ],
+      "position": [
+        1.2312325199165766,
+        1.33,
+        4.15390932
+      ],
+      "x": 1.2312325199165766,
+      "y": 1.33,
+      "z": 4.15390932,
+      "width": 0.7262424000000001,
+      "height": 0.5,
+      "w": 0.7262424000000001,
+      "h": 0.5,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "tech-workstation-cues"
+    },
+    {
+      "id": "show-monitor-3",
+      "p": [
+        2.271714419916577,
+        1.33,
+        4.15390932
+      ],
+      "position": [
+        2.271714419916577,
+        1.33,
+        4.15390932
+      ],
+      "x": 2.271714419916577,
+      "y": 1.33,
+      "z": 4.15390932,
+      "width": 0.7262424000000001,
+      "height": 0.5,
+      "w": 0.7262424000000001,
+      "h": 0.5,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "tech-workstation-cues"
+    },
+    {
+      "id": "show-laptop",
+      "p": [
+        2.9045896305215764,
+        1.2275,
+        4.349436120000002
+      ],
+      "position": [
+        2.9045896305215764,
+        1.2275,
+        4.349436120000002
+      ],
+      "x": 2.9045896305215764,
+      "y": 1.2275,
+      "z": 4.349436120000002,
+      "width": 0.38407050000000004,
+      "height": 0.33,
+      "w": 0.38407050000000004,
+      "h": 0.33,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "tech-workstation-cues"
+    },
+    {
+      "id": "live-multiview",
+      "p": [
+        6.866303968030459,
+        2.846261,
+        -2.588239201065905
+      ],
+      "position": [
+        6.866303968030459,
+        2.846261,
+        -2.588239201065905
+      ],
+      "x": 6.866303968030459,
+      "y": 2.846261,
+      "z": -2.588239201065905,
+      "width": 6.56631,
+      "height": 3.272276,
+      "w": 6.56631,
+      "h": 3.272276,
+      "rotation": [
+        0,
+        -0.2,
+        0
+      ],
+      "mediaHint": "tech-live-production"
+    },
+    {
+      "id": "live-monitor-0",
+      "p": [
+        3.9580723792642925,
+        1.33,
+        3.2146543005156722
+      ],
+      "position": [
+        3.9580723792642925,
+        1.33,
+        3.2146543005156722
+      ],
+      "x": 3.9580723792642925,
+      "y": 1.33,
+      "z": 3.2146543005156722,
+      "width": 0.80362776,
+      "height": 0.5,
+      "w": 0.80362776,
+      "h": 0.5,
+      "rotation": [
+        0,
+        -0.2,
+        0
+      ],
+      "mediaHint": "tech-workstation-production"
+    },
+    {
+      "id": "live-monitor-1",
+      "p": [
+        5.094046478208652,
+        1.33,
+        3.4449276504496176
+      ],
+      "position": [
+        5.094046478208652,
+        1.33,
+        3.4449276504496176
+      ],
+      "x": 5.094046478208652,
+      "y": 1.33,
+      "z": 3.4449276504496176,
+      "width": 0.9272628,
+      "height": 0.5,
+      "w": 0.9272628,
+      "h": 0.5,
+      "rotation": [
+        0,
+        -0.2,
+        0
+      ],
+      "mediaHint": "tech-workstation-production"
+    },
+    {
+      "id": "live-monitor-2",
+      "p": [
+        6.290605862430045,
+        1.33,
+        3.6874822457133707
+      ],
+      "position": [
+        6.290605862430045,
+        1.33,
+        3.6874822457133707
+      ],
+      "x": 6.290605862430045,
+      "y": 1.33,
+      "z": 3.6874822457133707,
+      "width": 0.80362776,
+      "height": 0.5,
+      "w": 0.80362776,
+      "h": 0.5,
+      "rotation": [
+        0,
+        -0.2,
+        0
+      ],
+      "mediaHint": "tech-workstation-production"
+    },
+    {
+      "id": "live-monitor-3",
+      "p": [
+        7.419006800714775,
+        1.33,
+        3.9162204399810854
+      ],
+      "position": [
+        7.419006800714775,
+        1.33,
+        3.9162204399810854
+      ],
+      "x": 7.419006800714775,
+      "y": 1.33,
+      "z": 3.9162204399810854,
+      "width": 0.80362776,
+      "height": 0.5,
+      "w": 0.80362776,
+      "h": 0.5,
+      "rotation": [
+        0,
+        -0.2,
+        0
+      ],
+      "mediaHint": "tech-workstation-production"
+    },
+    {
+      "id": "live-laptop",
+      "p": [
+        7.80250877118778,
+        1.2275,
+        4.214721997372067
+      ],
+      "position": [
+        7.80250877118778,
+        1.2275,
+        4.214721997372067
+      ],
+      "x": 7.80250877118778,
+      "y": 1.2275,
+      "z": 4.214721997372067,
+      "width": 0.42499545000000005,
+      "height": 0.33,
+      "w": 0.42499545000000005,
+      "h": 0.33,
+      "rotation": [
+        0,
+        -0.2,
+        0
+      ],
+      "mediaHint": "tech-workstation-audio"
+    },
+    {
+      "id": "end-concert",
+      "p": [
+        11.773941811811195,
+        4.293797,
+        -1.4581729827970853
+      ],
+      "position": [
+        11.773941811811195,
+        4.293797,
+        -1.4581729827970853
+      ],
+      "x": 11.773941811811195,
+      "y": 4.293797,
+      "z": -1.4581729827970853,
+      "width": 2.542797,
+      "height": 3.098394,
+      "w": 2.542797,
+      "h": 3.098394,
+      "rotation": [
+        0,
+        -0.17,
+        0
+      ],
+      "mediaHint": "tech-concert"
+    }
+  ],
+  "apertures": [
+    {
+      "id": "av-drafting",
+      "p": [
+        -7.440179968030459,
+        2.998184,
+        -2.588239201065905
+      ],
+      "position": [
+        -7.440179968030459,
+        2.998184,
+        -2.588239201065905
+      ],
+      "x": -7.440179968030459,
+      "y": 2.998184,
+      "z": -2.588239201065905,
+      "width": 6.276266,
+      "height": 3.789398,
+      "w": 6.276266,
+      "h": 3.789398,
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "mediaHint": "tech-engineering"
+    },
+    {
+      "id": "av-monitor-0",
+      "p": [
+        -5.730792756638827,
+        1.33,
+        5.041981340396063
+      ],
+      "position": [
+        -5.730792756638827,
+        1.33,
+        5.041981340396063
+      ],
+      "x": -5.730792756638827,
+      "y": 1.33,
+      "z": 5.041981340396063,
+      "width": 0.74044048,
+      "height": 0.5,
+      "w": 0.74044048,
+      "h": 0.5,
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "mediaHint": "tech-workstation-av"
+    },
+    {
+      "id": "av-monitor-1",
+      "p": [
+        -4.684137515299317,
+        1.33,
+        4.829813819258794
+      ],
+      "position": [
+        -4.684137515299317,
+        1.33,
+        4.829813819258794
+      ],
+      "x": -4.684137515299317,
+      "y": 1.33,
+      "z": 4.829813819258794,
+      "width": 0.8543544,
+      "height": 0.5,
+      "w": 0.8543544,
+      "h": 0.5,
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "mediaHint": "tech-workstation-av"
+    },
+    {
+      "id": "av-monitor-2",
+      "p": [
+        -3.5816606610883674,
+        1.33,
+        4.606330696994204
+      ],
+      "position": [
+        -3.5816606610883674,
+        1.33,
+        4.606330696994204
+      ],
+      "x": -3.5816606610883674,
+      "y": 1.33,
+      "z": 4.606330696994204,
+      "width": 0.74044048,
+      "height": 0.5,
+      "w": 0.74044048,
+      "h": 0.5,
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "mediaHint": "tech-workstation-av"
+    },
+    {
+      "id": "av-monitor-3",
+      "p": [
+        -2.541983121357788,
+        1.33,
+        4.395577625997847
+      ],
+      "position": [
+        -2.541983121357788,
+        1.33,
+        4.395577625997847
+      ],
+      "x": -2.541983121357788,
+      "y": 1.33,
+      "z": 4.395577625997847,
+      "width": 0.74044048,
+      "height": 0.5,
+      "w": 0.74044048,
+      "h": 0.5,
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "mediaHint": "tech-workstation-av"
+    },
+    {
+      "id": "av-laptop",
+      "p": [
+        -2.2106177867274894,
+        1.2275,
+        4.531810442970762
+      ],
+      "position": [
+        -2.2106177867274894,
+        1.2275,
+        4.531810442970762
+      ],
+      "x": -2.2106177867274894,
+      "y": 1.2275,
+      "z": 4.531810442970762,
+      "width": 0.3915791,
+      "height": 0.33,
+      "w": 0.3915791,
+      "h": 0.33,
+      "rotation": [
+        0,
+        0.2,
+        0
+      ],
+      "mediaHint": "tech-workstation-av"
+    },
+    {
+      "id": "show-cues",
+      "p": [
+        -0.360039,
+        2.783571,
+        -3.788
+      ],
+      "position": [
+        -0.360039,
+        2.783571,
+        -3.788
+      ],
+      "x": -0.360039,
+      "y": 2.783571,
+      "z": -3.788,
+      "width": 7.252591,
+      "height": 3.312057,
+      "w": 7.252591,
+      "h": 3.312057,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "tech-show-control"
+    },
+    {
+      "id": "show-monitor-0",
+      "p": [
+        -0.9195622800834231,
+        1.33,
+        4.15390932
+      ],
+      "position": [
+        -0.9195622800834231,
+        1.33,
+        4.15390932
+      ],
+      "x": -0.9195622800834231,
+      "y": 1.33,
+      "z": 4.15390932,
+      "width": 0.7262424000000001,
+      "height": 0.5,
+      "w": 0.7262424000000001,
+      "h": 0.5,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "tech-workstation-cues"
+    },
+    {
+      "id": "show-monitor-1",
+      "p": [
+        0.12790271991657676,
+        1.33,
+        4.15390932
+      ],
+      "position": [
+        0.12790271991657676,
+        1.33,
+        4.15390932
+      ],
+      "x": 0.12790271991657676,
+      "y": 1.33,
+      "z": 4.15390932,
+      "width": 0.8379719999999999,
+      "height": 0.5,
+      "w": 0.8379719999999999,
+      "h": 0.5,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "tech-workstation-cues"
+    },
+    {
+      "id": "show-monitor-2",
+      "p": [
+        1.2312325199165766,
+        1.33,
+        4.15390932
+      ],
+      "position": [
+        1.2312325199165766,
+        1.33,
+        4.15390932
+      ],
+      "x": 1.2312325199165766,
+      "y": 1.33,
+      "z": 4.15390932,
+      "width": 0.7262424000000001,
+      "height": 0.5,
+      "w": 0.7262424000000001,
+      "h": 0.5,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "tech-workstation-cues"
+    },
+    {
+      "id": "show-monitor-3",
+      "p": [
+        2.271714419916577,
+        1.33,
+        4.15390932
+      ],
+      "position": [
+        2.271714419916577,
+        1.33,
+        4.15390932
+      ],
+      "x": 2.271714419916577,
+      "y": 1.33,
+      "z": 4.15390932,
+      "width": 0.7262424000000001,
+      "height": 0.5,
+      "w": 0.7262424000000001,
+      "h": 0.5,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "tech-workstation-cues"
+    },
+    {
+      "id": "show-laptop",
+      "p": [
+        2.9045896305215764,
+        1.2275,
+        4.349436120000002
+      ],
+      "position": [
+        2.9045896305215764,
+        1.2275,
+        4.349436120000002
+      ],
+      "x": 2.9045896305215764,
+      "y": 1.2275,
+      "z": 4.349436120000002,
+      "width": 0.38407050000000004,
+      "height": 0.33,
+      "w": 0.38407050000000004,
+      "h": 0.33,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "tech-workstation-cues"
+    },
+    {
+      "id": "live-multiview",
+      "p": [
+        6.866303968030459,
+        2.846261,
+        -2.588239201065905
+      ],
+      "position": [
+        6.866303968030459,
+        2.846261,
+        -2.588239201065905
+      ],
+      "x": 6.866303968030459,
+      "y": 2.846261,
+      "z": -2.588239201065905,
+      "width": 6.56631,
+      "height": 3.272276,
+      "w": 6.56631,
+      "h": 3.272276,
+      "rotation": [
+        0,
+        -0.2,
+        0
+      ],
+      "mediaHint": "tech-live-production"
+    },
+    {
+      "id": "live-monitor-0",
+      "p": [
+        3.9580723792642925,
+        1.33,
+        3.2146543005156722
+      ],
+      "position": [
+        3.9580723792642925,
+        1.33,
+        3.2146543005156722
+      ],
+      "x": 3.9580723792642925,
+      "y": 1.33,
+      "z": 3.2146543005156722,
+      "width": 0.80362776,
+      "height": 0.5,
+      "w": 0.80362776,
+      "h": 0.5,
+      "rotation": [
+        0,
+        -0.2,
+        0
+      ],
+      "mediaHint": "tech-workstation-production"
+    },
+    {
+      "id": "live-monitor-1",
+      "p": [
+        5.094046478208652,
+        1.33,
+        3.4449276504496176
+      ],
+      "position": [
+        5.094046478208652,
+        1.33,
+        3.4449276504496176
+      ],
+      "x": 5.094046478208652,
+      "y": 1.33,
+      "z": 3.4449276504496176,
+      "width": 0.9272628,
+      "height": 0.5,
+      "w": 0.9272628,
+      "h": 0.5,
+      "rotation": [
+        0,
+        -0.2,
+        0
+      ],
+      "mediaHint": "tech-workstation-production"
+    },
+    {
+      "id": "live-monitor-2",
+      "p": [
+        6.290605862430045,
+        1.33,
+        3.6874822457133707
+      ],
+      "position": [
+        6.290605862430045,
+        1.33,
+        3.6874822457133707
+      ],
+      "x": 6.290605862430045,
+      "y": 1.33,
+      "z": 3.6874822457133707,
+      "width": 0.80362776,
+      "height": 0.5,
+      "w": 0.80362776,
+      "h": 0.5,
+      "rotation": [
+        0,
+        -0.2,
+        0
+      ],
+      "mediaHint": "tech-workstation-production"
+    },
+    {
+      "id": "live-monitor-3",
+      "p": [
+        7.419006800714775,
+        1.33,
+        3.9162204399810854
+      ],
+      "position": [
+        7.419006800714775,
+        1.33,
+        3.9162204399810854
+      ],
+      "x": 7.419006800714775,
+      "y": 1.33,
+      "z": 3.9162204399810854,
+      "width": 0.80362776,
+      "height": 0.5,
+      "w": 0.80362776,
+      "h": 0.5,
+      "rotation": [
+        0,
+        -0.2,
+        0
+      ],
+      "mediaHint": "tech-workstation-production"
+    },
+    {
+      "id": "live-laptop",
+      "p": [
+        7.80250877118778,
+        1.2275,
+        4.214721997372067
+      ],
+      "position": [
+        7.80250877118778,
+        1.2275,
+        4.214721997372067
+      ],
+      "x": 7.80250877118778,
+      "y": 1.2275,
+      "z": 4.214721997372067,
+      "width": 0.42499545000000005,
+      "height": 0.33,
+      "w": 0.42499545000000005,
+      "h": 0.33,
+      "rotation": [
+        0,
+        -0.2,
+        0
+      ],
+      "mediaHint": "tech-workstation-audio"
+    },
+    {
+      "id": "end-concert",
+      "p": [
+        11.773941811811195,
+        4.293797,
+        -1.4581729827970853
+      ],
+      "position": [
+        11.773941811811195,
+        4.293797,
+        -1.4581729827970853
+      ],
+      "x": 11.773941811811195,
+      "y": 4.293797,
+      "z": -1.4581729827970853,
+      "width": 2.542797,
+      "height": 3.098394,
+      "w": 2.542797,
+      "h": 3.098394,
+      "rotation": [
+        0,
+        -0.17,
+        0
+      ],
+      "mediaHint": "tech-concert"
+    }
+  ],
+  "humans": [
+    {
+      "asset": "Business_Male_01",
+      "pose": "talk",
+      "position": [
+        -4.074591,
+        0.09,
+        8
+      ],
+      "height": 2.2274030000000002,
+      "yaw": -2.530727415391778,
+      "textured": true,
+      "clothing": "black-backpack"
+    },
+    {
+      "asset": "Business_Female_04",
+      "pose": "talk",
+      "position": [
+        -3.127856,
+        0.09,
+        8.3
+      ],
+      "height": 1.939945,
+      "yaw": -1.361356816555577,
+      "textured": true
+    },
+    {
+      "asset": "Business_Male_02",
+      "pose": "operator",
+      "position": [
+        -1.8143925666809082,
+        0.09,
+        5.3270769119262695
+      ],
+      "height": 1.7912469999999998,
+      "yaw": 3.141592653589793,
+      "textured": true
+    },
+    {
+      "asset": "Business_Male_01",
+      "pose": "operator",
+      "position": [
+        0.03158140182495117,
+        0.09,
+        5.570082664489746
+      ],
+      "height": 1.766054,
+      "yaw": 3.141592653589793,
+      "textured": true
+    },
+    {
+      "asset": "Business_Male_02",
+      "pose": "operator",
+      "position": [
+        1.27683424949646,
+        0.09,
+        5.570082664489746
+      ],
+      "height": 1.7699159999999998,
+      "yaw": 3.141592653589793,
+      "textured": true
+    },
+    {
+      "asset": "Business_Male_01",
+      "pose": "operator",
+      "position": [
+        4.346353054046631,
+        0.09,
+        4.4774169921875
+      ],
+      "height": 1.9415059999999995,
+      "yaw": 3.1066860685499065,
+      "textured": true
+    },
+    {
+      "asset": "Business_Female_01",
+      "pose": "talk",
+      "position": [
+        6.529629707336426,
+        0.09,
+        4.245601654052734
+      ],
+      "height": 1.785223,
+      "yaw": 1.1344640137963142,
+      "textured": true
+    },
+    {
+      "asset": "Business_Male_01",
+      "pose": "idle",
+      "position": [
+        7.29331636428833,
+        0.09,
+        4.995139122009277
+      ],
+      "height": 1.86472,
+      "yaw": -1.4835298641951802,
+      "textured": true
+    },
+    {
+      "asset": "Business_Female_04",
+      "pose": "talk",
+      "position": [
+        7.068699836730957,
+        0.09,
+        4.995139122009277
+      ],
+      "height": 1.7200966199999999,
+      "yaw": 1.5707963267948966,
+      "textured": true,
+      "clothing": "white-blouse"
+    }
+  ],
+  "humanLicense": "technical-humans-LICENSE.txt",
+  "typography": [
+    {
+      "text": "DESIGN | INTEGRATE | DELIVER",
+      "position": [
+        -2.838133,
+        5.22,
+        0.155
+      ],
+      "requestedFontSize": 0.42,
+      "fontSize": 0.42,
+      "capHeight": 0.24346448108553886,
+      "width": 3.4316840413957834,
+      "maxWidth": 5.676266,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "CUES | TIMELINES | AUTOMATION",
+      "position": [
+        -3.3262955,
+        5.22,
+        0.155
+      ],
+      "requestedFontSize": 0.42,
+      "fontSize": 0.42,
+      "capHeight": 0.24346448108553886,
+      "width": 3.7620489802211523,
+      "maxWidth": 6.652591,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "CAPTURE | SWITCH",
+      "position": [
+        -2.983155,
+        5.22,
+        0.155
+      ],
+      "requestedFontSize": 0.42,
+      "fontSize": 0.42,
+      "capHeight": 0.24346448108553886,
+      "width": 2.1136710848659277,
+      "maxWidth": 5.96631,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "STREAM | DELIVER",
+      "position": [
+        -2.983155,
+        4.819999999999999,
+        0.155
+      ],
+      "requestedFontSize": 0.42,
+      "fontSize": 0.42,
+      "capHeight": 0.24346448108553886,
+      "width": 2.047098713926971,
+      "maxWidth": 5.96631,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "PEOPLE \u00b7 TECHNOLOGY \u00b7 EXTRAORDINARY EVENTS",
+      "position": [
+        -4.451942198186254,
+        6.52,
+        0.045
+      ],
+      "requestedFontSize": 0.52,
+      "fontSize": 0.52,
+      "capHeight": 0.21812623646110296,
+      "width": 7.310876853764057,
+      "maxWidth": 9.721224396372508,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "FROM VISION",
+      "position": [
+        0.65,
+        7.65,
+        0.045
+      ],
+      "requestedFontSize": 0.5,
+      "fontSize": 0.5,
+      "capHeight": 0.2097367704845965,
+      "width": 2.2466315366327763,
+      "maxWidth": 4.8,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "TO LIVE",
+      "position": [
+        1.88,
+        7.05,
+        0.046
+      ],
+      "requestedFontSize": 0.5,
+      "fontSize": 0.5,
+      "capHeight": 0.2097367704845965,
+      "width": 1.2746701892465353,
+      "maxWidth": 3.5,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "\u2014",
+      "position": [
+        3.84,
+        6.55,
+        0.047
+      ],
+      "requestedFontSize": 0.3,
+      "fontSize": 0.3,
+      "capHeight": 0.014520235359668732,
+      "width": 0.1739032119512558,
+      "maxWidth": null,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "TECHNICAL",
+      "position": [
+        -1.2120707524471648,
+        7.85,
+        0.022
+      ],
+      "requestedFontSize": 0.44,
+      "fontSize": 0.44,
+      "capHeight": 0.18456835742108524,
+      "width": 1.3348202896304429,
+      "maxWidth": 3.267321158770618,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "CREATIVE",
+      "position": [
+        -1.2120707524471648,
+        7.319999999999999,
+        0.022
+      ],
+      "requestedFontSize": 0.44,
+      "fontSize": 0.44,
+      "capHeight": 0.18456835742108524,
+      "width": 1.110772761516273,
+      "maxWidth": 3.267321158770618,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "HUMAN",
+      "position": [
+        -1.2120707524471648,
+        6.789999999999999,
+        0.022
+      ],
+      "requestedFontSize": 0.44,
+      "fontSize": 0.44,
+      "capHeight": 0.1815794080030173,
+      "width": 0.9253326021134853,
+      "maxWidth": 3.267321158770618,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "\u2014",
+      "position": [
+        1.0539745673453607,
+        6.42,
+        0.023
+      ],
+      "requestedFontSize": 0.23,
+      "fontSize": 0.23,
+      "capHeight": 0.01113218069076538,
+      "width": 0.13332578539848328,
+      "maxWidth": null,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "EXTRAORDINARY",
+      "position": [
+        10.77,
+        2.37,
+        -1.18
+      ],
+      "requestedFontSize": 0.36,
+      "fontSize": 0.36,
+      "capHeight": 0.15101047838106751,
+      "width": 1.6524540036916733,
+      "maxWidth": 2.5,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "EVENTS",
+      "position": [
+        10.77,
+        1.9100000000000001,
+        -1.18
+      ],
+      "requestedFontSize": 0.36,
+      "fontSize": 0.36,
+      "capHeight": 0.15101047838106751,
+      "width": 0.7119502276182175,
+      "maxWidth": 2.5,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "REAL RESULTS",
+      "position": [
+        10.77,
+        1.4500000000000002,
+        -1.18
+      ],
+      "requestedFontSize": 0.36,
+      "fontSize": 0.36,
+      "capHeight": 0.15101047838106751,
+      "width": 1.3396320194005966,
+      "maxWidth": 2.5,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "BIGGER",
+      "position": [
+        -0.9167359561394153,
+        4.5,
+        0.015
+      ],
+      "requestedFontSize": 0.35,
+      "fontSize": 0.35,
+      "capHeight": 0.14681573025882244,
+      "width": 0.6793943047523499,
+      "maxWidth": 1.8334719122788306,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "BRIGHTER",
+      "position": [
+        -0.9167359561394153,
+        4.02,
+        0.015
+      ],
+      "requestedFontSize": 0.35,
+      "fontSize": 0.35,
+      "capHeight": 0.14681573025882244,
+      "width": 0.9253749847412109,
+      "maxWidth": 1.8334719122788306,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "BOLDER",
+      "position": [
+        -0.9167359561394153,
+        3.54,
+        0.015
+      ],
+      "requestedFontSize": 0.35,
+      "fontSize": 0.35,
+      "capHeight": 0.14681573025882244,
+      "width": 0.7353665828704834,
+      "maxWidth": 1.8334719122788306,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "TOGETHER",
+      "position": [
+        -0.9167359561394153,
+        3.06,
+        0.015
+      ],
+      "requestedFontSize": 0.35,
+      "fontSize": 0.35,
+      "capHeight": 0.14681573025882244,
+      "width": 1.001655827043578,
+      "maxWidth": 1.8334719122788306,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "\u2014",
+      "position": [
+        -0.9167359561394153,
+        2.57,
+        0.016
+      ],
+      "requestedFontSize": 0.2,
+      "fontSize": 0.2,
+      "capHeight": 0.009680157527327538,
+      "width": 0.11593546718358994,
+      "maxWidth": null,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "EVENT TECHNOLOGY",
+      "position": [
+        -0.52,
+        0.73,
+        0.55
+      ],
+      "requestedFontSize": 0.16,
+      "fontSize": 0.16,
+      "capHeight": 0.06711576564703137,
+      "width": 0.8949222173541784,
+      "maxWidth": 2.5,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "FOR A BRIGHTER TOMORROW",
+      "position": [
+        -0.52,
+        0.52,
+        0.55
+      ],
+      "requestedFontSize": 0.16,
+      "fontSize": 0.16,
+      "capHeight": 0.06711576564703137,
+      "width": 1.2870650496333838,
+      "maxWidth": 2.5,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "IDEAS",
+      "position": [
+        -0.30399392000000003,
+        1.2242657399999999,
+        0.087
+      ],
+      "requestedFontSize": 0.145,
+      "fontSize": 0.145,
+      "capHeight": 0.06082366232294589,
+      "width": 0.21973677026107907,
+      "maxWidth": 0.6079878400000001,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "SYSTEMS",
+      "position": [
+        -0.30399392000000003,
+        1.0618881166666665,
+        0.087
+      ],
+      "requestedFontSize": 0.145,
+      "fontSize": 0.145,
+      "capHeight": 0.06082366232294589,
+      "width": 0.34532406739890575,
+      "maxWidth": 0.6079878400000001,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "PEOPLE",
+      "position": [
+        -0.30399392000000003,
+        0.8995104933333333,
+        0.087
+      ],
+      "requestedFontSize": 0.145,
+      "fontSize": 0.145,
+      "capHeight": 0.06082366232294589,
+      "width": 0.27941126748919487,
+      "maxWidth": 0.6079878400000001,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "EVENTS",
+      "position": [
+        -0.30399392000000003,
+        0.7371328699999999,
+        0.087
+      ],
+      "requestedFontSize": 0.145,
+      "fontSize": 0.145,
+      "capHeight": 0.06082366232294589,
+      "width": 0.2867577187716961,
+      "maxWidth": 0.6079878400000001,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "THAT",
+      "position": [
+        -0.30399392000000003,
+        0.5747552466666667,
+        0.087
+      ],
+      "requestedFontSize": 0.145,
+      "fontSize": 0.145,
+      "capHeight": 0.058853667229413986,
+      "width": 0.20816303475294262,
+      "maxWidth": 0.6079878400000001,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "MOVE",
+      "position": [
+        -0.30399392000000003,
+        0.4123776233333334,
+        0.087
+      ],
+      "requestedFontSize": 0.145,
+      "fontSize": 0.145,
+      "capHeight": 0.06082366232294589,
+      "width": 0.2281913422048092,
+      "maxWidth": 0.6079878400000001,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "THE WORLD",
+      "position": [
+        -0.30399392000000003,
+        0.25,
+        0.087
+      ],
+      "requestedFontSize": 0.145,
+      "fontSize": 0.145,
+      "capHeight": 0.06082366232294589,
+      "width": 0.46824370010290295,
+      "maxWidth": 0.6079878400000001,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "\u2014",
+      "position": [
+        -0.30399392000000003,
+        0.11,
+        0.088
+      ],
+      "requestedFontSize": 0.13,
+      "fontSize": 0.13,
+      "capHeight": 0.006292102858424187,
+      "width": 0.07535805553197861,
+      "maxWidth": 0.6079878400000001,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "CONSULT",
+      "position": [
+        -0.4903425,
+        1.1991228999999999,
+        0.087
+      ],
+      "requestedFontSize": 0.16,
+      "fontSize": 0.16,
+      "capHeight": 0.06711576564703137,
+      "width": 0.4056835565716028,
+      "maxWidth": 0.980685,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "DESIGN",
+      "position": [
+        -0.4903425,
+        0.9618421749999999,
+        0.087
+      ],
+      "requestedFontSize": 0.16,
+      "fontSize": 0.16,
+      "capHeight": 0.06711576564703137,
+      "width": 0.3118030037730932,
+      "maxWidth": 0.980685,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "ENGINEER",
+      "position": [
+        -0.4903425,
+        0.7245614499999999,
+        0.087
+      ],
+      "requestedFontSize": 0.16,
+      "fontSize": 0.16,
+      "capHeight": 0.06711576564703137,
+      "width": 0.4281913246959448,
+      "maxWidth": 0.980685,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "DEPLOY",
+      "position": [
+        -0.4903425,
+        0.48728072499999997,
+        0.087
+      ],
+      "requestedFontSize": 0.16,
+      "fontSize": 0.16,
+      "capHeight": 0.06711576564703137,
+      "width": 0.32941978238523006,
+      "maxWidth": 0.980685,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "SUPPORT",
+      "position": [
+        -0.4903425,
+        0.25,
+        0.087
+      ],
+      "requestedFontSize": 0.16,
+      "fontSize": 0.16,
+      "capHeight": 0.06711576564703137,
+      "width": 0.39667135989293456,
+      "maxWidth": 0.980685,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "\u2014",
+      "position": [
+        -0.4903425,
+        0.11,
+        0.088
+      ],
+      "requestedFontSize": 0.13,
+      "fontSize": 0.13,
+      "capHeight": 0.006292102858424187,
+      "width": 0.07535805553197861,
+      "maxWidth": 0.980685,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "SAME",
+      "position": [
+        -0.4,
+        1.0,
+        0.285
+      ],
+      "requestedFontSize": 0.16,
+      "fontSize": 0.16,
+      "capHeight": 0.06711576564703137,
+      "width": 0.2379847071133554,
+      "maxWidth": 0.8,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "STAGE",
+      "position": [
+        -0.4,
+        0.79,
+        0.285
+      ],
+      "requestedFontSize": 0.16,
+      "fontSize": 0.16,
+      "capHeight": 0.06711576564703137,
+      "width": 0.2681007734499872,
+      "maxWidth": 0.8,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "A BRIGHTER",
+      "position": [
+        -0.4,
+        0.5800000000000001,
+        0.285
+      ],
+      "requestedFontSize": 0.16,
+      "fontSize": 0.16,
+      "capHeight": 0.06711576564703137,
+      "width": 0.5180413419147953,
+      "maxWidth": 0.8,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "TOMORROW",
+      "position": [
+        -0.4,
+        0.37,
+        0.285
+      ],
+      "requestedFontSize": 0.16,
+      "fontSize": 0.16,
+      "capHeight": 0.06711576564703137,
+      "width": 0.5496518248692155,
+      "maxWidth": 0.8,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "\u2014",
+      "position": [
+        -0.4,
+        0.17,
+        0.285
+      ],
+      "requestedFontSize": 0.13,
+      "fontSize": 0.13,
+      "capHeight": 0.006292102858424187,
+      "width": 0.07535805553197861,
+      "maxWidth": 0.8,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    }
+  ],
+  "ambientOcclusion": {
+    "layer": "Col",
+    "samples": 32,
+    "radius": 0.7,
+    "objects": 18,
+    "occluderTriangles": 136638,
+    "corners": 296430,
+    "evaluatedPositions": 123028,
+    "rays": 3936896,
+    "skipped": {
+      "non_mesh": 0,
+      "character": 8,
+      "distant_hall": 2,
+      "non_opaque_or_emissive": 11
+    },
+    "budgetReached": false,
+    "seconds": 20.114,
+    "minimum": 0.45,
+    "mean": 0.73129
+  },
+  "cameraSuggestion": {
+    "position": [
+      3.224784,
+      2.2,
+      18
+    ],
+    "look": [
+      0.931724,
+      1.946367,
+      -1.866493
+    ],
+    "verticalFov": 42.54917
+  }
+}

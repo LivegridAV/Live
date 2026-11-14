@@ -33,16 +33,18 @@ export const metadata: Metadata = {
 };
 
 const ZONE_COPY: Record<string, string> = {
+  technical: "One connected AV engineering, show-control and live-production booth, with drafting displays, cue timelines, media-server workstations, camera multiviews and a shared reception.",
+  reception: "A reception environment with a cylindrical LED display, one suspended halo, a concave panoramic LED wall and a curved LED counter, with coordinated blue-and-champagne content and warm architectural lighting.",
   arrival:
-    "The experience opens outside a premium event entrance at night — brand band lit, light spilling out of the doors.",
+    "A satin graphite entrance with charcoal fluted columns, white-and-teal branding, warm light lines, natural planting and calm side water.",
   tunnel:
-    "A four-sided immersive LED tunnel: left wall, right wall, ceiling and floor running one coordinated image, so the content is continuous across every seam.",
+    "Emerald Current flows continuously across the dry LED floor, walls and ceiling, with a calmer presentation setting and a shared motion pause.",
   hall: "The tunnel opens into a full-height exhibition hall — the change of scale is the point.",
   gallery:
-    "Creative LED at real scale: pillars, vertical blades, a cylinder, a suspended ring, an LED bar counter, a curved wall, a shaped module mosaic and a 90° anamorphic corner.",
+    "Four redesigned LED pillars show continuous gold-and-silver ribbons, forest imagery and alpine scenery in a branded reception gallery with guests, lounge seating, planting and warm architectural lighting.",
   boulevard:
-    "Eight working service environments, each with its own architecture, screens and live content.",
-  approach: "Giant LED pillars and portrait displays lead into the arena portal.",
+    "An LED Rental Solutions pavilion with seven rotating LED formats, a mountain-lake display, application screens, lounge seating and reception, followed by a projection mapping showcase with crystalline architecture.",
+  approach: "Portrait displays lead into the arena portal.",
   arena: "A full-scale arena: rigging, trussing, moving lights, haze, flown PA and large-format LED.",
   stage:
     "One main stage, two creative directions. The mode switch changes the content on every surface, the colour of the room and the way the lights behave — the structure never moves.",
@@ -136,9 +138,8 @@ export default function Home() {
           <div>
             <h2>What we do</h2>
             <p>
-              Every service below has its own page. In the experience they are
-              grouped into eight distinct working environments plus a partner bay,
-              because related work is delivered together.
+              Every service below has its own page. The walkthrough currently features
+              redesigned LED pillars, reception, Content Studio, technical, LED rental and projection mapping exhibits.
             </p>
             <div className="v-seo-grid">
               {PAVILIONS.map((p) => (
@@ -159,7 +160,7 @@ export default function Home() {
                 </article>
               ))}
               <article className="v-seo-card">
-                <p className="v-mono">Partner bay</p>
+                <p className="v-mono">Production partners</p>
                 <h3 style={{ marginTop: 8 }}>{PARTNER_BAY.headline}</h3>
                 <p style={{ marginBottom: 10 }}>{PARTNER_BAY.note}</p>
                 <ul className="v-seo-list">

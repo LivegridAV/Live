@@ -8,7 +8,9 @@ import { Truss } from "../three/rig";
 import { ZoneGroup } from "../three/ZoneGroup";
 import { LightPool } from "../three/environment";
 import { useVenue } from "../systems/store";
-import { stoneSurface } from "../three/stoneSurface";
+import { preparePolishedFloor } from "../three/polishedFloor";
+import { GRAND } from "../data/grand";
+import { VENUE_FLOOR, venueFloorMaps } from "../three/venueFloor";
 
 /**
  * The building.
@@ -22,7 +24,7 @@ import { stoneSurface } from "../three/stoneSurface";
 
 /* ── venue dimensions (metres) ─────────────────────────── */
 export const V = {
-  hall: { x: 19, y: 15, from: -26, to: -238 },
+  hall: { x: GRAND.hall.halfWidth, y: GRAND.hall.roofHeight, from: GRAND.hall.from, to: GRAND.hall.to },
   arena: { x: 44, y: 34, from: -244, to: -380 },
   plaza: { from: 46, to: -1 },
 } as const;
@@ -40,45 +42,58 @@ function segments(from: number, to: number, size: number) {
 
 export function Ground() {
   const quality = useVenue((s) => s.quality);
-  const stone = useMemo(() => stoneSurface(), []);
-  const hallSegs = useMemo(() => segments(V.hall.from + 6, V.hall.to, 36), []);
-  const arenaSegs = useMemo(() => segments(V.arena.from + 6, V.arena.to, 40), []);
+  const stone = useMemo(() => venueFloorMaps(), []);
+  const geometry = useMemo(() => {
+    const width = GRAND.hall.halfWidth * 2 + 16, depth = 210, centerZ = -135;
+    const plane = new THREE.PlaneGeometry(width, depth);
+    const position = plane.getAttribute("position"), uv = plane.getAttribute("uv");
+    // Equivalent to world-space mapping: all UVs derive from the same world
+    // origin in metres, independent of active zone, mesh size or camera.
+    for (let i=0;i<position.count;i++) uv.setXY(i,
+      (position.getX(i)-VENUE_FLOOR.origin[0])/VENUE_FLOOR.textureMetres,
+      (-position.getY(i)+centerZ-VENUE_FLOOR.origin[1])/VENUE_FLOOR.textureMetres);
+    uv.needsUpdate=true;
+    return plane;
+  }, []);
+  return <group><mesh name="Continuous venue stone · world registered 2 m joints"
+    receiveShadow rotation={[-Math.PI/2,0,0]} position={[0,GRAND.master.floor,-135]}
+    geometry={geometry} userData={{venuePlanarReflection:true,grandRole:"venue-floor"}}>
+    <MeshReflectorMaterial color={VENUE_FLOOR.colour}
+      onUpdate={material=>preparePolishedFloor(material)}
+      map={stone.map} roughnessMap={stone.roughnessMap} normalMap={stone.normalMap}
+      normalScale={[.045,.045]} metalness={.035} roughness={.43} envMapIntensity={.48}
+      resolution={quality==="high"?1024:512}
+      blur={quality==="low"?[100,45]:[240,100]} mixBlur={1.5}
+      mixStrength={1.3} mirror={.46} depthScale={0}
+      minDepthThreshold={.85} maxDepthThreshold={1} />
+  </mesh>
+    {/* Existing arrival and arena retain their original floor datum. The brief
+        standardizes the exhibition hall; transition ramps meet those areas. */}
+    <mesh receiveShadow rotation={[-Math.PI/2,0,0]} position={[0,0,21.8]}>
+      <planeGeometry args={[96,48.4]}/>
+      <meshStandardMaterial color="#252d30" roughness={.75}/>
+    </mesh>
+    <mesh rotation={[-Math.PI/2,0,0]} position={[0,0,-204]} material={M.floor}>
+      <planeGeometry args={[96,352]}/>
+    </mesh>
+    <FloorTransition from={-28.4} to={-30} fromY={0} toY={GRAND.master.floor}/>
+    <FloorTransition from={-240} to={-244} fromY={GRAND.master.floor} toY={0}/>
+  </group>;
+}
 
-  return (
-    <group>
-      <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.009, -200]}>
-        <planeGeometry args={[88, 360]} />
-        <MeshReflectorMaterial color="#919397" map={stone.colour} roughnessMap={stone.roughness}
-          metalness={0.19} roughness={0.32}
-          resolution={quality === "high" ? 1024 : 512} blur={quality === "low" ? [0, 0] : [180, 65]}
-          mixBlur={0.75} mixStrength={2.2} mirror={0.8} depthScale={0}
-          minDepthThreshold={0.85} maxDepthThreshold={1} />
-      </mesh>
-      {/* exterior plaza */}
-      <mesh
-        rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, 0, (V.plaza.from + V.plaza.to) / 2]}
-        material={M.stone}
-        receiveShadow
-      >
-        <planeGeometry args={[90, V.plaza.from - V.plaza.to]} />
-      </mesh>
-
-      {/* hall floor — polished, so the screens streak across it */}
-      {hallSegs.map((s, i) => (
-        <mesh key={`h${i}`} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, s.z]} material={M.floor}>
-          <planeGeometry args={[V.hall.x * 2, s.len]} />
-        </mesh>
-      ))}
-
-      {/* arena floor */}
-      {arenaSegs.map((s, i) => (
-        <mesh key={`a${i}`} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, s.z]} material={M.floor}>
-          <planeGeometry args={[V.arena.x * 2, s.len]} />
-        </mesh>
-      ))}
-    </group>
-  );
+function FloorTransition({from,to,fromY,toY}:{from:number;to:number;fromY:number;toY:number}) {
+  const stone=useMemo(()=>venueFloorMaps(),[]);
+  const geometry=useMemo(()=>{
+    const width=GRAND.hall.halfWidth*2+16;
+    const vertices=[[-width/2,fromY,from],[width/2,fromY,from],[-width/2,toY,to],[width/2,toY,to]];
+    const result=new THREE.BufferGeometry();
+    result.setAttribute("position",new THREE.Float32BufferAttribute(vertices.flat(),3));
+    result.setAttribute("uv",new THREE.Float32BufferAttribute(vertices.flatMap(p=>[(p[0]-VENUE_FLOOR.origin[0])/VENUE_FLOOR.textureMetres,(p[2]-VENUE_FLOOR.origin[1])/VENUE_FLOOR.textureMetres]),2));
+    result.setIndex([0,1,2,2,1,3]);result.computeVertexNormals();return result;
+  },[from,to,fromY,toY]);
+  return <mesh name="Venue floor datum transition ramp" geometry={geometry} receiveShadow>
+    <meshStandardMaterial color={VENUE_FLOOR.colour} map={stone.map} roughnessMap={stone.roughnessMap} normalMap={stone.normalMap} normalScale={[.045,.045]} metalness={.035} roughness={.43} envMapIntensity={.48}/>
+  </mesh>;
 }
 
 /* ── exhibition hall shell ─────────────────────────────── */
@@ -91,11 +106,15 @@ export function Ground() {
  * shape that defeats it.
  */
 export function HallShell() {
-  return <group>{Array.from({ length: 8 }, (_, i) => {
-    const z = -39.25 - i * 26.5;
-    return <ZoneGroup key={i} from={z + 13.25} to={z - 13.25} ahead={68} behind={28}>
-      <group position={[0, 0, z]} scale={[1, 1, 26.5 / 26]}>
-        <ExpoAsset name="hall-bay" />
+  const visit = useVenue(s=>s.stallVisit);
+  const diagnostic = visit?.view==="plan" || visit?.view==="section";
+  // A fixed building envelope. Diagnostic views deliberately remove the hall
+  // roof; entering a stall never resizes walls, columns or the shared floor.
+  return <group visible={!diagnostic}>{Array.from({length:8},(_,i)=>{
+    const z=-39.25-i*26.5;
+    return <ZoneGroup key={i} from={z+13.25} to={z-13.25} ahead={82} behind={48}>
+      <group position={[0,0,z]} scale={[GRAND.hall.halfWidth/19,GRAND.hall.roofHeight/15,26.5/26]}>
+        <ExpoAsset name="hall-bay" darkHall={i>=1} hideHallColumns={i>=1}/>
       </group>
     </ZoneGroup>;
   })}</group>;

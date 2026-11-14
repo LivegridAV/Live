@@ -1,0 +1,758 @@
+{
+  "source": "Visual Brief P01, 21 October 2026",
+  "units": "metres",
+  "world_front_z": -14.4,
+  "rear_landing_world_z": -28.4,
+  "width": 24,
+  "height": 12,
+  "opening": [
+    16,
+    8
+  ],
+  "tunnel_depth": 10,
+  "floor": [
+    16,
+    22
+  ],
+  "LED_gross_area_m2": 643.2,
+  "logo": "provisional contours",
+  "source_objects": [
+    {
+      "name": "A01-A07 | closed bowed portal and fascia",
+      "type": "MESH"
+    },
+    {
+      "name": "A08 | recessed unlit portal channel",
+      "type": "CURVE"
+    },
+    {
+      "name": "A08 | rounded portal trim",
+      "type": "CURVE"
+    },
+    {
+      "name": "C01 | -1 full fluted column",
+      "type": "MESH"
+    },
+    {
+      "name": "C04-C06 | column collar -1 0.06",
+      "type": "MESH"
+    },
+    {
+      "name": "C04-C06 | column collar -1 4.6",
+      "type": "MESH"
+    },
+    {
+      "name": "C04-C06 | column collar -1 9.14",
+      "type": "MESH"
+    },
+    {
+      "name": "C01 | 1 full fluted column",
+      "type": "MESH"
+    },
+    {
+      "name": "C04-C06 | column collar 1 0.06",
+      "type": "MESH"
+    },
+    {
+      "name": "C04-C06 | column collar 1 4.6",
+      "type": "MESH"
+    },
+    {
+      "name": "C04-C06 | column collar 1 9.14",
+      "type": "MESH"
+    },
+    {
+      "name": "L01 | LED FLOOR 16 x 22",
+      "type": "MESH"
+    },
+    {
+      "name": "L04 | LED WALL LEFT 9.1 x 8",
+      "type": "MESH"
+    },
+    {
+      "name": "L05 | LED WALL RIGHT 9.1 x 8",
+      "type": "MESH"
+    },
+    {
+      "name": "L06 | LED CEILING 16 x 9.1",
+      "type": "MESH"
+    },
+    {
+      "name": "A07 | neutral throat soffit",
+      "type": "MESH"
+    },
+    {
+      "name": "A07 | neutral throat return -1",
+      "type": "MESH"
+    },
+    {
+      "name": "L08 | closed outer enclosure -1",
+      "type": "MESH"
+    },
+    {
+      "name": "S01 | side support -1 1",
+      "type": "MESH"
+    },
+    {
+      "name": "S01 | side support -1 3.25",
+      "type": "MESH"
+    },
+    {
+      "name": "S01 | side support -1 5.5",
+      "type": "MESH"
+    },
+    {
+      "name": "S01 | side support -1 7.75",
+      "type": "MESH"
+    },
+    {
+      "name": "S01 | side support -1 9.9",
+      "type": "MESH"
+    },
+    {
+      "name": "S02 | service rail -1 2.7",
+      "type": "MESH"
+    },
+    {
+      "name": "S02 | service rail -1 5.4",
+      "type": "MESH"
+    },
+    {
+      "name": "S03 | service hatch -1",
+      "type": "MESH"
+    },
+    {
+      "name": "S03 | hatch cover -1",
+      "type": "MESH"
+    },
+    {
+      "name": "A07 | neutral throat return 1",
+      "type": "MESH"
+    },
+    {
+      "name": "L08 | closed outer enclosure 1",
+      "type": "MESH"
+    },
+    {
+      "name": "S01 | side support 1 1",
+      "type": "MESH"
+    },
+    {
+      "name": "S01 | side support 1 3.25",
+      "type": "MESH"
+    },
+    {
+      "name": "S01 | side support 1 5.5",
+      "type": "MESH"
+    },
+    {
+      "name": "S01 | side support 1 7.75",
+      "type": "MESH"
+    },
+    {
+      "name": "S01 | side support 1 9.9",
+      "type": "MESH"
+    },
+    {
+      "name": "S02 | service rail 1 2.7",
+      "type": "MESH"
+    },
+    {
+      "name": "S02 | service rail 1 5.4",
+      "type": "MESH"
+    },
+    {
+      "name": "S03 | service hatch 1",
+      "type": "MESH"
+    },
+    {
+      "name": "S03 | hatch cover 1",
+      "type": "MESH"
+    },
+    {
+      "name": "S04 | roof cross member 1",
+      "type": "MESH"
+    },
+    {
+      "name": "S04 | roof cross member 3.25",
+      "type": "MESH"
+    },
+    {
+      "name": "S04 | roof cross member 5.5",
+      "type": "MESH"
+    },
+    {
+      "name": "S04 | roof cross member 7.75",
+      "type": "MESH"
+    },
+    {
+      "name": "S04 | roof cross member 9.9",
+      "type": "MESH"
+    },
+    {
+      "name": "S04 | roof longitudinal -8.25",
+      "type": "MESH"
+    },
+    {
+      "name": "S04 | roof longitudinal 0",
+      "type": "MESH"
+    },
+    {
+      "name": "S04 | roof longitudinal 8.25",
+      "type": "MESH"
+    },
+    {
+      "name": "A05 | rear fascia access panel -7.7",
+      "type": "MESH"
+    },
+    {
+      "name": "A05 | rear fascia access panel -4.6",
+      "type": "MESH"
+    },
+    {
+      "name": "A05 | rear fascia access panel -1.5",
+      "type": "MESH"
+    },
+    {
+      "name": "A05 | rear fascia access panel 1.6",
+      "type": "MESH"
+    },
+    {
+      "name": "A05 | rear fascia access panel 4.7",
+      "type": "MESH"
+    },
+    {
+      "name": "A05 | rear fascia access panel 7.8",
+      "type": "MESH"
+    },
+    {
+      "name": "B01 | L",
+      "type": "FONT"
+    },
+    {
+      "name": "B01 | I",
+      "type": "FONT"
+    },
+    {
+      "name": "B01 | V",
+      "type": "FONT"
+    },
+    {
+      "name": "B01 | E",
+      "type": "FONT"
+    },
+    {
+      "name": "B01 | G",
+      "type": "FONT"
+    },
+    {
+      "name": "B01 | R",
+      "type": "FONT"
+    },
+    {
+      "name": "B01 | I.001",
+      "type": "FONT"
+    },
+    {
+      "name": "B01 | D",
+      "type": "FONT"
+    },
+    {
+      "name": "B01 |  ",
+      "type": "FONT"
+    },
+    {
+      "name": "B01 | A",
+      "type": "FONT"
+    },
+    {
+      "name": "B01 | V.001",
+      "type": "FONT"
+    },
+    {
+      "name": "B02 | provisional emblem facet 0",
+      "type": "MESH"
+    },
+    {
+      "name": "B02 | provisional emblem facet 1",
+      "type": "MESH"
+    },
+    {
+      "name": "B02 | provisional emblem facet 2",
+      "type": "MESH"
+    },
+    {
+      "name": "B02 | provisional emblem facet 3",
+      "type": "MESH"
+    },
+    {
+      "name": "B02 | provisional emblem facet 4",
+      "type": "MESH"
+    },
+    {
+      "name": "B02 | provisional emblem facet 5",
+      "type": "MESH"
+    },
+    {
+      "name": "F01 | entrance platform",
+      "type": "MESH"
+    },
+    {
+      "name": "F02 | open rear landing",
+      "type": "MESH"
+    },
+    {
+      "name": "F03 | side walking strip -1",
+      "type": "MESH"
+    },
+    {
+      "name": "F04 | outer perimeter -1",
+      "type": "MESH"
+    },
+    {
+      "name": "P01 | planter base -1",
+      "type": "MESH"
+    },
+    {
+      "name": "P02 | long rim -1 -10.86",
+      "type": "MESH"
+    },
+    {
+      "name": "P02 | long rim -1 -14.44",
+      "type": "MESH"
+    },
+    {
+      "name": "P03 | end rim -1 -11.94",
+      "type": "MESH"
+    },
+    {
+      "name": "P03 | end rim -1 -2.06",
+      "type": "MESH"
+    },
+    {
+      "name": "P04 | soil recess -1",
+      "type": "MESH"
+    },
+    {
+      "name": "P05 | rill basin -1",
+      "type": "MESH"
+    },
+    {
+      "name": "P06 | neutral water -1",
+      "type": "MESH"
+    },
+    {
+      "name": "P07 | rill coping -1 -9.64",
+      "type": "MESH"
+    },
+    {
+      "name": "P07 | rill coping -1 -10.76",
+      "type": "MESH"
+    },
+    {
+      "name": "P07 | rill ends -1 -11.96",
+      "type": "MESH"
+    },
+    {
+      "name": "P07 | rill ends -1 -2.04",
+      "type": "MESH"
+    },
+    {
+      "name": "F03 | side walking strip 1",
+      "type": "MESH"
+    },
+    {
+      "name": "F04 | outer perimeter 1",
+      "type": "MESH"
+    },
+    {
+      "name": "P01 | planter base 1",
+      "type": "MESH"
+    },
+    {
+      "name": "P02 | long rim 1 10.86",
+      "type": "MESH"
+    },
+    {
+      "name": "P02 | long rim 1 14.44",
+      "type": "MESH"
+    },
+    {
+      "name": "P03 | end rim 1 -11.94",
+      "type": "MESH"
+    },
+    {
+      "name": "P03 | end rim 1 -2.06",
+      "type": "MESH"
+    },
+    {
+      "name": "P04 | soil recess 1",
+      "type": "MESH"
+    },
+    {
+      "name": "P05 | rill basin 1",
+      "type": "MESH"
+    },
+    {
+      "name": "P06 | neutral water 1",
+      "type": "MESH"
+    },
+    {
+      "name": "P07 | rill coping 1 9.64",
+      "type": "MESH"
+    },
+    {
+      "name": "P07 | rill coping 1 10.76",
+      "type": "MESH"
+    },
+    {
+      "name": "P07 | rill ends 1 -11.96",
+      "type": "MESH"
+    },
+    {
+      "name": "P07 | rill ends 1 -2.04",
+      "type": "MESH"
+    },
+    {
+      "name": "N01 | flared trunk",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.001",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.002",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.003",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.004",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.005",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.006",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.007",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.008",
+      "type": "MESH"
+    },
+    {
+      "name": "N01 | flared trunk.001",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.009",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.010",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.011",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.012",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.013",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.014",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.015",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.016",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.017",
+      "type": "MESH"
+    },
+    {
+      "name": "N01 | flared trunk.002",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.018",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.019",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.020",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.021",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.022",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.023",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.024",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.025",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.026",
+      "type": "MESH"
+    },
+    {
+      "name": "N05 | partially buried rock",
+      "type": "MESH"
+    },
+    {
+      "name": "N05 | partially buried rock.001",
+      "type": "MESH"
+    },
+    {
+      "name": "N05 | partially buried rock.002",
+      "type": "MESH"
+    },
+    {
+      "name": "N05 | partially buried rock.003",
+      "type": "MESH"
+    },
+    {
+      "name": "N05 | partially buried rock.004",
+      "type": "MESH"
+    },
+    {
+      "name": "N05 | partially buried rock.005",
+      "type": "MESH"
+    },
+    {
+      "name": "N05 | partially buried rock.006",
+      "type": "MESH"
+    },
+    {
+      "name": "N05 | partially buried rock.007",
+      "type": "MESH"
+    },
+    {
+      "name": "N05 | partially buried rock.008",
+      "type": "MESH"
+    },
+    {
+      "name": "N05 | partially buried rock.009",
+      "type": "MESH"
+    },
+    {
+      "name": "N05 | partially buried rock.010",
+      "type": "MESH"
+    },
+    {
+      "name": "N05 | partially buried rock.011",
+      "type": "MESH"
+    },
+    {
+      "name": "N01 | flared trunk.003",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.027",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.028",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.029",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.030",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.031",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.032",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.033",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.034",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.035",
+      "type": "MESH"
+    },
+    {
+      "name": "N01 | flared trunk.004",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.036",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.037",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.038",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.039",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.040",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.041",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.042",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.043",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.044",
+      "type": "MESH"
+    },
+    {
+      "name": "N01 | flared trunk.005",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.045",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.046",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.047",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.048",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.049",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.050",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.051",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.052",
+      "type": "MESH"
+    },
+    {
+      "name": "N02 | tapered branch.053",
+      "type": "MESH"
+    },
+    {
+      "name": "N05 | partially buried rock.012",
+      "type": "MESH"
+    },
+    {
+      "name": "N05 | partially buried rock.013",
+      "type": "MESH"
+    },
+    {
+      "name": "N05 | partially buried rock.014",
+      "type": "MESH"
+    },
+    {
+      "name": "N05 | partially buried rock.015",
+      "type": "MESH"
+    },
+    {
+      "name": "N05 | partially buried rock.016",
+      "type": "MESH"
+    },
+    {
+      "name": "N05 | partially buried rock.017",
+      "type": "MESH"
+    },
+    {
+      "name": "N05 | partially buried rock.018",
+      "type": "MESH"
+    },
+    {
+      "name": "N05 | partially buried rock.019",
+      "type": "MESH"
+    },
+    {
+      "name": "N05 | partially buried rock.020",
+      "type": "MESH"
+    },
+    {
+      "name": "N05 | partially buried rock.021",
+      "type": "MESH"
+    },
+    {
+      "name": "N05 | partially buried rock.022",
+      "type": "MESH"
+    },
+    {
+      "name": "N05 | partially buried rock.023",
+      "type": "MESH"
+    },
+    {
+      "name": "N03-N04 | individually modeled tree leaves shrubs and fern leaflets",
+      "type": "MESH"
+    }
+  ],
+  "web_meshes": 11
+}

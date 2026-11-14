@@ -1,0 +1,77 @@
+{
+  "reference": "User-supplied ChatGPT Image Sep 23, 2026, 12_29_33 AM (4).png",
+  "purpose": "Independent flat digital content for actual folded-corner LED and smaller content-studio displays. These files are not screenshots or photographs of the reference hall.",
+  "processing": "Original PNGs retained. Runtime WebP siblings encoded by Sharp quality96 effort6. No pixel cropping, compositing or perspective distortion baked into the assets.",
+  "prompts": "/media/anamorphic-stall/prompts.txt",
+  "assets": [
+    {
+      "file": "sculpture-master-v1.webp",
+      "original": "sculpture-master-v1.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 647312,
+      "method": "Reused existing public/media/final/anamorphic-sculpture.png. PNG copy is byte-identical.",
+      "sha256": "825524b063e7d10fa2f2f98cc820f8c23335423cfc183a5da16e126e1df18fae",
+      "content": "Upward-tilted silver female sculptural face with closed eyes, champagne hair, dark rocks and reflective alpine/futuristic lake. No text or physical booth.",
+      "mapping": "One shared virtual-camera projection across folded corner; do not split into unrelated repeated pictures."
+    },
+    {
+      "file": "chrome-orb-landscape-v1.webp",
+      "original": "chrome-orb-landscape-v1.png",
+      "width": 1774,
+      "height": 887,
+      "bytes": 726366,
+      "method": "Reused existing public/media/final/chrome-landscape.png. PNG copied without alteration.",
+      "content": "Polished chrome elliptical orb among pale rocky alpine cliffs, futuristic spires, cascades and lake."
+    },
+    {
+      "file": "content-portrait-v1.webp",
+      "original": "content-portrait-v1.png",
+      "width": 1086,
+      "height": 1448,
+      "bytes": 133680,
+      "method": "Built-in image_gen, new reference-guided content portrait.",
+      "content": "Adult woman in tailored black jacket, short dark bob, cool pale translucent studio background."
+    },
+    {
+      "file": "blue-silver-fluid-v1.webp",
+      "original": "blue-silver-fluid-v1.png",
+      "width": 1254,
+      "height": 1254,
+      "bytes": 858518,
+      "method": "Built-in image_gen, new reference-guided abstract artwork.",
+      "content": "Cool silver-white and deep steel-blue fluid vortex, no warm gold tones."
+    }
+  ],
+  "suggested_crops": {
+    "coordinate_convention": "Normalized source-image coordinates with origin at top-left. These are suggestions for runtime UV/fit mapping; source pixels remain uncropped.",
+    "chrome_sculpture": {
+      "source": "chrome-orb-landscape-v1.webp",
+      "bounds": [
+        0.43,
+        0,
+        0.79,
+        0.8
+      ]
+    },
+    "left_portrait_lake": {
+      "source": "chrome-orb-landscape-v1.webp",
+      "bounds": [
+        0.05,
+        0.1,
+        0.33,
+        0.99
+      ]
+    },
+    "right_mountain_lake": {
+      "source": "sculpture-master-v1.webp",
+      "bounds": [
+        0.66,
+        0.3,
+        1,
+        1
+      ]
+    }
+  },
+  "acceptance": "The existing close-match main artwork is preserved. New secondary assets are reference-guided reconstructions, not asserted to be pixel-identical copies. Hall architecture, branding, frames, furniture and visitors must remain separate actual 3D/runtime objects."
+}

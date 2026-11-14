@@ -1,0 +1,19 @@
+{
+  "asset": {
+    "sha256": "b99b56231ae497903485cbb5993f180da44f80d0128d2b2397f69bb7330d79bd",
+    "bytes": 981176,
+    "bounds": {
+      "min": [
+        -20.002643585205078,
+        9.236000061035156,
+        -15.00263786315918
+      ],
+      "max": [
+        20.002643585205078,
+        10.293999671936035,
+        19.00263786315918
+      ]
+    }
+  },
+  "context": "Independent real exhibition truss, not part of the reserved stall architecture."
+}

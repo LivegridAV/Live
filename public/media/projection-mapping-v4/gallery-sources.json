@@ -1,0 +1,76 @@
+{
+  "columns": 2,
+  "rows": 4,
+  "cellSize": [
+    1024,
+    576
+  ],
+  "views": [
+    {
+      "name": "architecture",
+      "source": "public/media/projection-mapping/applications.webp",
+      "quadrant": 0,
+      "variant": 0,
+      "file": "application-0-architecture.webp",
+      "sourceSHA256": "bd156ecfc2ea48bdaab173210f9c12c314bb7bd28d706e96ef3e5466c01f21bc"
+    },
+    {
+      "name": "concert",
+      "source": "public/media/led-rental-pavilion-v3/applications.webp",
+      "quadrant": 0,
+      "variant": 1,
+      "file": "application-1-concert.webp",
+      "sourceSHA256": "39004008af023a8e8c5d2c0bd3f142ee187b4d0ed72726b39fdc8188c9de40b1"
+    },
+    {
+      "name": "product-car",
+      "source": "public/media/projection-mapping-v4/product-car-original.png",
+      "variant": 2,
+      "file": "application-2-product-car.webp",
+      "sourceSHA256": "ea81647a54be6341891b0e6f1b71dcb65895f4b16091d51f2af33cdccf620e16"
+    },
+    {
+      "name": "interactive",
+      "source": "public/media/projection-mapping/applications.webp",
+      "quadrant": 3,
+      "variant": 3,
+      "file": "application-3-interactive.webp",
+      "sourceSHA256": "bd156ecfc2ea48bdaab173210f9c12c314bb7bd28d706e96ef3e5466c01f21bc"
+    },
+    {
+      "name": "landmark",
+      "source": "public/media/projection-mapping/hero.webp",
+      "crop": [
+        0.235,
+        0.2,
+        0.53,
+        0.73
+      ],
+      "variant": 4,
+      "file": "application-4-landmark.webp",
+      "sourceSHA256": "4c7e4c2bff1e9ba233ba174c19868794fd181b465230b22e363f722179072c4c"
+    },
+    {
+      "name": "brand-palace",
+      "source": "public/media/projection-mapping/hero.webp",
+      "variant": 5,
+      "file": "application-5-brand-palace.webp",
+      "sourceSHA256": "4c7e4c2bff1e9ba233ba174c19868794fd181b465230b22e363f722179072c4c"
+    },
+    {
+      "name": "interior",
+      "source": "public/media/projection-mapping-v4/interior-event-original.png",
+      "variant": 6,
+      "file": "application-6-interior.webp",
+      "sourceSHA256": "a9383449b29848e47670445f063be9ec4893684e2733f2a2d8a65502bc54c7a8"
+    },
+    {
+      "name": "event-crowd",
+      "source": "public/media/led-rental-pavilion-v2/applications.webp",
+      "quadrant": 1,
+      "variant": 7,
+      "file": "application-7-event-crowd.webp",
+      "sourceSHA256": "83a7571149fc9657964d605030d08d441353e473b5f2ab070a52b45024329562"
+    }
+  ]
+}

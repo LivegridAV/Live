@@ -1,0 +1,13 @@
+{
+  "source": "User-supplied ChatGPT Image Sep 23, 2026, 12_29_33 AM (3).png",
+  "method": "Built-in image_gen, guided by the reception photograph and the previous flat ribbon artwork. No scene, architecture, people, props or text are baked in.",
+  "selected": "/media/reception/counter-reference-art-v2.webp",
+  "original": "/media/reception/counter-reference-art-v2.png",
+  "width": 2172,
+  "height": 724,
+  "bytes": 502314,
+  "processing": "PNG preserved; WebP sibling encoded with Sharp quality96 effort6. No crop or geometric pixel transformation.",
+  "mapping": "The R6.2m / 1.2rad fascia uses horizontal UV repeat1.25 and a mirrored return, placing the blue/white curl left and the champagne/white ribbon at the visible right edge in the reference camera. A separate 3072x471 transparent canvas fits the LivegridAV wordmark at u0.438922 and the four-line slogan at u0.564681. The original bitmap is not cropped or warped on disk.",
+  "prompts": "/media/reception/counter-artwork-prompts.txt",
+  "acceptance": "A reference-guided reconstruction of the counter artwork, not a claim of pixel-identical reproduction."
+}

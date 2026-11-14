@@ -1,0 +1,66 @@
+{
+  "columns": 2,
+  "rows": 4,
+  "cellSize": [
+    1024,
+    576
+  ],
+  "views": [
+    {
+      "variant": 0,
+      "name": "architecture",
+      "file": "application-0-architecture.webp",
+      "source": "public/media/projection-mapping-v4/application-0-architecture.webp",
+      "sourceSHA256": "3d6101118c1112007331dd5cfd759d806231ed82173e5254d151c48d1a8af49c"
+    },
+    {
+      "variant": 1,
+      "name": "concert",
+      "file": "application-1-concert.webp",
+      "source": "public/media/projection-mapping-v4/application-1-concert.webp",
+      "sourceSHA256": "e580f04ac8e795f5603a9dd4dc0e1cddbb0250e3cc456319a5b35d7e208f255e"
+    },
+    {
+      "variant": 2,
+      "name": "product-car",
+      "file": "application-2-product-car.webp",
+      "source": "public/media/projection-mapping-v4/application-2-product-car.webp",
+      "sourceSHA256": "abb6029c5013b0b93f86f27c9b9a13da4cdbc31df57f7d7fa153af6435245a4f"
+    },
+    {
+      "variant": 3,
+      "name": "interactive",
+      "file": "application-3-interactive.webp",
+      "source": "public/media/projection-mapping-v6/interactive-original.png",
+      "sourceSHA256": "b265bf493392b67dbac917a7d8c49500b6afbf032c6653c95a7478ba12c0577f"
+    },
+    {
+      "variant": 4,
+      "name": "landmark",
+      "file": "application-4-landmark.webp",
+      "source": "public/media/projection-mapping-v6/landmark-original.png",
+      "sourceSHA256": "23bc8213f961f591288b7580c2c651adb6e8dc1b8be29259587090d314a601c2"
+    },
+    {
+      "variant": 5,
+      "name": "brand-palace",
+      "file": "application-5-brand-palace.webp",
+      "source": "public/media/projection-mapping-v4/application-5-brand-palace.webp",
+      "sourceSHA256": "c4d6e35b44b051462d47225fdfbb33d906f22b9181f4279002bc283a418b113c"
+    },
+    {
+      "variant": 6,
+      "name": "interior",
+      "file": "application-6-interior.webp",
+      "source": "public/media/projection-mapping-v4/application-6-interior.webp",
+      "sourceSHA256": "ed10a4f82280b8a59ea8fdb542da897fa74ca51aadef51bece61566799a49b44"
+    },
+    {
+      "variant": 7,
+      "name": "event-exhibition",
+      "file": "application-7-event-exhibition.webp",
+      "source": "public/media/projection-mapping-v6/event-original.png",
+      "sourceSHA256": "2142b44f1f0ba32a4440e101cf81cb0d895764375b07c3f4be69aa2e5457d21b"
+    }
+  ]
+}

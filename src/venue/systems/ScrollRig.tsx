@@ -49,24 +49,38 @@ export function ScrollRig() {
   const prevT = useRef(0);
 
   const read = useCallback(() => {
+    if (useVenue.getState().stallVisit) return;
     journey.target = Math.min(1, Math.max(0, window.scrollY / trackRange()));
   }, []);
 
   useEffect(() => {
     read();
+    let resizeFrame=0,resizing=false;
     const onScroll = () => {
-      if (!journey.locked) read();
+      if (!journey.locked&&!resizing) read();
+    };
+    const onResize=()=>{
+      const current=journey.target,state=useVenue.getState();
+      if(!state.entered||(state.pastVenue&&!state.stallVisit)){read();return;}
+      resizing=true;cancelAnimationFrame(resizeFrame);
+      resizeFrame=requestAnimationFrame(()=>{
+        // A visit locks manual scrolling, but its document anchor must still
+        // follow the new viewport height or the HUD mistakes it for an article.
+        window.scrollTo({top:current*trackRange(),behavior:"instant"});
+        resizing=false;read();
+      });
     };
     const onPointer = (e: PointerEvent) => {
       journey.pointerX = (e.clientX / window.innerWidth) * 2 - 1;
       journey.pointerY = (e.clientY / window.innerHeight) * 2 - 1;
     };
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", read);
+    window.addEventListener("resize", onResize);
     window.addEventListener("pointermove", onPointer, { passive: true });
     return () => {
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", read);
+      window.removeEventListener("resize", onResize);
+      cancelAnimationFrame(resizeFrame);
       window.removeEventListener("pointermove", onPointer);
     };
   }, [read]);
@@ -97,7 +111,7 @@ export function ScrollRig() {
         setZone(zoneAt(journey.progress).id);
         // Once the written content is on screen the venue chrome would be
         // floating over an article, so it stands down.
-        setPastVenue(window.scrollY > trackRange() + window.innerHeight * 0.25);
+        setPastVenue(!useVenue.getState().stallVisit&&window.scrollY > trackRange() + window.innerHeight * 0.25);
       }
     };
     raf.current = requestAnimationFrame(tick);

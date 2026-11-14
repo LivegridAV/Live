@@ -1,0 +1,78 @@
+{
+  "geometry": {
+    "sha256": "8b0b8be67495875d3a8b7b4d33c5903290791bf17299a6911784863d472b670d",
+    "bytes": 4366056,
+    "triangles": 99484
+  },
+  "people": {
+    "sha256": "a0c399100149095ae821e0b0532f8218b638011d5cce9111d5675363571b4ab8",
+    "bytes": 21589248,
+    "triangles": 56790
+  },
+  "placements": [
+    {
+      "role": "foreground observer",
+      "galleryPosition": [
+        -3.2,
+        0.009,
+        4.2
+      ],
+      "scale": 0.98
+    },
+    {
+      "role": "left group",
+      "galleryPosition": [
+        -8.8,
+        0.009,
+        -0.5
+      ],
+      "scale": 0.99
+    },
+    {
+      "role": "companion guest",
+      "galleryPosition": [
+        -7.0,
+        0.009,
+        -3.5
+      ],
+      "scale": 0.94
+    },
+    {
+      "role": "reception visitor",
+      "galleryPosition": [
+        3.3,
+        0.009,
+        -5.1
+      ],
+      "scale": 0.93
+    },
+    {
+      "role": "reception host",
+      "galleryPosition": [
+        -1.6,
+        0.009,
+        -7.93
+      ],
+      "scale": 0.94
+    },
+    {
+      "role": "reception colleague",
+      "galleryPosition": [
+        3.55,
+        0.009,
+        -7.94
+      ],
+      "scale": 0.98
+    },
+    {
+      "role": "reception adviser",
+      "galleryPosition": [
+        6.15,
+        0.009,
+        -7.95
+      ],
+      "scale": 0.94
+    }
+  ],
+  "provenance": "Original retained gallery joinery; original textured curved-leaf botany; Microsoft Rocketbox Avatar Library MIT Copyright (c) 2020 Microsoft. Gallery raises .111m with common .12m finished floor. Main central route world X[-1,1] kept clear of planters/avatars."
+}

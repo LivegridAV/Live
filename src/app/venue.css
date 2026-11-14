@@ -243,6 +243,8 @@
 }
 .v-nav-link[aria-current="true"] { color: var(--v-glow); }
 .v-nav-cta { margin-left: 8px; }
+.v-nav:is([data-zone="reception"],[data-zone="projection"],[data-zone="led-rental"]) .v-nav-links { display: none; }
+.v-nav:is([data-zone="reception"],[data-zone="projection"],[data-zone="led-rental"]) .v-nav-toggle { display: grid; place-items: center; }
 
 .v-nav-toggle {
   display: none;
@@ -300,6 +302,11 @@
   max-width: min(440px, 62vw);
   pointer-events: none;
 }
+.v-hud[data-reception="true"] { top: auto; bottom: 28px; transform: none; }
+.v-hud[data-reception="true"] .v-hud-fade { background: none; backdrop-filter: none; -webkit-backdrop-filter: none; border: 0; box-shadow: none; padding: 0; }
+.v-hud[data-reception="true"] .v-hud-title { font-size: 13px; letter-spacing: .12em; text-transform: uppercase; }
+.v-hud[data-reception="true"] .v-hud-zone,
+.v-hud[data-reception="true"] .v-hud-line { display: none; }
 .v-hud-zone {
   display: flex;
   align-items: center;
@@ -1084,3 +1091,73 @@
   .v-hud[data-zone="stage"], .v-hud[data-zone="arena"] { top: 61%; }
   .v-hud[data-zone="stage"] .v-hud-title { font-size: 20px; }
 }
+
+/* The technical booth carries its own physical labels. Keep its accessible
+   service action at the edge of the frame, clear of the control displays. */
+.v-prompt[data-technical="true"] {
+  top: auto; bottom: 22px; right: 24px; left: auto; width: auto;
+  max-width: calc(100vw - 48px); padding: 0; transform: none !important;
+  background: none; border: 0; box-shadow: none; backdrop-filter: none;
+}
+.v-prompt[data-technical="true"]::before,
+.v-prompt[data-technical="true"] .v-prompt-no,
+.v-prompt[data-technical="true"] h2 { display: none; }
+.v-prompt[data-technical="true"] .v-btn {
+  background: #12171bd9; border-color: #929b9f66; color: #f2f3f5;
+  font-size: 11px; padding: 10px 15px; box-shadow: none;
+}
+.v-projection-views { position: fixed; z-index: 42; left: 50%; bottom: 22px; transform: translateX(-50%); display: flex; padding: 3px; gap: 3px; background: #0b1014e8; border: 1px solid #929b9f66; border-radius: 7px; }
+.v-projection-views button { border: 0; background: transparent; color: #aeb8bc; font: 500 10px/1.2 Arial, sans-serif; padding: 8px 10px; border-radius: 4px; white-space: nowrap; text-transform: capitalize; cursor: pointer; }
+.v-projection-views button[aria-pressed="true"] { color: #fff; background: #34423f; }
+.v-projection-views button:focus-visible { outline: 2px solid #85d6be; outline-offset: 2px; }
+.v-rental-views button:last-child { border-left: 1px solid #929b9f55; border-radius: 0 4px 4px 0; }
+@media (max-width: 700px) { .v-rental-views { max-width: calc(100vw - 20px); } .v-rental-views button { min-height: 44px; padding: 9px 6px !important; font-size: 8px !important; } .v-hud[data-zone="led-rental"] { bottom: 108px; max-width: calc(100vw - 30px); } .v-hud[data-zone="led-rental"] .v-hud-title { font-size: 10px; } }
+@media (max-width: 700px) { .v-projection-views { bottom: 18px; } .v-projection-views button { padding: 9px 8px; font-size: 9px; } .v-hud[data-zone="projection"] { bottom: 108px; } }
+@media (max-width: 700px) {
+  .v-prompt[data-technical="true"] { bottom: 62px; right: 16px !important; left: auto !important; }
+  .v-hud[data-zone="technical"] { max-width: calc(100vw - 34px); }
+  .v-hud[data-zone="technical"] .v-hud-title { font-size: 10px; }
+}
+
+/* Shared architectural views stay inside the actual connected 3D venue. */
+.v-stall-visit {position:fixed;z-index:44;bottom:18px;left:50%;transform:translateX(-50%);width:max-content;max-width:calc(100vw - 32px);padding:8px 10px;background:#0b1014ed;border:1px solid #76868066;border-radius:7px;color:#f1f3f2;}
+.v-stall-visit-name {display:block;text-align:center;font:500 10px/1.3 Arial,sans-serif;letter-spacing:.08em;margin:0 0 5px;}
+.v-stall-visit-actions {display:flex;gap:3px;flex-wrap:wrap;justify-content:center;}
+.v-stall-visit button {background:transparent;border:1px solid transparent;border-radius:4px;padding:7px 8px;color:#bcc6c3;font:500 10px/1.2 Arial,sans-serif;cursor:pointer;white-space:nowrap;}
+.v-stall-visit button[aria-pressed=true] {color:white;background:#31433d;}
+.v-stall-visit button:focus-visible {outline:2px solid #8ce3cb;outline-offset:2px;}
+.v-stall-visit .v-stall-back {border-color:#8b9b9580;color:white;margin-left:4px;}
+.v-stall-dimensions {position:fixed;z-index:43;left:24px;top:104px;display:flex;flex-direction:column;gap:5px;padding:12px 15px;background:#0b1014e8;border:1px solid #96aaa166;color:#ecf2ef;font:11px/1.4 Arial,sans-serif;max-width:calc(100vw - 48px);}
+.v-stall-dimensions strong {font-size:12px;font-weight:600;}
+@media(max-width:700px){.v-stall-visit{bottom:12px;max-width:calc(100vw - 20px);width:calc(100vw - 20px);padding:6px;}.v-stall-visit button{min-height:36px;padding:5px 6px;font-size:9px;}.v-stall-visit-name{font-size:9px;}.v-stall-dimensions{left:12px;top:84px;max-width:calc(100vw - 24px);font-size:9px;}.v-hud[data-reception=true]{bottom:145px!important;}.v-prompt[data-technical=true]{bottom:142px!important;}}
+
+/* Explicit local review captures retain the actual 3D dimensions but clear UI.
+   The loader remains operable until Enter; remove capture=1 to restore chrome. */
+.venue[data-capture=true] .v-nav,
+.venue[data-capture=true] .v-stall-visit,
+.venue[data-capture=true] .v-hud,
+.venue[data-capture=true] .v-prompt,
+.venue[data-capture=true] .v-rail,
+.venue[data-capture=true] .v-scrollcue,
+.venue[data-capture=true] button,
+.venue[data-capture=true] select,
+.venue[data-capture=true] [data-render-metrics] {visibility:hidden!important;pointer-events:none!important;}
+
+/* Explicit record=1 local review control; absent from the normal experience. */
+.v-review-recorder {position:fixed;z-index:65;left:16px;right:auto;top:86px;width:310px;max-width:calc(100vw - 32px);padding:12px;border:1px solid #7caa9d;border-radius:7px;background:#0b1217f2;color:#edf4f0;font:12px/1.45 Arial,sans-serif;}
+.v-review-recorder strong {font-size:11px;letter-spacing:.08em;color:#9ee0cb;}
+.v-review-recorder p {margin:5px 0 9px;color:#b6c8c1;}
+.v-review-recorder button {padding:7px 9px;margin:0 5px 7px 0;border:1px solid #728e85;border-radius:4px;background:#172b26;color:#f2f5f3;font:12px Arial,sans-serif;cursor:pointer;}
+.v-review-recorder button:disabled {opacity:.45;cursor:default;}
+.v-review-recorder output,.v-review-recorder-downloads a {display:block;}
+.v-review-recorder-downloads {margin-top:8px;}
+.v-review-recorder a {color:#a7e9d4;text-decoration:underline;margin-top:5px;}
+.venue[data-capture=true] .v-review-recorder button {visibility:visible!important;pointer-events:auto!important;}
+@media(max-width:600px){.v-review-recorder{top:76px;left:10px;right:auto;max-width:calc(100vw - 20px);font-size:11px;padding:9px;}}
+/* The visible record=1 control enables this temporary clean review state.
+   H restores controls; keep actual geometry and diagnostic labels in view. */
+html[data-grand-clean=true] .venue > :not(.venue-canvas):not(.venue-vignette):not(.venue-track):not(.v-stall-dimensions),
+html[data-grand-clean=true] .venue button,
+html[data-grand-clean=true] .venue select,
+html[data-grand-clean=true] .venue [data-render-metrics],
+html[data-grand-clean=true] .venue .v-review-recorder button {visibility:hidden!important;pointer-events:none!important;}

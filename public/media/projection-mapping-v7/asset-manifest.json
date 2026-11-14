@@ -1,0 +1,76 @@
+{
+  "date": "2026-10-17",
+  "method": "Frequency-separated calm rear and teal roof fields from existing original V6 isolated rasters; full actual V7 crystal GLB rendered in Blender for hero.",
+  "rearSource": {
+    "file": "public/media/projection-mapping-v6/rear-blue-particulate.webp",
+    "sha256": "74c23a3475c54892a2465a20e820bc4ff174703cc3f4a1903313d6f4cbb4450b",
+    "broadFieldGain": 0.66,
+    "fineGain": 0.86
+  },
+  "roofSource": {
+    "file": "public/media/projection-mapping-v6/roof-cyan-particulate.webp",
+    "sha256": "89dfe974f3141ee3fe71eb8d5b97b92be22e27dd785257e18ec36bcea3506b88",
+    "broadFieldGain": 0.7,
+    "fineGain": 0.84,
+    "rgbGrade": [
+      0.75,
+      1,
+      0.85
+    ]
+  },
+  "modelSHA256": "3dbbf0c6bae80b778dc30b7269dc96c1cd259ffa607592a18b7d9f2a25474b6e",
+  "projectionDomain": {
+    "min": [
+      -2.15,
+      0
+    ],
+    "max": [
+      2.15,
+      3.55
+    ]
+  },
+  "assets": [
+    {
+      "file": "crystals-hero.png",
+      "width": 1600,
+      "height": 900,
+      "bytes": 1889215,
+      "sha256": "46462faaa944e0b44310c7d06aec56ae58f5103f3c59577bcfa00ee0518d9761"
+    },
+    {
+      "file": "crystals-hero.webp",
+      "width": 1600,
+      "height": 900,
+      "bytes": 147238,
+      "sha256": "8a68a52fb57cd4981a47da7c95a6a3780f9b559133308c2fc04b9ab138f97079"
+    },
+    {
+      "file": "rear-ocean-particulate-native.png",
+      "width": 2560,
+      "height": 1024,
+      "bytes": 3987287,
+      "sha256": "b3d7d30c76207604f96b4b0a3c81266b0672121e87bda5d785c2dcead6264a3e"
+    },
+    {
+      "file": "rear-ocean-particulate.webp",
+      "width": 2560,
+      "height": 1024,
+      "bytes": 649836,
+      "sha256": "9729ed0d32f2c4e7f6995518f08bad69f94e2bc7cd8a4cf22b33817580be3de8"
+    },
+    {
+      "file": "roof-teal-particulate-native.png",
+      "width": 1536,
+      "height": 1536,
+      "bytes": 4357104,
+      "sha256": "68ff2a87b76af83bbb5c57e65490622d32fb99dc69be5af3878f6d590eade32e"
+    },
+    {
+      "file": "roof-teal-particulate.webp",
+      "width": 1536,
+      "height": 1536,
+      "bytes": 662396,
+      "sha256": "4abd8e148028aaf9c63818b33d4d97030febe236b7700c9e04ef5435397a45c9"
+    }
+  ]
+}

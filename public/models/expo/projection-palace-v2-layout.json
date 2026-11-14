@@ -1,0 +1,265 @@
+{
+  "version": 1,
+  "authoringScale": 1,
+  "root": [
+    10.2,
+    0,
+    -189
+  ],
+  "rootRotation": [
+    0,
+    -1.5707963267948966,
+    0
+  ],
+  "modelCenter": [
+    0,
+    1.65,
+    -1.3
+  ],
+  "bottom": 1.65,
+  "domes": [
+    {
+      "name": "grand central dome",
+      "center": [
+        0,
+        5.89,
+        -1.1
+      ],
+      "radius": 1.27,
+      "height": 1.15,
+      "ribs": 28
+    },
+    {
+      "name": "flanking bulbous dome",
+      "center": [
+        -3.13,
+        5.13,
+        -1.08
+      ],
+      "radius": 0.73,
+      "height": 0.88,
+      "ribs": 20
+    },
+    {
+      "name": "miniature turret bulbous cap",
+      "center": [
+        -1.51,
+        5.780600000000001,
+        0.55
+      ],
+      "radius": 0.207,
+      "height": 0.189,
+      "ribs": 10
+    },
+    {
+      "name": "miniature turret bulbous cap",
+      "center": [
+        -2.02,
+        4.8872,
+        0.26
+      ],
+      "radius": 0.184,
+      "height": 0.168,
+      "ribs": 10
+    },
+    {
+      "name": "miniature turret bulbous cap",
+      "center": [
+        -4.24,
+        4.8872,
+        0.26
+      ],
+      "radius": 0.184,
+      "height": 0.168,
+      "ribs": 10
+    },
+    {
+      "name": "miniature turret bulbous cap",
+      "center": [
+        -5.7,
+        4.2821,
+        0.03
+      ],
+      "radius": 0.1495,
+      "height": 0.1365,
+      "ribs": 10
+    },
+    {
+      "name": "flanking bulbous dome",
+      "center": [
+        3.13,
+        5.13,
+        -1.08
+      ],
+      "radius": 0.73,
+      "height": 0.88,
+      "ribs": 20
+    },
+    {
+      "name": "miniature turret bulbous cap",
+      "center": [
+        1.51,
+        5.780600000000001,
+        0.55
+      ],
+      "radius": 0.207,
+      "height": 0.189,
+      "ribs": 10
+    },
+    {
+      "name": "miniature turret bulbous cap",
+      "center": [
+        2.02,
+        4.8872,
+        0.26
+      ],
+      "radius": 0.184,
+      "height": 0.168,
+      "ribs": 10
+    },
+    {
+      "name": "miniature turret bulbous cap",
+      "center": [
+        4.24,
+        4.8872,
+        0.26
+      ],
+      "radius": 0.184,
+      "height": 0.168,
+      "ribs": 10
+    },
+    {
+      "name": "miniature turret bulbous cap",
+      "center": [
+        5.7,
+        4.2821,
+        0.03
+      ],
+      "radius": 0.1495,
+      "height": 0.1365,
+      "ribs": 10
+    }
+  ],
+  "archApertures": [
+    {
+      "name": "grand central pointed gateway",
+      "center": [
+        0,
+        3.36,
+        0.66
+      ],
+      "openingWidth": 2.05,
+      "openingHeight": 2.98,
+      "spring": 1.75,
+      "depth": 0.72,
+      "structuralDepth": 2.65,
+      "back": -0.05999999999999994
+    },
+    {
+      "name": "flanking tower gateway",
+      "center": [
+        -3.13,
+        3.025,
+        0.38
+      ],
+      "openingWidth": 1.3,
+      "openingHeight": 2.31,
+      "spring": 1.3,
+      "depth": 0.72,
+      "structuralDepth": 2.73,
+      "back": -0.33999999999999997
+    },
+    {
+      "name": "outer low annex pointed gateway",
+      "center": [
+        -5.1,
+        2.79,
+        0.1
+      ],
+      "openingWidth": 0.78,
+      "openingHeight": 1.84,
+      "spring": 1.1,
+      "depth": 0.72,
+      "structuralDepth": 2.44,
+      "back": -0.62
+    },
+    {
+      "name": "flanking tower gateway",
+      "center": [
+        3.13,
+        3.025,
+        0.38
+      ],
+      "openingWidth": 1.3,
+      "openingHeight": 2.31,
+      "spring": 1.3,
+      "depth": 0.72,
+      "structuralDepth": 2.73,
+      "back": -0.33999999999999997
+    },
+    {
+      "name": "outer low annex pointed gateway",
+      "center": [
+        5.1,
+        2.79,
+        0.1
+      ],
+      "openingWidth": 0.78,
+      "openingHeight": 1.84,
+      "spring": 1.1,
+      "depth": 0.72,
+      "structuralDepth": 2.44,
+      "back": -0.62
+    }
+  ],
+  "materialRoles": [
+    "Projection Palace | ivory projection substrate",
+    "Projection Palace | carved cornice projection trim",
+    "Projection Palace | inset arch projection surface",
+    "Projection Palace | dome rib projection trim"
+  ],
+  "projection": {
+    "method": "runtime light projected on genuine 3D mesh surfaces",
+    "coordinateSpace": "authored local Three XYZ; all mesh transforms are identity",
+    "substrate": "unmapped ivory plaster; blue/gold is applied by the website"
+  },
+  "ambientOcclusion": {
+    "layer": "Col",
+    "samples": 24,
+    "radius": 0.38,
+    "objects": 4,
+    "occluderTriangles": 95428,
+    "corners": 184604,
+    "evaluatedPositions": 91452,
+    "rays": 2194848,
+    "skipped": {
+      "non_mesh": 0,
+      "character": 0,
+      "distant_hall": 0,
+      "non_opaque_or_emissive": 0
+    },
+    "budgetReached": false,
+    "seconds": 11.106,
+    "minimum": 0.62,
+    "mean": 0.82739
+  },
+  "stats": {
+    "file": "projection-palace-v2.glb",
+    "bytes": 3583608,
+    "meshes": 4,
+    "vertices": 49918,
+    "triangles": 95428,
+    "bounds": {
+      "min": [
+        -5.889599800109863,
+        1.649999976158142,
+        -3.299999952316284
+      ],
+      "max": [
+        5.889599800109863,
+        7.400000095367432,
+        1.069000005722046
+      ]
+    }
+  }
+}

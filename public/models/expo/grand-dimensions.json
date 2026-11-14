@@ -1,0 +1,16 @@
+{
+  "version": "grand-20261018",
+  "units": "metres",
+  "master": {"width":24,"depth":16,"height":12.701,"floor":0.12,"fasciaTop":12.821,"principalRoute":2,"secondaryRoute":1.2,"tolerance":0.02},
+  "pillarBenchmark": {"bodyHeight":12.6,"originalBodyBase":0.11,"originalBodyTop":12.71,"originalVenueFloor":0.009,"galleryRaise":0.111,"heightAboveFinishedFloor":12.701},
+  "bounds": {"xMin":-12,"xMax":12,"zMin":-8,"zMax":8},
+  "placements": {
+    "reception":{"root":[0,0,-80],"yaw":0,"openFeature":true},
+    "anamorphic":{"root":[-18,0,-113],"yaw":1.5707963267948966},
+    "technical":{"root":[-18,0,-145],"yaw":1.5707963267948966},
+    "led-rental":{"root":[-18,0,-175],"yaw":1.5707963267948966},
+    "projection":{"root":[18,0,-205],"yaw":-1.5707963267948966}
+  },
+  "hall":{"halfWidth":40,"roofHeight":19,"from":-26,"to":-238},
+  "selectionRationale":"24m accommodates the three 20.095m technical bays, joints and end returns. 16m allows distinct reception, 2m principal route, 5.8m projection display and rear service/lounge depths at native human scale. Height equals the measured hero body top above the original .009m venue floor; gallery rises .111m with the new .12m continuous finish."
+}

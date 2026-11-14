@@ -1,0 +1,592 @@
+{
+  "version": 10,
+  "source": "Microsoft Rocketbox, MIT; see technical-humans-LICENSE.txt",
+  "authoringAxes": "native Three XYZ, front +Z",
+  "count": 13,
+  "placements": [
+    {
+      "role": "reception-host",
+      "avatar": "Business_Female_01",
+      "pose": "operator",
+      "position": [
+        -4.1,
+        0.1,
+        2.34
+      ],
+      "nativeThreeYaw": 0,
+      "scale": 0.94,
+      "appearance": null,
+      "height": 1.6854200586676598,
+      "bounds": {
+        "min": [
+          -4.350529670715332,
+          0.10000000149011612,
+          2.176774263381958
+        ],
+        "max": [
+          -3.847728729248047,
+          1.7854200601577759,
+          2.6752278804779053
+        ]
+      }
+    },
+    {
+      "role": "reception-colleague",
+      "avatar": "Business_Male_01",
+      "pose": "operator",
+      "position": [
+        -2.83,
+        0.1,
+        2.18
+      ],
+      "nativeThreeYaw": 0.25,
+      "scale": 0.98,
+      "appearance": null,
+      "height": 1.7571400627493858,
+      "bounds": {
+        "min": [
+          -3.1031570434570312,
+          0.10000000149011612,
+          2.0262434482574463
+        ],
+        "max": [
+          -2.483154296875,
+          1.857140064239502,
+          2.6214115619659424
+        ]
+      }
+    },
+    {
+      "role": "left-gallery-browser",
+      "avatar": "Business_Male_02",
+      "pose": "idle",
+      "position": [
+        -5.6,
+        0.1,
+        1.7
+      ],
+      "nativeThreeYaw": 2.6,
+      "scale": 0.96,
+      "appearance": null,
+      "height": 1.721280001103878,
+      "bounds": {
+        "min": [
+          -5.849589824676514,
+          0.10000000149011612,
+          1.449747085571289
+        ],
+        "max": [
+          -5.348344326019287,
+          1.8212800025939941,
+          1.8807705640792847
+        ]
+      }
+    },
+    {
+      "role": "conversation-left",
+      "avatar": "Business_Male_02",
+      "pose": "talk",
+      "position": [
+        -1.9,
+        0.1,
+        3.1
+      ],
+      "nativeThreeYaw": 1.2,
+      "scale": 0.98,
+      "appearance": null,
+      "height": 1.7571400627493858,
+      "bounds": {
+        "min": [
+          -2.0860378742218018,
+          0.10000000149011612,
+          2.837769031524658
+        ],
+        "max": [
+          -1.6644189357757568,
+          1.857140064239502,
+          3.495448589324951
+        ]
+      }
+    },
+    {
+      "role": "conversation-right",
+      "avatar": "Business_Male_01",
+      "pose": "idle",
+      "position": [
+        -1.23,
+        0.1,
+        3.26
+      ],
+      "nativeThreeYaw": -1.84,
+      "scale": 0.99,
+      "appearance": null,
+      "height": 1.7750699743628502,
+      "bounds": {
+        "min": [
+          -1.469102382659912,
+          0.10000000149011612,
+          2.9733951091766357
+        ],
+        "max": [
+          -1.0738043785095215,
+          1.8750699758529663,
+          3.541367530822754
+        ]
+      }
+    },
+    {
+      "role": "crystal-observer",
+      "avatar": "Business_Female_04",
+      "pose": "idle",
+      "position": [
+        0.7,
+        0.1,
+        3.25
+      ],
+      "nativeThreeYaw": -2.72,
+      "scale": 0.94,
+      "appearance": "black-top-ivory-trousers",
+      "height": 1.6854200586676598,
+      "bounds": {
+        "min": [
+          0.485117107629776,
+          0.10000000149011612,
+          3.0752735137939453
+        ],
+        "max": [
+          0.9416700005531311,
+          1.7854200601577759,
+          3.4396965503692627
+        ]
+      },
+      "wardrobeFaces": {
+        "charcoalTopFaces": 1698,
+        "ivoryTrouserFaces": 534,
+        "preservedSkinFaces": 1656
+      }
+    },
+    {
+      "role": "kiosk-guest",
+      "avatar": "Business_Male_02",
+      "pose": "operator",
+      "position": [
+        3.05,
+        0.1,
+        3.65
+      ],
+      "nativeThreeYaw": -2.14,
+      "scale": 0.98,
+      "appearance": "black-backpack",
+      "height": 1.7571400627493858,
+      "bounds": {
+        "min": [
+          2.5915181636810303,
+          0.10000000149011612,
+          3.2433958053588867
+        ],
+        "max": [
+          3.3849658966064453,
+          1.857140064239502,
+          3.930654525756836
+        ]
+      }
+    },
+    {
+      "role": "deep-right-gallery",
+      "avatar": "Business_Female_01",
+      "pose": "talk",
+      "position": [
+        3.9,
+        0.1,
+        -1.75
+      ],
+      "nativeThreeYaw": 1.15,
+      "scale": 0.93,
+      "appearance": null,
+      "height": 1.6674900278449059,
+      "bounds": {
+        "min": [
+          3.716944694519043,
+          0.10000000149011612,
+          -2.0022897720336914
+        ],
+        "max": [
+          4.082969665527344,
+          1.767490029335022,
+          -1.3903263807296753
+        ]
+      }
+    },
+    {
+      "role": "interior-left-conversation",
+      "avatar": "Business_Female_04",
+      "pose": "talk",
+      "position": [
+        -3.5,
+        0.1,
+        -1.65
+      ],
+      "nativeThreeYaw": -0.72,
+      "scale": 0.94,
+      "appearance": null,
+      "height": 1.6854200586676598,
+      "bounds": {
+        "min": [
+          -3.9021952152252197,
+          0.10000000149011612,
+          -1.860063076019287
+        ],
+        "max": [
+          -3.2703073024749756,
+          1.7854200601577759,
+          -1.4678353071212769
+        ]
+      }
+    },
+    {
+      "role": "interior-right-browser",
+      "avatar": "Business_Male_01",
+      "pose": "idle",
+      "position": [
+        3.45,
+        0.1,
+        0.5
+      ],
+      "nativeThreeYaw": 1.4,
+      "scale": 0.98,
+      "appearance": null,
+      "height": 1.7571400627493858,
+      "bounds": {
+        "min": [
+          3.301551342010498,
+          0.10000000149011612,
+          0.2174374759197235
+        ],
+        "max": [
+          3.6746153831481934,
+          1.857140064239502,
+          0.7881051301956177
+        ]
+      }
+    },
+    {
+      "role": "cafe-left",
+      "avatar": "Business_Female_01",
+      "pose": "projection-seated",
+      "position": [
+        4.275,
+        0.1,
+        3.11
+      ],
+      "nativeThreeYaw": 1.15,
+      "scale": 1,
+      "appearance": null,
+      "height": 1.3472149595618248,
+      "bounds": {
+        "min": [
+          4.42740535736084,
+          0.10000000149011612,
+          3.029656410217285
+        ],
+        "max": [
+          5.147404193878174,
+          1.447214961051941,
+          3.6368510723114014
+        ]
+      }
+    },
+    {
+      "role": "cafe-right",
+      "avatar": "Business_Male_02",
+      "pose": "projection-seated",
+      "position": [
+        5.952,
+        0.1,
+        2.401
+      ],
+      "nativeThreeYaw": -0.6,
+      "scale": 1,
+      "appearance": null,
+      "height": 1.3898945078253746,
+      "bounds": {
+        "min": [
+          5.316074848175049,
+          0.10000000149011612,
+          2.5263078212738037
+        ],
+        "max": [
+          5.95068883895874,
+          1.4898945093154907,
+          3.2110307216644287
+        ]
+      }
+    },
+    {
+      "role": "cafe-rear",
+      "avatar": "Business_Male_01",
+      "pose": "projection-seated",
+      "position": [
+        5.072,
+        0.1,
+        1.882
+      ],
+      "nativeThreeYaw": -0.6,
+      "scale": 1,
+      "appearance": null,
+      "height": 1.3803128898143768,
+      "bounds": {
+        "min": [
+          4.43098783493042,
+          0.1000000536441803,
+          2.003736972808838
+        ],
+        "max": [
+          5.071096897125244,
+          1.4803129434585571,
+          2.698061227798462
+        ]
+      }
+    }
+  ],
+  "architectureEnvelope": [
+    14.4,
+    7.2,
+    10.75
+  ],
+  "nativeFloorZDomain": [
+    -4.5,
+    6.25
+  ],
+  "stage": {
+    "center": [
+      0,
+      1.25,
+      -1.45
+    ],
+    "radius": 2.9,
+    "shape": "circular"
+  },
+  "crystal": {
+    "asset": "projection-crystals-v10.glb",
+    "position": [
+      0,
+      1.25,
+      -1.25
+    ],
+    "scale": [
+      1.22,
+      1.34,
+      1.22
+    ]
+  },
+  "seatedChairAnchors": [
+    {
+      "role": "cafe-left",
+      "position": [
+        4.3,
+        0.1,
+        3.05
+      ],
+      "yaw": 1.15
+    },
+    {
+      "role": "cafe-right",
+      "position": [
+        5.832,
+        0.1,
+        2.401
+      ],
+      "yaw": -0.6
+    },
+    {
+      "role": "cafe-rear",
+      "position": [
+        5.072,
+        0.1,
+        1.882
+      ],
+      "yaw": -0.6
+    }
+  ],
+  "seatTopY": 0.584,
+  "seatedContactRevision": "chair-contact-ik-v5",
+  "seatedGuestOffsets": {
+    "cafe-left": [
+      -0.025,
+      0,
+      0.06
+    ],
+    "cafe-right": [
+      0.12,
+      0,
+      0
+    ],
+    "cafe-rear": [
+      0,
+      0,
+      0
+    ]
+  },
+  "seatingFurniture": {
+    "cafe-left": "single rounded armchair",
+    "cafe-right": "two-seat sofa right",
+    "cafe-rear": "two-seat sofa left"
+  },
+  "seatedContacts": [
+    {
+      "revision": "chair-contact-ik-v5",
+      "avatar": "Business_Male_01",
+      "pose": "projection-seated",
+      "seatTopY": 0.584,
+      "floorY": 0.1,
+      "bodyScalePreserved": 0.8731643721046909,
+      "pelvisLift": 0.13031288620384746,
+      "hipCenterY": 0.685434445336721,
+      "rearContactY": 0.5867362382229457,
+      "shoeFloorY": 0.10000005204465126,
+      "headTopY": 1.4803129196166993,
+      "forwardPerch": 0.36,
+      "minimumSurfaceYWithinFlatCushion": 0.5923321306705475,
+      "limbLengthsBefore": {
+        "L": [
+          0.34842356090833265,
+          0.3463747959484374
+        ],
+        "R": [
+          0.34842353135866166,
+          0.3463747842732616
+        ]
+      },
+      "limbLengthsAfter": {
+        "L": [
+          0.3484234420409449,
+          0.34637478784468034
+        ],
+        "R": [
+          0.34842355348907283,
+          0.3463747577298522
+        ]
+      }
+    },
+    {
+      "revision": "chair-contact-ik-v5",
+      "avatar": "Business_Male_02",
+      "pose": "projection-seated",
+      "seatTopY": 0.584,
+      "floorY": 0.1,
+      "bodyScalePreserved": 0.8630175057428994,
+      "pelvisLift": 0.13989441731723845,
+      "hipCenterY": 0.6897272177577117,
+      "rearContactY": 0.5865551299102142,
+      "shoeFloorY": 0.1,
+      "headTopY": 1.489894485473633,
+      "forwardPerch": 0.36,
+      "minimumSurfaceYWithinFlatCushion": 0.592229551076889,
+      "limbLengthsBefore": {
+        "L": [
+          0.3443744892177107,
+          0.3423497260074016
+        ],
+        "R": [
+          0.34437447234856083,
+          0.34234951717250045
+        ]
+      },
+      "limbLengthsAfter": {
+        "L": [
+          0.34437452880985375,
+          0.34234978824787055
+        ],
+        "R": [
+          0.34437450029595784,
+          0.34234955625485464
+        ]
+      }
+    },
+    {
+      "revision": "chair-contact-ik-v5",
+      "avatar": "Business_Female_01",
+      "pose": "projection-seated",
+      "seatTopY": 0.584,
+      "floorY": 0.1,
+      "bodyScalePreserved": 0.9318946580333352,
+      "pelvisLift": 0.09721472844960377,
+      "hipCenterY": 0.6862593682341025,
+      "rearContactY": 0.586776881107103,
+      "shoeFloorY": 0.1,
+      "headTopY": 1.447214937210083,
+      "forwardPerch": 0.36,
+      "minimumSurfaceYWithinFlatCushion": 0.5867768883705139,
+      "limbLengthsBefore": {
+        "L": [
+          0.3970431455313508,
+          0.373181050974816
+        ],
+        "R": [
+          0.3970429924999194,
+          0.37318113930822816
+        ]
+      },
+      "limbLengthsAfter": {
+        "L": [
+          0.3970431620821676,
+          0.37318103952889026
+        ],
+        "R": [
+          0.3970429820601691,
+          0.3731810664166561
+        ]
+      }
+    }
+  ],
+  "ambientOcclusion": {
+    "layer": "Col",
+    "samples": 16,
+    "radius": 0.06,
+    "objects": 18,
+    "occluderTriangles": 98656,
+    "corners": 310974,
+    "evaluatedPositions": 55172,
+    "rays": 882752,
+    "skipped": {
+      "non_mesh": 0,
+      "character": 0,
+      "distant_hall": 0,
+      "non_opaque_or_emissive": 0
+    },
+    "budgetReached": false,
+    "seconds": 4.234,
+    "minimum": 0.72,
+    "mean": 0.95292
+  },
+  "bytes": 22764488,
+  "sha256": "1eef1c83d2ad425216aba99be36c86faf42a0ae52a8c4e9a5be647a29712a73a",
+  "staging": {
+    "receptionCenter": [
+      -4.3,
+      0.1,
+      3.1
+    ],
+    "kioskCenter": [
+      1.85,
+      0.1,
+      3.25
+    ],
+    "cafeTableCenter": [
+      5.15,
+      0.1,
+      3.05
+    ],
+    "cafeTableRadius": 0.43,
+    "cafeTableTopY": 0.748,
+    "openFrontEntry": {
+      "center": [
+        0.15,
+        0.1,
+        4
+      ],
+      "width": 2.4
+    },
+    "normalHumanDimensionsPreserved": true
+  }
+}

@@ -5,6 +5,8 @@ import { trapDialogFocus } from "./focusTrap";
 import { useVenue } from "../systems/store";
 import { NAV_STOPS } from "../data/zones";
 import { scrollToProgress } from "../systems/ScrollRig";
+import { inProjectionShowcase } from "../data/projection";
+import { inRental2026 } from "../data/ledRental2026";
 
 /**
  * Navigation.
@@ -44,6 +46,8 @@ const ROUTES = [
 export function Nav() {
   const sheet = useRef<HTMLDivElement>(null);
   const zone = useVenue((s) => s.zone);
+  const projectionFrame = useVenue(s=>inProjectionShowcase(s.progress));
+  const rentalFrame = useVenue(s=>inRental2026(s.progress));
   const navOpen = useVenue((s) => s.navOpen);
   const setNavOpen = useVenue((s) => s.setNavOpen);
 
@@ -68,7 +72,7 @@ export function Nav() {
 
   return (
     <>
-      <header className="v-nav">
+      <header className="v-nav" data-zone={rentalFrame ? "led-rental" : projectionFrame ? "projection" : zone}>
         <button type="button" className="v-nav-brand" onClick={() => go(0)} aria-label="livegridAV — back to the entrance">
           <NavMark />
           livegrid<span>AV</span>

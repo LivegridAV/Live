@@ -1,0 +1,590 @@
+{
+  "version": 1,
+  "authoringScale": 1,
+  "root": [
+    10.2,
+    0,
+    -189
+  ],
+  "worldAnchor": [
+    10.2,
+    0,
+    -189
+  ],
+  "rootRotation": [
+    0,
+    -1.5707963267948966,
+    0
+  ],
+  "floorTop": 0.22,
+  "cameraSuggestion": {
+    "position": [
+      -2.0,
+      3.1,
+      25.0
+    ],
+    "look": [
+      0,
+      5.0,
+      -0.4
+    ],
+    "verticalFov": 38
+  },
+  "architecture": {
+    "width": 23,
+    "height": 10.9,
+    "depth": 11.0,
+    "frontFascia": "continuous swept black and broad champagne arch",
+    "reception": {
+      "center": [
+        -7.75,
+        0,
+        3.1
+      ],
+      "width": 5.4,
+      "depth": 1.52,
+      "bottom": 0.3,
+      "top": 2.18
+    },
+    "palaceStage": {
+      "min": [
+        -6.2,
+        0.22,
+        -3.55
+      ],
+      "max": [
+        6.2,
+        1.65,
+        1.25
+      ]
+    },
+    "canopies": [
+      {
+        "center": [
+          0,
+          9.02,
+          -0.48
+        ],
+        "radiusX": 6.75,
+        "radiusZ": 3.87
+      },
+      {
+        "center": [
+          0,
+          8.73,
+          -0.34
+        ],
+        "radiusX": 3.72,
+        "radiusZ": 2.42
+      }
+    ]
+  },
+  "apertures": [
+    {
+      "id": "projection-ceiling-outer",
+      "type": "ellipse",
+      "x": 0.0,
+      "y": 8.941143035888672,
+      "z": -0.4752628207206726,
+      "w": 13.5,
+      "h": 7.74,
+      "radiusX": 6.75,
+      "radiusZ": 3.87,
+      "rotation": [
+        1.5107963267948965,
+        0,
+        0
+      ],
+      "innerFraction": 0.6,
+      "mediaHint": "projection-ceiling"
+    },
+    {
+      "id": "projection-ceiling-inner",
+      "type": "ellipse",
+      "x": 0.0,
+      "y": 8.651251792907715,
+      "z": -0.3336867392063141,
+      "w": 7.44,
+      "h": 4.84,
+      "radiusX": 3.72,
+      "radiusZ": 2.42,
+      "rotation": [
+        1.4907963267948965,
+        0,
+        0
+      ],
+      "innerFraction": 0.8,
+      "mediaHint": "projection-ceiling"
+    },
+    {
+      "id": "projection-backdrop-left",
+      "type": "plane",
+      "x": -4.25,
+      "y": 4.36,
+      "z": -5.98,
+      "w": 4.05,
+      "h": 5.6,
+      "width": 4.05,
+      "height": 5.6,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "projection-backdrop"
+    },
+    {
+      "id": "projection-backdrop-right",
+      "type": "plane",
+      "x": 4.25,
+      "y": 4.36,
+      "z": -5.98,
+      "w": 4.05,
+      "h": 5.6,
+      "width": 4.05,
+      "height": 5.6,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "projection-backdrop"
+    },
+    {
+      "id": "projection-application-0",
+      "type": "plane",
+      "x": -8.3,
+      "y": 6.66,
+      "z": -3.13,
+      "w": 3.4,
+      "h": 1.28,
+      "width": 3.4,
+      "height": 1.28,
+      "rotation": [
+        0,
+        0.1,
+        0
+      ],
+      "mediaHint": "projection-application-0"
+    },
+    {
+      "id": "projection-application-1",
+      "type": "plane",
+      "x": -8.3,
+      "y": 5.0,
+      "z": -3.13,
+      "w": 3.4,
+      "h": 1.28,
+      "width": 3.4,
+      "height": 1.28,
+      "rotation": [
+        0,
+        0.1,
+        0
+      ],
+      "mediaHint": "projection-application-1"
+    },
+    {
+      "id": "projection-application-2",
+      "type": "plane",
+      "x": -8.3,
+      "y": 3.34,
+      "z": -3.13,
+      "w": 3.4,
+      "h": 1.28,
+      "width": 3.4,
+      "height": 1.28,
+      "rotation": [
+        0,
+        0.1,
+        0
+      ],
+      "mediaHint": "projection-application-2"
+    },
+    {
+      "id": "projection-application-3",
+      "type": "plane",
+      "x": -8.3,
+      "y": 1.68,
+      "z": -3.13,
+      "w": 3.4,
+      "h": 1.28,
+      "width": 3.4,
+      "height": 1.28,
+      "rotation": [
+        0,
+        0.1,
+        0
+      ],
+      "mediaHint": "projection-application-3"
+    },
+    {
+      "id": "projection-hero",
+      "type": "plane",
+      "x": 8.43,
+      "y": 4.62,
+      "z": -2.77,
+      "w": 4.38,
+      "h": 2.46,
+      "width": 4.38,
+      "height": 2.46,
+      "rotation": [
+        0,
+        -0.08,
+        0
+      ],
+      "mediaHint": "projection-hero"
+    },
+    {
+      "id": "projection-kiosk-wide",
+      "type": "plane",
+      "x": 7.25,
+      "y": 2.8329999446868896,
+      "z": 3.0199999809265137,
+      "w": 2.63,
+      "h": 1.4143570116082314,
+      "width": 2.63,
+      "height": 1.4143570116082314,
+      "rotation": [
+        -1.0325837862189327,
+        -0.051386481066113786,
+        -0.08582492235622484
+      ],
+      "mediaHint": "projection-kiosk"
+    },
+    {
+      "id": "projection-kiosk-slim",
+      "type": "plane",
+      "x": -1.8700000047683716,
+      "y": 2.4130001068115234,
+      "z": 3.440000057220459,
+      "w": 0.81,
+      "h": 0.9926057435220422,
+      "width": 0.81,
+      "height": 0.9926057435220422,
+      "rotation": [
+        -0.8037279878953107,
+        0.15396969371072322,
+        0.15776774763414256
+      ],
+      "mediaHint": "projection-kiosk"
+    }
+  ],
+  "screens": [
+    {
+      "id": "projection-ceiling-outer",
+      "type": "ellipse",
+      "x": 0.0,
+      "y": 8.941143035888672,
+      "z": -0.4752628207206726,
+      "w": 13.5,
+      "h": 7.74,
+      "radiusX": 6.75,
+      "radiusZ": 3.87,
+      "rotation": [
+        1.5107963267948965,
+        0,
+        0
+      ],
+      "innerFraction": 0.6,
+      "mediaHint": "projection-ceiling"
+    },
+    {
+      "id": "projection-ceiling-inner",
+      "type": "ellipse",
+      "x": 0.0,
+      "y": 8.651251792907715,
+      "z": -0.3336867392063141,
+      "w": 7.44,
+      "h": 4.84,
+      "radiusX": 3.72,
+      "radiusZ": 2.42,
+      "rotation": [
+        1.4907963267948965,
+        0,
+        0
+      ],
+      "innerFraction": 0.8,
+      "mediaHint": "projection-ceiling"
+    },
+    {
+      "id": "projection-backdrop-left",
+      "type": "plane",
+      "x": -4.25,
+      "y": 4.36,
+      "z": -5.98,
+      "w": 4.05,
+      "h": 5.6,
+      "width": 4.05,
+      "height": 5.6,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "projection-backdrop"
+    },
+    {
+      "id": "projection-backdrop-right",
+      "type": "plane",
+      "x": 4.25,
+      "y": 4.36,
+      "z": -5.98,
+      "w": 4.05,
+      "h": 5.6,
+      "width": 4.05,
+      "height": 5.6,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "projection-backdrop"
+    },
+    {
+      "id": "projection-application-0",
+      "type": "plane",
+      "x": -8.3,
+      "y": 6.66,
+      "z": -3.13,
+      "w": 3.4,
+      "h": 1.28,
+      "width": 3.4,
+      "height": 1.28,
+      "rotation": [
+        0,
+        0.1,
+        0
+      ],
+      "mediaHint": "projection-application-0"
+    },
+    {
+      "id": "projection-application-1",
+      "type": "plane",
+      "x": -8.3,
+      "y": 5.0,
+      "z": -3.13,
+      "w": 3.4,
+      "h": 1.28,
+      "width": 3.4,
+      "height": 1.28,
+      "rotation": [
+        0,
+        0.1,
+        0
+      ],
+      "mediaHint": "projection-application-1"
+    },
+    {
+      "id": "projection-application-2",
+      "type": "plane",
+      "x": -8.3,
+      "y": 3.34,
+      "z": -3.13,
+      "w": 3.4,
+      "h": 1.28,
+      "width": 3.4,
+      "height": 1.28,
+      "rotation": [
+        0,
+        0.1,
+        0
+      ],
+      "mediaHint": "projection-application-2"
+    },
+    {
+      "id": "projection-application-3",
+      "type": "plane",
+      "x": -8.3,
+      "y": 1.68,
+      "z": -3.13,
+      "w": 3.4,
+      "h": 1.28,
+      "width": 3.4,
+      "height": 1.28,
+      "rotation": [
+        0,
+        0.1,
+        0
+      ],
+      "mediaHint": "projection-application-3"
+    },
+    {
+      "id": "projection-hero",
+      "type": "plane",
+      "x": 8.43,
+      "y": 4.62,
+      "z": -2.77,
+      "w": 4.38,
+      "h": 2.46,
+      "width": 4.38,
+      "height": 2.46,
+      "rotation": [
+        0,
+        -0.08,
+        0
+      ],
+      "mediaHint": "projection-hero"
+    },
+    {
+      "id": "projection-kiosk-wide",
+      "type": "plane",
+      "x": 7.25,
+      "y": 2.8329999446868896,
+      "z": 3.0199999809265137,
+      "w": 2.63,
+      "h": 1.4143570116082314,
+      "width": 2.63,
+      "height": 1.4143570116082314,
+      "rotation": [
+        -1.0325837862189327,
+        -0.051386481066113786,
+        -0.08582492235622484
+      ],
+      "mediaHint": "projection-kiosk"
+    },
+    {
+      "id": "projection-kiosk-slim",
+      "type": "plane",
+      "x": -1.8700000047683716,
+      "y": 2.4130001068115234,
+      "z": 3.440000057220459,
+      "w": 0.81,
+      "h": 0.9926057435220422,
+      "width": 0.81,
+      "height": 0.9926057435220422,
+      "rotation": [
+        -0.8037279878953107,
+        0.15396969371072322,
+        0.15776774763414256
+      ],
+      "mediaHint": "projection-kiosk"
+    }
+  ],
+  "projectors": [
+    {
+      "id": "projection-central-projector",
+      "position": [
+        0,
+        8.49,
+        1.45
+      ],
+      "lens": [
+        0,
+        8.49,
+        1.45
+      ],
+      "target": [
+        0,
+        4.55,
+        -0.62
+      ],
+      "width": 2.8,
+      "height": 3.4,
+      "radius": 1.7,
+      "color": "#c7e9ff",
+      "opacity": 0.105
+    },
+    {
+      "id": "projection-left-projector",
+      "position": [
+        -4.65,
+        7.73,
+        0.46
+      ],
+      "lens": [
+        -4.65,
+        7.73,
+        0.46
+      ],
+      "target": [
+        -3.06,
+        3.9,
+        -0.85
+      ],
+      "width": 2.0,
+      "height": 2.7,
+      "radius": 1.2,
+      "color": "#c7e9ff",
+      "opacity": 0.065
+    },
+    {
+      "id": "projection-right-projector",
+      "position": [
+        4.65,
+        7.73,
+        0.46
+      ],
+      "lens": [
+        4.65,
+        7.73,
+        0.46
+      ],
+      "target": [
+        3.06,
+        3.9,
+        -0.85
+      ],
+      "width": 2.0,
+      "height": 2.7,
+      "radius": 1.2,
+      "color": "#c7e9ff",
+      "opacity": 0.065
+    }
+  ],
+  "interaction": {
+    "position": [
+      -7.75,
+      1.19,
+      3.89
+    ],
+    "rotation": [
+      0,
+      0,
+      0
+    ],
+    "w": 5.1,
+    "h": 1.58
+  },
+  "ambientOcclusion": {
+    "layer": "Col",
+    "samples": 32,
+    "radius": 0.7,
+    "objects": 21,
+    "occluderTriangles": 132040,
+    "corners": 273724,
+    "evaluatedPositions": 101621,
+    "rays": 3251872,
+    "skipped": {
+      "non_mesh": 0,
+      "character": 0,
+      "distant_hall": 1,
+      "non_opaque_or_emissive": 7
+    },
+    "budgetReached": false,
+    "seconds": 24.767,
+    "minimum": 0.45,
+    "mean": 0.73628
+  },
+  "stats": {
+    "main": {
+      "file": "projection-mapping-stall.glb",
+      "bytes": 6817456,
+      "meshes": 29,
+      "vertices": 146815,
+      "triangles": 210300,
+      "bounds": {
+        "min": [
+          -11.804020881652832,
+          0.03500000014901161,
+          -6.70381498336792
+        ],
+        "max": [
+          11.803801536560059,
+          11.887999534606934,
+          5.097999572753906
+        ]
+      }
+    }
+  }
+}

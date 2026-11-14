@@ -1,0 +1,243 @@
+{
+  "version": 6,
+  "asset": "projection-botanical-v6.glb",
+  "authoringAxes": "native Three XYZ front +Z",
+  "provenance": "Original procedural botanical meshes and native mathematical PBR maps; no external assets or attachment pixels.",
+  "nativeBoothDomain": {
+    "min": [
+      -7.2,
+      0.1,
+      -3
+    ],
+    "max": [
+      7.2,
+      7.8,
+      5
+    ]
+  },
+  "bounds": {
+    "min": [
+      -7.1686482429504395,
+      0.10000000149011612,
+      -1.4129929542541504
+    ],
+    "max": [
+      7.084047794342041,
+      5.82041597366333,
+      4.192901134490967
+    ]
+  },
+  "plants": [
+    {
+      "name": "airy left entrance ficus",
+      "speciesType": "Ficus microcarpa inspired branched specimen",
+      "anchor": [
+        -6.6,
+        0.1,
+        3.4
+      ],
+      "targetHeight": 2.9,
+      "newPolygonCount": 25482
+    },
+    {
+      "name": "inner left airy areca",
+      "speciesType": "multi stem areca palm",
+      "anchor": [
+        -3.2,
+        0.1,
+        -0.6
+      ],
+      "targetHeight": 2.6,
+      "newPolygonCount": 5834
+    },
+    {
+      "name": "inner right fine bamboo",
+      "speciesType": "fine stemmed bamboo",
+      "anchor": [
+        3.4,
+        0.1,
+        -0.55
+      ],
+      "targetHeight": 2.6,
+      "newPolygonCount": 6449
+    },
+    {
+      "name": "right entrance layered palm",
+      "speciesType": "multi stem areca palm",
+      "anchor": [
+        6.7,
+        0.1,
+        3.25
+      ],
+      "targetHeight": 2.1,
+      "newPolygonCount": 8808
+    },
+    {
+      "name": "left gallery outer fine vine",
+      "speciesType": "fine climbing evergreen vine",
+      "anchor": [
+        -4.95,
+        0.1,
+        0.15
+      ],
+      "targetHeight": 6.0,
+      "newPolygonCount": 13440
+    },
+    {
+      "name": "left gallery inner fine vine",
+      "speciesType": "fine climbing evergreen vine",
+      "anchor": [
+        -4.95,
+        0.1,
+        0.15
+      ],
+      "targetHeight": 6.0,
+      "newPolygonCount": 13440
+    },
+    {
+      "name": "right gallery outer fine vine",
+      "speciesType": "fine climbing evergreen vine",
+      "anchor": [
+        5.15,
+        0.1,
+        0.15
+      ],
+      "targetHeight": 6.0,
+      "newPolygonCount": 13440
+    },
+    {
+      "name": "right gallery inner fine vine",
+      "speciesType": "fine climbing evergreen vine",
+      "anchor": [
+        5.15,
+        0.1,
+        0.15
+      ],
+      "targetHeight": 6.0,
+      "newPolygonCount": 13440
+    },
+    {
+      "name": "stage left fine fern",
+      "speciesType": "fine pinnate fern",
+      "anchor": [
+        -2.6,
+        0.1,
+        1.45
+      ],
+      "targetHeight": 1.05,
+      "newPolygonCount": 2424
+    },
+    {
+      "name": "stage right fine fern",
+      "speciesType": "fine pinnate fern",
+      "anchor": [
+        2.6,
+        0.1,
+        1.45
+      ],
+      "targetHeight": 0.98,
+      "newPolygonCount": 2424
+    },
+    {
+      "name": "reception side low fern",
+      "speciesType": "fine pinnate fern",
+      "anchor": [
+        -2.85,
+        0.1,
+        1.45
+      ],
+      "targetHeight": 0.6,
+      "newPolygonCount": 2424
+    },
+    {
+      "name": "left entrance low fern",
+      "speciesType": "fine pinnate fern",
+      "anchor": [
+        -6.0,
+        0.1,
+        3.72
+      ],
+      "targetHeight": 0.57,
+      "newPolygonCount": 2424
+    },
+    {
+      "name": "right lounge low fern",
+      "speciesType": "fine pinnate fern",
+      "anchor": [
+        6.65,
+        0.1,
+        0.75
+      ],
+      "targetHeight": 0.58,
+      "newPolygonCount": 2424
+    },
+    {
+      "name": "counter ivory orchids",
+      "speciesType": "small ivory orchid arrangement",
+      "anchor": [
+        -3.15,
+        1.2,
+        3.05
+      ],
+      "targetHeight": 0.32,
+      "newPolygonCount": 724
+    },
+    {
+      "name": "cafe ivory orchids",
+      "speciesType": "small ivory orchid arrangement",
+      "anchor": [
+        5.15,
+        0.75,
+        3.05
+      ],
+      "targetHeight": 0.26,
+      "newPolygonCount": 724
+    }
+  ],
+  "leafCount": 6669,
+  "materialBatches": 10,
+  "triangles": 228120,
+  "vertices": 189393,
+  "bytes": 12228908,
+  "sha256": "0044be8cc2fb4c1a61f3fa0ea42b3195dcacac1ccc84f3713760c743d90e8b4c",
+  "materials": [
+    "Projection Botanical V6 | planter champagne brushed metal",
+    "Projection Botanical V6 | soil dark coarse planting substrate",
+    "Projection Botanical V6 | bark textured natural warm grey trunks",
+    "Projection Botanical V6 | bark slender olive brown stems",
+    "Projection Botanical V6 | foliage mature ficus with fine reticulated veins",
+    "Projection Botanical V6 | foliage slender areca and bamboo",
+    "Projection Botanical V6 | foliage small climbing leaves",
+    "Projection Botanical V6 | foliage fine fern pinnae",
+    "Projection Botanical V6 | ivory thin porcelain orchid petals",
+    "Projection Botanical V6 | orchid quiet ochre throat"
+  ],
+  "maps": [
+    {
+      "file": "public\\media\\projection-mapping-v6\\botanical\\leaf-atlas-basecolor.png",
+      "sha256": "db00e68aacbd289e00826bad224a2353b6b8c0e57f31144c25b04ec6d915b3f3"
+    },
+    {
+      "file": "public\\media\\projection-mapping-v6\\botanical\\leaf-atlas-normal.png",
+      "sha256": "bc652e4dbaaeef6a35dbe50d12251e49c5f2ff166d0eb82e435d94dc526ab2a0"
+    },
+    {
+      "file": "public\\media\\projection-mapping-v6\\botanical\\bark-basecolor.png",
+      "sha256": "16e5f70ac995870c34cc0a82775e8762b3dc23009ce3fbebb0471d64e3287bf4"
+    },
+    {
+      "file": "public\\media\\projection-mapping-v6\\botanical\\bark-normal.png",
+      "sha256": "47e9c90262ec2b524039c4aa87794476f661e20b215c8ea90167b6b00973ece2"
+    },
+    {
+      "file": "public\\media\\projection-mapping-v6\\botanical\\champagne-brushing-normal.png",
+      "sha256": "94a11a98694485e31f2b0c73c6315e7cfe1754ba8e41e06cbaa644ac20d515a7"
+    },
+    {
+      "file": "public\\media\\projection-mapping-v6\\botanical\\soil-basecolor.png",
+      "sha256": "7e17f73b805fb17b8329ffca9ada8280d4b0129a59fdc5a456549ab4b25bc9a8"
+    }
+  ],
+  "apertureProtection": "Gallery leaves restricted to local absX>1.205 outside panel half-width1.125.",
+  "runtimeGuidance": "Preserve exported standard PBR textures, metalness, roughness, normal maps and opaque double-sided leaf materials."
+}

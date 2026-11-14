@@ -1,0 +1,1002 @@
+{
+  "version": 7,
+  "authoringScale": 1,
+  "authoringSpace": "Three XYZ, front +Z, bottom Y0",
+  "reference": "codex-clipboard-9b0cc574-b6fa-41e9-afc8-1133772084b9.png",
+  "placement": {
+    "position": [
+      0,
+      1.25,
+      -1.25
+    ],
+    "scale": [
+      1.22,
+      1.34,
+      1.22
+    ],
+    "parentRuntimeScale": 3
+  },
+  "projectionDomain": {
+    "min": [
+      -2.15,
+      0
+    ],
+    "max": [
+      2.15,
+      3.55
+    ]
+  },
+  "materialRoles": [
+    "Projection Crystals | ivory sculpted return",
+    "Projection Crystals | crystal brushed silver facet",
+    "Projection Crystals | white projected sculpted facade | pale blue secondary facet",
+    "Projection Crystals | dark crystal recessed joint",
+    "Projection Crystals | crystal champagne gold facet",
+    "Projection Crystals | warm narrow architectural rib",
+    "Projection Crystals | white projected sculpted facade"
+  ],
+  "crystals": [
+    {
+      "name": "slender highest rear crystal",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        -0.265,
+        -0.335
+      ],
+      "width": 0.355,
+      "depth": 0.45,
+      "height": 3.55,
+      "lean": [
+        -0.065,
+        -0.025
+      ],
+      "tip": [
+        -0.4142607218231485,
+        3.55,
+        -0.42122827784481603
+      ],
+      "spin": -0.12,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "short oblique truncated cap",
+      "capWidth": 0.1775
+    },
+    {
+      "name": "central rising blue folded blade",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        0.115,
+        -0.005
+      ],
+      "width": 0.465,
+      "depth": 0.43,
+      "height": 3.22,
+      "lean": [
+        0.185,
+        -0.06
+      ],
+      "tip": [
+        0.20577370226913969,
+        3.22,
+        -0.11754096384665275
+      ],
+      "spin": -0.17,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "short oblique truncated cap",
+      "capWidth": 0.1953
+    },
+    {
+      "name": "narrow secondary rear spear",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        0.415,
+        -0.48
+      ],
+      "width": 0.245,
+      "depth": 0.32,
+      "height": 2.98,
+      "lean": [
+        -0.025,
+        0.015
+      ],
+      "tip": [
+        0.36549999999999994,
+        2.98,
+        -0.48419999999999996
+      ],
+      "spin": 0.13,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "left broken champagne and ice spire",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        -0.94,
+        -0.175
+      ],
+      "width": 0.46,
+      "depth": 0.43,
+      "height": 2.49,
+      "lean": [
+        0.09,
+        -0.045
+      ],
+      "tip": [
+        -0.9652621126706294,
+        2.49,
+        -0.2996298279773547
+      ],
+      "spin": 0.1,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "short oblique truncated cap",
+      "capWidth": 0.2852
+    },
+    {
+      "name": "left layered rear splinter",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        -1.23,
+        -0.43
+      ],
+      "width": 0.24,
+      "depth": 0.3,
+      "height": 2.22,
+      "lean": [
+        0.055,
+        0.01
+      ],
+      "tip": [
+        -1.199,
+        2.22,
+        -0.438
+      ],
+      "spin": -0.14,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "left leaning fractured ice",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        -1.465,
+        0.1
+      ],
+      "width": 0.32,
+      "depth": 0.35,
+      "height": 1.94,
+      "lean": [
+        -0.105,
+        -0.065
+      ],
+      "tip": [
+        -1.602,
+        1.94,
+        0.014000000000000005
+      ],
+      "spin": -0.24,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "outer left low jagged spear",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        -1.83,
+        0.11
+      ],
+      "width": 0.27,
+      "depth": 0.32,
+      "height": 1.32,
+      "lean": [
+        0.035,
+        -0.02
+      ],
+      "tip": [
+        -1.822,
+        1.32,
+        0.0708
+      ],
+      "spin": 0.18,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "right high faceted silver spire",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        0.86,
+        -0.34
+      ],
+      "width": 0.42,
+      "depth": 0.45,
+      "height": 2.73,
+      "lean": [
+        -0.055,
+        -0.015
+      ],
+      "tip": [
+        0.7093406739660604,
+        2.73,
+        -0.4467076210122826
+      ],
+      "spin": 0.2,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "short oblique truncated cap",
+      "capWidth": 0.26039999999999996
+    },
+    {
+      "name": "right narrow golden cleft",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        1.28,
+        -0.015
+      ],
+      "width": 0.37,
+      "depth": 0.34,
+      "height": 2.27,
+      "lean": [
+        0.085,
+        -0.07
+      ],
+      "tip": [
+        1.328,
+        2.27,
+        -0.10540000000000001
+      ],
+      "spin": -0.12,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "outer right rising ice spur",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        1.665,
+        -0.15
+      ],
+      "width": 0.29,
+      "depth": 0.32,
+      "height": 1.9,
+      "lean": [
+        0.065,
+        -0.02
+      ],
+      "tip": [
+        1.701,
+        1.9,
+        -0.18919999999999998
+      ],
+      "spin": 0.18,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "layered fine shard 00",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        -0.61,
+        -0.49
+      ],
+      "width": 0.15,
+      "depth": 0.23,
+      "height": 2.76,
+      "lean": [
+        -0.035,
+        -0.025
+      ],
+      "tip": [
+        -0.66,
+        2.76,
+        -0.5288
+      ],
+      "spin": 0.0,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "layered fine shard 01",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        -0.72,
+        0.1
+      ],
+      "width": 0.19,
+      "depth": 0.23,
+      "height": 2.16,
+      "lean": [
+        0.075,
+        -0.025
+      ],
+      "tip": [
+        -0.664,
+        2.16,
+        0.06120000000000001
+      ],
+      "spin": 0.10097651817694758,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "layered fine shard 02",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        0.55,
+        -0.15
+      ],
+      "width": 0.16,
+      "depth": 0.23,
+      "height": 2.5,
+      "lean": [
+        0.025,
+        -0.025
+      ],
+      "tip": [
+        0.559,
+        2.5,
+        -0.1888
+      ],
+      "spin": 0.1091156912190818,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "layered fine shard 03",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        0.665,
+        -0.52
+      ],
+      "width": 0.16,
+      "depth": 0.23,
+      "height": 2.34,
+      "lean": [
+        -0.045,
+        -0.025
+      ],
+      "tip": [
+        0.604,
+        2.34,
+        -0.5588000000000001
+      ],
+      "spin": 0.016934400967184064,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "layered fine shard 04",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        -1.61,
+        -0.21
+      ],
+      "width": 0.14,
+      "depth": 0.23,
+      "height": 1.63,
+      "lean": [
+        -0.025,
+        -0.025
+      ],
+      "tip": [
+        -1.649,
+        1.63,
+        -0.2488
+      ],
+      "spin": -0.09081629943695138,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "layered fine shard 05",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        1.49,
+        -0.48
+      ],
+      "width": 0.17,
+      "depth": 0.23,
+      "height": 1.96,
+      "lean": [
+        0.03,
+        -0.025
+      ],
+      "tip": [
+        1.5030000000000001,
+        1.96,
+        -0.5188
+      ],
+      "spin": -0.11507091295957661,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "layered fine shard 06",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        1.91,
+        0.08
+      ],
+      "width": 0.16,
+      "depth": 0.23,
+      "height": 1.23,
+      "lean": [
+        -0.055,
+        -0.025
+      ],
+      "tip": [
+        1.839,
+        1.23,
+        0.0412
+      ],
+      "spin": -0.0335298597838711,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "layered fine shard 07",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        -1.96,
+        0.2
+      ],
+      "width": 0.15,
+      "depth": 0.23,
+      "height": 0.91,
+      "lean": [
+        0.025,
+        -0.025
+      ],
+      "tip": [
+        -1.95,
+        0.91,
+        0.1612
+      ],
+      "spin": 0.07883839184625469,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "central diagonal fractured ivory slab",
+      "kind": "closed off-axis folded lamella",
+      "outline": [
+        [
+          -0.64,
+          1.43,
+          0.4
+        ],
+        [
+          -0.4,
+          1.56,
+          0.35
+        ],
+        [
+          0.68,
+          0.13,
+          0.76
+        ],
+        [
+          0.4,
+          0.055,
+          0.78
+        ]
+      ],
+      "thickness": 0.09
+    },
+    {
+      "name": "near central split crystalline shield",
+      "kind": "closed off-axis folded lamella",
+      "outline": [
+        [
+          -0.56,
+          0.07,
+          0.72
+        ],
+        [
+          -0.6,
+          1.25,
+          0.43
+        ],
+        [
+          -0.3,
+          1.89,
+          0.23
+        ],
+        [
+          -0.1,
+          1.67,
+          0.4
+        ],
+        [
+          0.17,
+          0.58,
+          0.69
+        ],
+        [
+          0.07,
+          0.055,
+          0.77
+        ]
+      ],
+      "thickness": 0.095
+    },
+    {
+      "name": "right tilted broken icy sail",
+      "kind": "closed off-axis folded lamella",
+      "outline": [
+        [
+          0.53,
+          0.05,
+          0.74
+        ],
+        [
+          0.49,
+          1.05,
+          0.46
+        ],
+        [
+          0.79,
+          1.71,
+          0.24
+        ],
+        [
+          1.01,
+          1.43,
+          0.35
+        ],
+        [
+          1.18,
+          0.65,
+          0.61
+        ],
+        [
+          1.03,
+          0.05,
+          0.75
+        ]
+      ],
+      "thickness": 0.1
+    },
+    {
+      "name": "left intermediate ascending lamella",
+      "kind": "closed off-axis folded lamella",
+      "outline": [
+        [
+          -1.63,
+          0.11,
+          0.6
+        ],
+        [
+          -1.58,
+          1.27,
+          0.2
+        ],
+        [
+          -1.35,
+          1.61,
+          0.12
+        ],
+        [
+          -1.1,
+          0.87,
+          0.53
+        ],
+        [
+          -1.14,
+          0.07,
+          0.69
+        ]
+      ],
+      "thickness": 0.085
+    },
+    {
+      "name": "right outer folded pointed plate",
+      "kind": "closed off-axis folded lamella",
+      "outline": [
+        [
+          1.45,
+          0.055,
+          0.62
+        ],
+        [
+          1.47,
+          0.49,
+          0.49
+        ],
+        [
+          1.95,
+          1.32,
+          0.22
+        ],
+        [
+          2.035,
+          1.35,
+          0.16
+        ],
+        [
+          1.87,
+          0.33,
+          0.58
+        ]
+      ],
+      "thickness": 0.09
+    },
+    {
+      "name": "left crossing low silver blade",
+      "kind": "closed off-axis folded lamella",
+      "outline": [
+        [
+          -1.68,
+          0.93,
+          0.47
+        ],
+        [
+          -1.08,
+          0.75,
+          0.68
+        ],
+        [
+          -0.83,
+          0.37,
+          0.73
+        ],
+        [
+          -1.46,
+          0.6,
+          0.66
+        ]
+      ],
+      "thickness": 0.075
+    },
+    {
+      "name": "low fractured cluster 00",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        -1.97,
+        0.5
+      ],
+      "width": 0.23,
+      "depth": 0.2,
+      "height": 0.58,
+      "lean": [
+        0.045,
+        -0.015
+      ],
+      "tip": [
+        -1.948,
+        0.58,
+        0.473
+      ],
+      "spin": 0.22,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "low fractured cluster 01",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        -1.74,
+        0.61
+      ],
+      "width": 0.27,
+      "depth": 0.2,
+      "height": 0.91,
+      "lean": [
+        -0.065,
+        -0.015
+      ],
+      "tip": [
+        -1.8319999999999999,
+        0.91,
+        0.583
+      ],
+      "spin": 0.11886650729099076,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "low fractured cluster 02",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        -1.4,
+        0.6
+      ],
+      "width": 0.25,
+      "depth": 0.2,
+      "height": 0.71,
+      "lean": [
+        0.07,
+        -0.015
+      ],
+      "tip": [
+        -1.3549999999999998,
+        0.71,
+        0.573
+      ],
+      "spin": -0.09155230404037133,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "low fractured cluster 03",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        -1.02,
+        0.56
+      ],
+      "width": 0.3,
+      "depth": 0.2,
+      "height": 1.08,
+      "lean": [
+        -0.08,
+        -0.015
+      ],
+      "tip": [
+        -1.1300000000000001,
+        1.08,
+        0.533
+      ],
+      "spin": -0.21779834925209798,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "low fractured cluster 04",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        -0.74,
+        0.63
+      ],
+      "width": 0.23,
+      "depth": 0.2,
+      "height": 0.64,
+      "lean": [
+        0.03,
+        -0.015
+      ],
+      "tip": [
+        -0.733,
+        0.64,
+        0.603
+      ],
+      "spin": -0.14380159658999464,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "low fractured cluster 05",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        -0.18,
+        0.66
+      ],
+      "width": 0.24,
+      "depth": 0.2,
+      "height": 0.78,
+      "lean": [
+        -0.08,
+        -0.015
+      ],
+      "tip": [
+        -0.28400000000000003,
+        0.78,
+        0.633
+      ],
+      "spin": 0.06240568080190977,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "low fractured cluster 06",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        0.21,
+        0.66
+      ],
+      "width": 0.29,
+      "depth": 0.2,
+      "height": 0.54,
+      "lean": [
+        0.06,
+        -0.015
+      ],
+      "tip": [
+        0.24100000000000002,
+        0.54,
+        0.633
+      ],
+      "spin": 0.21123746306308053,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "low fractured cluster 07",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        0.89,
+        0.58
+      ],
+      "width": 0.26,
+      "depth": 0.2,
+      "height": 0.92,
+      "lean": [
+        0.05,
+        -0.015
+      ],
+      "tip": [
+        0.914,
+        0.92,
+        0.5529999999999999
+      ],
+      "spin": 0.165858495955527,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "low fractured cluster 08",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        1.31,
+        0.55
+      ],
+      "width": 0.28,
+      "depth": 0.2,
+      "height": 1.05,
+      "lean": [
+        -0.07,
+        -0.015
+      ],
+      "tip": [
+        1.212,
+        1.05,
+        0.523
+      ],
+      "spin": -0.03201000743789498,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "low fractured cluster 09",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        1.72,
+        0.54
+      ],
+      "width": 0.28,
+      "depth": 0.2,
+      "height": 0.73,
+      "lean": [
+        0.06,
+        -0.015
+      ],
+      "tip": [
+        1.752,
+        0.73,
+        0.513
+      ],
+      "spin": -0.20044865761462893,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    },
+    {
+      "name": "low fractured cluster 10",
+      "kind": "fractured pointed blade",
+      "centreXZ": [
+        1.98,
+        0.52
+      ],
+      "width": 0.2,
+      "depth": 0.2,
+      "height": 0.53,
+      "lean": [
+        -0.02,
+        -0.015
+      ],
+      "tip": [
+        1.94,
+        0.53,
+        0.493
+      ],
+      "spin": -0.18459573639681953,
+      "crossSections": 4,
+      "frontFaces": "true noncoplanar triangulated folds",
+      "topMode": "pointed splinter",
+      "capWidth": 0
+    }
+  ],
+  "ambientOcclusion": {
+    "layer": "Col",
+    "samples": 32,
+    "radius": 0.105,
+    "objects": 6,
+    "occluderTriangles": 27818,
+    "corners": 57932,
+    "evaluatedPositions": 57818,
+    "rays": 1850176,
+    "skipped": {
+      "non_mesh": 0,
+      "character": 0,
+      "distant_hall": 0,
+      "non_opaque_or_emissive": 1
+    },
+    "budgetReached": false,
+    "seconds": 5.83,
+    "minimum": 0.50011,
+    "mean": 0.9467
+  },
+  "stats": {
+    "file": "projection-crystals-v7.glb",
+    "bytes": 2030572,
+    "meshes": 7,
+    "vertices": 18825,
+    "triangles": 27896,
+    "bounds": {
+      "min": [
+        -2.1500000953674316,
+        0.0,
+        -0.800000011920929
+      ],
+      "max": [
+        2.1500000953674316,
+        3.547487735748291,
+        0.800000011920929
+      ]
+    }
+  },
+  "sha256": "3dbbf0c6bae80b778dc30b7269dc96c1cd259ffa607592a18b7d9f2a25474b6e",
+  "designNotes": [
+    "Slim rear highest apex; off-axis kinked cross-sections.",
+    "True folded foreground lamellae and dense low side shards.",
+    "No uninterrupted broad front quads or previous regular-prism geometry."
+  ]
+}

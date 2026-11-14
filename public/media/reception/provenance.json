@@ -1,0 +1,9 @@
+{
+  "reference": "User-supplied ChatGPT Image Sep 23, 2026, 12_29_33 AM (3).png",
+  "opening": "The opening and every subsequent reception view render actual 3D architecture, curved LED meshes, furniture, props and people. The supplied photograph is retained only as design reference and is not displayed over the scene.",
+  "motion": "24-second deformation of independent flat LED artwork, disabled for reduced motion. Typography remains anchored to its own curved 3D layer.",
+  "architecture": "scripts/blender/rebuild_reception_gallery.py -> public/models/expo/reception-gallery.glb",
+  "screen_media": ["/media/reception/cylinder-reference-art-v1.webp", "/media/reception/ribbon-reference-art-v1.webp", "/media/reception/panorama-reference-art-v1.webp"],
+  "artwork_provenance": "/media/reception/artwork-provenance.json",
+  "acceptance": "Camera and LED silhouettes are fitted to the supplied reference. A pixel-identical 100% reproduction has not been verified."
+}

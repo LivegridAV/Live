@@ -1,0 +1,614 @@
+{
+  "version": 2,
+  "authoringScale": 1,
+  "root": [
+    10.2,
+    0,
+    -189
+  ],
+  "worldAnchor": [
+    10.2,
+    0,
+    -189
+  ],
+  "rootRotation": [
+    0,
+    -1.5707963267948966,
+    0
+  ],
+  "floorTop": 0.1,
+  "cameraSuggestion": {
+    "position": [
+      -8.5,
+      1.85,
+      10.5
+    ],
+    "look": [
+      -0.2,
+      2.35,
+      -0.15
+    ],
+    "verticalFov": 38
+  },
+  "architecture": {
+    "width": 12,
+    "height": 4.5,
+    "depth": 5,
+    "frontFascia": "deep rounded fascia with one broad asymmetrical champagne inner arch",
+    "deckBounds": {
+      "min": [
+        -6,
+        0.1,
+        -2.5
+      ],
+      "max": [
+        6,
+        0.1,
+        2.5
+      ]
+    },
+    "zones": {
+      "left": 3.8,
+      "center": 4.8,
+      "right": 3.0,
+      "totalColumnAllowance": 0.4
+    },
+    "reception": {
+      "center": [
+        -4.32,
+        0.1,
+        1.6
+      ],
+      "width": 3.2,
+      "height": 1.05,
+      "depth": 0.78,
+      "top": 1.15
+    },
+    "palaceStage": {
+      "min": [
+        -2.1,
+        0.1,
+        -1.4
+      ],
+      "max": [
+        2.9,
+        0.68,
+        0.8
+      ]
+    }
+  },
+  "palacePlacement": {
+    "center": [
+      0.4,
+      0.68,
+      -0.45
+    ],
+    "sourceAnchor": [
+      0,
+      1.65,
+      -1.3
+    ],
+    "position": [
+      0.4,
+      0.02,
+      0.07
+    ],
+    "scale": [
+      0.4,
+      0.4,
+      0.4
+    ],
+    "uniformScale": 0.4,
+    "targetWidth": 4.68,
+    "targetHeight": 2.3,
+    "bottom": 0.68
+  },
+  "apertures": [
+    {
+      "id": "projection-application-0",
+      "type": "plane",
+      "x": -3.6500000953674316,
+      "y": 3.299999952316284,
+      "z": -0.8500000238418579,
+      "w": 1.6983444570342587,
+      "h": 0.5,
+      "width": 1.6983444570342587,
+      "height": 0.5,
+      "rotation": [
+        0,
+        0.07846008959377573,
+        0
+      ],
+      "mediaHint": "projection-application-0"
+    },
+    {
+      "id": "projection-application-1",
+      "type": "plane",
+      "x": -3.6500000953674316,
+      "y": 2.680000066757202,
+      "z": -0.8500000238418579,
+      "w": 1.6983444570342587,
+      "h": 0.5,
+      "width": 1.6983444570342587,
+      "height": 0.5,
+      "rotation": [
+        0,
+        0.07846008959377573,
+        0
+      ],
+      "mediaHint": "projection-application-1"
+    },
+    {
+      "id": "projection-application-2",
+      "type": "plane",
+      "x": -3.6500000953674316,
+      "y": 2.06000018119812,
+      "z": -0.8500000238418579,
+      "w": 1.6983444570342587,
+      "h": 0.5,
+      "width": 1.6983444570342587,
+      "height": 0.5,
+      "rotation": [
+        0,
+        0.07846008959377573,
+        0
+      ],
+      "mediaHint": "projection-application-2"
+    },
+    {
+      "id": "projection-application-3",
+      "type": "plane",
+      "x": -3.6500000953674316,
+      "y": 1.440000057220459,
+      "z": -0.8500000238418579,
+      "w": 1.6983444570342587,
+      "h": 0.5,
+      "width": 1.6983444570342587,
+      "height": 0.5,
+      "rotation": [
+        0,
+        0.07846008959377573,
+        0
+      ],
+      "mediaHint": "projection-application-3"
+    },
+    {
+      "id": "projection-hero",
+      "type": "plane",
+      "x": 4.659130573272705,
+      "y": 1.944495439529419,
+      "z": -1.0181818008422852,
+      "w": 1.9298536425556911,
+      "h": 0.9619265946745873,
+      "width": 1.9298536425556911,
+      "height": 0.9619265946745873,
+      "rotation": [
+        0,
+        -0.04356935461498078,
+        0
+      ],
+      "mediaHint": "projection-hero"
+    },
+    {
+      "id": "projection-backdrop-left",
+      "type": "plane",
+      "x": -1.867825984954834,
+      "y": 1.8412843942642212,
+      "z": -2.3545455932617188,
+      "w": 1.982608675956726,
+      "h": 2.2788990569114684,
+      "width": 1.982608675956726,
+      "height": 2.2788990569114684,
+      "rotation": [
+        0,
+        0.0,
+        0
+      ],
+      "mediaHint": "projection-backdrop"
+    },
+    {
+      "id": "projection-backdrop-right",
+      "type": "plane",
+      "x": 2.264347791671753,
+      "y": 1.8412843942642212,
+      "z": -2.3545455932617188,
+      "w": 1.982608675956726,
+      "h": 2.2788990569114684,
+      "width": 1.982608675956726,
+      "height": 2.2788990569114684,
+      "rotation": [
+        0,
+        0.0,
+        0
+      ],
+      "mediaHint": "projection-backdrop"
+    },
+    {
+      "id": "projection-ceiling-outer",
+      "type": "ellipse",
+      "x": 0.0,
+      "y": 3.777952194213867,
+      "z": 0.028703957796096802,
+      "w": 8.139130353927612,
+      "h": 3.799031865670699,
+      "radiusX": 4.069565176963806,
+      "radiusZ": 1.8995159328353495,
+      "innerFraction": 0.28,
+      "rotation": [
+        1.3507963267948966,
+        0,
+        0
+      ],
+      "mediaHint": "projection-ceiling"
+    },
+    {
+      "id": "projection-ceiling-inner",
+      "type": "ellipse",
+      "x": 0.0,
+      "y": 3.6213605403900146,
+      "z": 0.029247313737869263,
+      "w": 4.361739087104797,
+      "h": 2.433189456822424,
+      "radiusX": 2.1808695435523986,
+      "radiusZ": 1.216594728411212,
+      "innerFraction": 0.93,
+      "rotation": [
+        1.3507963267948966,
+        0,
+        0
+      ],
+      "mediaHint": "projection-ceiling"
+    },
+    {
+      "id": "projection-kiosk-wide",
+      "type": "plane",
+      "x": 3.299999952316284,
+      "y": 1.2419999837875366,
+      "z": 1.9199999570846558,
+      "w": 1.3499999999999999,
+      "h": 0.6663321502504735,
+      "width": 1.3499999999999999,
+      "height": 0.6663321502504735,
+      "rotation": [
+        -1.1041027033435926,
+        -0.05419984387190082,
+        -0.10711499793780307
+      ],
+      "mediaHint": "projection-kiosk"
+    },
+    {
+      "id": "projection-kiosk-slim",
+      "type": "plane",
+      "x": -1.899999976158142,
+      "y": 1.121999979019165,
+      "z": 2.0399999618530273,
+      "w": 0.4,
+      "h": 0.43239733281106113,
+      "width": 0.4,
+      "height": 0.43239733281106113,
+      "rotation": [
+        -0.8618432707662487,
+        0.11791972485172279,
+        0.136313056959755
+      ],
+      "mediaHint": "projection-kiosk"
+    }
+  ],
+  "screens": [
+    {
+      "id": "projection-application-0",
+      "type": "plane",
+      "x": -3.6500000953674316,
+      "y": 3.299999952316284,
+      "z": -0.8500000238418579,
+      "w": 1.6983444570342587,
+      "h": 0.5,
+      "width": 1.6983444570342587,
+      "height": 0.5,
+      "rotation": [
+        0,
+        0.07846008959377573,
+        0
+      ],
+      "mediaHint": "projection-application-0"
+    },
+    {
+      "id": "projection-application-1",
+      "type": "plane",
+      "x": -3.6500000953674316,
+      "y": 2.680000066757202,
+      "z": -0.8500000238418579,
+      "w": 1.6983444570342587,
+      "h": 0.5,
+      "width": 1.6983444570342587,
+      "height": 0.5,
+      "rotation": [
+        0,
+        0.07846008959377573,
+        0
+      ],
+      "mediaHint": "projection-application-1"
+    },
+    {
+      "id": "projection-application-2",
+      "type": "plane",
+      "x": -3.6500000953674316,
+      "y": 2.06000018119812,
+      "z": -0.8500000238418579,
+      "w": 1.6983444570342587,
+      "h": 0.5,
+      "width": 1.6983444570342587,
+      "height": 0.5,
+      "rotation": [
+        0,
+        0.07846008959377573,
+        0
+      ],
+      "mediaHint": "projection-application-2"
+    },
+    {
+      "id": "projection-application-3",
+      "type": "plane",
+      "x": -3.6500000953674316,
+      "y": 1.440000057220459,
+      "z": -0.8500000238418579,
+      "w": 1.6983444570342587,
+      "h": 0.5,
+      "width": 1.6983444570342587,
+      "height": 0.5,
+      "rotation": [
+        0,
+        0.07846008959377573,
+        0
+      ],
+      "mediaHint": "projection-application-3"
+    },
+    {
+      "id": "projection-hero",
+      "type": "plane",
+      "x": 4.659130573272705,
+      "y": 1.944495439529419,
+      "z": -1.0181818008422852,
+      "w": 1.9298536425556911,
+      "h": 0.9619265946745873,
+      "width": 1.9298536425556911,
+      "height": 0.9619265946745873,
+      "rotation": [
+        0,
+        -0.04356935461498078,
+        0
+      ],
+      "mediaHint": "projection-hero"
+    },
+    {
+      "id": "projection-backdrop-left",
+      "type": "plane",
+      "x": -1.867825984954834,
+      "y": 1.8412843942642212,
+      "z": -2.3545455932617188,
+      "w": 1.982608675956726,
+      "h": 2.2788990569114684,
+      "width": 1.982608675956726,
+      "height": 2.2788990569114684,
+      "rotation": [
+        0,
+        0.0,
+        0
+      ],
+      "mediaHint": "projection-backdrop"
+    },
+    {
+      "id": "projection-backdrop-right",
+      "type": "plane",
+      "x": 2.264347791671753,
+      "y": 1.8412843942642212,
+      "z": -2.3545455932617188,
+      "w": 1.982608675956726,
+      "h": 2.2788990569114684,
+      "width": 1.982608675956726,
+      "height": 2.2788990569114684,
+      "rotation": [
+        0,
+        0.0,
+        0
+      ],
+      "mediaHint": "projection-backdrop"
+    },
+    {
+      "id": "projection-ceiling-outer",
+      "type": "ellipse",
+      "x": 0.0,
+      "y": 3.777952194213867,
+      "z": 0.028703957796096802,
+      "w": 8.139130353927612,
+      "h": 3.799031865670699,
+      "radiusX": 4.069565176963806,
+      "radiusZ": 1.8995159328353495,
+      "innerFraction": 0.28,
+      "rotation": [
+        1.3507963267948966,
+        0,
+        0
+      ],
+      "mediaHint": "projection-ceiling"
+    },
+    {
+      "id": "projection-ceiling-inner",
+      "type": "ellipse",
+      "x": 0.0,
+      "y": 3.6213605403900146,
+      "z": 0.029247313737869263,
+      "w": 4.361739087104797,
+      "h": 2.433189456822424,
+      "radiusX": 2.1808695435523986,
+      "radiusZ": 1.216594728411212,
+      "innerFraction": 0.93,
+      "rotation": [
+        1.3507963267948966,
+        0,
+        0
+      ],
+      "mediaHint": "projection-ceiling"
+    },
+    {
+      "id": "projection-kiosk-wide",
+      "type": "plane",
+      "x": 3.299999952316284,
+      "y": 1.2419999837875366,
+      "z": 1.9199999570846558,
+      "w": 1.3499999999999999,
+      "h": 0.6663321502504735,
+      "width": 1.3499999999999999,
+      "height": 0.6663321502504735,
+      "rotation": [
+        -1.1041027033435926,
+        -0.05419984387190082,
+        -0.10711499793780307
+      ],
+      "mediaHint": "projection-kiosk"
+    },
+    {
+      "id": "projection-kiosk-slim",
+      "type": "plane",
+      "x": -1.899999976158142,
+      "y": 1.121999979019165,
+      "z": 2.0399999618530273,
+      "w": 0.4,
+      "h": 0.43239733281106113,
+      "width": 0.4,
+      "height": 0.43239733281106113,
+      "rotation": [
+        -0.8618432707662487,
+        0.11791972485172279,
+        0.136313056959755
+      ],
+      "mediaHint": "projection-kiosk"
+    }
+  ],
+  "projectors": [
+    {
+      "id": "projection-central-projector",
+      "position": [
+        0.0,
+        3.5050456523895264,
+        0.9318182468414307
+      ],
+      "lens": [
+        0.0,
+        3.5050456523895264,
+        0.9318182468414307
+      ],
+      "target": [
+        0.0,
+        1.8784403800964355,
+        -0.009090900421142578
+      ],
+      "width": 2.0,
+      "height": 2.7,
+      "radius": 0.68,
+      "color": "#c7e9ff",
+      "opacity": 0.065
+    },
+    {
+      "id": "projection-left-projector",
+      "position": [
+        -2.426086902618408,
+        3.191284418106079,
+        0.48181819915771484
+      ],
+      "lens": [
+        -2.426086902618408,
+        3.191284418106079,
+        0.48181819915771484
+      ],
+      "target": [
+        -1.5965217351913452,
+        1.6100918054580688,
+        -0.11363637447357178
+      ],
+      "width": 2.0,
+      "height": 2.7,
+      "radius": 0.49,
+      "color": "#c7e9ff",
+      "opacity": 0.065
+    },
+    {
+      "id": "projection-right-projector",
+      "position": [
+        2.426086902618408,
+        3.191284418106079,
+        0.48181819915771484
+      ],
+      "lens": [
+        2.426086902618408,
+        3.191284418106079,
+        0.48181819915771484
+      ],
+      "target": [
+        1.5965217351913452,
+        1.6100918054580688,
+        -0.11363637447357178
+      ],
+      "width": 2.0,
+      "height": 2.7,
+      "radius": 0.49,
+      "color": "#c7e9ff",
+      "opacity": 0.065
+    }
+  ],
+  "interaction": {
+    "position": [
+      -4.32,
+      0.64,
+      2.014
+    ],
+    "rotation": [
+      0,
+      0,
+      0
+    ],
+    "w": 3.05,
+    "h": 0.93
+  },
+  "ambientOcclusion": {
+    "layer": "Col",
+    "samples": 32,
+    "radius": 0.32,
+    "objects": 21,
+    "occluderTriangles": 81764,
+    "corners": 170898,
+    "evaluatedPositions": 68462,
+    "rays": 2190784,
+    "skipped": {
+      "non_mesh": 0,
+      "character": 0,
+      "distant_hall": 1,
+      "non_opaque_or_emissive": 7
+    },
+    "budgetReached": false,
+    "seconds": 17.132,
+    "minimum": 0.45,
+    "mean": 0.76905
+  },
+  "stats": {
+    "main": {
+      "file": "projection-mapping-stall-v2.glb",
+      "bytes": 5295184,
+      "meshes": 29,
+      "vertices": 109797,
+      "triangles": 149232,
+      "bounds": {
+        "min": [
+          -6.177999973297119,
+          0.014449541456997395,
+          -2.7280001640319824
+        ],
+        "max": [
+          6.177999973297119,
+          5.078000068664551,
+          2.751654863357544
+        ]
+      }
+    }
+  }
+}

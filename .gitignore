@@ -49,3 +49,11 @@ next-env.d.ts
 
 # QA screenshots from the venue walkthrough review (local only)
 /qa/
+
+# QA/review evidence (screenshots, recordings, archives) stays local; it is
+# preserved in the development handoff package, not in Git.
+/reports/
+
+# Vendored Python tooling (pip --target) and bytecode
+/scripts/python-libs/
+__pycache__/

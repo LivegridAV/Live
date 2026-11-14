@@ -1,0 +1,236 @@
+{
+  "source": "Microsoft Rocketbox, MIT; see technical-humans-LICENSE.txt",
+  "count": 9,
+  "placements": [
+    {
+      "avatar": "Business_Female_01",
+      "pose": "operator",
+      "position": [
+        -3.95,
+        0.1,
+        1.25
+      ],
+      "yaw": 0.1,
+      "scale": 0.92
+    },
+    {
+      "avatar": "Business_Male_02",
+      "pose": "talk",
+      "position": [
+        -1.3,
+        0.1,
+        1.61
+      ],
+      "yaw": 2.7,
+      "scale": 0.96
+    },
+    {
+      "avatar": "Business_Male_01",
+      "pose": "idle",
+      "position": [
+        -0.6,
+        0.1,
+        1.5
+      ],
+      "yaw": 3.48,
+      "scale": 0.96
+    },
+    {
+      "avatar": "Business_Female_04",
+      "pose": "idle",
+      "position": [
+        0.82,
+        0.1,
+        1.6
+      ],
+      "yaw": 3.14,
+      "scale": 0.91
+    },
+    {
+      "avatar": "Business_Male_02",
+      "pose": "operator",
+      "position": [
+        3.05,
+        0.1,
+        2.42
+      ],
+      "yaw": 3.68,
+      "scale": 0.95
+    },
+    {
+      "avatar": "Business_Male_01",
+      "pose": "talk",
+      "position": [
+        -2.3,
+        0.1,
+        0.36
+      ],
+      "yaw": 0.5,
+      "scale": 0.92
+    },
+    {
+      "avatar": "Business_Male_01",
+      "pose": "projection-seated",
+      "position": [
+        3.25,
+        0.1,
+        1.15
+      ],
+      "yaw": 1.25,
+      "scale": 1
+    },
+    {
+      "avatar": "Business_Male_02",
+      "pose": "projection-seated",
+      "position": [
+        4.975,
+        0.1,
+        0.49
+      ],
+      "yaw": -1.25,
+      "scale": 1
+    },
+    {
+      "avatar": "Business_Female_01",
+      "pose": "projection-seated",
+      "position": [
+        4.15,
+        0.1,
+        0.08
+      ],
+      "yaw": 0,
+      "scale": 1
+    }
+  ],
+  "bytes": 21722804,
+  "seatedContactRevision": "chair-contact-ik-v5",
+  "seatedContacts": [
+    {
+      "revision": "chair-contact-ik-v5",
+      "avatar": "Business_Male_01",
+      "pose": "projection-seated",
+      "seatTopY": 0.584,
+      "floorY": 0.1,
+      "bodyScalePreserved": 0.8731643721046909,
+      "pelvisLift": 0.13031288620384746,
+      "hipCenterY": 0.685434445336721,
+      "rearContactY": 0.5867362382229457,
+      "shoeFloorY": 0.10000005204465126,
+      "headTopY": 1.4803129196166993,
+      "forwardPerch": 0.36,
+      "minimumSurfaceYWithinFlatCushion": 0.5923321306705475,
+      "limbLengthsBefore": {
+        "L": [
+          0.34842356090833265,
+          0.3463747959484374
+        ],
+        "R": [
+          0.34842353135866166,
+          0.3463747842732616
+        ]
+      },
+      "limbLengthsAfter": {
+        "L": [
+          0.3484234420409449,
+          0.34637478784468034
+        ],
+        "R": [
+          0.34842355348907283,
+          0.3463747577298522
+        ]
+      }
+    },
+    {
+      "revision": "chair-contact-ik-v5",
+      "avatar": "Business_Male_02",
+      "pose": "projection-seated",
+      "seatTopY": 0.584,
+      "floorY": 0.1,
+      "bodyScalePreserved": 0.8630175057428994,
+      "pelvisLift": 0.13989441731723845,
+      "hipCenterY": 0.6897272177577117,
+      "rearContactY": 0.5865551299102142,
+      "shoeFloorY": 0.1,
+      "headTopY": 1.489894485473633,
+      "forwardPerch": 0.36,
+      "minimumSurfaceYWithinFlatCushion": 0.592229551076889,
+      "limbLengthsBefore": {
+        "L": [
+          0.3443744892177107,
+          0.3423497260074016
+        ],
+        "R": [
+          0.34437447234856083,
+          0.34234951717250045
+        ]
+      },
+      "limbLengthsAfter": {
+        "L": [
+          0.34437452880985375,
+          0.34234978824787055
+        ],
+        "R": [
+          0.34437450029595784,
+          0.34234955625485464
+        ]
+      }
+    },
+    {
+      "revision": "chair-contact-ik-v5",
+      "avatar": "Business_Female_01",
+      "pose": "projection-seated",
+      "seatTopY": 0.584,
+      "floorY": 0.1,
+      "bodyScalePreserved": 0.9318946580333352,
+      "pelvisLift": 0.09721472844960377,
+      "hipCenterY": 0.6862593682341025,
+      "rearContactY": 0.586776881107103,
+      "shoeFloorY": 0.1,
+      "headTopY": 1.447214937210083,
+      "forwardPerch": 0.36,
+      "minimumSurfaceYWithinFlatCushion": 0.5867768883705139,
+      "limbLengthsBefore": {
+        "L": [
+          0.3970431455313508,
+          0.373181050974816
+        ],
+        "R": [
+          0.3970429924999194,
+          0.37318113930822816
+        ]
+      },
+      "limbLengthsAfter": {
+        "L": [
+          0.3970431620821676,
+          0.37318103952889026
+        ],
+        "R": [
+          0.3970429820601691,
+          0.3731810664166561
+        ]
+      }
+    }
+  ],
+  "seatedChairAnchors": [
+    [
+      3.25,
+      0.1,
+      1.15
+    ],
+    [
+      4.95,
+      0.1,
+      0.4
+    ],
+    [
+      4.15,
+      0.1,
+      0.08
+    ]
+  ],
+  "rightGuestOffsetFromChair": [
+    0.025,
+    0,
+    0.09
+  ]
+}

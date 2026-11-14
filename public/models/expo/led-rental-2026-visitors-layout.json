@@ -1,0 +1,491 @@
+{
+  "version": 2026,
+  "asset": "led-rental-2026-visitors.glb",
+  "authoringAxes": "native Three XYZ front +Z",
+  "count": 19,
+  "placements": [
+    {
+      "role": "reception host",
+      "template": "reception-host",
+      "position": [
+        8.05,
+        0.12,
+        2.28
+      ],
+      "yaw": 0,
+      "scale": 0.94,
+      "seated": false,
+      "bounds": {
+        "min": [
+          7.799469947814941,
+          0.11999998986721039,
+          2.116774082183838
+        ],
+        "max": [
+          8.302270889282227,
+          1.8054200410842896,
+          2.615227699279785
+        ]
+      }
+    },
+    {
+      "role": "reception colleague",
+      "template": "reception-colleague",
+      "position": [
+        6.32,
+        0.12,
+        2.25
+      ],
+      "yaw": 0.05,
+      "scale": 0.98,
+      "seated": false,
+      "bounds": {
+        "min": [
+          6.032977104187012,
+          0.12000000476837158,
+          2.110356569290161
+        ],
+        "max": [
+          6.626692295074463,
+          1.8771400451660156,
+          2.659245252609253
+        ]
+      }
+    },
+    {
+      "role": "reception adviser",
+      "template": "interior-left-conversation",
+      "position": [
+        9.45,
+        0.12,
+        2.25
+      ],
+      "yaw": -0.18,
+      "scale": 0.9306,
+      "seated": false,
+      "bounds": {
+        "min": [
+          9.141924858093262,
+          0.11999999731779099,
+          2.040982961654663
+        ],
+        "max": [
+          9.699212074279785,
+          1.788565754890442,
+          2.511984348297119
+        ]
+      }
+    },
+    {
+      "role": "reception guest",
+      "template": "conversation-left",
+      "position": [
+        9.12,
+        0.12,
+        4.78
+      ],
+      "yaw": 3.141592653589793,
+      "scale": 0.98,
+      "seated": false,
+      "bounds": {
+        "min": [
+          8.843721389770508,
+          0.11999998986721039,
+          4.421672344207764
+        ],
+        "max": [
+          9.451071739196777,
+          1.8771398067474365,
+          4.929044723510742
+        ]
+      }
+    },
+    {
+      "role": "left front visitor with backpack",
+      "template": "kiosk-guest",
+      "position": [
+        -10.13,
+        0.12,
+        5.08
+      ],
+      "yaw": 2.9,
+      "scale": 0.9603999999999999,
+      "seated": false,
+      "bounds": {
+        "min": [
+          -10.400995254516602,
+          0.12000000476837158,
+          4.647800922393799
+        ],
+        "max": [
+          -9.792693138122559,
+          1.8419971466064453,
+          5.414368152618408
+        ]
+      }
+    },
+    {
+      "role": "left front conversation man",
+      "template": "conversation-left",
+      "position": [
+        -8.32,
+        0.12,
+        4.66
+      ],
+      "yaw": -1.1,
+      "scale": 0.98,
+      "seated": false,
+      "bounds": {
+        "min": [
+          -8.763728141784668,
+          0.11999998986721039,
+          4.3836894035339355
+        ],
+        "max": [
+          -8.12598991394043,
+          1.8771398067474365,
+          4.9303812980651855
+        ]
+      }
+    },
+    {
+      "role": "left front ivory trousers visitor",
+      "template": "crystal-observer",
+      "position": [
+        -7.29,
+        0.12,
+        4.85
+      ],
+      "yaw": 2.85,
+      "scale": 0.94,
+      "seated": false,
+      "bounds": {
+        "min": [
+          -7.538977146148682,
+          0.11999999731779099,
+          4.688777923583984
+        ],
+        "max": [
+          -7.064727306365967,
+          1.8054200410842896,
+          5.048643112182617
+        ]
+      }
+    },
+    {
+      "role": "left middle visitor",
+      "template": "deep-right-gallery",
+      "position": [
+        -3.87,
+        0.12,
+        1.08
+      ],
+      "yaw": -1.7,
+      "scale": 0.93,
+      "seated": false,
+      "bounds": {
+        "min": [
+          -4.145473957061768,
+          0.11999999731779099,
+          0.7868574857711792
+        ],
+        "max": [
+          -3.701411247253418,
+          1.7874900102615356,
+          1.334373116493225
+        ]
+      }
+    },
+    {
+      "role": "left middle conversation",
+      "template": "conversation-right",
+      "position": [
+        -2.82,
+        0.12,
+        1.12
+      ],
+      "yaw": 1.4,
+      "scale": 0.99,
+      "seated": false,
+      "bounds": {
+        "min": [
+          -2.969963550567627,
+          0.11999999731779099,
+          0.8345544338226318
+        ],
+        "max": [
+          -2.593092441558838,
+          1.89506995677948,
+          1.4110451936721802
+        ]
+      }
+    },
+    {
+      "role": "right interior visitor",
+      "template": "left-gallery-browser",
+      "position": [
+        5.35,
+        0.12,
+        -0.38
+      ],
+      "yaw": -0.8,
+      "scale": 0.9503999999999999,
+      "seated": false,
+      "bounds": {
+        "min": [
+          5.09757137298584,
+          0.12000000476837158,
+          -0.5936902165412903
+        ],
+        "max": [
+          5.560837268829346,
+          1.824067234992981,
+          -0.1264142096042633
+        ]
+      }
+    },
+    {
+      "role": "right interior conversation",
+      "template": "interior-left-conversation",
+      "position": [
+        4.72,
+        0.12,
+        0.66
+      ],
+      "yaw": 2.4,
+      "scale": 0.9306,
+      "seated": false,
+      "bounds": {
+        "min": [
+          4.494874477386475,
+          0.11999999731779099,
+          0.47865596413612366
+        ],
+        "max": [
+          5.119495868682861,
+          1.788565754890442,
+          0.8697375655174255
+        ]
+      }
+    },
+    {
+      "role": "central left sofa seated guest",
+      "template": "cafe-left",
+      "position": [
+        -0.65,
+        0.12,
+        -2.86
+      ],
+      "yaw": 0,
+      "scale": 1,
+      "seated": true,
+      "bounds": {
+        "min": [
+          -0.8896445631980896,
+          0.11999999731779099,
+          -2.660660743713379
+        ],
+        "max": [
+          -0.41035473346710205,
+          1.4672149419784546,
+          -1.9824687242507935
+        ]
+      }
+    },
+    {
+      "role": "central right sofa seated guest",
+      "template": "cafe-rear",
+      "position": [
+        3.62,
+        0.12,
+        -2.86
+      ],
+      "yaw": 0,
+      "scale": 1,
+      "seated": true,
+      "bounds": {
+        "min": [
+          3.3468658924102783,
+          0.12000004947185516,
+          -2.6268362998962402
+        ],
+        "max": [
+          3.8931353092193604,
+          1.5003129243850708,
+          -1.989195704460144
+        ]
+      }
+    },
+    {
+      "role": "central left chair seated guest",
+      "template": "cafe-right",
+      "position": [
+        -1.0,
+        0.12,
+        0.05
+      ],
+      "yaw": 3.141592653589793,
+      "scale": 1,
+      "seated": true,
+      "bounds": {
+        "min": [
+          -1.2654880285263062,
+          0.11999999731779099,
+          -0.8148682713508606
+        ],
+        "max": [
+          -0.7345137596130371,
+          1.5098944902420044,
+          -0.18463748693466187
+        ]
+      }
+    },
+    {
+      "role": "central right chair seated guest",
+      "template": "cafe-left",
+      "position": [
+        3.8,
+        0.12,
+        0.05
+      ],
+      "yaw": 3.141592653589793,
+      "scale": 1,
+      "seated": true,
+      "bounds": {
+        "min": [
+          3.560354709625244,
+          0.11999999731779099,
+          -0.8275312781333923
+        ],
+        "max": [
+          4.039644718170166,
+          1.4672149419784546,
+          -0.14933928847312927
+        ]
+      }
+    },
+    {
+      "role": "left middle seated guest",
+      "template": "cafe-rear",
+      "position": [
+        -5.25,
+        0.12,
+        -0.42
+      ],
+      "yaw": -1.5707963267948966,
+      "scale": 1,
+      "seated": true,
+      "bounds": {
+        "min": [
+          -6.120804309844971,
+          0.12000004947185516,
+          -0.6931338906288147
+        ],
+        "max": [
+          -5.483163356781006,
+          1.5003129243850708,
+          -0.14686453342437744
+        ]
+      }
+    },
+    {
+      "role": "right application seated guest",
+      "template": "cafe-left",
+      "position": [
+        7.5,
+        0.12,
+        -1.82
+      ],
+      "yaw": -1.5707963267948966,
+      "scale": 1,
+      "seated": true,
+      "bounds": {
+        "min": [
+          6.6224684715271,
+          0.11999999731779099,
+          -2.0596446990966797
+        ],
+        "max": [
+          7.300660610198975,
+          1.4672149419784546,
+          -1.5803548097610474
+        ]
+      }
+    },
+    {
+      "role": "product plinth seated adviser",
+      "template": "cafe-rear",
+      "position": [
+        -8.1,
+        0.42,
+        2.15
+      ],
+      "yaw": 1.5707963267948966,
+      "scale": 1,
+      "seated": true,
+      "bounds": {
+        "min": [
+          -7.866837024688721,
+          0.4200000464916229,
+          1.8768645524978638
+        ],
+        "max": [
+          -7.229196071624756,
+          1.800312876701355,
+          2.4231340885162354
+        ]
+      }
+    },
+    {
+      "role": "product plinth seated guest",
+      "template": "cafe-left",
+      "position": [
+        -5.4,
+        0.42,
+        2.15
+      ],
+      "yaw": -1.5707963267948966,
+      "scale": 1,
+      "seated": true,
+      "bounds": {
+        "min": [
+          -6.277531623840332,
+          0.41999998688697815,
+          1.9103554487228394
+        ],
+        "max": [
+          -5.599339485168457,
+          1.7672148942947388,
+          2.3896453380584717
+        ]
+      }
+    }
+  ],
+  "source": "projection-visitors-v10.glb",
+  "license": "Microsoft Rocketbox Avatar Library; MIT; Copyright (c) 2020 Microsoft",
+  "licenseNotice": "/models/expo/technical-humans-LICENSE.txt",
+  "photographicTextureMapsPreserved": true,
+  "normalHumanProportionsPreserved": true,
+  "floorTopY": 0.12,
+  "seatTopY": 0.604,
+  "stats": {
+    "bytes": 22074348,
+    "sha256": "f3df7da74a6cc1e6be63282d791aee03507b46ea8a600299166f5d3446f5aa27",
+    "count": 19,
+    "vertices": 99907,
+    "triangles": 154065,
+    "bounds": {
+      "min": [
+        -10.400995254516602,
+        0.11999998986721039,
+        -2.660660743713379
+      ],
+      "max": [
+        9.699212074279785,
+        1.89506995677948,
+        5.414368152618408
+      ]
+    }
+  },
+  "sha256": "f3df7da74a6cc1e6be63282d791aee03507b46ea8a600299166f5d3446f5aa27"
+}

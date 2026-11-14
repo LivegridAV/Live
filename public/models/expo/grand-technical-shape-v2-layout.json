@@ -1,0 +1,2488 @@
+{
+  "version": "grand-technical-shape-v2-20261018",
+  "assetNames": [
+    "grand-technical-shape-v2-shell",
+    "grand-technical-shape-v2-interior",
+    "grand-technical-shape-v2-visitors"
+  ],
+  "assets": {
+    "grand-technical-shape-v2-shell": {
+      "sha256": "e5dea7dedd84a0d3cbee3161b3efc83707ecc5492df1547f1ac3825a78a64dd4",
+      "bytes": 546340,
+      "bounds": {
+        "min": [
+          -12.0,
+          0.0,
+          -8.0
+        ],
+        "max": [
+          12.0,
+          12.821000099182129,
+          8.0
+        ]
+      }
+    },
+    "grand-technical-shape-v2-interior": {
+      "sha256": "908870207e7acd3aaa7b1e9197500c6ea89f9958810b98bc700eee1f35a88b68",
+      "bytes": 6656604,
+      "bounds": {
+        "min": [
+          -11.935647010803223,
+          0.0299999937415123,
+          -6.9967498779296875
+        ],
+        "max": [
+          11.940508842468262,
+          10.005000114440918,
+          7.795544624328613
+        ]
+      }
+    },
+    "grand-technical-shape-v2-visitors": {
+      "sha256": "e08d17b4794d56815428cae9b718160d3694a65d9e81328e898b5c0448d2ec0b",
+      "bytes": 21696904,
+      "bounds": {
+        "min": [
+          -7.889394283294678,
+          0.11999999731779099,
+          -2.420783042907715
+        ],
+        "max": [
+          6.8602986335754395,
+          1.957824945449829,
+          6.655825138092041
+        ]
+      }
+    }
+  },
+  "root": [
+    -18,
+    0,
+    -145
+  ],
+  "rootRotation": [
+    0,
+    1.5707963267948966,
+    0
+  ],
+  "units": "metres",
+  "bounds": {
+    "min": [
+      -12,
+      0,
+      -8
+    ],
+    "max": [
+      12,
+      12.821,
+      8
+    ]
+  },
+  "architecturalDimensions": {
+    "width": 24,
+    "depth": 16,
+    "height": 12.701,
+    "floor": 0.12,
+    "fasciaTop": 12.821,
+    "lowestOverheadUnderside": 7.578999996185303,
+    "clearHeight": 7.458999996185303
+  },
+  "crown": {
+    "frontPlan": [
+      [
+        -10.7,
+        7.7
+      ],
+      [
+        0.1,
+        -3.1
+      ],
+      [
+        10.7,
+        7.5
+      ]
+    ],
+    "backMiterPlan": [
+      [
+        -11.90208152801713,
+        6.497918471982869
+      ],
+      [
+        0.1,
+        -5.504163056034262
+      ],
+      [
+        11.90208152801713,
+        6.29791847198287
+      ]
+    ],
+    "turnDegrees": 90,
+    "depth": 1.7,
+    "underside": 10.12,
+    "baySoffitUnderside": 7.695,
+    "soffit": "Descending dark acoustic surface with narrow11percent pearl perimeter; native lower bay headers physically meet its rear underside",
+    "opaqueWing": "left",
+    "transmittedWing": "right",
+    "visibleClearBackground": "Unobstructed above the descending lower soffit; shared hall truss remains visible"
+  },
+  "apertures": [
+    {
+      "id": "av-drafting",
+      "p": [
+        -6.778830731758601,
+        4.320841363238827,
+        -3.847076828495226
+      ],
+      "position": [
+        -6.778830731758601,
+        4.320841363238827,
+        -3.847076828495226
+      ],
+      "x": -6.778830731758601,
+      "y": 4.320841363238827,
+      "z": -3.847076828495226,
+      "width": 7.339230708484171,
+      "height": 4.128317273522346,
+      "w": 7.339230708484171,
+      "h": 4.128317273522346,
+      "rotation": [
+        0,
+        0.3805063712399861,
+        0
+      ],
+      "mediaHint": "tech-engineering"
+    },
+    {
+      "id": "av-monitor-0",
+      "p": [
+        -8.30896033619401,
+        1.51,
+        -0.8063156748315028
+      ],
+      "position": [
+        -8.30896033619401,
+        1.51,
+        -0.8063156748315028
+      ],
+      "x": -8.30896033619401,
+      "y": 1.51,
+      "z": -0.8063156748315028,
+      "width": 1.18,
+      "height": 0.67,
+      "w": 1.18,
+      "h": 0.67,
+      "rotation": [
+        0,
+        0.3805063712399861,
+        0
+      ],
+      "mediaHint": "tech-workstation-av"
+    },
+    {
+      "id": "av-monitor-1",
+      "p": [
+        -6.77697379263477,
+        1.51,
+        -1.4191102818193686
+      ],
+      "position": [
+        -6.77697379263477,
+        1.51,
+        -1.4191102818193686
+      ],
+      "x": -6.77697379263477,
+      "y": 1.51,
+      "z": -1.4191102818193686,
+      "width": 1.18,
+      "height": 0.67,
+      "w": 1.18,
+      "h": 0.67,
+      "rotation": [
+        0,
+        0.3805063712399861,
+        0
+      ],
+      "mediaHint": "tech-workstation-av"
+    },
+    {
+      "id": "av-monitor-2",
+      "p": [
+        -5.152139579768909,
+        1.51,
+        -2.069043955897408
+      ],
+      "position": [
+        -5.152139579768909,
+        1.51,
+        -2.069043955897408
+      ],
+      "x": -5.152139579768909,
+      "y": 1.51,
+      "z": -2.069043955897408,
+      "width": 1.18,
+      "height": 0.67,
+      "w": 1.18,
+      "h": 0.67,
+      "rotation": [
+        0,
+        0.3805063712399861,
+        0
+      ],
+      "mediaHint": "tech-workstation-av"
+    },
+    {
+      "id": "av-monitor-3",
+      "p": [
+        -3.6201530362096705,
+        1.51,
+        -2.6818385628852734
+      ],
+      "position": [
+        -3.6201530362096705,
+        1.51,
+        -2.6818385628852734
+      ],
+      "x": -3.6201530362096705,
+      "y": 1.51,
+      "z": -2.6818385628852734,
+      "width": 1.18,
+      "height": 0.67,
+      "w": 1.18,
+      "h": 0.67,
+      "rotation": [
+        0,
+        0.3805063712399861,
+        0
+      ],
+      "mediaHint": "tech-workstation-av"
+    },
+    {
+      "id": "show-cues",
+      "p": [
+        0.0,
+        4.5850000520186,
+        -5.242999999999999
+      ],
+      "position": [
+        0.0,
+        4.5850000520186,
+        -5.242999999999999
+      ],
+      "x": 0.0,
+      "y": 4.5850000520186,
+      "z": -5.242999999999999,
+      "width": 6.399999815044978,
+      "height": 3.5999998959628003,
+      "w": 6.399999815044978,
+      "h": 3.5999998959628003,
+      "rotation": [
+        0,
+        0.0,
+        0
+      ],
+      "mediaHint": "tech-show-control"
+    },
+    {
+      "id": "show-monitor-0",
+      "p": [
+        -2.55,
+        1.51,
+        -2.988
+      ],
+      "position": [
+        -2.55,
+        1.51,
+        -2.988
+      ],
+      "x": -2.55,
+      "y": 1.51,
+      "z": -2.988,
+      "width": 1.18,
+      "height": 0.67,
+      "w": 1.18,
+      "h": 0.67,
+      "rotation": [
+        0,
+        0.0,
+        0
+      ],
+      "mediaHint": "tech-workstation-cues"
+    },
+    {
+      "id": "show-monitor-1",
+      "p": [
+        -0.9,
+        1.51,
+        -2.988
+      ],
+      "position": [
+        -0.9,
+        1.51,
+        -2.988
+      ],
+      "x": -0.9,
+      "y": 1.51,
+      "z": -2.988,
+      "width": 1.18,
+      "height": 0.67,
+      "w": 1.18,
+      "h": 0.67,
+      "rotation": [
+        0,
+        0.0,
+        0
+      ],
+      "mediaHint": "tech-workstation-cues"
+    },
+    {
+      "id": "show-monitor-2",
+      "p": [
+        0.85,
+        1.51,
+        -2.988
+      ],
+      "position": [
+        0.85,
+        1.51,
+        -2.988
+      ],
+      "x": 0.85,
+      "y": 1.51,
+      "z": -2.988,
+      "width": 1.18,
+      "height": 0.67,
+      "w": 1.18,
+      "h": 0.67,
+      "rotation": [
+        0,
+        0.0,
+        0
+      ],
+      "mediaHint": "tech-workstation-cues"
+    },
+    {
+      "id": "show-monitor-3",
+      "p": [
+        2.5,
+        1.51,
+        -2.988
+      ],
+      "position": [
+        2.5,
+        1.51,
+        -2.988
+      ],
+      "x": 2.5,
+      "y": 1.51,
+      "z": -2.988,
+      "width": 1.18,
+      "height": 0.67,
+      "w": 1.18,
+      "h": 0.67,
+      "rotation": [
+        0,
+        0.0,
+        0
+      ],
+      "mediaHint": "tech-workstation-cues"
+    },
+    {
+      "id": "live-multiview",
+      "p": [
+        6.477153327073194,
+        4.4765219135513314,
+        -3.8477790316426863
+      ],
+      "position": [
+        6.477153327073194,
+        4.4765219135513314,
+        -3.8477790316426863
+      ],
+      "x": 6.477153327073194,
+      "y": 4.4765219135513314,
+      "z": -3.8477790316426863,
+      "width": 6.785699862928599,
+      "height": 3.8169561728973367,
+      "w": 6.785699862928599,
+      "h": 3.8169561728973367,
+      "rotation": [
+        0,
+        -0.41241042987188353,
+        0
+      ],
+      "mediaHint": "tech-live-production"
+    },
+    {
+      "id": "live-monitor-0",
+      "p": [
+        3.2371056645977996,
+        1.51,
+        -2.8039322301973133
+      ],
+      "position": [
+        3.2371056645977996,
+        1.51,
+        -2.8039322301973133
+      ],
+      "x": 3.2371056645977996,
+      "y": 1.51,
+      "z": -2.8039322301973133,
+      "width": 1.18,
+      "height": 0.67,
+      "w": 1.18,
+      "h": 0.67,
+      "rotation": [
+        0,
+        -0.41241042987188353,
+        0
+      ],
+      "mediaHint": "tech-workstation-production"
+    },
+    {
+      "id": "live-monitor-1",
+      "p": [
+        4.7487652749410865,
+        1.51,
+        -2.1425811717897663
+      ],
+      "position": [
+        4.7487652749410865,
+        1.51,
+        -2.1425811717897663
+      ],
+      "x": 4.7487652749410865,
+      "y": 1.51,
+      "z": -2.1425811717897663,
+      "width": 1.18,
+      "height": 0.67,
+      "w": 1.18,
+      "h": 0.67,
+      "rotation": [
+        0,
+        -0.41241042987188353,
+        0
+      ],
+      "mediaHint": "tech-workstation-production"
+    },
+    {
+      "id": "live-monitor-2",
+      "p": [
+        6.352040619244572,
+        1.51,
+        -1.4411482310544885
+      ],
+      "position": [
+        6.352040619244572,
+        1.51,
+        -1.4411482310544885
+      ],
+      "x": 6.352040619244572,
+      "y": 1.51,
+      "z": -1.4411482310544885,
+      "width": 1.18,
+      "height": 0.67,
+      "w": 1.18,
+      "h": 0.67,
+      "rotation": [
+        0,
+        -0.41241042987188353,
+        0
+      ],
+      "mediaHint": "tech-workstation-production"
+    },
+    {
+      "id": "live-monitor-3",
+      "p": [
+        7.863700229587859,
+        1.51,
+        -0.7797971726469415
+      ],
+      "position": [
+        7.863700229587859,
+        1.51,
+        -0.7797971726469415
+      ],
+      "x": 7.863700229587859,
+      "y": 1.51,
+      "z": -0.7797971726469415,
+      "width": 1.18,
+      "height": 0.67,
+      "w": 1.18,
+      "h": 0.67,
+      "rotation": [
+        0,
+        -0.41241042987188353,
+        0
+      ],
+      "mediaHint": "tech-workstation-production"
+    },
+    {
+      "id": "end-concert",
+      "p": [
+        10.841665089713633,
+        5.21,
+        1.7332231303455345
+      ],
+      "position": [
+        10.841665089713633,
+        5.21,
+        1.7332231303455345
+      ],
+      "x": 10.841665089713633,
+      "y": 5.21,
+      "z": 1.7332231303455345,
+      "width": 3.2,
+      "height": 4.4,
+      "w": 3.2,
+      "h": 4.4,
+      "rotation": [
+        0,
+        -1.2943710869435197,
+        0
+      ],
+      "mediaHint": "tech-concert"
+    },
+    {
+      "id": "reception-laptop-0.45",
+      "p": [
+        0.45,
+        1.385,
+        5.141999999999999
+      ],
+      "position": [
+        0.45,
+        1.385,
+        5.141999999999999
+      ],
+      "x": 0.45,
+      "y": 1.385,
+      "z": 5.141999999999999,
+      "width": 0.55,
+      "height": 0.33,
+      "w": 0.55,
+      "h": 0.33,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "tech-workstation-cues"
+    },
+    {
+      "id": "reception-laptop-3.85",
+      "p": [
+        3.85,
+        1.385,
+        5.141999999999999
+      ],
+      "position": [
+        3.85,
+        1.385,
+        5.141999999999999
+      ],
+      "x": 3.85,
+      "y": 1.385,
+      "z": 5.141999999999999,
+      "width": 0.55,
+      "height": 0.33,
+      "w": 0.55,
+      "h": 0.33,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "tech-workstation-cues"
+    }
+  ],
+  "screens": [
+    {
+      "id": "av-drafting",
+      "p": [
+        -6.778830731758601,
+        4.320841363238827,
+        -3.847076828495226
+      ],
+      "position": [
+        -6.778830731758601,
+        4.320841363238827,
+        -3.847076828495226
+      ],
+      "x": -6.778830731758601,
+      "y": 4.320841363238827,
+      "z": -3.847076828495226,
+      "width": 7.339230708484171,
+      "height": 4.128317273522346,
+      "w": 7.339230708484171,
+      "h": 4.128317273522346,
+      "rotation": [
+        0,
+        0.3805063712399861,
+        0
+      ],
+      "mediaHint": "tech-engineering"
+    },
+    {
+      "id": "av-monitor-0",
+      "p": [
+        -8.30896033619401,
+        1.51,
+        -0.8063156748315028
+      ],
+      "position": [
+        -8.30896033619401,
+        1.51,
+        -0.8063156748315028
+      ],
+      "x": -8.30896033619401,
+      "y": 1.51,
+      "z": -0.8063156748315028,
+      "width": 1.18,
+      "height": 0.67,
+      "w": 1.18,
+      "h": 0.67,
+      "rotation": [
+        0,
+        0.3805063712399861,
+        0
+      ],
+      "mediaHint": "tech-workstation-av"
+    },
+    {
+      "id": "av-monitor-1",
+      "p": [
+        -6.77697379263477,
+        1.51,
+        -1.4191102818193686
+      ],
+      "position": [
+        -6.77697379263477,
+        1.51,
+        -1.4191102818193686
+      ],
+      "x": -6.77697379263477,
+      "y": 1.51,
+      "z": -1.4191102818193686,
+      "width": 1.18,
+      "height": 0.67,
+      "w": 1.18,
+      "h": 0.67,
+      "rotation": [
+        0,
+        0.3805063712399861,
+        0
+      ],
+      "mediaHint": "tech-workstation-av"
+    },
+    {
+      "id": "av-monitor-2",
+      "p": [
+        -5.152139579768909,
+        1.51,
+        -2.069043955897408
+      ],
+      "position": [
+        -5.152139579768909,
+        1.51,
+        -2.069043955897408
+      ],
+      "x": -5.152139579768909,
+      "y": 1.51,
+      "z": -2.069043955897408,
+      "width": 1.18,
+      "height": 0.67,
+      "w": 1.18,
+      "h": 0.67,
+      "rotation": [
+        0,
+        0.3805063712399861,
+        0
+      ],
+      "mediaHint": "tech-workstation-av"
+    },
+    {
+      "id": "av-monitor-3",
+      "p": [
+        -3.6201530362096705,
+        1.51,
+        -2.6818385628852734
+      ],
+      "position": [
+        -3.6201530362096705,
+        1.51,
+        -2.6818385628852734
+      ],
+      "x": -3.6201530362096705,
+      "y": 1.51,
+      "z": -2.6818385628852734,
+      "width": 1.18,
+      "height": 0.67,
+      "w": 1.18,
+      "h": 0.67,
+      "rotation": [
+        0,
+        0.3805063712399861,
+        0
+      ],
+      "mediaHint": "tech-workstation-av"
+    },
+    {
+      "id": "show-cues",
+      "p": [
+        0.0,
+        4.5850000520186,
+        -5.242999999999999
+      ],
+      "position": [
+        0.0,
+        4.5850000520186,
+        -5.242999999999999
+      ],
+      "x": 0.0,
+      "y": 4.5850000520186,
+      "z": -5.242999999999999,
+      "width": 6.399999815044978,
+      "height": 3.5999998959628003,
+      "w": 6.399999815044978,
+      "h": 3.5999998959628003,
+      "rotation": [
+        0,
+        0.0,
+        0
+      ],
+      "mediaHint": "tech-show-control"
+    },
+    {
+      "id": "show-monitor-0",
+      "p": [
+        -2.55,
+        1.51,
+        -2.988
+      ],
+      "position": [
+        -2.55,
+        1.51,
+        -2.988
+      ],
+      "x": -2.55,
+      "y": 1.51,
+      "z": -2.988,
+      "width": 1.18,
+      "height": 0.67,
+      "w": 1.18,
+      "h": 0.67,
+      "rotation": [
+        0,
+        0.0,
+        0
+      ],
+      "mediaHint": "tech-workstation-cues"
+    },
+    {
+      "id": "show-monitor-1",
+      "p": [
+        -0.9,
+        1.51,
+        -2.988
+      ],
+      "position": [
+        -0.9,
+        1.51,
+        -2.988
+      ],
+      "x": -0.9,
+      "y": 1.51,
+      "z": -2.988,
+      "width": 1.18,
+      "height": 0.67,
+      "w": 1.18,
+      "h": 0.67,
+      "rotation": [
+        0,
+        0.0,
+        0
+      ],
+      "mediaHint": "tech-workstation-cues"
+    },
+    {
+      "id": "show-monitor-2",
+      "p": [
+        0.85,
+        1.51,
+        -2.988
+      ],
+      "position": [
+        0.85,
+        1.51,
+        -2.988
+      ],
+      "x": 0.85,
+      "y": 1.51,
+      "z": -2.988,
+      "width": 1.18,
+      "height": 0.67,
+      "w": 1.18,
+      "h": 0.67,
+      "rotation": [
+        0,
+        0.0,
+        0
+      ],
+      "mediaHint": "tech-workstation-cues"
+    },
+    {
+      "id": "show-monitor-3",
+      "p": [
+        2.5,
+        1.51,
+        -2.988
+      ],
+      "position": [
+        2.5,
+        1.51,
+        -2.988
+      ],
+      "x": 2.5,
+      "y": 1.51,
+      "z": -2.988,
+      "width": 1.18,
+      "height": 0.67,
+      "w": 1.18,
+      "h": 0.67,
+      "rotation": [
+        0,
+        0.0,
+        0
+      ],
+      "mediaHint": "tech-workstation-cues"
+    },
+    {
+      "id": "live-multiview",
+      "p": [
+        6.477153327073194,
+        4.4765219135513314,
+        -3.8477790316426863
+      ],
+      "position": [
+        6.477153327073194,
+        4.4765219135513314,
+        -3.8477790316426863
+      ],
+      "x": 6.477153327073194,
+      "y": 4.4765219135513314,
+      "z": -3.8477790316426863,
+      "width": 6.785699862928599,
+      "height": 3.8169561728973367,
+      "w": 6.785699862928599,
+      "h": 3.8169561728973367,
+      "rotation": [
+        0,
+        -0.41241042987188353,
+        0
+      ],
+      "mediaHint": "tech-live-production"
+    },
+    {
+      "id": "live-monitor-0",
+      "p": [
+        3.2371056645977996,
+        1.51,
+        -2.8039322301973133
+      ],
+      "position": [
+        3.2371056645977996,
+        1.51,
+        -2.8039322301973133
+      ],
+      "x": 3.2371056645977996,
+      "y": 1.51,
+      "z": -2.8039322301973133,
+      "width": 1.18,
+      "height": 0.67,
+      "w": 1.18,
+      "h": 0.67,
+      "rotation": [
+        0,
+        -0.41241042987188353,
+        0
+      ],
+      "mediaHint": "tech-workstation-production"
+    },
+    {
+      "id": "live-monitor-1",
+      "p": [
+        4.7487652749410865,
+        1.51,
+        -2.1425811717897663
+      ],
+      "position": [
+        4.7487652749410865,
+        1.51,
+        -2.1425811717897663
+      ],
+      "x": 4.7487652749410865,
+      "y": 1.51,
+      "z": -2.1425811717897663,
+      "width": 1.18,
+      "height": 0.67,
+      "w": 1.18,
+      "h": 0.67,
+      "rotation": [
+        0,
+        -0.41241042987188353,
+        0
+      ],
+      "mediaHint": "tech-workstation-production"
+    },
+    {
+      "id": "live-monitor-2",
+      "p": [
+        6.352040619244572,
+        1.51,
+        -1.4411482310544885
+      ],
+      "position": [
+        6.352040619244572,
+        1.51,
+        -1.4411482310544885
+      ],
+      "x": 6.352040619244572,
+      "y": 1.51,
+      "z": -1.4411482310544885,
+      "width": 1.18,
+      "height": 0.67,
+      "w": 1.18,
+      "h": 0.67,
+      "rotation": [
+        0,
+        -0.41241042987188353,
+        0
+      ],
+      "mediaHint": "tech-workstation-production"
+    },
+    {
+      "id": "live-monitor-3",
+      "p": [
+        7.863700229587859,
+        1.51,
+        -0.7797971726469415
+      ],
+      "position": [
+        7.863700229587859,
+        1.51,
+        -0.7797971726469415
+      ],
+      "x": 7.863700229587859,
+      "y": 1.51,
+      "z": -0.7797971726469415,
+      "width": 1.18,
+      "height": 0.67,
+      "w": 1.18,
+      "h": 0.67,
+      "rotation": [
+        0,
+        -0.41241042987188353,
+        0
+      ],
+      "mediaHint": "tech-workstation-production"
+    },
+    {
+      "id": "end-concert",
+      "p": [
+        10.841665089713633,
+        5.21,
+        1.7332231303455345
+      ],
+      "position": [
+        10.841665089713633,
+        5.21,
+        1.7332231303455345
+      ],
+      "x": 10.841665089713633,
+      "y": 5.21,
+      "z": 1.7332231303455345,
+      "width": 3.2,
+      "height": 4.4,
+      "w": 3.2,
+      "h": 4.4,
+      "rotation": [
+        0,
+        -1.2943710869435197,
+        0
+      ],
+      "mediaHint": "tech-concert"
+    },
+    {
+      "id": "reception-laptop-0.45",
+      "p": [
+        0.45,
+        1.385,
+        5.141999999999999
+      ],
+      "position": [
+        0.45,
+        1.385,
+        5.141999999999999
+      ],
+      "x": 0.45,
+      "y": 1.385,
+      "z": 5.141999999999999,
+      "width": 0.55,
+      "height": 0.33,
+      "w": 0.55,
+      "h": 0.33,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "tech-workstation-cues"
+    },
+    {
+      "id": "reception-laptop-3.85",
+      "p": [
+        3.85,
+        1.385,
+        5.141999999999999
+      ],
+      "position": [
+        3.85,
+        1.385,
+        5.141999999999999
+      ],
+      "x": 3.85,
+      "y": 1.385,
+      "z": 5.141999999999999,
+      "width": 0.55,
+      "height": 0.33,
+      "w": 0.55,
+      "h": 0.33,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "tech-workstation-cues"
+    }
+  ],
+  "bays": [
+    {
+      "id": "av",
+      "center": -6.800000000000001,
+      "z": -3.9,
+      "yaw": 0.3805063712399861,
+      "planEnds": [
+        [
+          -10.3,
+          -2.5
+        ],
+        [
+          -3.3,
+          -5.3
+        ]
+      ],
+      "width": 7.379230708484171,
+      "headerBaseline": 7.15,
+      "subtitleBaseline": 6.69,
+      "top": 7.695,
+      "soffitGap": 0,
+      "mainScreenAspect": 1.7777777777777777,
+      "worktopY": 1.1
+    },
+    {
+      "id": "show",
+      "center": 0.0,
+      "z": -5.3,
+      "yaw": -0.0,
+      "planEnds": [
+        [
+          -3.3,
+          -5.3
+        ],
+        [
+          3.3,
+          -5.3
+        ]
+      ],
+      "width": 6.439999815044978,
+      "headerBaseline": 7.15,
+      "subtitleBaseline": 6.69,
+      "top": 7.695,
+      "soffitGap": 0,
+      "mainScreenAspect": 1.7777777777777777,
+      "worktopY": 1.1
+    },
+    {
+      "id": "live",
+      "center": 6.5,
+      "z": -3.9,
+      "yaw": -0.41241042987188353,
+      "planEnds": [
+        [
+          3.3,
+          -5.3
+        ],
+        [
+          9.7,
+          -2.5
+        ]
+      ],
+      "width": 6.825699862928599,
+      "headerBaseline": 7.15,
+      "subtitleBaseline": 6.69,
+      "top": 7.695,
+      "soffitGap": 0,
+      "mainScreenAspect": 1.7777777777777777,
+      "worktopY": 1.1
+    }
+  ],
+  "typography": [
+    {
+      "text": "PEOPLE  TECHNOLOGY  EXTRAORDINARY EVENTS",
+      "position": [
+        -6.616753466593083,
+        10.479999999999999,
+        0.045
+      ],
+      "requestedFontSize": 0.49,
+      "fontSize": 0.49,
+      "capHeight": 0.20554203749634326,
+      "width": 7.024019228294492,
+      "maxWidth": 13.273506933186168,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "FROM VISION",
+      "position": [
+        1.7988797172975983,
+        11.639999999999999,
+        0.055
+      ],
+      "requestedFontSize": 0.63,
+      "fontSize": 0.63,
+      "capHeight": 0.2642683144658804,
+      "width": 2.6732559204101562,
+      "maxWidth": 8.244865370947327,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "TO LIVE",
+      "position": [
+        2.848226219054531,
+        11.0,
+        0.055
+      ],
+      "requestedFontSize": 0.63,
+      "fontSize": 0.63,
+      "capHeight": 0.2642683144658804,
+      "width": 1.511584460735321,
+      "maxWidth": 6.895705582974128,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "\u2014",
+      "position": [
+        4.7970125794602625,
+        10.52,
+        0.055
+      ],
+      "requestedFontSize": 0.26,
+      "fontSize": 0.26,
+      "capHeight": 0.012584205716848373,
+      "width": 0.15071611106395721,
+      "maxWidth": 1.0,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "TECHNICAL",
+      "position": [
+        -0.7310000132672926,
+        12.059999999999999,
+        0.035
+      ],
+      "requestedFontSize": 0.57,
+      "fontSize": 0.45777878350338397,
+      "capHeight": 0.19202608964405954,
+      "width": 1.4620000265345852,
+      "maxWidth": 1.4620000265345852,
+      "uniformFit": 0.8031206728129544,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "CREATIVE",
+      "position": [
+        -0.7310000132672926,
+        11.53,
+        0.035
+      ],
+      "requestedFontSize": 0.57,
+      "fontSize": 0.5486991964924043,
+      "capHeight": 0.23016478470526636,
+      "width": 1.4620000265345852,
+      "maxWidth": 1.4620000265345852,
+      "uniformFit": 0.9626301692849198,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "HUMAN",
+      "position": [
+        -0.7310000132672926,
+        10.999999999999998,
+        0.035
+      ],
+      "requestedFontSize": 0.57,
+      "fontSize": 0.57,
+      "capHeight": 0.23522786470130086,
+      "width": 1.2443262320011854,
+      "maxWidth": 1.4620000265345852,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "\u2014",
+      "position": [
+        -0.7310000132672926,
+        10.42,
+        0.035
+      ],
+      "requestedFontSize": 0.25,
+      "fontSize": 0.25,
+      "capHeight": 0.01210019737482071,
+      "width": 0.14491933584213257,
+      "maxWidth": 0.8500000154270844,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "AV ENGINEERING",
+      "position": [
+        -3.469615354242085,
+        7.15,
+        0.125
+      ],
+      "requestedFontSize": 1.05,
+      "fontSize": 1.05,
+      "capHeight": 0.4404471907764673,
+      "width": 4.850566113367677,
+      "maxWidth": 6.93923070848417,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "DESIGN | INTEGRATE | DELIVER",
+      "position": [
+        -3.469615354242085,
+        6.69,
+        0.13
+      ],
+      "requestedFontSize": 0.4,
+      "fontSize": 0.4,
+      "capHeight": 0.23187094181776047,
+      "width": 3.4302701260894537,
+      "maxWidth": 6.93923070848417,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "SHOW CONTROL",
+      "position": [
+        -2.999999907522489,
+        7.15,
+        0.125
+      ],
+      "requestedFontSize": 1.05,
+      "fontSize": 1.05,
+      "capHeight": 0.4404471907764673,
+      "width": 4.729903891682625,
+      "maxWidth": 5.999999815044978,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "CUES | TIMELINES | AUTOMATION",
+      "position": [
+        -2.999999907522489,
+        6.69,
+        0.13
+      ],
+      "requestedFontSize": 0.4,
+      "fontSize": 0.4,
+      "capHeight": 0.23187094181776047,
+      "width": 3.7509040916338563,
+      "maxWidth": 5.999999815044978,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "LIVE PRODUCTION",
+      "position": [
+        -3.1928499314642993,
+        7.15,
+        0.125
+      ],
+      "requestedFontSize": 1.05,
+      "fontSize": 1.05,
+      "capHeight": 0.4404471907764673,
+      "width": 5.119826972484589,
+      "maxWidth": 6.385699862928599,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "CAPTURE | SWITCH | STREAM | DELIVER",
+      "position": [
+        -3.1928499314642993,
+        6.69,
+        0.13
+      ],
+      "requestedFontSize": 0.4,
+      "fontSize": 0.4,
+      "capHeight": 0.23187094181776047,
+      "width": 4.3911492908373475,
+      "maxWidth": 6.385699862928599,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "BIGGER",
+      "position": [
+        -2.5105379882864143,
+        6.05,
+        0.035
+      ],
+      "requestedFontSize": 0.49,
+      "fontSize": 0.49,
+      "capHeight": 0.20554203749634326,
+      "width": 1.0491520036011934,
+      "maxWidth": 5.316433386959465,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "BRIGHTER",
+      "position": [
+        -2.5105379882864143,
+        5.49,
+        0.035
+      ],
+      "requestedFontSize": 0.49,
+      "fontSize": 0.49,
+      "capHeight": 0.20554203749634326,
+      "width": 1.432725178077817,
+      "maxWidth": 5.316433386959465,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "BOLDER",
+      "position": [
+        -2.5105379882864143,
+        4.93,
+        0.035
+      ],
+      "requestedFontSize": 0.49,
+      "fontSize": 0.49,
+      "capHeight": 0.20554203749634326,
+      "width": 1.127513276413083,
+      "maxWidth": 5.316433386959465,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "TOGETHER",
+      "position": [
+        -2.5105379882864143,
+        4.369999999999999,
+        0.035
+      ],
+      "requestedFontSize": 0.49,
+      "fontSize": 0.49,
+      "capHeight": 0.20554203749634326,
+      "width": 1.539518274832517,
+      "maxWidth": 5.316433386959465,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "\u2014",
+      "position": [
+        -2.5105379882864143,
+        3.5,
+        0.035
+      ],
+      "requestedFontSize": 0.3,
+      "fontSize": 0.3,
+      "capHeight": 0.014520235359668732,
+      "width": 0.1739032119512558,
+      "maxWidth": 1,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "EXTRAORDINARY",
+      "position": [
+        -0.8800000000000001,
+        2.72,
+        0.065
+      ],
+      "requestedFontSize": 0.46,
+      "fontSize": 0.46,
+      "capHeight": 0.19295783853158355,
+      "width": 2.1666688602417707,
+      "maxWidth": 3.2,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "EVENTS",
+      "position": [
+        -0.8800000000000001,
+        2.18,
+        0.065
+      ],
+      "requestedFontSize": 0.46,
+      "fontSize": 0.46,
+      "capHeight": 0.19295783853158355,
+      "width": 0.9327141921967268,
+      "maxWidth": 3.2,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "REAL RESULTS",
+      "position": [
+        -0.8800000000000001,
+        1.6400000000000001,
+        0.065
+      ],
+      "requestedFontSize": 0.46,
+      "fontSize": 0.46,
+      "capHeight": 0.19295783853158355,
+      "width": 1.7623520772904158,
+      "maxWidth": 3.2,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "\u2014",
+      "position": [
+        -0.8800000000000001,
+        0.8,
+        0.065
+      ],
+      "requestedFontSize": 0.3,
+      "fontSize": 0.3,
+      "capHeight": 0.014520235359668732,
+      "width": 0.1739032119512558,
+      "maxWidth": 1,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "EVENT TECHNOLOGY",
+      "position": [
+        2.21,
+        0.43,
+        5.9399999999999995
+      ],
+      "requestedFontSize": 0.14,
+      "fontSize": 0.14,
+      "capHeight": 0.058726295887026936,
+      "width": 0.9090568898245692,
+      "maxWidth": 2.8,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "FOR A BRIGHTER TOMORROW",
+      "position": [
+        2.21,
+        0.23,
+        5.9399999999999995
+      ],
+      "requestedFontSize": 0.12,
+      "fontSize": 0.12,
+      "capHeight": 0.050336822343524545,
+      "width": 1.070898607838899,
+      "maxWidth": 3.0,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "CONSULT",
+      "position": [
+        -0.43699999999999994,
+        1.5415999999999999,
+        0.087
+      ],
+      "requestedFontSize": 0.16,
+      "fontSize": 0.16,
+      "capHeight": 0.06711576564703137,
+      "width": 0.4056835565716028,
+      "maxWidth": 0.8739999999999999,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "DESIGN",
+      "position": [
+        -0.43699999999999994,
+        1.2187,
+        0.087
+      ],
+      "requestedFontSize": 0.16,
+      "fontSize": 0.16,
+      "capHeight": 0.06711576564703137,
+      "width": 0.3118030037730932,
+      "maxWidth": 0.8739999999999999,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "ENGINEER",
+      "position": [
+        -0.43699999999999994,
+        0.8957999999999999,
+        0.087
+      ],
+      "requestedFontSize": 0.16,
+      "fontSize": 0.16,
+      "capHeight": 0.06711576564703137,
+      "width": 0.4281913246959448,
+      "maxWidth": 0.8739999999999999,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "DEPLOY",
+      "position": [
+        -0.43699999999999994,
+        0.5729,
+        0.087
+      ],
+      "requestedFontSize": 0.16,
+      "fontSize": 0.16,
+      "capHeight": 0.06711576564703137,
+      "width": 0.32941978238523006,
+      "maxWidth": 0.8739999999999999,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "SUPPORT",
+      "position": [
+        -0.43699999999999994,
+        0.25,
+        0.087
+      ],
+      "requestedFontSize": 0.16,
+      "fontSize": 0.16,
+      "capHeight": 0.06711576564703137,
+      "width": 0.39667135989293456,
+      "maxWidth": 0.8739999999999999,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "\u2014",
+      "position": [
+        -0.43699999999999994,
+        0.11,
+        0.088
+      ],
+      "requestedFontSize": 0.13,
+      "fontSize": 0.13,
+      "capHeight": 0.006292102858424187,
+      "width": 0.07535805553197861,
+      "maxWidth": 0.8739999999999999,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "IDEAS",
+      "position": [
+        -0.42560000000000003,
+        1.6236,
+        0.087
+      ],
+      "requestedFontSize": 0.145,
+      "fontSize": 0.145,
+      "capHeight": 0.06082366232294589,
+      "width": 0.21973677026107907,
+      "maxWidth": 0.8512000000000001,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "SYSTEMS",
+      "position": [
+        -0.42560000000000003,
+        1.3488799999999999,
+        0.087
+      ],
+      "requestedFontSize": 0.145,
+      "fontSize": 0.145,
+      "capHeight": 0.06082366232294589,
+      "width": 0.34532406739890575,
+      "maxWidth": 0.8512000000000001,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "PEOPLE",
+      "position": [
+        -0.42560000000000003,
+        1.07416,
+        0.087
+      ],
+      "requestedFontSize": 0.145,
+      "fontSize": 0.145,
+      "capHeight": 0.06082366232294589,
+      "width": 0.27941126748919487,
+      "maxWidth": 0.8512000000000001,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "EVENTS",
+      "position": [
+        -0.42560000000000003,
+        0.79944,
+        0.087
+      ],
+      "requestedFontSize": 0.145,
+      "fontSize": 0.145,
+      "capHeight": 0.06082366232294589,
+      "width": 0.2867577187716961,
+      "maxWidth": 0.8512000000000001,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "THAT MOVE",
+      "position": [
+        -0.42560000000000003,
+        0.5247200000000001,
+        0.087
+      ],
+      "requestedFontSize": 0.145,
+      "fontSize": 0.145,
+      "capHeight": 0.06082366232294589,
+      "width": 0.4680795489111915,
+      "maxWidth": 0.8512000000000001,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "THE WORLD",
+      "position": [
+        -0.42560000000000003,
+        0.2500000000000002,
+        0.087
+      ],
+      "requestedFontSize": 0.145,
+      "fontSize": 0.145,
+      "capHeight": 0.06082366232294589,
+      "width": 0.46824370010290295,
+      "maxWidth": 0.8512000000000001,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    },
+    {
+      "text": "\u2014",
+      "position": [
+        -0.42560000000000003,
+        0.11,
+        0.088
+      ],
+      "requestedFontSize": 0.13,
+      "fontSize": 0.13,
+      "capHeight": 0.006292102858424187,
+      "width": 0.07535805553197861,
+      "maxWidth": 0.8512000000000001,
+      "uniformFit": 1,
+      "font": "Segoe UI Semibold"
+    }
+  ],
+  "humans": [
+    {
+      "asset": "Business_Male_02",
+      "pose": "operator",
+      "position": [
+        -7.5,
+        0.12,
+        -0.85
+      ],
+      "height": 1.7481749999999998,
+      "yaw": -2.670353755551324,
+      "textured": true,
+      "bounds": {
+        "min": [
+          -7.889394283294678,
+          0.11999999731779099,
+          -1.304776668548584
+        ],
+        "max": [
+          -7.249232292175293,
+          1.8681750297546387,
+          -0.6733110547065735
+        ]
+      }
+    },
+    {
+      "asset": "Business_Male_01",
+      "pose": "operator",
+      "position": [
+        -4.7,
+        0.12,
+        -1.95
+      ],
+      "height": 1.793,
+      "yaw": -2.670353755551324,
+      "textured": true,
+      "bounds": {
+        "min": [
+          -5.103099822998047,
+          0.11999999731779099,
+          -2.420783281326294
+        ],
+        "max": [
+          -4.439892768859863,
+          1.9129999876022339,
+          -1.76602041721344
+        ]
+      }
+    },
+    {
+      "asset": "Business_Male_02",
+      "pose": "operator",
+      "position": [
+        -1.4,
+        0.12,
+        -1.65
+      ],
+      "height": 1.8378249999999998,
+      "yaw": -3.0543261909900767,
+      "textured": true,
+      "bounds": {
+        "min": [
+          -1.7275573015213013,
+          0.11999999731779099,
+          -2.0832772254943848
+        ],
+        "max": [
+          -1.1046407222747803,
+          1.957824945449829,
+          -1.5009735822677612
+        ]
+      }
+    },
+    {
+      "asset": "Business_Male_02",
+      "pose": "operator",
+      "position": [
+        1.4,
+        0.12,
+        -1.65
+      ],
+      "height": 1.7481749999999998,
+      "yaw": -3.0543261909900767,
+      "textured": true,
+      "bounds": {
+        "min": [
+          1.088421106338501,
+          0.11999999731779099,
+          -2.0621416568756104
+        ],
+        "max": [
+          1.680951476097107,
+          1.8681750297546387,
+          -1.508243203163147
+        ]
+      }
+    },
+    {
+      "asset": "Business_Male_01",
+      "pose": "operator",
+      "position": [
+        3.8,
+        0.12,
+        -1.95
+      ],
+      "height": 1.793,
+      "yaw": -3.4557519189487724,
+      "textured": true,
+      "bounds": {
+        "min": [
+          3.5226399898529053,
+          0.11999999731779099,
+          -2.410872220993042
+        ],
+        "max": [
+          4.1653032302856445,
+          1.9129999876022339,
+          -1.787306308746338
+        ]
+      }
+    },
+    {
+      "asset": "Business_Female_04",
+      "pose": "operator",
+      "position": [
+        6.55,
+        0.12,
+        -0.75
+      ],
+      "height": 1.8378249999999998,
+      "yaw": -3.4557519189487724,
+      "textured": true,
+      "bounds": {
+        "min": [
+          6.2793049812316895,
+          0.11999999731779099,
+          -1.1552801132202148
+        ],
+        "max": [
+          6.8602986335754395,
+          1.957824945449829,
+          -0.5306738615036011
+        ]
+      }
+    },
+    {
+      "asset": "Business_Female_01",
+      "pose": "talk",
+      "position": [
+        1.0,
+        0.12,
+        4.45
+      ],
+      "height": 1.7481749999999998,
+      "yaw": -0.0,
+      "textured": true,
+      "bounds": {
+        "min": [
+          0.7342382073402405,
+          0.11999999731779099,
+          4.2768235206604
+        ],
+        "max": [
+          1.260170817375183,
+          1.8681750297546387,
+          4.77799129486084
+        ]
+      }
+    },
+    {
+      "asset": "Business_Male_01",
+      "pose": "idle",
+      "position": [
+        4.1,
+        0.12,
+        4.45
+      ],
+      "height": 1.793,
+      "yaw": -0.0,
+      "textured": true,
+      "bounds": {
+        "min": [
+          3.8047432899475098,
+          0.11999999731779099,
+          4.305820941925049
+        ],
+        "max": [
+          4.394331455230713,
+          1.9129999876022339,
+          4.654358386993408
+        ]
+      }
+    },
+    {
+      "asset": "Business_Male_02",
+      "pose": "operator",
+      "position": [
+        3.5,
+        0.12,
+        6.5
+      ],
+      "height": 1.8378249999999998,
+      "yaw": -2.9670597283903604,
+      "textured": true,
+      "bounds": {
+        "min": [
+          3.1539266109466553,
+          0.11999999731779099,
+          6.050602912902832
+        ],
+        "max": [
+          3.7876105308532715,
+          1.957824945449829,
+          6.655825138092041
+        ]
+      }
+    },
+    {
+      "asset": "Business_Female_01",
+      "pose": "talk",
+      "position": [
+        -7.2,
+        0.12,
+        1.5
+      ],
+      "height": 1.7481749999999998,
+      "yaw": 0.6108652381980153,
+      "textured": true,
+      "bounds": {
+        "min": [
+          -7.449607849121094,
+          0.11999999731779099,
+          1.2866333723068237
+        ],
+        "max": [
+          -7.002060413360596,
+          1.8681750297546387,
+          1.887819528579712
+        ]
+      }
+    }
+  ],
+  "roles": [
+    {
+      "role": "platform",
+      "bounds": {
+        "min": [
+          -12.0,
+          0.0,
+          -8.0
+        ],
+        "max": [
+          12.0,
+          0.11999999731779099,
+          8.0
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "rear-boundary",
+      "bounds": {
+        "min": [
+          -11.699999809265137,
+          0.12000012397766113,
+          -8.0
+        ],
+        "max": [
+          11.699999809265137,
+          7.694999694824219,
+          -7.699999809265137
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "side-left",
+      "bounds": {
+        "min": [
+          -11.899999618530273,
+          0.12000012397766113,
+          -7.850000381469727
+        ],
+        "max": [
+          -11.680000305175781,
+          7.694999694824219,
+          -2.450000047683716
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "side-right",
+      "bounds": {
+        "min": [
+          11.680000305175781,
+          0.12000012397766113,
+          -7.850000381469727
+        ],
+        "max": [
+          11.899999618530273,
+          7.694999694824219,
+          -2.450000047683716
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "fascia-brand",
+      "bounds": {
+        "min": [
+          -11.902081489562988,
+          10.119999885559082,
+          -5.5041632652282715
+        ],
+        "max": [
+          0.10000000149011612,
+          12.821000099182129,
+          7.699999809265137
+        ]
+      },
+      "overhead": true
+    },
+    {
+      "role": "fascia-clear",
+      "bounds": {
+        "min": [
+          0.059999946504831314,
+          10.127999305725098,
+          -5.526163101196289
+        ],
+        "max": [
+          11.924081802368164,
+          12.813000679016113,
+          7.532559871673584
+        ]
+      },
+      "overhead": true
+    },
+    {
+      "role": "fascia-return-left",
+      "bounds": {
+        "min": [
+          -11.695505142211914,
+          10.119999885559082,
+          4.667813777923584
+        ],
+        "max": [
+          -10.448785781860352,
+          12.821000099182129,
+          7.695505619049072
+        ]
+      },
+      "overhead": true
+    },
+    {
+      "role": "fascia-return-right",
+      "bounds": {
+        "min": [
+          10.448785781860352,
+          10.119999885559082,
+          4.467813968658447
+        ],
+        "max": [
+          11.695505142211914,
+          12.821000099182129,
+          7.4955058097839355
+        ]
+      },
+      "overhead": true
+    },
+    {
+      "role": "fascia-solid-exposed-endcap",
+      "bounds": {
+        "min": [
+          10.518980979919434,
+          10.119999885559082,
+          6.116899013519287
+        ],
+        "max": [
+          11.892182350158691,
+          12.821000099182129,
+          7.490100383758545
+        ]
+      },
+      "overhead": true
+    },
+    {
+      "role": "ceiling",
+      "bounds": {
+        "min": [
+          -11.717046737670898,
+          7.578999996185303,
+          -7.699999809265137
+        ],
+        "max": [
+          11.717046737670898,
+          10.119999885559082,
+          7.7127275466918945
+        ]
+      },
+      "overhead": true
+    },
+    {
+      "role": "platform-edge",
+      "bounds": {
+        "min": [
+          -11.9399995803833,
+          0.054499998688697815,
+          -7.920000076293945
+        ],
+        "max": [
+          11.9399995803833,
+          0.0754999965429306,
+          7.920000076293945
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "bay-av",
+      "bounds": {
+        "min": [
+          -10.386905670166016,
+          0.10999998450279236,
+          -5.526176929473877
+        ],
+        "max": [
+          -2.2900032997131348,
+          7.694999694824219,
+          0.4697088599205017
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "bay-show",
+      "bounds": {
+        "min": [
+          -3.299999952316284,
+          0.10999998450279236,
+          -5.550000190734863
+        ],
+        "max": [
+          3.299999952316284,
+          7.694999694824219,
+          -1.2984020709991455
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "bay-live",
+      "bounds": {
+        "min": [
+          2.204390287399292,
+          0.10999998450279236,
+          -5.5226263999938965
+        ],
+        "max": [
+          9.793791770935059,
+          7.694999694824219,
+          0.5142050385475159
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "branding-return-left",
+      "bounds": {
+        "min": [
+          -11.935647010803223,
+          0.11999999731779099,
+          -2.545504093170166
+        ],
+        "max": [
+          -10.300000190734863,
+          10.005000114440918,
+          4.75
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "portrait-return-right",
+      "bounds": {
+        "min": [
+          9.699999809265137,
+          0.11999999731779099,
+          -2.5682296752929688
+        ],
+        "max": [
+          11.940508842468262,
+          10.005000114440918,
+          4.550000190734863
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "reception",
+      "bounds": {
+        "min": [
+          -0.7799999713897705,
+          0.12000000476837158,
+          4.759999752044678
+        ],
+        "max": [
+          5.279999732971191,
+          1.5950000286102295,
+          5.96999979019165
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "acrylic-guide-right",
+      "bounds": {
+        "min": [
+          5.394999980926514,
+          0.0299999937415123,
+          5.739999771118164
+        ],
+        "max": [
+          6.605000019073486,
+          2.0,
+          5.960000038146973
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "acrylic-guide-left",
+      "bounds": {
+        "min": [
+          -11.140000343322754,
+          0.0299999937415123,
+          5.440000057220459
+        ],
+        "max": [
+          -9.960000038146973,
+          2.0999999046325684,
+          5.660000324249268
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "lounge",
+      "bounds": {
+        "min": [
+          -10.59000015258789,
+          0.14261552691459656,
+          2.6100869178771973
+        ],
+        "max": [
+          -6.409999847412109,
+          1.2100000381469727,
+          5.329999923706055
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "planting",
+      "bounds": {
+        "min": [
+          -11.694894790649414,
+          0.14999999105930328,
+          5.807422161102295
+        ],
+        "max": [
+          -9.688511848449707,
+          1.8175444602966309,
+          7.795544624328613
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "planting",
+      "bounds": {
+        "min": [
+          -11.648200988769531,
+          0.14999999105930328,
+          -6.9967498779296875
+        ],
+        "max": [
+          -9.721356391906738,
+          1.8108066320419312,
+          -5.28219747543335
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "planting",
+      "bounds": {
+        "min": [
+          9.716710090637207,
+          0.14999999105930328,
+          5.799535751342773
+        ],
+        "max": [
+          11.730400085449219,
+          1.8340708017349243,
+          7.746906757354736
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "planting",
+      "bounds": {
+        "min": [
+          9.703892707824707,
+          0.14999999105930328,
+          -6.9472832679748535
+        ],
+        "max": [
+          11.634944915771484,
+          1.80628502368927,
+          -5.133584976196289
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "planting",
+      "bounds": {
+        "min": [
+          -6.419238090515137,
+          0.14999999105930328,
+          4.8193464279174805
+        ],
+        "max": [
+          -4.9470672607421875,
+          1.3691575527191162,
+          6.260565757751465
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "planting",
+      "bounds": {
+        "min": [
+          7.025757312774658,
+          0.14999999105930328,
+          4.359376430511475
+        ],
+        "max": [
+          8.415316581726074,
+          1.3618167638778687,
+          5.8273749351501465
+        ]
+      },
+      "overhead": false
+    },
+    {
+      "role": "visitors",
+      "bounds": {
+        "min": [
+          -7.889394283294678,
+          0.11999999731779099,
+          -2.420783281326294
+        ],
+        "max": [
+          6.8602986335754395,
+          1.957824945449829,
+          6.655825138092041
+        ]
+      },
+      "overhead": false
+    }
+  ],
+  "routes": [
+    {
+      "id": "main-interior-entry",
+      "width": 2,
+      "centerline": [
+        [
+          -3,
+          0.12,
+          8
+        ],
+        [
+          -3,
+          0.12,
+          -0.8
+        ]
+      ],
+      "clearEnvelopeXZ": [
+        -4,
+        -2,
+        -0.8,
+        8
+      ],
+      "measurement": "2m clear between reception left edge x=-.78 and lounge/planting right extent at or below x=-5.3; ends before native workstation envelopes"
+    }
+  ],
+  "views": {
+    "entry": {
+      "position": [
+        -3,
+        1.77,
+        10.5
+      ],
+      "look": [
+        -3,
+        1.65,
+        -2.0
+      ],
+      "worldPosition": [
+        -7.5,
+        1.77,
+        -142.0
+      ],
+      "worldLook": [
+        -20.0,
+        1.65,
+        -142.0
+      ]
+    },
+    "interior": {
+      "position": [
+        -3,
+        1.77,
+        0.1
+      ],
+      "look": [
+        2.5,
+        2.0,
+        -6.0
+      ],
+      "worldPosition": [
+        -17.9,
+        1.77,
+        -142.0
+      ],
+      "worldLook": [
+        -24.0,
+        2.0,
+        -147.5
+      ]
+    },
+    "out": {
+      "position": [
+        -3,
+        1.77,
+        -0.8
+      ],
+      "look": [
+        -3,
+        1.6,
+        10.0
+      ],
+      "worldPosition": [
+        -18.8,
+        1.77,
+        -142.0
+      ],
+      "worldLook": [
+        -8.0,
+        1.6,
+        -142.0
+      ]
+    }
+  },
+  "provenance": {
+    "architecture": "Original bespoke Blender geometry based on selected reference; old assets preserved",
+    "humans": "Microsoft Rocketbox MIT; technical-humans-LICENSE.txt"
+  },
+  "fallbacks": [
+    "Runtime acrylic treatment documented separately; geometry retains real45/30/40mm front/back/miter sheets. The outer end is exposed solid black with native white lettering; main-front raised copy uses a separate runtime draw-order finish to avoid transmission prepass ghosting.",
+    "The explicit shared12.701m envelope is taller relative to native people than the selected reference. Main live displays retain native16:9 landscape aspect. A descending overhead canopy reconciles the high crown with lower native occupied bays; that canopy transition remains larger than in the selected reference. Shape-v2 corrects geometry and occupied-wall relations without claiming pixel identity."
+  ]
+}

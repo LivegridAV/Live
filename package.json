@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && node scripts/prepare-export.mjs",
+    "build": "next build && node scripts/prepare-export.mjs && node scripts/optimize-export.mjs",
     "typecheck": "tsc --noEmit",
     "test": "node --test scripts/release.test.mjs",
     "start": "next start",
@@ -23,6 +23,9 @@
     "zustand": "^5.0.14"
   },
   "devDependencies": {
+    "@gltf-transform/core": "4.5.1",
+    "@gltf-transform/extensions": "4.5.1",
+    "@gltf-transform/functions": "4.5.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -30,6 +33,7 @@
     "@types/three": "^0.185.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
+    "meshoptimizer": "1.1.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

@@ -1,0 +1,154 @@
+{
+  "date": "2026-10-16",
+  "reference": "ChatGPT Image Oct 16, 2026, 09_32_18 PM-1.png",
+  "method": "Native blue/white/gold projected light plus existing isolated nebula artwork graded/warped with native Canvas2D; no reference-booth pixels.",
+  "branches": 246,
+  "assets": [
+    {
+      "file": "application-0-architecture.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 190570,
+      "sha256": "3d6101118c1112007331dd5cfd759d806231ed82173e5254d151c48d1a8af49c"
+    },
+    {
+      "file": "application-1-concert.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 113038,
+      "sha256": "e580f04ac8e795f5603a9dd4dc0e1cddbb0250e3cc456319a5b35d7e208f255e"
+    },
+    {
+      "file": "application-2-product-car.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 167462,
+      "sha256": "abb6029c5013b0b93f86f27c9b9a13da4cdbc31df57f7d7fa153af6435245a4f"
+    },
+    {
+      "file": "application-3-interactive.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 218226,
+      "sha256": "35db2024906f1474428449a23abafa9b2b6ea08a2009a478a573263f5567adbb"
+    },
+    {
+      "file": "application-4-landmark.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 292294,
+      "sha256": "b6afa46241c342613367c09f8d9ee2ebbcf41fb8ddee4b884b9511e21ab22c1b"
+    },
+    {
+      "file": "application-5-brand-palace.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 278694,
+      "sha256": "c4d6e35b44b051462d47225fdfbb33d906f22b9181f4279002bc283a418b113c"
+    },
+    {
+      "file": "application-6-interior.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 135652,
+      "sha256": "ed10a4f82280b8a59ea8fdb542da897fa74ca51aadef51bece61566799a49b44"
+    },
+    {
+      "file": "application-7-event-crowd.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 160840,
+      "sha256": "f352a96fe6b6fa937a7d0c0cb4c593bc550afc968f01093ca5038f7eabf31942"
+    },
+    {
+      "file": "applications-original.png",
+      "width": 2048,
+      "height": 2304,
+      "bytes": 12007486,
+      "sha256": "85cadb305b5fddec5f329e94fb1b8d97abff4e5efb0367a52420206251ad5ff2"
+    },
+    {
+      "file": "applications.webp",
+      "width": 2048,
+      "height": 2304,
+      "bytes": 1565924,
+      "sha256": "bc3e89999a3d81940bf529278049d1a47cb1829885fbf87354c45ebd4750ce67"
+    },
+    {
+      "file": "cosmic-panorama-native.png",
+      "width": 2560,
+      "height": 1024,
+      "bytes": 2359191,
+      "sha256": "7f50ff5b80041f9a457eb700bec4a0c9af296cd8dca7e9bbfa9689d1d12e8dd8"
+    },
+    {
+      "file": "cosmic-panorama.webp",
+      "width": 2560,
+      "height": 1024,
+      "bytes": 401608,
+      "sha256": "8b7a379bf3d9e165fdeb7e633f6bec91f1d56477864aeff7b28c6552ba8503f1"
+    },
+    {
+      "file": "cosmic-swirl-native.png",
+      "width": 1024,
+      "height": 1024,
+      "bytes": 1377115,
+      "sha256": "d0445b01c15d00b4b52a6b1ce2af5b66d1ff2735de4f431bb60747bf4713d0a7"
+    },
+    {
+      "file": "cosmic-swirl.webp",
+      "width": 1024,
+      "height": 1024,
+      "bytes": 392750,
+      "sha256": "0d91bda94e965622c19c4890e2b3aa7f18652412ae7f767cc76df86581e0da1c"
+    },
+    {
+      "file": "crystal-light-native.png",
+      "width": 2048,
+      "height": 1536,
+      "bytes": 1892480,
+      "sha256": "7c8a1d580f7ef6595af800baf2720d821afd5fb90f6b464eb0c70287c634352a"
+    },
+    {
+      "file": "crystal-light.webp",
+      "width": 2048,
+      "height": 1536,
+      "bytes": 371670,
+      "sha256": "4b0b9cc5a139ca11673ea8e27bbd948590f490b7cdf5eadaad1c0549f44e84d4"
+    },
+    {
+      "file": "crystals-hero.png",
+      "width": 1600,
+      "height": 900,
+      "bytes": 1676044,
+      "sha256": "97367da2d91d2edf0df065050219692c1c27c41126cc64d98225c866079170b7"
+    },
+    {
+      "file": "crystals-hero.webp",
+      "width": 1600,
+      "height": 900,
+      "bytes": 86054,
+      "sha256": "febef8269d9c6588145aeeb26bf52cf92e495351600c6e457c9b87556875f279"
+    },
+    {
+      "file": "interior-event-original.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2007383,
+      "sha256": "a9383449b29848e47670445f063be9ec4893684e2733f2a2d8a65502bc54c7a8"
+    },
+    {
+      "file": "product-car-original.png",
+      "width": 1672,
+      "height": 941,
+      "bytes": 2241738,
+      "sha256": "ea81647a54be6341891b0e6f1b71dcb65895f4b16091d51f2af33cdccf620e16"
+    }
+  ],
+  "hero": {
+    "source": "crystals-hero.png",
+    "method": "Actual current crystal GLB rendered in Blender against native navy/teal cosmic background; no booth or reference photo pixels.",
+    "geometrySHA256": "12f23ea5fe88914475ddbca0737032efd4bc2c5719c91da4bc126fd0fe734b6e",
+    "fieldSHA256": "4b0b9cc5a139ca11673ea8e27bbd948590f490b7cdf5eadaad1c0549f44e84d4"
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "created": "2026-10-16",
+  "heroSource": "sculpture-hero-render-blue.png",
+  "method": "native procedural light fields and actual Blender sculpture render; no reference raster cropping",
+  "assets": [
+    {
+      "file": "cosmic-tile-native.png",
+      "width": 512,
+      "height": 512,
+      "bytes": 179139,
+      "sha256": "cd1762931e49af133f2ecf5b2f4503967a64bf2ca14b23bc6f914925a55d0050"
+    },
+    {
+      "file": "cosmic-tile.webp",
+      "width": 512,
+      "height": 512,
+      "bytes": 75728,
+      "sha256": "b4890937889f767e80334d493cb4c985d8a1e0791ec67be2975eb0fe422effef"
+    },
+    {
+      "file": "sculpture-caustics-native.png",
+      "width": 2048,
+      "height": 1536,
+      "bytes": 2733520,
+      "sha256": "2a1701b20f69489d523240bcfecd4badf9265019fb84978e814a9e4838f661d6"
+    },
+    {
+      "file": "sculpture-caustics.webp",
+      "width": 2048,
+      "height": 1536,
+      "bytes": 201146,
+      "sha256": "cdb7f0768b357a0ff81de01066427593e4b15f51df527d071b83ab1fb0ad6325"
+    },
+    {
+      "file": "sculpture-hero-render-blue.png",
+      "width": 1600,
+      "height": 900,
+      "bytes": 1792630,
+      "sha256": "8f6a151fee69abbf0f12f233031f474c2ea239feabb8c6376029b9f6338e8903"
+    },
+    {
+      "file": "sculpture-hero-render.png",
+      "width": 1600,
+      "height": 900,
+      "bytes": 1694188,
+      "sha256": "02b4e117b6e50e6899481d8c0b732f13428b2032352e51605f579db6f5c028e1"
+    },
+    {
+      "file": "sculpture-hero.webp",
+      "width": 1600,
+      "height": 900,
+      "bytes": 102204,
+      "sha256": "c4010537203ee05746921c12f9a81ffbffee2fb04424867f6b13617d2c08e254"
+    }
+  ]
+}

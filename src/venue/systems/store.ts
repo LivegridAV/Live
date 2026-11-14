@@ -1,3 +1,4 @@
+import type { StallVisit } from "../data/stallVisits";
 import { create } from "zustand";
 
 /**
@@ -11,6 +12,7 @@ import { create } from "zustand";
 
 export type StageMode = "corporate" | "festival";
 export type QualityTier = "low" | "medium" | "high";
+export type ProjectionAngle = "front" | "left" | "right" | "top";
 
 export interface VenueState {
   /* ── journey ── */
@@ -39,6 +41,11 @@ export interface VenueState {
   reducedMotion: boolean;
   contactOpen: boolean;
   navOpen: boolean;
+  projectionAngle: ProjectionAngle;
+  rentalAngle: ProjectionAngle;
+  rentalModelsRotate: boolean;
+  /** A camera visit inside the same physical stall volume. */
+  stallVisit: StallVisit | null;
 
   /* ── device ── */
   quality: QualityTier;
@@ -59,6 +66,10 @@ export interface VenueState {
   setNavOpen: (v: boolean) => void;
   setQuality: (q: QualityTier) => void;
   setIsMobile: (v: boolean) => void;
+  setProjectionAngle: (view: ProjectionAngle) => void;
+  setRentalAngle: (view: ProjectionAngle) => void;
+  setRentalModelsRotate: (rotate: boolean) => void;
+  setStallVisit: (visit: StallVisit | null) => void;
 }
 
 export const useVenue = create<VenueState>((set, get) => ({
@@ -75,6 +86,10 @@ export const useVenue = create<VenueState>((set, get) => ({
   reducedMotion: false,
   contactOpen: false,
   navOpen: false,
+  projectionAngle: "front",
+  rentalAngle: "front",
+  rentalModelsRotate: true,
+  stallVisit: null,
   quality: "high",
   isMobile: false,
 
@@ -99,6 +114,10 @@ export const useVenue = create<VenueState>((set, get) => ({
   setNavOpen: (v) => set({ navOpen: v }),
   setQuality: (q) => set({ quality: q }),
   setIsMobile: (v) => set({ isMobile: v }),
+  setProjectionAngle: (projectionAngle) => set({ projectionAngle }),
+  setRentalAngle: (rentalAngle) => set({ rentalAngle }),
+  setRentalModelsRotate: (rentalModelsRotate) => set({ rentalModelsRotate }),
+  setStallVisit: (stallVisit) => set({ stallVisit }),
 }));
 
 /** Non-reactive read for use inside useFrame (avoids re-render churn). */

@@ -1,10 +1,14 @@
 import * as THREE from "three";
 
 /** Upload buffers/textures and prepare reflection + shadow variants behind the
- * loader. compileAsync alone does not upload geometry or render depth materials.
+ * loader. The installed r185 compileAsync polls material.currentProgram from
+ * an uncaught timer; disposed startup materials can strand the loader. Public
+ * synchronous compile avoids that lifetime race. Initial shader work may block
+ * the loading screen, then the real offscreen draw uploads buffers/textures.
  * A tiny offscreen target avoids drawing the whole venue at display resolution. */
 export async function warmScene(gl: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera, cancelled = () => false) {
-  await gl.compileAsync(scene, camera);
+  if (cancelled()) return;
+  gl.compile(scene, camera);
   if (cancelled()) return;
   const target = new THREE.WebGLRenderTarget(32, 32);
   const previousTarget = gl.getRenderTarget();
@@ -39,5 +43,5 @@ export async function warmScene(gl: THREE.WebGLRenderer, scene: THREE.Scene, cam
   }
   // The offscreen reflection path uses linear output; wait for the on-screen
   // colour-space variants as well before enabling Enter.
-  await gl.compileAsync(scene, camera);
+  if (!cancelled()) gl.compile(scene, camera);
 }

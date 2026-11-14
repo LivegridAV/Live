@@ -1,0 +1,1695 @@
+{
+  "version": 4,
+  "authoringScale": 1,
+  "runtimeScale": 3,
+  "root": [
+    10.2,
+    0,
+    -189
+  ],
+  "worldAnchor": [
+    10.2,
+    0,
+    -189
+  ],
+  "rootRotation": [
+    0,
+    -1.5707963267948966,
+    0
+  ],
+  "floorTop": 0.1,
+  "deckPolygonXZ": [
+    [
+      -6,
+      -2.75
+    ],
+    [
+      6,
+      -2.75
+    ],
+    [
+      6,
+      1.85
+    ],
+    [
+      5.32,
+      2.75
+    ],
+    [
+      -2.58,
+      2.75
+    ],
+    [
+      -5.69,
+      2.24
+    ],
+    [
+      -6,
+      1.79
+    ]
+  ],
+  "architecture": {
+    "width": 12,
+    "depth": 5.5,
+    "height": 5.8,
+    "dimensions": {
+      "width": 12,
+      "depth": 5.5,
+      "height": 5.8
+    },
+    "deckPolygonXZ": [
+      [
+        -6,
+        -2.75
+      ],
+      [
+        6,
+        -2.75
+      ],
+      [
+        6,
+        1.85
+      ],
+      [
+        5.32,
+        2.75
+      ],
+      [
+        -2.58,
+        2.75
+      ],
+      [
+        -5.69,
+        2.24
+      ],
+      [
+        -6,
+        1.79
+      ]
+    ],
+    "reception": {
+      "center": [
+        -3.95,
+        0.1,
+        1.92
+      ],
+      "width": 3.6,
+      "height": 1.1,
+      "depth": 0.8,
+      "top": 1.2
+    },
+    "stage": {
+      "center": [
+        0,
+        0.72,
+        -0.5
+      ],
+      "width": 4.7,
+      "depth": 2.0,
+      "top": 0.72,
+      "min": [
+        -2.35,
+        0.1,
+        -1.5
+      ],
+      "max": [
+        2.35,
+        0.72,
+        0.5
+      ]
+    },
+    "seating": [
+      {
+        "id": "right-left",
+        "position": [
+          3.25,
+          0.1,
+          1.15
+        ],
+        "yaw": 1.25,
+        "seatTop": 0.584,
+        "width": 0.783,
+        "depth": 0.792,
+        "height": 0.886
+      },
+      {
+        "id": "right-right",
+        "position": [
+          4.95,
+          0.1,
+          0.4
+        ],
+        "yaw": -1.25,
+        "seatTop": 0.584,
+        "width": 0.783,
+        "depth": 0.792,
+        "height": 0.886
+      },
+      {
+        "id": "right-rear",
+        "position": [
+          4.15,
+          0.1,
+          0.08
+        ],
+        "yaw": 0,
+        "seatTop": 0.584,
+        "width": 0.783,
+        "depth": 0.792,
+        "height": 0.886
+      }
+    ],
+    "rightTable": {
+      "position": [
+        4.15,
+        0.1,
+        1.15
+      ],
+      "top": 0.65
+    },
+    "kiosk": {
+      "position": [
+        2.45,
+        0.1,
+        2.08
+      ],
+      "width": 1.4,
+      "height": 1.32
+    }
+  },
+  "modelPlacement": {
+    "position": [
+      0,
+      0.72,
+      -0.45
+    ],
+    "scale": [
+      1,
+      1,
+      1
+    ],
+    "targetWidth": 4.3,
+    "targetHeight": 3.3,
+    "bottom": 0.72
+  },
+  "apertures": [
+    {
+      "id": "projection-application-0",
+      "type": "plane",
+      "x": -3.6,
+      "y": 4.15,
+      "z": -0.985,
+      "w": 1.65,
+      "h": 0.68,
+      "width": 1.65,
+      "height": 0.68,
+      "rotation": [
+        0,
+        -0.08,
+        0
+      ],
+      "mediaHint": "projection-application-0"
+    },
+    {
+      "id": "projection-application-1",
+      "type": "plane",
+      "x": -3.6,
+      "y": 3.35,
+      "z": -0.985,
+      "w": 1.65,
+      "h": 0.68,
+      "width": 1.65,
+      "height": 0.68,
+      "rotation": [
+        0,
+        -0.08,
+        0
+      ],
+      "mediaHint": "projection-application-1"
+    },
+    {
+      "id": "projection-application-2",
+      "type": "plane",
+      "x": -3.6,
+      "y": 2.55,
+      "z": -0.985,
+      "w": 1.65,
+      "h": 0.68,
+      "width": 1.65,
+      "height": 0.68,
+      "rotation": [
+        0,
+        -0.08,
+        0
+      ],
+      "mediaHint": "projection-application-2"
+    },
+    {
+      "id": "projection-application-3",
+      "type": "plane",
+      "x": -3.6,
+      "y": 1.75,
+      "z": -0.985,
+      "w": 1.65,
+      "h": 0.68,
+      "width": 1.65,
+      "height": 0.68,
+      "rotation": [
+        0,
+        -0.08,
+        0
+      ],
+      "mediaHint": "projection-application-3"
+    },
+    {
+      "id": "projection-application-4",
+      "type": "plane",
+      "x": 4.25,
+      "y": 4.15,
+      "z": -0.985,
+      "w": 1.65,
+      "h": 0.68,
+      "width": 1.65,
+      "height": 0.68,
+      "rotation": [
+        0,
+        -0.04,
+        0
+      ],
+      "mediaHint": "projection-application-4"
+    },
+    {
+      "id": "projection-application-5",
+      "type": "plane",
+      "x": 4.25,
+      "y": 3.35,
+      "z": -0.985,
+      "w": 1.65,
+      "h": 0.68,
+      "width": 1.65,
+      "height": 0.68,
+      "rotation": [
+        0,
+        -0.04,
+        0
+      ],
+      "mediaHint": "projection-application-5"
+    },
+    {
+      "id": "projection-application-6",
+      "type": "plane",
+      "x": 4.25,
+      "y": 2.55,
+      "z": -0.985,
+      "w": 1.65,
+      "h": 0.68,
+      "width": 1.65,
+      "height": 0.68,
+      "rotation": [
+        0,
+        -0.04,
+        0
+      ],
+      "mediaHint": "projection-application-6"
+    },
+    {
+      "id": "projection-application-7",
+      "type": "plane",
+      "x": 4.25,
+      "y": 1.75,
+      "z": -0.985,
+      "w": 1.65,
+      "h": 0.68,
+      "width": 1.65,
+      "height": 0.68,
+      "rotation": [
+        0,
+        -0.04,
+        0
+      ],
+      "mediaHint": "projection-application-7"
+    },
+    {
+      "id": "projection-backdrop",
+      "type": "curved",
+      "x": 0,
+      "y": 3.05,
+      "z": 4.35,
+      "w": 6.109476940430963,
+      "h": 2.35,
+      "radius": 6.7,
+      "arc": 0.9118622299150692,
+      "rotation": [
+        0,
+        3.141592653589793,
+        0
+      ],
+      "mediaHint": "projection-backdrop",
+      "flipU": true,
+      "chordWidth": 5.9
+    },
+    {
+      "id": "projection-ceiling-outer",
+      "type": "ellipse",
+      "x": 0.0,
+      "y": 5.065702438354492,
+      "z": -0.34123748540878296,
+      "w": 8.24,
+      "h": 4.44,
+      "radiusX": 4.12,
+      "radiusZ": 2.22,
+      "innerFraction": 0.28,
+      "rotation": [
+        1.4107963267948966,
+        0,
+        0
+      ],
+      "mediaHint": "projection-ceiling"
+    },
+    {
+      "id": "projection-ceiling-inner",
+      "type": "ellipse",
+      "x": 0.0,
+      "y": 4.690587043762207,
+      "z": -0.9916273951530457,
+      "w": 3.5999999999999996,
+      "h": 2.0,
+      "radiusX": 1.7999999999999998,
+      "radiusZ": 1.0,
+      "innerFraction": 0.14,
+      "rotation": [
+        1.4307963267948964,
+        0,
+        0
+      ],
+      "mediaHint": "projection-ceiling"
+    },
+    {
+      "id": "projection-kiosk-wide",
+      "type": "plane",
+      "x": 2.450000047683716,
+      "y": 1.2619999647140503,
+      "z": 2.0799999237060547,
+      "w": 1.2999999999999998,
+      "h": 0.6663321502504735,
+      "width": 1.2999999999999998,
+      "height": 0.6663321502504735,
+      "rotation": [
+        -1.1041027033435926,
+        -0.05419984387190082,
+        -0.10711499793780307
+      ],
+      "mediaHint": "projection-kiosk"
+    }
+  ],
+  "screens": [
+    {
+      "id": "projection-application-0",
+      "type": "plane",
+      "x": -3.6,
+      "y": 4.15,
+      "z": -0.985,
+      "w": 1.65,
+      "h": 0.68,
+      "width": 1.65,
+      "height": 0.68,
+      "rotation": [
+        0,
+        -0.08,
+        0
+      ],
+      "mediaHint": "projection-application-0"
+    },
+    {
+      "id": "projection-application-1",
+      "type": "plane",
+      "x": -3.6,
+      "y": 3.35,
+      "z": -0.985,
+      "w": 1.65,
+      "h": 0.68,
+      "width": 1.65,
+      "height": 0.68,
+      "rotation": [
+        0,
+        -0.08,
+        0
+      ],
+      "mediaHint": "projection-application-1"
+    },
+    {
+      "id": "projection-application-2",
+      "type": "plane",
+      "x": -3.6,
+      "y": 2.55,
+      "z": -0.985,
+      "w": 1.65,
+      "h": 0.68,
+      "width": 1.65,
+      "height": 0.68,
+      "rotation": [
+        0,
+        -0.08,
+        0
+      ],
+      "mediaHint": "projection-application-2"
+    },
+    {
+      "id": "projection-application-3",
+      "type": "plane",
+      "x": -3.6,
+      "y": 1.75,
+      "z": -0.985,
+      "w": 1.65,
+      "h": 0.68,
+      "width": 1.65,
+      "height": 0.68,
+      "rotation": [
+        0,
+        -0.08,
+        0
+      ],
+      "mediaHint": "projection-application-3"
+    },
+    {
+      "id": "projection-application-4",
+      "type": "plane",
+      "x": 4.25,
+      "y": 4.15,
+      "z": -0.985,
+      "w": 1.65,
+      "h": 0.68,
+      "width": 1.65,
+      "height": 0.68,
+      "rotation": [
+        0,
+        -0.04,
+        0
+      ],
+      "mediaHint": "projection-application-4"
+    },
+    {
+      "id": "projection-application-5",
+      "type": "plane",
+      "x": 4.25,
+      "y": 3.35,
+      "z": -0.985,
+      "w": 1.65,
+      "h": 0.68,
+      "width": 1.65,
+      "height": 0.68,
+      "rotation": [
+        0,
+        -0.04,
+        0
+      ],
+      "mediaHint": "projection-application-5"
+    },
+    {
+      "id": "projection-application-6",
+      "type": "plane",
+      "x": 4.25,
+      "y": 2.55,
+      "z": -0.985,
+      "w": 1.65,
+      "h": 0.68,
+      "width": 1.65,
+      "height": 0.68,
+      "rotation": [
+        0,
+        -0.04,
+        0
+      ],
+      "mediaHint": "projection-application-6"
+    },
+    {
+      "id": "projection-application-7",
+      "type": "plane",
+      "x": 4.25,
+      "y": 1.75,
+      "z": -0.985,
+      "w": 1.65,
+      "h": 0.68,
+      "width": 1.65,
+      "height": 0.68,
+      "rotation": [
+        0,
+        -0.04,
+        0
+      ],
+      "mediaHint": "projection-application-7"
+    },
+    {
+      "id": "projection-backdrop",
+      "type": "curved",
+      "x": 0,
+      "y": 3.05,
+      "z": 4.35,
+      "w": 6.109476940430963,
+      "h": 2.35,
+      "radius": 6.7,
+      "arc": 0.9118622299150692,
+      "rotation": [
+        0,
+        3.141592653589793,
+        0
+      ],
+      "mediaHint": "projection-backdrop",
+      "flipU": true,
+      "chordWidth": 5.9
+    },
+    {
+      "id": "projection-ceiling-outer",
+      "type": "ellipse",
+      "x": 0.0,
+      "y": 5.065702438354492,
+      "z": -0.34123748540878296,
+      "w": 8.24,
+      "h": 4.44,
+      "radiusX": 4.12,
+      "radiusZ": 2.22,
+      "innerFraction": 0.28,
+      "rotation": [
+        1.4107963267948966,
+        0,
+        0
+      ],
+      "mediaHint": "projection-ceiling"
+    },
+    {
+      "id": "projection-ceiling-inner",
+      "type": "ellipse",
+      "x": 0.0,
+      "y": 4.690587043762207,
+      "z": -0.9916273951530457,
+      "w": 3.5999999999999996,
+      "h": 2.0,
+      "radiusX": 1.7999999999999998,
+      "radiusZ": 1.0,
+      "innerFraction": 0.14,
+      "rotation": [
+        1.4307963267948964,
+        0,
+        0
+      ],
+      "mediaHint": "projection-ceiling"
+    },
+    {
+      "id": "projection-kiosk-wide",
+      "type": "plane",
+      "x": 2.450000047683716,
+      "y": 1.2619999647140503,
+      "z": 2.0799999237060547,
+      "w": 1.2999999999999998,
+      "h": 0.6663321502504735,
+      "width": 1.2999999999999998,
+      "height": 0.6663321502504735,
+      "rotation": [
+        -1.1041027033435926,
+        -0.05419984387190082,
+        -0.10711499793780307
+      ],
+      "mediaHint": "projection-kiosk"
+    }
+  ],
+  "projectors": [
+    {
+      "id": "projection-central-projector",
+      "position": [
+        0,
+        4.35,
+        1.25
+      ],
+      "lens": [
+        0,
+        4.35,
+        1.25
+      ],
+      "target": [
+        -0.2,
+        2.9,
+        -0.65
+      ],
+      "width": 1.5,
+      "height": 3.3,
+      "radius": 0.75,
+      "color": "#c7e9ff",
+      "opacity": 0.075
+    },
+    {
+      "id": "projection-left-projector",
+      "position": [
+        -1.85,
+        4.05,
+        1.1
+      ],
+      "lens": [
+        -1.85,
+        4.05,
+        1.1
+      ],
+      "target": [
+        -1.2,
+        2.1,
+        -0.3
+      ],
+      "width": 1.16,
+      "height": 3.3,
+      "radius": 0.58,
+      "color": "#c7e9ff",
+      "opacity": 0.075
+    },
+    {
+      "id": "projection-right-projector",
+      "position": [
+        1.85,
+        4.05,
+        1.1
+      ],
+      "lens": [
+        1.85,
+        4.05,
+        1.1
+      ],
+      "target": [
+        1.2,
+        2.1,
+        -0.3
+      ],
+      "width": 1.16,
+      "height": 3.3,
+      "radius": 0.58,
+      "color": "#c7e9ff",
+      "opacity": 0.075
+    }
+  ],
+  "interaction": {
+    "position": [
+      -3.95,
+      0.65,
+      2.35
+    ],
+    "rotation": [
+      0,
+      0,
+      0
+    ],
+    "w": 3.45,
+    "h": 1.0
+  },
+  "typography": [
+    {
+      "body": "ARCHITECTURAL MAPPING",
+      "position": [
+        -3.5999999046325684,
+        3.700000047683716,
+        -0.9520000219345093
+      ],
+      "yaw": -0.08,
+      "requestedCapHeight": 0.09,
+      "capHeight": 0.09,
+      "width": 1.658550610336639,
+      "uniformFit": 1.0,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          -4.4303765296936035,
+          3.700000047683716,
+          -1.018951177597046
+        ],
+        "max": [
+          -2.777069091796875,
+          3.7899999618530273,
+          -0.8856457471847534
+        ]
+      }
+    },
+    {
+      "body": "STAGE EXPERIENCES",
+      "position": [
+        -3.5999999046325684,
+        2.9000000953674316,
+        -0.9520000219345093
+      ],
+      "yaw": -0.08,
+      "requestedCapHeight": 0.09,
+      "capHeight": 0.09,
+      "width": 1.2548162927464688,
+      "uniformFit": 1.0,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          -4.224735736846924,
+          2.9000000953674316,
+          -1.002464771270752
+        ],
+        "max": [
+          -2.9738717079162598,
+          2.990000009536743,
+          -0.9014236330986023
+        ]
+      }
+    },
+    {
+      "body": "PRODUCT MAPPING",
+      "position": [
+        -3.5999999046325684,
+        2.0999999046325684,
+        -0.9520000219345093
+      ],
+      "yaw": -0.08,
+      "requestedCapHeight": 0.09,
+      "capHeight": 0.09,
+      "width": 1.2282121984480532,
+      "uniformFit": 1.0,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          -4.21087121963501,
+          2.0999999046325684,
+          -1.0013532638549805
+        ],
+        "max": [
+          -2.986525774002075,
+          2.18999981880188,
+          -0.9024381041526794
+        ]
+      }
+    },
+    {
+      "body": "INTERACTIVE SPACES",
+      "position": [
+        -3.5999999046325684,
+        1.2999999523162842,
+        -0.9520000219345093
+      ],
+      "yaw": -0.08,
+      "requestedCapHeight": 0.09,
+      "capHeight": 0.09,
+      "width": 1.307470637014799,
+      "uniformFit": 1.0,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          -4.248950958251953,
+          1.2999999523162842,
+          -1.004406213760376
+        ],
+        "max": [
+          -2.945600748062134,
+          1.3899999856948853,
+          -0.8991571068763733
+        ]
+      }
+    },
+    {
+      "body": "LANDMARKS",
+      "position": [
+        4.25,
+        3.700000047683716,
+        -0.9520000219345093
+      ],
+      "yaw": -0.04,
+      "requestedCapHeight": 0.09,
+      "capHeight": 0.09,
+      "width": 0.7741894900135525,
+      "uniformFit": 1.0,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          3.8659300804138184,
+          3.700000047683716,
+          -0.9677528142929077
+        ],
+        "max": [
+          4.639531135559082,
+          3.7899999618530273,
+          -0.9360286593437195
+        ]
+      }
+    },
+    {
+      "body": "BRAND EXPERIENCES",
+      "position": [
+        4.25,
+        2.9000000953674316,
+        -0.9520000219345093
+      ],
+      "yaw": -0.04,
+      "requestedCapHeight": 0.09,
+      "capHeight": 0.09,
+      "width": 1.2972048997166694,
+      "uniformFit": 1.0,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          3.6046316623687744,
+          2.9000000953674316,
+          -0.9782103300094604
+        ],
+        "max": [
+          4.900829315185547,
+          2.990000009536743,
+          -0.9255711436271667
+        ]
+      }
+    },
+    {
+      "body": "INTERIORS",
+      "position": [
+        4.25,
+        2.0999999046325684,
+        -0.9520000219345093
+      ],
+      "yaw": -0.04,
+      "requestedCapHeight": 0.09,
+      "capHeight": 0.09,
+      "width": 0.646598426555651,
+      "uniformFit": 1.0,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          3.9296746253967285,
+          2.0999999046325684,
+          -0.9652016758918762
+        ],
+        "max": [
+          4.575786590576172,
+          2.18999981880188,
+          -0.938579797744751
+        ]
+      }
+    },
+    {
+      "body": "EVENTS & EXHIBITIONS",
+      "position": [
+        4.25,
+        1.2999999523162842,
+        -0.9520000219345093
+      ],
+      "yaw": -0.04,
+      "requestedCapHeight": 0.09,
+      "capHeight": 0.09,
+      "width": 1.4524348025103004,
+      "uniformFit": 1.0,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          3.527078866958618,
+          1.2999999523162842,
+          -0.9813140630722046
+        ],
+        "max": [
+          4.978382110595703,
+          1.3899999856948853,
+          -0.9224674105644226
+        ]
+      }
+    },
+    {
+      "body": "PROJECTION MAPPING",
+      "position": [
+        0.8999999761581421,
+        5.369999885559082,
+        2.1700000762939453
+      ],
+      "yaw": 0,
+      "requestedCapHeight": 0.16,
+      "capHeight": 0.16,
+      "width": 2.5036093439634173,
+      "uniformFit": 1.0,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          0.920296847820282,
+          5.369999885559082,
+          2.1693196296691895
+        ],
+        "max": [
+          3.4239063262939453,
+          5.529999732971191,
+          2.170680522918701
+        ]
+      }
+    },
+    {
+      "body": "TRANSFORM SPACES INTO STORIES",
+      "position": [
+        0.9100000262260437,
+        5.150000095367432,
+        2.1700000762939453
+      ],
+      "yaw": 0,
+      "requestedCapHeight": 0.1,
+      "capHeight": 0.1,
+      "width": 2.4664728273061276,
+      "uniformFit": 1.0,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          0.9127665758132935,
+          5.150000095367432,
+          2.169574737548828
+        ],
+        "max": [
+          3.379239320755005,
+          5.25,
+          2.1704254150390625
+        ]
+      }
+    },
+    {
+      "body": "ANY",
+      "position": [
+        5.21999979019165,
+        5.320000171661377,
+        2.180000066757202
+      ],
+      "yaw": 0,
+      "requestedCapHeight": 0.12,
+      "capHeight": 0.12,
+      "width": 0.35406530787912194,
+      "uniformFit": 1.0,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          5.221840858459473,
+          5.320000171661377,
+          2.1794726848602295
+        ],
+        "max": [
+          5.575906276702881,
+          5.440000057220459,
+          2.180527448654175
+        ]
+      }
+    },
+    {
+      "body": "SURFACE",
+      "position": [
+        5.21999979019165,
+        5.119999885559082,
+        2.180000066757202
+      ],
+      "yaw": 0,
+      "requestedCapHeight": 0.12,
+      "capHeight": 0.10896766285706569,
+      "width": 0.66,
+      "uniformFit": 0.9080638571422142,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          5.228896617889404,
+          5.119999885559082,
+          2.179536819458008
+        ],
+        "max": [
+          5.888896465301514,
+          5.228967666625977,
+          2.1804633140563965
+        ]
+      }
+    },
+    {
+      "body": "A CANVAS",
+      "position": [
+        5.21999979019165,
+        4.920000076293945,
+        2.180000066757202
+      ],
+      "yaw": 0,
+      "requestedCapHeight": 0.12,
+      "capHeight": 0.09276309212777928,
+      "width": 0.66,
+      "uniformFit": 0.773025767731494,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          5.221376895904541,
+          4.920000076293945,
+          2.179605722427368
+        ],
+        "max": [
+          5.88137674331665,
+          5.012763023376465,
+          2.180394411087036
+        ]
+      }
+    },
+    {
+      "body": "IDEAS",
+      "position": [
+        5.349999904632568,
+        3.950000047683716,
+        2.178999900817871
+      ],
+      "yaw": 0,
+      "requestedCapHeight": 0.11,
+      "capHeight": 0.11,
+      "width": 0.4230888064570923,
+      "uniformFit": 1.0,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          5.363954067230225,
+          3.950000047683716,
+          2.178532123565674
+        ],
+        "max": [
+          5.787042617797852,
+          4.059999942779541,
+          2.1794676780700684
+        ]
+      }
+    },
+    {
+      "body": "MAPPED",
+      "position": [
+        5.349999904632568,
+        3.75,
+        2.178999900817871
+      ],
+      "yaw": 0,
+      "requestedCapHeight": 0.11,
+      "capHeight": 0.09623929123189538,
+      "width": 0.56,
+      "uniformFit": 0.8749026475626853,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          5.362617015838623,
+          3.75,
+          2.178576946258545
+        ],
+        "max": [
+          5.922616958618164,
+          3.8462393283843994,
+          2.1794228553771973
+        ]
+      }
+    },
+    {
+      "body": "BIGGER",
+      "position": [
+        5.349999904632568,
+        3.549999952316284,
+        2.178999900817871
+      ],
+      "yaw": 0,
+      "requestedCapHeight": 0.11,
+      "capHeight": 0.11,
+      "width": 0.5413306336304167,
+      "uniformFit": 1.0,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          5.363954067230225,
+          3.549999952316284,
+          2.178532123565674
+        ],
+        "max": [
+          5.905284881591797,
+          3.6599998474121094,
+          2.1794676780700684
+        ]
+      }
+    },
+    {
+      "body": "BUILDINGS",
+      "position": [
+        5.349999904632568,
+        2.880000114440918,
+        2.178999900817871
+      ],
+      "yaw": 0,
+      "requestedCapHeight": 0.095,
+      "capHeight": 0.0772840983148988,
+      "width": 0.57,
+      "uniformFit": 0.8135168243673557,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          5.359803676605225,
+          2.880000114440918,
+          2.178671360015869
+        ],
+        "max": [
+          5.929803848266602,
+          2.9572842121124268,
+          2.179328441619873
+        ]
+      }
+    },
+    {
+      "body": "STAGES",
+      "position": [
+        5.349999904632568,
+        2.680000066757202,
+        2.178999900817871
+      ],
+      "yaw": 0,
+      "requestedCapHeight": 0.095,
+      "capHeight": 0.095,
+      "width": 0.4802692306739492,
+      "uniformFit": 1.0,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          5.3577561378479,
+          2.680000066757202,
+          2.178596019744873
+        ],
+        "max": [
+          5.8380255699157715,
+          2.7750000953674316,
+          2.179403781890869
+        ]
+      }
+    },
+    {
+      "body": "PRODUCTS",
+      "position": [
+        5.349999904632568,
+        2.4800000190734863,
+        2.178999900817871
+      ],
+      "yaw": 0,
+      "requestedCapHeight": 0.095,
+      "capHeight": 0.07762526795288846,
+      "width": 0.57,
+      "uniformFit": 0.8171080837146154,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          5.359847068786621,
+          2.4800000190734863,
+          2.1786699295043945
+        ],
+        "max": [
+          5.929847240447998,
+          2.5576252937316895,
+          2.1793298721313477
+        ]
+      }
+    },
+    {
+      "body": "INTERIORS",
+      "position": [
+        5.349999904632568,
+        2.2799999713897705,
+        2.178999900817871
+      ],
+      "yaw": 0,
+      "requestedCapHeight": 0.095,
+      "capHeight": 0.07933827031924078,
+      "width": 0.57,
+      "uniformFit": 0.8351396875709556,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          5.360064506530762,
+          2.2799999713897705,
+          2.1786625385284424
+        ],
+        "max": [
+          5.9300642013549805,
+          2.3593382835388184,
+          2.1793372631073
+        ]
+      }
+    },
+    {
+      "body": "EXPERIENCES",
+      "position": [
+        5.349999904632568,
+        2.0799999237060547,
+        2.178999900817871
+      ],
+      "yaw": 0,
+      "requestedCapHeight": 0.095,
+      "capHeight": 0.06365114977216264,
+      "width": 0.57,
+      "uniformFit": 0.6700121028648699,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          5.358074188232422,
+          2.0799999237060547,
+          2.178729295730591
+        ],
+        "max": [
+          5.928074359893799,
+          2.143651008605957,
+          2.1792705059051514
+        ]
+      }
+    },
+    {
+      "body": "SPACES",
+      "position": [
+        -5.953286170959473,
+        3.7200000286102295,
+        0.4129387438297272
+      ],
+      "yaw": -0.6985264932960452,
+      "requestedCapHeight": 0.12,
+      "capHeight": 0.1157002112189379,
+      "width": 0.58,
+      "uniformFit": 0.9641684268244826,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          -5.94636869430542,
+          3.7200000286102295,
+          0.4186369478702545
+        ],
+        "max": [
+          -5.501577377319336,
+          3.835700273513794,
+          0.7923826575279236
+        ]
+      }
+    },
+    {
+      "body": "PEOPLE",
+      "position": [
+        -5.953286170959473,
+        3.509999990463257,
+        0.4129387438297272
+      ],
+      "yaw": -0.6985264932960452,
+      "requestedCapHeight": 0.12,
+      "capHeight": 0.11777697481501272,
+      "width": 0.58,
+      "uniformFit": 0.981474790125106,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          -5.942166805267334,
+          3.509999990463257,
+          0.4221634268760681
+        ],
+        "max": [
+          -5.497364044189453,
+          3.627776861190796,
+          0.7959226369857788
+        ]
+      }
+    },
+    {
+      "body": "BRANDS",
+      "position": [
+        -5.953286170959473,
+        3.299999952316284,
+        0.4129387438297272
+      ],
+      "yaw": -0.6985264932960452,
+      "requestedCapHeight": 0.12,
+      "capHeight": 0.10494981975934743,
+      "width": 0.58,
+      "uniformFit": 0.8745818313278952,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          -5.94337797164917,
+          3.299999952316284,
+          0.4211587607860565
+        ],
+        "max": [
+          -5.498645305633545,
+          3.40494966506958,
+          0.7948344349861145
+        ]
+      }
+    },
+    {
+      "body": "EMOTIONS",
+      "position": [
+        -5.953286170959473,
+        3.0899999141693115,
+        0.4129387438297272
+      ],
+      "yaw": -0.6985264932960452,
+      "requestedCapHeight": 0.12,
+      "capHeight": 0.07889287152135878,
+      "width": 0.58,
+      "uniformFit": 0.6574405960113232,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          -5.94583797454834,
+          3.0899999141693115,
+          0.41911789774894714
+        ],
+        "max": [
+          -5.501247882843018,
+          3.1688928604125977,
+          0.7926238775253296
+        ]
+      }
+    },
+    {
+      "body": "RENTAL",
+      "position": [
+        -5.953286170959473,
+        2.569999933242798,
+        0.4129387438297272
+      ],
+      "yaw": -0.6985264932960452,
+      "requestedCapHeight": 0.12,
+      "capHeight": 0.1089894132312634,
+      "width": 0.58,
+      "uniformFit": 0.9082451102605285,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          -5.942652225494385,
+          2.569999933242798,
+          0.4217608869075775
+        ],
+        "max": [
+          -5.497877597808838,
+          2.6789894104003906,
+          0.7954866886138916
+        ]
+      }
+    },
+    {
+      "body": "SOLUTIONS",
+      "position": [
+        -5.953286170959473,
+        2.359999895095825,
+        0.4129387438297272
+      ],
+      "yaw": -0.6985264932960452,
+      "requestedCapHeight": 0.12,
+      "capHeight": 0.06467561469047983,
+      "width": 0.51,
+      "uniformFit": 0.5389634557539986,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          -5.949419021606445,
+          2.359999895095825,
+          0.41612398624420166
+        ],
+        "max": [
+          -5.558512210845947,
+          2.424675464630127,
+          0.7445211410522461
+        ]
+      }
+    },
+    {
+      "body": "EXPERIENCES",
+      "position": [
+        -5.953286170959473,
+        2.1500000953674316,
+        0.4129387438297272
+      ],
+      "yaw": -0.6985264932960452,
+      "requestedCapHeight": 0.12,
+      "capHeight": 0.056951028743513946,
+      "width": 0.51,
+      "uniformFit": 0.47459190619594954,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          -5.947909355163574,
+          2.1500000953674316,
+          0.4173993468284607
+        ],
+        "max": [
+          -5.557044982910156,
+          2.206951141357422,
+          0.7457461357116699
+        ]
+      }
+    },
+    {
+      "body": "MORE",
+      "position": [
+        5.835000038146973,
+        2.759999990463257,
+        -1.3200000524520874
+      ],
+      "yaw": -1.5707963267948966,
+      "requestedCapHeight": 0.09,
+      "capHeight": 0.09,
+      "width": 0.3515052824004117,
+      "uniformFit": 1.0,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          5.8346171379089355,
+          2.759999990463257,
+          -1.3085830211639404
+        ],
+        "max": [
+          5.83538293838501,
+          2.8499999046325684,
+          -0.9570777416229248
+        ]
+      }
+    },
+    {
+      "body": "THAN PROJECTION",
+      "position": [
+        5.835000038146973,
+        2.5799999237060547,
+        -1.3200000524520874
+      ],
+      "yaw": -1.5707963267948966,
+      "requestedCapHeight": 0.09,
+      "capHeight": 0.0767177660229658,
+      "width": 1.0,
+      "uniformFit": 0.8524196224773978,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          5.834673881530762,
+          2.5799999237060547,
+          -1.3178776502609253
+        ],
+        "max": [
+          5.835326194763184,
+          2.6567177772521973,
+          -0.3178776502609253
+        ]
+      }
+    },
+    {
+      "body": "A HIGHER PERSPECTIVE",
+      "position": [
+        5.835000038146973,
+        2.4000000953674316,
+        -1.3200000524520874
+      ],
+      "yaw": -1.5707963267948966,
+      "requestedCapHeight": 0.09,
+      "capHeight": 0.061786658055535015,
+      "width": 1.0,
+      "uniformFit": 0.686518422839278,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          5.834737300872803,
+          2.4000000953674316,
+          -1.3190828561782837
+        ],
+        "max": [
+          5.835262775421143,
+          2.4617867469787598,
+          -0.3190828561782837
+        ]
+      }
+    },
+    {
+      "body": "RENTAL  |  SOLUTIONS  |  EXPERIENCES",
+      "position": [
+        -5.409999847412109,
+        0.35499998927116394,
+        2.3359999656677246
+      ],
+      "yaw": 0,
+      "requestedCapHeight": 0.085,
+      "capHeight": 0.085,
+      "width": 1.66747795689208,
+      "uniformFit": 1.0,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          -5.402196884155273,
+          0.35499998927116394,
+          2.33573842048645
+        ],
+        "max": [
+          -3.7347190380096436,
+          0.4399999976158142,
+          2.336261510848999
+        ]
+      }
+    },
+    {
+      "body": "EXPLORE",
+      "position": [
+        2.4084599018096924,
+        0.7100000381469727,
+        2.424504518508911
+      ],
+      "yaw": 0,
+      "requestedCapHeight": 0.135,
+      "capHeight": 0.135,
+      "width": 0.7947182526684267,
+      "uniformFit": 1.0,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          2.01841139793396,
+          0.7100000381469727,
+          2.376911163330078
+        ],
+        "max": [
+          2.8075520992279053,
+          0.8450000286102295,
+          2.4731884002685547
+        ]
+      }
+    },
+    {
+      "body": "POSSIBILITIES",
+      "position": [
+        2.4084599018096924,
+        0.5,
+        2.424504518508911
+      ],
+      "yaw": 0,
+      "requestedCapHeight": 0.135,
+      "capHeight": 0.13124105165599617,
+      "width": 1.22,
+      "uniformFit": 0.9721559381925642,
+      "horizontalAspectRatio": 1,
+      "font": "Segoe UI",
+      "curveResolution": 6,
+      "bounds": {
+        "min": [
+          1.8067361116409302,
+          0.5,
+          2.351402997970581
+        ],
+        "max": [
+          3.018096446990967,
+          0.6312410831451416,
+          2.4985601902008057
+        ]
+      }
+    }
+  ],
+  "ambientOcclusion": {
+    "layer": "Col",
+    "samples": 32,
+    "radius": 0.32,
+    "objects": 20,
+    "occluderTriangles": 123721,
+    "corners": 269363,
+    "evaluatedPositions": 95154,
+    "rays": 3044928,
+    "skipped": {
+      "non_mesh": 0,
+      "character": 0,
+      "distant_hall": 0,
+      "non_opaque_or_emissive": 9
+    },
+    "budgetReached": false,
+    "seconds": 23.326,
+    "minimum": 0.45,
+    "mean": 0.73881
+  },
+  "stats": {
+    "main": {
+      "file": "projection-mapping-stall-v4.glb",
+      "bytes": 9888264,
+      "meshes": 29,
+      "vertices": 184652,
+      "triangles": 239273,
+      "bounds": {
+        "min": [
+          -6.0,
+          0.03500000014901161,
+          -2.75
+        ],
+        "max": [
+          6.0,
+          5.800000190734863,
+          2.75
+        ]
+      }
+    }
+  }
+}

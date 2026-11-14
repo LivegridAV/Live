@@ -1,0 +1,1001 @@
+{
+  "version": "grand-20261018",
+  "dimensions": {
+    "width": 24,
+    "depth": 16,
+    "height": 12.701,
+    "floor": 0.12,
+    "fasciaTop": 12.821,
+    "principalRoute": 2,
+    "secondaryRoute": 1.2,
+    "tolerance": 0.02
+  },
+  "shellBounds": {
+    "min": [
+      -12,
+      0.12,
+      -8
+    ],
+    "max": [
+      12,
+      12.821,
+      8
+    ]
+  },
+  "clearOverhead": 10.344,
+  "apertures": [
+    {
+      "id": "main-backdrop",
+      "position": [
+        2.0,
+        5.45,
+        -7.6
+      ],
+      "w": 10.2,
+      "h": 7.8,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "rental2026-backdrop"
+    },
+    {
+      "id": "application-0",
+      "position": [
+        8.95,
+        9.45,
+        -7.6
+      ],
+      "w": 2.45,
+      "h": 1.48,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "rental2026-application-0"
+    },
+    {
+      "id": "application-1",
+      "position": [
+        8.95,
+        7.45,
+        -7.6
+      ],
+      "w": 2.45,
+      "h": 1.48,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "rental2026-application-1"
+    },
+    {
+      "id": "application-2",
+      "position": [
+        8.95,
+        5.45,
+        -7.6
+      ],
+      "w": 2.45,
+      "h": 1.48,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "rental2026-application-2"
+    },
+    {
+      "id": "application-3",
+      "position": [
+        8.95,
+        3.45,
+        -7.6
+      ],
+      "w": 2.45,
+      "h": 1.48,
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "mediaHint": "rental2026-application-3"
+    }
+  ],
+  "products": [
+    {
+      "id": "flat",
+      "type": "flat",
+      "position": [
+        -10.15,
+        8.55,
+        -5.65
+      ],
+      "width": 1.75,
+      "height": 1.6
+    },
+    {
+      "id": "curved",
+      "type": "curved",
+      "position": [
+        -7.3,
+        8.55,
+        -5.65
+      ],
+      "width": 2.22,
+      "height": 1.6,
+      "radius": 1.3,
+      "arc": 2.04
+    },
+    {
+      "id": "cylinder",
+      "type": "cylinder",
+      "position": [
+        -4.65,
+        8.55,
+        -5.65
+      ],
+      "radius": 0.67,
+      "height": 1.8
+    },
+    {
+      "id": "corner",
+      "type": "corner",
+      "position": [
+        -10.15,
+        5.0,
+        -5.65
+      ],
+      "side": 1.2,
+      "height": 1.45
+    },
+    {
+      "id": "transparent",
+      "type": "transparent",
+      "position": [
+        -7.82,
+        5.0,
+        -5.65
+      ],
+      "width": 1.4,
+      "height": 1.9
+    },
+    {
+      "id": "dna",
+      "type": "dna",
+      "position": [
+        -5.9,
+        5.0,
+        -5.65
+      ],
+      "width": 1,
+      "height": 2.5
+    },
+    {
+      "id": "sphere",
+      "type": "sphere",
+      "position": [
+        -3.96,
+        5.0,
+        -5.65
+      ],
+      "radius": 0.72
+    }
+  ],
+  "fixtures": [
+    {
+      "position": [
+        -10,
+        10.46,
+        -6.5
+      ],
+      "target": [
+        -10,
+        0.12,
+        -7.3
+      ]
+    },
+    {
+      "position": [
+        -10,
+        10.46,
+        -2
+      ],
+      "target": [
+        -10,
+        0.12,
+        -2.8
+      ]
+    },
+    {
+      "position": [
+        -10,
+        10.46,
+        3.7
+      ],
+      "target": [
+        -10,
+        0.12,
+        2.9000000000000004
+      ]
+    },
+    {
+      "position": [
+        -10,
+        10.46,
+        6.7
+      ],
+      "target": [
+        -10,
+        0.12,
+        5.9
+      ]
+    },
+    {
+      "position": [
+        -7,
+        10.46,
+        -6.5
+      ],
+      "target": [
+        -7,
+        0.12,
+        -7.3
+      ]
+    },
+    {
+      "position": [
+        -7,
+        10.46,
+        -2
+      ],
+      "target": [
+        -7,
+        0.12,
+        -2.8
+      ]
+    },
+    {
+      "position": [
+        -7,
+        10.46,
+        3.7
+      ],
+      "target": [
+        -7,
+        0.12,
+        2.9000000000000004
+      ]
+    },
+    {
+      "position": [
+        -7,
+        10.46,
+        6.7
+      ],
+      "target": [
+        -7,
+        0.12,
+        5.9
+      ]
+    },
+    {
+      "position": [
+        -4,
+        10.46,
+        -6.5
+      ],
+      "target": [
+        -4,
+        0.12,
+        -7.3
+      ]
+    },
+    {
+      "position": [
+        -4,
+        10.46,
+        -2
+      ],
+      "target": [
+        -4,
+        0.12,
+        -2.8
+      ]
+    },
+    {
+      "position": [
+        -4,
+        10.46,
+        3.7
+      ],
+      "target": [
+        -4,
+        0.12,
+        2.9000000000000004
+      ]
+    },
+    {
+      "position": [
+        -4,
+        10.46,
+        6.7
+      ],
+      "target": [
+        -4,
+        0.12,
+        5.9
+      ]
+    },
+    {
+      "position": [
+        0,
+        10.46,
+        -6.5
+      ],
+      "target": [
+        0,
+        0.12,
+        -7.3
+      ]
+    },
+    {
+      "position": [
+        0,
+        10.46,
+        -2
+      ],
+      "target": [
+        0,
+        0.12,
+        -2.8
+      ]
+    },
+    {
+      "position": [
+        0,
+        10.46,
+        3.7
+      ],
+      "target": [
+        0,
+        0.12,
+        2.9000000000000004
+      ]
+    },
+    {
+      "position": [
+        0,
+        10.46,
+        6.7
+      ],
+      "target": [
+        0,
+        0.12,
+        5.9
+      ]
+    },
+    {
+      "position": [
+        4,
+        10.46,
+        -6.5
+      ],
+      "target": [
+        4,
+        0.12,
+        -7.3
+      ]
+    },
+    {
+      "position": [
+        4,
+        10.46,
+        -2
+      ],
+      "target": [
+        4,
+        0.12,
+        -2.8
+      ]
+    },
+    {
+      "position": [
+        4,
+        10.46,
+        3.7
+      ],
+      "target": [
+        4,
+        0.12,
+        2.9000000000000004
+      ]
+    },
+    {
+      "position": [
+        4,
+        10.46,
+        6.7
+      ],
+      "target": [
+        4,
+        0.12,
+        5.9
+      ]
+    },
+    {
+      "position": [
+        7,
+        10.46,
+        -6.5
+      ],
+      "target": [
+        7,
+        0.12,
+        -7.3
+      ]
+    },
+    {
+      "position": [
+        7,
+        10.46,
+        -2
+      ],
+      "target": [
+        7,
+        0.12,
+        -2.8
+      ]
+    },
+    {
+      "position": [
+        7,
+        10.46,
+        3.7
+      ],
+      "target": [
+        7,
+        0.12,
+        2.9000000000000004
+      ]
+    },
+    {
+      "position": [
+        7,
+        10.46,
+        6.7
+      ],
+      "target": [
+        7,
+        0.12,
+        5.9
+      ]
+    },
+    {
+      "position": [
+        10,
+        10.46,
+        -6.5
+      ],
+      "target": [
+        10,
+        0.12,
+        -7.3
+      ]
+    },
+    {
+      "position": [
+        10,
+        10.46,
+        -2
+      ],
+      "target": [
+        10,
+        0.12,
+        -2.8
+      ]
+    },
+    {
+      "position": [
+        10,
+        10.46,
+        3.7
+      ],
+      "target": [
+        10,
+        0.12,
+        2.9000000000000004
+      ]
+    },
+    {
+      "position": [
+        10,
+        10.46,
+        6.7
+      ],
+      "target": [
+        10,
+        0.12,
+        5.9
+      ]
+    }
+  ],
+  "typography": [
+    {
+      "body": "livegrid AV",
+      "position": [
+        -8.4,
+        11.3,
+        7.807
+      ],
+      "height": 0.91,
+      "width": 4.575505468470698,
+      "yaw": 0,
+      "uniformScale": true
+    },
+    {
+      "body": "LED RENTAL SOLUTIONS",
+      "position": [
+        0.2,
+        11.75,
+        7.807
+      ],
+      "height": 0.23791340526135085,
+      "width": 4.9,
+      "yaw": 0,
+      "uniformScale": true
+    },
+    {
+      "body": "FOR EVERY VISION",
+      "position": [
+        0.2,
+        11.3,
+        7.807
+      ],
+      "height": 0.22,
+      "width": 3.6546792059399364,
+      "yaw": 0,
+      "uniformScale": true
+    },
+    {
+      "body": "STAGES",
+      "position": [
+        8.05,
+        12.31,
+        7.5
+      ],
+      "height": 0.14,
+      "width": 0.7243016825516754,
+      "yaw": 0.14,
+      "uniformScale": true
+    },
+    {
+      "body": "EVENTS",
+      "position": [
+        8.05,
+        12.105,
+        7.5
+      ],
+      "height": 0.14,
+      "width": 0.7204284758263265,
+      "yaw": 0.14,
+      "uniformScale": true
+    },
+    {
+      "body": "EXHIBITIONS",
+      "position": [
+        8.05,
+        11.9,
+        7.5
+      ],
+      "height": 0.14,
+      "width": 1.2477667341781606,
+      "yaw": 0.14,
+      "uniformScale": true
+    },
+    {
+      "body": "BRANDS",
+      "position": [
+        8.05,
+        11.695,
+        7.5
+      ],
+      "height": 0.14,
+      "width": 0.7902395131523108,
+      "yaw": 0.14,
+      "uniformScale": true
+    },
+    {
+      "body": "FIXED INSTALLATIONS",
+      "position": [
+        8.05,
+        11.49,
+        7.5
+      ],
+      "height": 0.14,
+      "width": 2.195496842626907,
+      "yaw": 0.14,
+      "uniformScale": true
+    },
+    {
+      "body": "AND MORE",
+      "position": [
+        8.05,
+        11.285,
+        7.5
+      ],
+      "height": 0.14,
+      "width": 1.0966997841988662,
+      "yaw": 0.14,
+      "uniformScale": true
+    },
+    {
+      "body": "IDEAS",
+      "position": [
+        11.999,
+        6.55,
+        5.45
+      ],
+      "height": 0.24,
+      "width": 0.9457813715772923,
+      "yaw": 1.5707963267948966,
+      "uniformScale": true
+    },
+    {
+      "body": "IN",
+      "position": [
+        11.999,
+        6.17,
+        5.45
+      ],
+      "height": 0.24,
+      "width": 0.3139832868675431,
+      "yaw": 1.5707963267948966,
+      "uniformScale": true
+    },
+    {
+      "body": "MOTION",
+      "position": [
+        11.999,
+        5.79,
+        5.45
+      ],
+      "height": 0.24,
+      "width": 1.3888665669527758,
+      "yaw": 1.5707963267948966,
+      "uniformScale": true
+    },
+    {
+      "body": "CORPORATE EVENTS",
+      "position": [
+        10.31,
+        9.37,
+        -7.55
+      ],
+      "height": 0.102514363581433,
+      "width": 1.25,
+      "yaw": 0,
+      "uniformScale": true
+    },
+    {
+      "body": "LIVE EXPERIENCES",
+      "position": [
+        10.31,
+        7.37,
+        -7.55
+      ],
+      "height": 0.11355062891948038,
+      "width": 1.25,
+      "yaw": 0,
+      "uniformScale": true
+    },
+    {
+      "body": "BRAND ACTIVATIONS",
+      "position": [
+        10.31,
+        5.37,
+        -7.55
+      ],
+      "height": 0.10402024678188025,
+      "width": 1.25,
+      "yaw": 0,
+      "uniformScale": true
+    },
+    {
+      "body": "RETAIL & SHOWROOMS",
+      "position": [
+        10.31,
+        3.37,
+        -7.55
+      ],
+      "height": 0.09417111883690514,
+      "width": 1.25,
+      "yaw": 0,
+      "uniformScale": true
+    },
+    {
+      "body": "FLAT LED",
+      "position": [
+        -10.15,
+        7.390000000000001,
+        -5.61
+      ],
+      "height": 0.18,
+      "width": 1.0748710527937573,
+      "yaw": 0,
+      "uniformScale": true
+    },
+    {
+      "body": "CURVED LED",
+      "position": [
+        -7.3,
+        7.390000000000001,
+        -5.61
+      ],
+      "height": 0.18,
+      "width": 1.4675926286148826,
+      "yaw": 0,
+      "uniformScale": true
+    },
+    {
+      "body": "CYLINDRICAL LED",
+      "position": [
+        -4.65,
+        7.29,
+        -5.61
+      ],
+      "height": 0.18,
+      "width": 2.063475343468683,
+      "yaw": 0,
+      "uniformScale": true
+    },
+    {
+      "body": "SEAMLESS",
+      "position": [
+        -10.15,
+        3.9150000000000005,
+        -5.61
+      ],
+      "height": 0.18,
+      "width": 1.1819197645264663,
+      "yaw": 0,
+      "uniformScale": true
+    },
+    {
+      "body": "CORNER LED",
+      "position": [
+        -10.15,
+        3.6750000000000007,
+        -5.61
+      ],
+      "height": 0.18,
+      "width": 1.490183657949106,
+      "yaw": 0,
+      "uniformScale": true
+    },
+    {
+      "body": "TRANSPARENT LED",
+      "position": [
+        -7.82,
+        3.69,
+        -5.61
+      ],
+      "height": 0.1706104834666648,
+      "width": 2.12,
+      "yaw": 0,
+      "uniformScale": true
+    },
+    {
+      "body": "DNA LED",
+      "position": [
+        -5.9,
+        3.39,
+        -5.61
+      ],
+      "height": 0.18,
+      "width": 1.0574208608781719,
+      "yaw": 0,
+      "uniformScale": true
+    },
+    {
+      "body": "SPHERE LED",
+      "position": [
+        -3.96,
+        3.9200000000000004,
+        -5.61
+      ],
+      "height": 0.18,
+      "width": 1.3843942714656052,
+      "yaw": 0,
+      "uniformScale": true
+    }
+  ],
+  "stats": {
+    "shell": {
+      "bytes": 1961196,
+      "sha256": "60d75fe16c0edf2b3bee69ba19839fa51a1bf6743a88c34071a9c23870aa7b8e",
+      "meshes": 17,
+      "triangles": 41688
+    },
+    "interior": {
+      "bytes": 12112592,
+      "sha256": "f0c1908e4811dabacd115ce5a95f99a83a56df1f3261c009b9d1fb1727743fcc",
+      "meshes": 19,
+      "triangles": 308170
+    },
+    "visitors": {
+      "bytes": 22155816,
+      "sha256": "a21abd8bdc9edbd53623f5b8eaab4a4cf46000d0e5e5560e3030ffa0a2a80fee",
+      "meshes": 6,
+      "triangles": 73426
+    }
+  },
+  "visitorPlacements": [
+    {
+      "role": "reception host",
+      "source": "reception-host",
+      "position": [
+        8.0,
+        0.12,
+        4.5
+      ],
+      "yaw": 0,
+      "nativeHumanScale": 0.94
+    },
+    {
+      "role": "reception colleague",
+      "source": "reception-colleague",
+      "position": [
+        6.35,
+        0.12,
+        4.5
+      ],
+      "yaw": 0,
+      "nativeHumanScale": 0.98
+    },
+    {
+      "role": "reception guest",
+      "source": "conversation-left",
+      "position": [
+        9.25,
+        0.12,
+        7.15
+      ],
+      "yaw": 3.141592653589793,
+      "nativeHumanScale": 0.98
+    },
+    {
+      "role": "product observer",
+      "source": "kiosk-guest",
+      "position": [
+        -9.5,
+        0.12,
+        3.8
+      ],
+      "yaw": 2.8,
+      "nativeHumanScale": 0.98
+    },
+    {
+      "role": "product discussion",
+      "source": "crystal-observer",
+      "position": [
+        -8.1,
+        0.12,
+        3.65
+      ],
+      "yaw": -1.0,
+      "nativeHumanScale": 0.94
+    },
+    {
+      "role": "lounge adviser",
+      "source": "cafe-left",
+      "position": [
+        3.2,
+        0.12,
+        -4.5
+      ],
+      "yaw": 0,
+      "nativeHumanScale": 1
+    },
+    {
+      "role": "lounge guest",
+      "source": "cafe-right",
+      "position": [
+        4.35,
+        0.12,
+        -1.55
+      ],
+      "yaw": 3.141592653589793,
+      "nativeHumanScale": 1
+    },
+    {
+      "role": "left consultation guest",
+      "source": "cafe-rear",
+      "position": [
+        -4.8,
+        0.12,
+        -0.3
+      ],
+      "yaw": -1.5707963267948966,
+      "nativeHumanScale": 1
+    },
+    {
+      "role": "application visitor",
+      "source": "deep-right-gallery",
+      "position": [
+        7.3,
+        0.12,
+        -1.0
+      ],
+      "yaw": -0.8,
+      "nativeHumanScale": 0.93
+    }
+  ],
+  "floor": "shared-world-venue-finish",
+  "routes": [
+    {
+      "id": "principal",
+      "polygonXZ": [
+        [
+          -1.2,
+          8
+        ],
+        [
+          1.2,
+          8
+        ],
+        [
+          1.2,
+          -5.8
+        ],
+        [
+          -1.2,
+          -5.8
+        ]
+      ],
+      "clearWidth": 2.4
+    }
+  ],
+  "views": {
+    "entrance": {
+      "position": [
+        0,
+        1.8,
+        9.4
+      ],
+      "look": [
+        2,
+        3.6,
+        -7.5
+      ]
+    },
+    "interior": {
+      "position": [
+        0,
+        1.8,
+        2.5
+      ],
+      "look": [
+        2,
+        3.6,
+        -7.5
+      ]
+    },
+    "exit": {
+      "position": [
+        0,
+        1.8,
+        2.5
+      ],
+      "look": [
+        0,
+        1.8,
+        10
+      ]
+    }
+  },
+  "provenance": "Existing original bespoke Blender helpers, selected rental artwork and botanical atlas; native textured Microsoft Rocketbox visitors MIT Copyright (c) 2020 Microsoft. No generated image used as geometry."
+}

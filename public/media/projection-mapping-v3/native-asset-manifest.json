@@ -1,0 +1,69 @@
+{
+  "created": "2026-10-16",
+  "method": "deterministic native branching electrical veins, porcelain/icy light patches and periodic teal/gold cosmic mottling; no raster reference editing or image generation",
+  "assets": [
+    {
+      "file": "cosmic-tile-native.png",
+      "width": 768,
+      "height": 768,
+      "bytes": 399509,
+      "sha256": "6b493c67fa8ddc000ebf5e6ff57dffed8a3fba58a981b7e4b38c55db0de5d2e2"
+    },
+    {
+      "file": "cosmic-tile.webp",
+      "width": 768,
+      "height": 768,
+      "bytes": 255710,
+      "sha256": "9d1e88e1d76d9237f07c5c729a967b5704c826fe815dc55679a1a193b7375956"
+    },
+    {
+      "file": "sculpture-caustics-native.png",
+      "width": 2048,
+      "height": 1536,
+      "bytes": 1679966,
+      "sha256": "f7e3b62f89732ea7a0e2239f2220ff934df6e5b0711fc6ac36ca517bf16ca8e8"
+    },
+    {
+      "file": "sculpture-caustics.webp",
+      "width": 2048,
+      "height": 1536,
+      "bytes": 338206,
+      "sha256": "9e82788a37d59bbc8ef5c1710d48760c18b9a66afaf07ab74a620c645bff6ab0"
+    },
+    {
+      "file": "sculpture-hero-render-blue.png",
+      "width": 1600,
+      "height": 900,
+      "bytes": 1792630,
+      "sha256": "8f6a151fee69abbf0f12f233031f474c2ea239feabb8c6376029b9f6338e8903"
+    },
+    {
+      "file": "sculpture-hero-render-final.png",
+      "width": 1600,
+      "height": 900,
+      "bytes": 1752207,
+      "sha256": "a089645cd58d8034f8d4023e1bf2c1d7c3fdf807dd6b53b2e7c7fd1c85f69ad7"
+    },
+    {
+      "file": "sculpture-hero-render.png",
+      "width": 1600,
+      "height": 900,
+      "bytes": 1694188,
+      "sha256": "02b4e117b6e50e6899481d8c0b732f13428b2032352e51605f579db6f5c028e1"
+    },
+    {
+      "file": "sculpture-hero.webp",
+      "width": 1600,
+      "height": 900,
+      "bytes": 116858,
+      "sha256": "d5202dd97465fb1c9fa5a1b676eabc246e89fcb67359f3238bee09a6eddd4149"
+    }
+  ],
+  "hero": {
+    "source": "sculpture-hero-render-final.png",
+    "geometry": "/models/expo/projection-sculpture.glb",
+    "geometrySHA256": "e4489e8edc1ba384c64e0aa68880fcaa0b8cedf8371adf45f9bcd1660be37afb",
+    "lightFieldSHA256": "9e82788a37d59bbc8ef5c1710d48760c18b9a66afaf07ab74a620c645bff6ab0",
+    "method": "Actual final sculpture mesh rendered in Blender against native navy cosmic material, ivory returns and native branching-vein projection; no reference pixels."
+  }
+}

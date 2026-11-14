@@ -1,0 +1,16 @@
+{
+  "date": "2026-10-16",
+  "mode": "built-in image_gen.imagegen; brand new isolated monitor photographs; no reference image editing",
+  "prompts": [
+    {
+      "key": "car",
+      "file": "product-car-original.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: one isolated 16:9 photograph displayed inside a small projection-mapping application monitor. Create a premium, believable photograph of a silver-white modern sports sedan, front three-quarter view pointing left, entirely visible including all four wheels and roof, centered and filling about 76 percent of frame width. The vehicle is in a dark black/navy product launch studio. Bright icy blue and white projection-mapped flowing topographic contour lines and delicate electric veins wrap precisely over the hood, front bumper, doors and wheel arches; blue light reflects off the glossy floor. Deep navy background, two or three very small out-of-focus business visitors standing behind the car at the far edges, restrained stage spotlights overhead. Real automotive surface reflections, photoreal material detail, subtle cinematic contrast, cool blue-white palette. Keep the car readable and correctly proportioned. No text, no logo, no watermark, no border, no screen frame, no exhibition booth facade, no UI. This is isolated product mapping event photography, not a mockup of a monitor or a whole booth."
+    },
+    {
+      "key": "interior",
+      "file": "interior-event-original.png",
+      "prompt": "Use case: photorealistic-natural. Asset type: one isolated wide 16:9 photograph for a small INTERIORS application monitor at an exhibition. Create a premium contemporary indoor event and conference venue photographed from the back at eye level looking toward a modest presentation stage. Warm champagne-white architectural cove lighting, tall softly lit ivory fabric wall panels alternating with narrow walnut ribs, orderly rows of charcoal upholstered conference chairs with an open center aisle and a few naturally seated business guests, a broad dark teal and warm-white projected scenic light backdrop at the far stage. The room has beautiful warm materials and believable real reflections, neutral gray-beige carpeting, simple clean ceiling joinery, and an inviting refined event atmosphere. Natural architectural photography with realistic proportions and rich blacks, restrained warm light rather than neon. The room and seating should dominate; stage content is only a small background element. No legible text, no logo, no watermark, no border, no screen frame, no exhibition booth facade, no UI. This is actual-looking interior event photography, not a rendering of the whole requested booth."
+    }
+  ]
+}

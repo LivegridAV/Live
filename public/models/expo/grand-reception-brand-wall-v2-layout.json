@@ -1,0 +1,354 @@
+{
+  "version": "reception-brand-wall-v2-20261019",
+  "openFeatureReservation": {
+    "width": 24,
+    "depth": 16,
+    "height": 12.701,
+    "floor": 0.12,
+    "fasciaTop": 12.821,
+    "principalRoute": 2,
+    "secondaryRoute": 1.2,
+    "tolerance": 0.02
+  },
+  "geometry": {
+    "file": "grand-reception-brand-wall-v2.glb",
+    "bytes": 5797332,
+    "sha256": "af4c8b0e12e377adb40bf92d12595f59869d6061572ed4b3f6cd466656ef9796",
+    "bounds": {
+      "min": [
+        -11.824999809265137,
+        0.11999988555908203,
+        -7.767294406890869
+      ],
+      "max": [
+        13.703343391418457,
+        11.733939170837402,
+        5.9757466316223145
+      ]
+    },
+    "triangles": 183596
+  },
+  "people": {
+    "bytes": 17314244,
+    "sha256": "de18dd4673222ccafdacde41c7c99c86dcaea179a0de2ab4fce1b273f26ef48b",
+    "bounds": {
+      "min": [
+        -5.203649520874023,
+        0.11999998986721039,
+        -5.000660419464111
+      ],
+      "max": [
+        5.5809454917907715,
+        1.89506995677948,
+        5.845910549163818
+      ]
+    },
+    "triangles": 55133
+  },
+  "placements": [
+    {
+      "role": "host",
+      "position": [
+        3.5,
+        0.12,
+        4.65
+      ],
+      "nativeScale": 0.94
+    },
+    {
+      "role": "bar adviser",
+      "position": [
+        5.3,
+        0.12,
+        4.6
+      ],
+      "nativeScale": 0.98
+    },
+    {
+      "role": "visitor",
+      "position": [
+        -3.95,
+        0.12,
+        5.65
+      ],
+      "nativeScale": 0.98
+    },
+    {
+      "role": "guest",
+      "position": [
+        -4.3,
+        0.12,
+        4.8
+      ],
+      "nativeScale": 0.99
+    },
+    {
+      "role": "rear seated",
+      "position": [
+        -3.7,
+        0.12,
+        -5.2
+      ],
+      "nativeScale": 1
+    },
+    {
+      "role": "left consultation",
+      "position": [
+        -5.2,
+        0.12,
+        -3.8
+      ],
+      "nativeScale": 1
+    },
+    {
+      "role": "lounge guest",
+      "position": [
+        -2.1,
+        0.12,
+        -2.25
+      ],
+      "nativeScale": 1
+    }
+  ],
+  "assemblies": {
+    "cylinder": {
+      "source": [
+        -7,
+        0,
+        0
+      ],
+      "position": [
+        -7,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    "halo": {
+      "source": [
+        1,
+        8,
+        -3
+      ],
+      "position": [
+        2.2,
+        10.11994,
+        -3.5
+      ],
+      "scale": [
+        1.551020408163265,
+        2,
+        0.7857142857142857
+      ]
+    },
+    "panorama": {
+      "source": [
+        8,
+        3.55,
+        2
+      ],
+      "position": [
+        0.7,
+        4.45,
+        4
+      ],
+      "scale": [
+        1.2888888888888888,
+        1.272727272727273,
+        1.2888888888888888
+      ],
+      "rotation_y": -0.5
+    },
+    "counter": {
+      "source": [
+        4,
+        0,
+        -0.6
+      ],
+      "position": [
+        4.8863,
+        0,
+        -0.2692
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "rotation_y": -0.23157
+    },
+    "lounge": {
+      "source": [
+        -3.3,
+        0,
+        -4.3
+      ],
+      "position": [
+        -3.3,
+        0,
+        -4.3
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    "right": {
+      "source": [
+        15.1,
+        0,
+        -4.85
+      ],
+      "position": [
+        12.704402923583984,
+        0,
+        0.3193845748901367
+      ],
+      "scale": [
+        1,
+        1.1702127659574468,
+        1
+      ],
+      "rotation_y": -0.2
+    },
+    "right_tree": {
+      "source": [
+        14.6,
+        0,
+        -3.55
+      ],
+      "position": [
+        10,
+        0,
+        1.3
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    "left_pavilion": {
+      "source": [
+        -12.5,
+        0,
+        -5.75
+      ],
+      "position": [
+        -10.8,
+        0,
+        -5.75
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    "left_brand": {
+      "source": [
+        -5.3,
+        0,
+        -7.7
+      ],
+      "position": [
+        -3.977606806423204,
+        0,
+        -6.910847563984351
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ],
+      "rotation_y": 0.2400000000000002
+    }
+  },
+  "route": {
+    "width": 2,
+    "xMin": -3.4,
+    "xMax": -1.4,
+    "zMin": 1.8,
+    "zMax": 8
+  },
+  "provenance": "Original selected reception joinery reused and reflowed; original botanical helper/atlas; Microsoft Rocketbox MIT textured people. No full-assembly scaling.",
+  "brandingWallRelocation": {
+    "sourceFile": "grand-reception.glb",
+    "sourceSha256": "6f2d98da1961e0a24f00c2b651da146262e071856a0df759ca34650aecd0a0e2",
+    "targetFile": "grand-reception-brand-wall-v2.glb",
+    "targetSha256": "af4c8b0e12e377adb40bf92d12595f59869d6061572ed4b3f6cd466656ef9796",
+    "ledRightEndpointXZ": [
+      11.671094393614652,
+      0.23236310051019737
+    ],
+    "jointMetres": 0.03,
+    "originalPivot": [
+      10.649999618530273,
+      0,
+      -0.5
+    ],
+    "newPivot": [
+      12.704402923583984,
+      0,
+      0.3193845748901367
+    ],
+    "translation": [
+      2.054403305053711,
+      0,
+      0.8193845748901367
+    ],
+    "yawUnchanged": -0.2,
+    "scaleUnchanged": [
+      1,
+      1.1702127659574468,
+      1
+    ],
+    "movedBoundsBefore": {
+      "min": [
+        9.6510591506958,
+        0.11999988555908203,
+        -0.8113105893135071
+      ],
+      "max": [
+        11.648940086364746,
+        11.119998931884766,
+        -0.18868941068649292
+      ]
+    },
+    "movedBoundsAfter": {
+      "min": [
+        11.705462455749512,
+        0.11999988555908203,
+        0.008073985576629639
+      ],
+      "max": [
+        13.703343391418457,
+        11.119998931884766,
+        0.6306951642036438
+      ]
+    },
+    "changedMeshes": [
+      {
+        "mesh": "Reception | matte charcoal panel | interior",
+        "vertices": 96,
+        "faces": 60
+      },
+      {
+        "mesh": "Reception | porcelain brand lettering | interior",
+        "vertices": 7514,
+        "faces": 5332
+      }
+    ],
+    "translatedVertices": 7610,
+    "unchangedVertices": 130043,
+    "trianglesUnchanged": 183596,
+    "allOtherVerticesPreserved": true,
+    "sourceFilePreserved": true,
+    "exportMethod": "Direct original GLB POSITION byte patch; no mesh/material/image roundtrip"
+  }
+}

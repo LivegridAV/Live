@@ -1,0 +1,25 @@
+{
+  "publisher": "Microsoft",
+  "project": "Microsoft Rocketbox Avatar Library",
+  "repository": "https://github.com/microsoft/Microsoft-Rocketbox",
+  "treeCommit": "0943055db6ec570bcef9f2c8b41c9e5467c808f9",
+  "license": "MIT",
+  "copyright": "Copyright (c) 2020 Microsoft",
+  "licenseSource": "https://raw.githubusercontent.com/microsoft/Microsoft-Rocketbox/master/LICENSE.md",
+  "publicNotice": "/models/expo/technical-humans-LICENSE.txt",
+  "characters": [
+    "Assets/Avatars/Professions/Business_Male_01",
+    "Assets/Avatars/Professions/Business_Male_02",
+    "Assets/Avatars/Professions/Business_Female_01",
+    "Assets/Avatars/Professions/Business_Female_04"
+  ],
+  "derivatives": {
+    "geometry": "Original rigged human meshes, authored static arm poses, normalized to 1.793m and baked without a runtime skeleton",
+    "color": "Original body and head TGA diffuse maps converted to 2048px JPEG",
+    "normal": "Original body and head normal maps converted to 1024px PNG",
+    "hair": "Original RGBA hair color/opacity, PNG and alpha test cutoff 0.33",
+    "runtimeMaterials": "Rocketbox | Business_* | body/head/opacity",
+    "ambientOcclusion": "Characters and their texture materials are excluded from the static booth AO bake",
+    "garmentVariants": "UV-masked upper-garment white blouse and black top diffuse derivatives retain source cloth creases, source skin/head/hair and original normal maps; fitted backpack is authored geometry"
+  }
+}
