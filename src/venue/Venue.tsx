@@ -15,6 +15,7 @@ import { ContactPanel } from "./ui/Contact";
 import { GuideControls } from "./ui/Guide";
 import { ReviewControls } from "./ui/ReviewControls";
 import { StallVisitControls } from "./ui/StallVisit";
+import { BottomDock } from "./ui/BottomDock";
 import { ReviewRecorder } from "./ui/ReviewRecorder";
 import { EntranceFinishes } from "./ui/EntranceFinishes";
 import { EntranceWalkthrough } from "./ui/EntranceWalkthrough";
@@ -108,14 +109,16 @@ export default function Venue() {
       <Loader />
       <Nav />
       <ZoneHud />
-      <StallVisitControls />
+      <BottomDock>
+        <StallVisitControls />
+        <GuideControls />
+      </BottomDock>
       <ProgressRail />
       <ScrollCue />
       <PavilionPrompt />
       <PavilionPanel />
       <StageModeSwitch />
       <ContactPanel />
-      <GuideControls />
       <ReviewControls />
       <ReviewRecorder />
       <EntranceFinishes />

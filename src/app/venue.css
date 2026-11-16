@@ -1161,3 +1161,16 @@ html[data-grand-clean=true] .venue button,
 html[data-grand-clean=true] .venue select,
 html[data-grand-clean=true] .venue [data-render-metrics],
 html[data-grand-clean=true] .venue .v-review-recorder button {visibility:hidden!important;pointer-events:none!important;}
+
+/* ══════════════════════════════════════════════════════════
+   Bottom dock — a stall's view toolbar stacked above the guided
+   Back / Next route (see ui/BottomDock.tsx). Both used to pin
+   themselves to the same bottom edge and covered each other.
+   z-index sits above the zone caption (30) and prompt (32), below
+   the contact panel (36), mobile menu (45) and detail panel (50).
+   ══════════════════════════════════════════════════════════ */
+.v-dock { position: fixed; left: 0; right: 0; bottom: 22px; z-index: 35; display: flex; flex-direction: column; align-items: center; gap: 10px; pointer-events: none; }
+.v-dock > * { pointer-events: auto; }
+.v-dock > .v-stall-visit,
+.v-dock > .v-guide { position: relative; left: auto; right: auto; bottom: auto; transform: none; z-index: auto; }
+@media (max-width: 700px) { .v-dock { bottom: 12px; gap: 8px; } }
