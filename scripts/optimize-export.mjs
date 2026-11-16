@@ -6,7 +6,10 @@
 // 1. Prune heavy binary assets that no source file references (superseded
 //    iterations such as projection-botanical-v8…v11 remain in `public/` for
 //    history, but are not uploaded).
-// 2. Compress every remaining GLB with EXT_meshopt_compression in FILTER mode.
+// 2. Re-encode embedded PNG/JPEG textures as WebP (EXT_texture_webp) at their
+//    original resolution — colour at quality 88, normal maps at 95 — keeping a
+//    texture's original bytes whenever WebP would not be smaller.
+//    Compress every remaining GLB with EXT_meshopt_compression in FILTER mode.
 //    FILTER mode decodes back to float attributes in the same local space, so
 //    code that reads geometry, bounding boxes or node transforms is unaffected.
 //    The runtime decoder is already enabled by drei's useGLTF (useMeshopt
@@ -17,9 +20,12 @@
 import { readdirSync, readFileSync, statSync, rmSync, writeFileSync, existsSync } from "node:fs";
 import path from "node:path";
 import { NodeIO } from "@gltf-transform/core";
-import { ALL_EXTENSIONS, EXTMeshoptCompression } from "@gltf-transform/extensions";
-import { reorder } from "@gltf-transform/functions";
+import { ALL_EXTENSIONS, EXTMeshoptCompression, EXTTextureWebP } from "@gltf-transform/extensions";
+import { reorder, listTextureSlots } from "@gltf-transform/functions";
 import { MeshoptEncoder, MeshoptDecoder } from "meshoptimizer";
+// Must be the same sharp that @gltf-transform/functions loads (via
+// ndarray-pixels): two libvips builds in one process corrupt each other.
+import sharp from "sharp";
 
 const OUT = path.resolve("out");
 const MAX_FILE_BYTES = 25 * 1024 * 1024; // Cloudflare Pages per-asset limit
@@ -102,11 +108,13 @@ if (compress) {
   await MeshoptEncoder.ready; await MeshoptDecoder.ready;
   const io = new NodeIO().registerExtensions(ALL_EXTENSIONS)
     .registerDependencies({ "meshopt.encoder": MeshoptEncoder, "meshopt.decoder": MeshoptDecoder });
-  let saved = 0;
+  let saved = 0, textureSaved = 0;
   for (const file of walk(OUT).filter(f => f.toLowerCase().endsWith(".glb"))) {
     const original = statSync(file).size;
     const document = await io.read(file);
-    if (document.getRoot().listExtensionsUsed().some(e => e.extensionName === "EXT_meshopt_compression" || e.extensionName === "KHR_draco_mesh_compression")) continue;
+    const used = document.getRoot().listExtensionsUsed().map(e => e.extensionName);
+    if (used.includes("EXT_meshopt_compression") || used.includes("KHR_draco_mesh_compression")) continue;
+    textureSaved += await texturesToWebP(document);
     await document.transform(reorder({ encoder: MeshoptEncoder, target: "size" }));
     document.createExtension(EXTMeshoptCompression).setRequired(true)
       .setEncoderOptions({ method: EXTMeshoptCompression.EncoderMethod.FILTER });
@@ -116,7 +124,26 @@ if (compress) {
     saved += original - output.byteLength;
     report.compressed.push({ file: rel(file), before: original, after: output.byteLength });
   }
-  console.log(`Compressed ${report.compressed.length} GLBs, saving ${mib(saved)}${dryRun ? " [dry run]" : ""}.`);
+  console.log(`Compressed ${report.compressed.length} GLBs, saving ${mib(saved)} (of which textures ${mib(textureSaved)})${dryRun ? " [dry run]" : ""}.`);
+}
+
+/** Re-encode PNG/JPEG textures as WebP at full resolution; returns bytes saved. */
+async function texturesToWebP(document) {
+  let saved = 0, converted = 0;
+  for (const texture of document.getRoot().listTextures()) {
+    const image = texture.getImage();
+    if (!image || !/^image\/(png|jpeg)$/.test(texture.getMimeType())) continue;
+    const normal = listTextureSlots(texture).some(slot => /normal/i.test(slot));
+    const webp = await sharp(Buffer.from(image))
+      .webp({ quality: normal ? 95 : 88, alphaQuality: 100, effort: 4 })
+      .toBuffer();
+    if (webp.byteLength >= image.byteLength) continue;
+    texture.setImage(new Uint8Array(webp)).setMimeType("image/webp");
+    saved += image.byteLength - webp.byteLength;
+    converted++;
+  }
+  if (converted) document.createExtension(EXTTextureWebP).setRequired(true);
+  return saved;
 }
 
 // ------------------------------------------------------------ host limits

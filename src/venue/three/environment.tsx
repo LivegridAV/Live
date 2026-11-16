@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
-import { RectAreaLightUniformsLib } from "three/examples/jsm/lights/RectAreaLightUniformsLib.js";
+import { AreaPanel } from "./areaPanel";
 import { createTechnicalEnvironment } from "./technicalEnvironment";
 import { createProjectionEnvironment } from "./projectionEnvironment";
 import { createRental2026Environment } from "./rental2026Environment";
@@ -161,29 +161,30 @@ export function LightRig() {
   const hemiRef = useRef<THREE.HemisphereLight>(null);
   const cachedShadow = useRef<"entrance"|"technical"|"projection"|"rental2026"|null>(null);
   const technicalAreas = useMemo(() => {
-    RectAreaLightUniformsLib.init();
-    const canopy = new THREE.RectAreaLight("#ffe7c6", 0, 24, 1.8);
+    // Soft panels rendered as calibrated spot lights; see areaPanel.ts for why
+    // these are no longer RectAreaLights (first-visit shader compile time).
+    const canopy = new AreaPanel("#ffe7c6", 0, 24, 1.8);
     canopy.position.set(-8.6, 5.85, -142); canopy.up.set(1, 0, 0); canopy.lookAt(-6.2, .1, -142);
-    const reception = new THREE.RectAreaLight("#edf2ff", 0, 5.6, 2.6);
+    const reception = new AreaPanel("#edf2ff", 0, 5.6, 2.6);
     reception.position.set(4.4, 3.4, -144.9); reception.lookAt(.6, 1, -144.9);
     // Fixed down-facing emitters light the recessed gallery bays without a
     // point source shining back into its own nearby black soffit.
     const galleries=[{x:-8.72,width:3.4},{x:8.72,width:3.4}].map(({x,width})=>{
-      const light=new THREE.RectAreaLight("#ffe5c6",0,width,2.6);
+      const light=new AreaPanel("#ffe5c6",0,width,2.6);
       light.position.set(...projectionWorldPosition([x,10.9,2.1]));
       light.up.set(1,0,0);light.lookAt(...projectionWorldPosition([x,.12,.8]));
       return light;
     });
-    const rentalFascia=new THREE.RectAreaLight("#f2e8da",0,24,3);
+    const rentalFascia=new AreaPanel("#f2e8da",0,24,3);
     rentalFascia.position.set(...rental2026World([-2,12,14]));
     rentalFascia.lookAt(...rental2026World([0,9.8,4.7]));
-    const projectionFascia=new THREE.RectAreaLight("#eee4d6",0,22,2.2);
+    const projectionFascia=new AreaPanel("#eee4d6",0,22,2.2);
     projectionFascia.position.set(...projectionWorldPosition([0,14,13]));
     projectionFascia.lookAt(...projectionWorldPosition([0,11.6,7.4]));
     return [canopy, reception,...galleries,rentalFascia,projectionFascia];
   }, []);
   useEffect(() => () => technicalAreas.forEach(light => light.dispose()), [technicalAreas]);
-  const authoredAreas=useMemo(()=>technicalAreas.map(light=>({position:light.position.clone(),quaternion:light.quaternion.clone(),width:light.width,height:light.height,color:light.color.clone()})),[technicalAreas]);
+  const authoredAreas=useMemo(()=>technicalAreas.map(light=>({position:light.position.clone(),quaternion:light.quaternion.clone(),aim:light.aim.clone(),width:light.width,height:light.height,color:light.color.clone()})),[technicalAreas]);
 
   const cur = useRef({
     key: new THREE.Color(LOOKS.arrival.key),
@@ -213,7 +214,7 @@ export function LightRig() {
     const entranceNeutral=useEntranceFinishes.getState().mode==="neutral";
     for(let i=2;i<6;i++){
       const light=technicalAreas[i],authored=authoredAreas[i];
-      light.position.copy(authored.position);light.quaternion.copy(authored.quaternion);
+      light.position.copy(authored.position);light.quaternion.copy(authored.quaternion);light.aim.copy(authored.aim);
       light.width=authored.width;light.height=authored.height;light.color.copy(authored.color);
     }
     const technicalBlend = THREE.MathUtils.smoothstep(journey.progress, EP.technical.start, EP.technical.start+.012)
@@ -273,6 +274,7 @@ export function LightRig() {
       canopy.position.set(...grandWorld("technical",[0,5.18,.7]));canopy.lookAt(...grandWorld("technical",[0,.12,-1.5]));canopy.width=18.5;canopy.height=8.2;canopy.color.set("#ffe7ce");canopy.intensity=technicalBlend*3.8;
       reception.position.set(...grandWorld("technical",[0,4.6,9]));reception.lookAt(...grandWorld("technical",[0,1.2,3]));reception.width=18;reception.height=3;reception.color.set("#f2e9dd");reception.intensity=technicalBlend*2.6;
     }
+    for (const panel of technicalAreas) panel.sync();
     const base = rental ? RENTAL2026_LOOK : projection ? PROJECTION_LOOK : LOOKS[zone.id] ?? LOOKS.hall;
     // Blended, not switched: the room arrives at the festival look across the
     // cue, in step with the screens and the fixtures.
@@ -471,7 +473,7 @@ export function LightRig() {
   return (
     <>
       <ambientLight ref={ambRef} intensity={0.14} color="#a6bcc0" />
-      {technicalAreas.map(light => <primitive key={light.uuid} object={light} />)}
+      {technicalAreas.map(panel => <primitive key={panel.uuid} object={panel.spot} />)}
       <hemisphereLight ref={hemiRef} args={["#9fbcc2", "#201a12", 0.92]} />
       <pointLight ref={keyRef} distance={58} decay={2} intensity={26} />
       <pointLight ref={fillRef} distance={44} decay={2} intensity={14} />
