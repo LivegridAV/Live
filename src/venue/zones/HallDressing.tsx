@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useMemo } from "react";
+import { useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
@@ -11,6 +12,7 @@ import { ZoneGroup } from "../three/ZoneGroup";
 import rentalLayout from "../../../public/models/expo/grand-rental-finish-v2-layout.json";
 import { FLOOR, type Guest, type Layout, type Part, type Sign } from "./hallKit";
 import { hallZones, servicePosterTexture, type Zone } from "./hallFeatures";
+import { applySurface, refineAvatarSkin } from "../three/surfaceDetail";
 
 /**
  * Hall dressing — renders the furniture, planting, LED sculptures, lightboxes,
@@ -98,7 +100,7 @@ function instanced(geometry: THREE.BufferGeometry, material: THREE.Material, par
 
 type Shared = {
   geometry: Record<"box" | "round" | "cylinder" | "pot" | "torus" | "plane" | "leaf", THREE.BufferGeometry>;
-  material: Record<"metal" | "matte" | "leaf" | "glow" | "pool", THREE.Material>;
+  material: Record<"metal" | "fabric" | "wood" | "stone" | "ceramic" | "wet" | "leaf" | "glow" | "pool", THREE.Material>;
 };
 
 function createShared(): Shared {
@@ -118,10 +120,15 @@ function createShared(): Shared {
     },
     material: {
       // White base: each instance carries its own colour.
-      metal: new THREE.MeshStandardMaterial({ color: "#ffffff", metalness: .7, roughness: .34, envMapIntensity: .9 }),
-      matte: new THREE.MeshStandardMaterial({ color: "#ffffff", metalness: 0, roughness: .78, envMapIntensity: .45 }),
-      leaf: new THREE.MeshStandardMaterial({ color: "#ffffff", map: leafTexture(), alphaTest: .5, side: THREE.DoubleSide,
-        roughness: .7, metalness: 0, envMapIntensity: .35 }),
+      // Each family carries its own fine world-space grain (hallSurface.ts).
+      metal: applySurface(new THREE.MeshStandardMaterial({ color: "#ffffff", metalness: .8, roughness: .3, envMapIntensity: 1.1 }), "metal"),
+      fabric: applySurface(new THREE.MeshStandardMaterial({ color: "#ffffff", metalness: 0, roughness: .9, envMapIntensity: .4 }), "fabric"),
+      wood: applySurface(new THREE.MeshStandardMaterial({ color: "#ffffff", metalness: 0, roughness: .52, envMapIntensity: .7 }), "wood"),
+      stone: applySurface(new THREE.MeshStandardMaterial({ color: "#ffffff", metalness: 0, roughness: .3, envMapIntensity: .85 }), "stone"),
+      ceramic: applySurface(new THREE.MeshStandardMaterial({ color: "#ffffff", metalness: 0, roughness: .2, envMapIntensity: 1 }), "ceramic"),
+      wet: applySurface(new THREE.MeshStandardMaterial({ color: "#ffffff", metalness: 0, roughness: .16, envMapIntensity: 1.2 }), "wet"),
+      leaf: applySurface(new THREE.MeshStandardMaterial({ color: "#ffffff", map: leafTexture(), alphaTest: .5, side: THREE.DoubleSide,
+        roughness: .42, metalness: 0, envMapIntensity: .8 }), "leaf"),
       glow: new THREE.MeshBasicMaterial({ color: "#ffffff", toneMapped: false, side: THREE.DoubleSide }),
       pool: new THREE.MeshBasicMaterial({ map: getPoolTexture(), transparent: true, depthWrite: false,
         blending: THREE.AdditiveBlending, toneMapped: false, side: THREE.DoubleSide }),
@@ -135,10 +142,13 @@ function buildMeshes(layout: Layout, shared: Shared, label: string) {
     instanced(g.cylinder, m.metal, layout.metal, `${label} · metal`),
     instanced(g.box, m.metal, layout.metalBox, `${label} · metal trims`),
     instanced(g.torus, m.metal, layout.metalTorus, `${label} · metal rings`),
-    instanced(g.round, m.matte, layout.soft, `${label} · upholstery`),
-    instanced(g.box, m.matte, layout.solid, `${label} · joinery and rugs`),
-    instanced(g.cylinder, m.matte, layout.disc, `${label} · tops, pots and bottles`),
-    instanced(g.pot, m.matte, layout.pots, `${label} · planters`),
+    instanced(g.round, m.fabric, layout.soft, `${label} · upholstery`),
+    instanced(g.box, m.fabric, layout.rugs, `${label} · rugs`),
+    instanced(g.box, m.wood, layout.solid, `${label} · joinery`),
+    instanced(g.cylinder, m.stone, layout.disc, `${label} · tops, pots and bottles`),
+    instanced(g.pot, m.ceramic, layout.pots, `${label} · planters`),
+    instanced(g.cylinder, m.wet, layout.wet, `${label} · watered soil`),
+    instanced(g.box, m.wet, layout.water, `${label} · water channels`),
     instanced(g.leaf, m.leaf, layout.leaves, `${label} · planting`),
     instanced(g.plane, m.glow, layout.glow, `${label} · lamps and LED strips`, { receive: false }),
     instanced(g.plane, m.pool, layout.pools, `${label} · light pools`, { receive: false }),
@@ -197,28 +207,69 @@ function figures(scene: THREE.Object3D): Figure[] {
   return out;
 }
 
+/**
+ * Clothing tones for variety: the licensed set has four people, so each clone
+ * may wear its outfit in a different tone (navy, sand, charcoal). Only the
+ * body (clothing) material is tinted; faces and hair keep their own maps.
+ */
+const OUTFIT_TONES = [null, "#c3cde2", "#ead9bf", "#9d9ea6"] as const;
+const tinted = new Map<string, THREE.Material>();
+function outfit(material: THREE.Material, tone: string) {
+  const key = material.uuid + tone;
+  let result = tinted.get(key);
+  if (!result) {
+    result = material.clone();
+    (result as THREE.MeshStandardMaterial).color.multiply(new THREE.Color(tone));
+    tinted.set(key, result);
+  }
+  return result;
+}
+
 function placeGuests(source: THREE.Object3D, guests: Guest[], offset: number) {
   const pool = figures(source);
   const standing = pool.filter(f => !f.seated), seated = pool.filter(f => f.seated);
   const group = new THREE.Group();
   group.name = "Hall guests";
   let s = offset, t = offset;
-  for (const guest of guests) {
+  guests.forEach((guest, index) => {
     const list = guest.seated ? seated : standing;
-    if (!list.length) continue;
-    const figure = list[(guest.seated ? t++ : s++) % list.length];
+    if (!list.length) return;
+    const n = guest.seated ? t++ : s++;
+    const figure = list[n % list.length];
+    // Second time round the pose list, mirror the pose so repeats read as new people.
+    const mirrored = Math.floor(n / list.length) % 2 === 1;
     const pivot = new THREE.Group();
     pivot.position.set(guest.p[0], FLOOR - figure.centre.y, guest.p[1]);
-    pivot.rotation.y = Math.atan2(guest.face[0], guest.face[1]) - figure.forward;
+    pivot.rotation.y = Math.atan2(guest.face[0], guest.face[1]) - figure.forward * (mirrored ? -1 : 1);
+    // A slow, small weight shift: phase and pace differ per person.
+    pivot.userData.idle = { yaw: pivot.rotation.y, phase: (index * 2.39) % (Math.PI * 2), pace: .55 + (index * .37) % .4 };
     // The figure's own world frame, moved so its footprint centre is the pivot.
     const clone = figure.root.clone(true);
     figure.root.matrixWorld.decompose(clone.position, clone.quaternion, clone.scale);
     clone.position.x -= figure.centre.x; clone.position.z -= figure.centre.z;
-    clone.traverse(object => { object.castShadow = false; object.frustumCulled = true; });
-    pivot.add(clone);
+    const tone = OUTFIT_TONES[(index * 7 + offset) % OUTFIT_TONES.length];
+    clone.traverse(object => {
+      object.castShadow = false; object.frustumCulled = true;
+      if (tone && object instanceof THREE.Mesh && !Array.isArray(object.material) && /\|\s*[^|]*body(?:\.\d+)?$/i.test(object.material.name))
+        object.material = outfit(object.material, tone);
+    });
+    const holder = new THREE.Group();
+    if (mirrored) holder.scale.x = -1;
+    holder.add(clone);
+    pivot.add(holder);
     group.add(pivot);
-  }
+  });
   return group;
+}
+
+/** Breathing room: every guest sways a degree or so, never in step. */
+function idleGuests(group: THREE.Group, time: number) {
+  for (const pivot of group.children) {
+    const idle = pivot.userData.idle as { yaw: number; phase: number; pace: number } | undefined;
+    if (!idle) continue;
+    pivot.rotation.y = idle.yaw + Math.sin(time * idle.pace + idle.phase) * .022;
+    pivot.scale.y = 1 + Math.sin(time * 1.6 + idle.phase) * .0025;
+  }
 }
 
 /* ── component ─────────────────────────────────────────── */
@@ -278,6 +329,8 @@ function DressedZone({ zone, visitors }: { zone: Zone; visitors: THREE.Object3D 
   const shared = useMemo(() => createShared(), []);
   const meshes = useMemo(() => buildMeshes(zone.layout, shared, zone.label), [zone, shared]);
   const guests = useMemo(() => placeGuests(visitors, zone.layout.guests, zone.cast), [visitors, zone]);
+  // Only while the zone is shown: ZoneGroup hides its group when out of range.
+  useFrame(({ clock }) => { if (guests.parent?.visible !== false) idleGuests(guests, clock.elapsedTime); });
   const fixtures = useMemo(() => buildFixtures(zone), [zone]);
   useEffect(() => () => {
     meshes.forEach(mesh => mesh.dispose());
@@ -306,6 +359,7 @@ function DressedZone({ zone, visitors }: { zone: Zone; visitors: THREE.Object3D 
 export function HallDressing() {
   const diagnostic = useVenue(s => s.stallVisit?.view === "plan" || s.stallVisit?.view === "section");
   const { scene: visitors } = useGLTF(expoAssetUrl("grand-rental-finish-v2-visitors", rentalLayout.stats.visitors.sha256), false);
+  useMemo(() => refineAvatarSkin(visitors), [visitors]);
   const zones = useMemo(() => hallZones(), []);
   return <group visible={!diagnostic} name="Hall dressing">
     {zones.map(zone => <DressedZone key={zone.label} zone={zone} visitors={visitors} />)}

@@ -13,6 +13,7 @@ import { inProjectionShowcase } from "../data/projection";
 import { inRental2026 } from "../data/ledRental2026";
 import { applyRental2026Materials } from "./rental2026Materials";
 import type { InstallationId } from "../data/placements";
+import { refineAvatarSkin } from "./surfaceDetail";
 
 function installationFinishId(name:string):InstallationId|undefined {
   if(name.startsWith("grand-anamorphic"))return "S1";
@@ -54,6 +55,7 @@ function Model({ name, revision, darkHall=false, hideHallColumns=false }: AssetP
   const {clone,owned,overhead,sectionWalls} = useMemo(() => {
     const model = scene.clone(true);
     shareAvatarTextures(model);
+    refineAvatarSkin(model);
     const owned:THREE.Material[]=[];
     if(darkHall || hideHallColumns){
       const finishes=new Map<THREE.Material,THREE.Material>();

@@ -50,12 +50,15 @@ function tree(L: Layout, x: number, z: number, seed: number, scale = 1.55) {
 /** A planted wall on a stall back; `dir` is its facing (+1 = +x). */
 function greenWall(L: Layout, x: number, z0: number, z1: number, dir: number, seed: number, h = 5.4) {
   const len = Math.abs(z1 - z0), zc = (z0 + z1) / 2;
-  L.solid.push({ p: [x + dir * .06, FLOOR + .3 + h / 2, zc], s: [.12, h, len], c: "#141a14" });
+  // Moss backing (woven-fabric grain reads as moss) so gaps between leaves stay green.
+  L.rugs.push({ p: [x + dir * .06, FLOOR + .3 + h / 2, zc], s: [.12, h, len], c: "#1e301c" });
   L.solid.push({ p: [x + dir * .55, FLOOR + .1, zc], s: [.8, .2, len], c: "#1a1714" });
+  // The irrigation channel along the plinth: still, dark water catching the light.
+  L.water.push({ p: [x + dir * .55, FLOOR + .205, zc], s: [.62, .012, len - .1], c: "#0c1316" });
   const rnd = mulberry(seed);
-  for (let i = 0; i < len * h * 11; i++) {
-    const z = zc + (rnd() - .5) * len, y = FLOOR + .35 + rnd() * h, size = .17 + rnd() * .14;
-    L.leaves.push({ p: [x + dir * (.14 + rnd() * .22), y, z],
+  for (let i = 0; i < len * h * 17; i++) {
+    const z = zc + (rnd() - .5) * len, y = FLOOR + .35 + rnd() * h, size = .24 + rnd() * .2;
+    L.leaves.push({ p: [x + dir * (.12 + rnd() * .34), y, z],
       r: [(rnd() - .5) * 1.2, dir * Math.PI / 2 + (rnd() - .5) * 1.4, (rnd() - .5) * 2],
       s: [size * .55, size, 1], c: LEAF_TINTS[Math.floor(rnd() * LEAF_TINTS.length)] });
   }
@@ -91,8 +94,8 @@ function signalGrid(L: Layout, [x, y, z]: Vec3, cell: number, yaw = 0, pitch = -
       L.glow.push({ p: at(cx, cy, .035), r, s: [cell, cell, 1], c: lit });
       L.glow.push({ p: at(cx, cy, -.235), r, s: [cell, cell, 1], c: lit });
     } else {
-      L.solid.push({ p: at(cx, cy, 0), r, s: [cell, cell, .07], c: "#18211f" });
-      L.solid.push({ p: at(cx, cy, -.2), r, s: [cell, cell, .07], c: "#18211f" });
+      L.metalBox.push({ p: at(cx, cy, 0), r, s: [cell, cell, .07], c: "#121816" });
+      L.metalBox.push({ p: at(cx, cy, -.2), r, s: [cell, cell, .07], c: "#121816" });
     }
   }
   for (const side of [-1, 1]) {
@@ -151,9 +154,29 @@ function grove(L: Layout, r: Rect, seed: number) {
   if (xs.length > 3) L.guest(xs[3] - 1.2, zc - .3, 1, .2);
 }
 
-const junctionSigns = (z: number, line: string): { sign: Sign; p: Vec3; yaw: number }[] => [
-  { sign: { title: "Café · Lounge", line, arrow: "left" }, p: [-2.4, 0, z], yaw: 0 },
-  { sign: { title: "Explore", line, arrow: "right" }, p: [7.2, 0, z], yaw: 0 },
+/** Totems either side of a junction, placed clear of the walk line there. */
+/** Standing visitors: [x, z, face x, face z]. */
+function people(L: Layout, spots: [number, number, number, number][]) {
+  for (const [x, z, fx, fz] of spots) L.guest(x, z, fx, fz);
+}
+
+/**
+ * Zone F, the strip behind the Content Studio: a quiet seating niche with
+ * benches, planters, warm floor lamps and a few people resting.
+ */
+function quietLounge(L: Layout) {
+  for (const z of [-76, -84, -90.5]) L.bench(-35.5, z, Math.PI / 2, 2.4);
+  for (const z of [-80, -87.5]) L.planter(-36.5, z, 1.05, false, Math.round(-z));
+  L.planter(-36.2, -73, 1.4, true, 61);
+  for (const z of [-73.2, -93]) L.floorLamp(-36.8, z);
+  L.rug(-33.5, -83.5, 4, 18, C.rugAlt);
+  L.guest(-35.2, -76.4, 1, 0, true); L.guest(-35.2, -84.4, 1, 0, true);
+  L.guest(-31.8, -88, -1, .3); L.guest(-32.4, -88.7, .6, .8);
+}
+
+const junctionSigns =(z: number, line: string, [left, right]: [number, number]): { sign: Sign; p: Vec3; yaw: number }[] => [
+  { sign: { title: "Café · Lounge", line, arrow: "left" }, p: [left, 0, z], yaw: 0 },
+  { sign: { title: "Explore", line, arrow: "right" }, p: [right, 0, z], yaw: 0 },
 ];
 
 /* ── zones ──────────────────────────────────────────────── */
@@ -177,7 +200,9 @@ export function hallZones(): Zone[] {
   signalGrid(middle, JUNCTIONS[1], .9);
   lounge(middle, -29, mid(MIDDLE_LEFT), C.fabricTaupe, 3);
   lounge(middle, -19.5, mid(MIDDLE_LEFT), C.fabricOlive, 4);
-  tree(middle, -10.5, mid(MIDDLE_LEFT) - 1.5, 77); tree(middle, -6.5, mid(MIDDLE_LEFT) + 2, 78);
+  // The trees stand at the wall end: the walk crosses the aisle end of this
+  // zone on its way to the Content Studio's calibrated view.
+  tree(middle, -35, mid(MIDDLE_LEFT) - 2.2, 77); tree(middle, -34.5, mid(MIDDLE_LEFT) + 2.4, 78);
   let service = 0;
   for (let x = MIDDLE_RIGHT.x0 + 2.5, i = 0; x < MIDDLE_RIGHT.x1 - 1.5; x += 5.4, i++) {
     const z = mid(MIDDLE_RIGHT) + (i % 2 ? -.6 : .6), yaw = i % 2 ? -.35 : .35;
@@ -199,13 +224,34 @@ export function hallZones(): Zone[] {
   }
   forecourt.guest(-3.2, -204.5 + FORECOURT_SHIFT, .3, -1);
   forecourt.guest(-2.5, -205.2 + FORECOURT_SHIFT, -.5, .8);
+
+  // Life: people at every exhibit and in every corner, all at least 3 m from
+  // the camera's walk line (checked against the sampled path).
+  people(front, [
+    [-10.6, -39.6, 3.1, -2.6], [-10.4, -40.8, 2.9, -1.4],       // at the hero pillar
+    [10.4, -45.2, -2.9, 3], [10.3, -54.6, -2.8, 2.4], [-10.2, -55, 2.7, 2.8], // the other pillars
+    [-17, -30.5, 1, -.9], [-16, -31.4, -1, .9], [17, -31, -1, -.4], [16.2, -30.2, .6, -1], // groups at the hall entry
+    [11, -57.5, 1, .4], [11.8, -58.4, .8, .7],                   // waiting at reception
+    [5.6, -75.5, 1, 0], [6.2, -76.3, 1, -.3], [5.4, -86, 1, .2], [5.8, -92, 1, .1], [5, -92.8, .8, .5], // at LED Rental
+  ]);
+  for (const [x, z] of [[-37, -31.5], [37, -32.5]]) tree(front, x, z, Math.round(-z * 3), 1.65);
+  quietLounge(middle);
+  people(middle, [
+    [5.5, -110.5, 1, -.2], [6.4, -111.6, 1, 0], [5.6, -140.5, 1, .2],   // at Projection Mapping
+    [.2, -120, -1, 0], [1.2, -137, -1, -.2], [2, -137.6, -1, .3],       // at AV Engineering
+    [25.6, -100.8, -.2, -1], [31, -101, .2, -1],                        // reading the lightboxes
+    [34.6, -79, -1, 0], [35.2, -90, -1, .2],                            // at the green wall
+    [35.4, -118, -1, 0], [34.8, -130.5, -1, -.2],                       // at the service panels
+    [-24, -103.4, 0, 1],                                                // by the lounges
+  ]);
+  people(forecourt, [[-14, -150, 1, -.6], [13.5, -148.5, -1, -.5], [14.3, -149.2, -1, .2], [-11, -155, .3, -1]]);
   const arena = { title: "Main Arena", line: "Keynote stage\nStraight ahead", arrow: "up" as const };
 
   return [
     { label: "Café, grove and signal grid", from: -28, to: -72, cast: 2, layout: front, panels: frontPanels,
-      signs: junctionSigns(-60.4, "Studio · Rental\nThis way") },
+      signs: junctionSigns(-60.4, "Studio · Rental\nThis way", [-6, 10.5]) },
     { label: "Lounges, lightboxes and green wall", from: -66, to: -146, cast: 7, layout: middle, panels: middlePanels,
-      signs: junctionSigns(-97.2, "Engineering · Mapping\nThis way") },
+      signs: junctionSigns(-97.2, "Engineering · Mapping\nThis way", [-2.4, 7.2]) },
     { label: "Arena forecourt", from: -146.5, to: GRAND.hall.to, cast: 9, layout: forecourt, panels: [],
       signs: [{ sign: arena, p: [-6.2, 0, -203 + FORECOURT_SHIFT], yaw: 0 }, { sign: arena, p: [6.2, 0, -203 + FORECOURT_SHIFT], yaw: 0 }] },
   ];

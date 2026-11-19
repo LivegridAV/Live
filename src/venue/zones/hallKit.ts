@@ -28,6 +28,8 @@ export const C = {
 export class Layout {
   metal: Part[] = []; metalBox: Part[] = []; metalTorus: Part[] = []; soft: Part[] = []; solid: Part[] = []; disc: Part[] = [];
   leaves: Part[] = []; pots: Part[] = []; glow: Part[] = []; pools: Part[] = []; guests: Guest[] = [];
+  /** Rug pile (woven fabric); watered soil (discs) and water channels (boxes). */
+  rugs: Part[] = []; wet: Part[] = []; water: Part[] = [];
   /** Point in a local frame (x across, z along) rotated by yaw about (ox, oz). */
   at(ox: number, oz: number, yaw: number, x: number, z: number): [number, number] {
     const c = Math.cos(yaw), s = Math.sin(yaw);
@@ -88,7 +90,7 @@ export class Layout {
   }
 
   rug(x: number, z: number, w: number, d: number, colour: string, yaw = 0) {
-    this.solid.push({ p: [x, FLOOR + .006, z], r: [0, yaw, 0], s: [w, .012, d], c: colour });
+    this.rugs.push({ p: [x, FLOOR + .006, z], r: [0, yaw, 0], s: [w, .012, d], c: colour });
   }
 
   /** Ceramic planter with a leafy crown; `tree` adds a bare trunk below it. */
@@ -96,7 +98,7 @@ export class Layout {
     const rnd = mulberry(seed);
     const potH = (tree ? .62 : .78) * scale, potR = (tree ? .42 : .34) * scale;
     this.pots.push({ p: [x, FLOOR + potH / 2, z], s: [potR * 2, potH, potR * 2], c: C.ceramic });
-    this.disc.push({ p: [x, FLOOR + potH - .02, z], s: [potR * 1.86, .02, potR * 1.86], c: C.soil });
+    this.wet.push({ p: [x, FLOOR + potH - .02, z], s: [potR * 1.86, .02, potR * 1.86], c: C.soil });
     const crownY = FLOOR + potH + (tree ? 1.45 * scale : .45 * scale);
     const crownR = (tree ? .78 : .52) * scale;
     if (tree) {

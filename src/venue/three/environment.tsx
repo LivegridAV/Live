@@ -16,6 +16,9 @@ import { PROJECTION_SCALE, projectionWorldPosition, inProjectionShowcase } from 
 import { grandWorld } from "../data/grand";
 import { EXHIBITION_PROGRESS as EP, inExhibitionRange, transformOldWorldToNew, type InstallationId } from "../data/placements";
 
+/** Image-based fill strength in the shared hall (stalls set their own). */
+const HOUSE_ENVIRONMENT = .45;
+
 /**
  * Lighting and reflection environment.
  *
@@ -39,7 +42,7 @@ export function VenueEnvironment() {
     const rental=createRental2026Environment(gl);
     environments.current = { regular: rt.texture, technical: technical.texture, rental:rental.texture, projection:projection.texture };
     scene.environment = rt.texture;
-    scene.environmentIntensity = 0.24;
+    scene.environmentIntensity = HOUSE_ENVIRONMENT;
     // The public floor belongs to the hall. Keep its indirect material
     // response on one house environment while exhibits retain local IBLs.
     // Its planar buffer still reflects the actual scene and emitting screens.
@@ -72,7 +75,9 @@ export function VenueEnvironment() {
     const rental=inRental2026(journey.progress);
     const texture = technical ? maps.technical : rental ? maps.rental : projection ? maps.projection : maps.regular;
     if (scene.environment !== texture) scene.environment = texture;
-    scene.environmentIntensity = THREE.MathUtils.damp(scene.environmentIntensity, technical ? .68 : rental ? .62 : projection ? .70 : .24, 4, Math.min(dt, .1));
+    // The house environment is a soft, even fill: enough for gloss, glaze and
+    // wet surfaces to read, without lifting the dark room into flat grey.
+    scene.environmentIntensity = THREE.MathUtils.damp(scene.environmentIntensity, technical ? .68 : rental ? .62 : projection ? .70 : HOUSE_ENVIRONMENT, 4, Math.min(dt, .1));
   }, -4);
 
   return null;
