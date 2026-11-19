@@ -1,0 +1,209 @@
+/* ══════════════════════════════════════════════════════════
+   Liquid Glass
+   ------------------------------------------------------------------
+   Our web reading of Apple's Liquid Glass guidance
+   (developer.apple.com/documentation/technologyoverviews/adopting-liquid-glass):
+
+   1. Glass is a functional layer. Navigation and controls float above the
+      content in it; content itself (cards, articles, the venue) is never
+      glass. Used sparingly, it points at what matters.
+   2. The material: a saturating blur that darkens what is behind it a
+      little (legibility without a heavy tint), a specular rim that catches
+      light on the leading edge, an inner top glow, and a soft lift shadow.
+   3. Controls come alive when touched: light follows the pointer across
+      the surface and a press swells the control slightly, then settles.
+   4. Rounder, concentric shapes: controls are capsules, and anything
+      nested uses its container's radius minus the padding between them.
+   5. Content that scrolls beneath the navigation is softened by a scroll
+      edge effect instead of being cut off by an opaque bar.
+   6. It adapts: reduced transparency and increased contrast make it
+      opaque, reduced motion removes the morphing, and forced colours get
+      plain borders.
+
+   The pointer light is driven by components/LiquidGlassLight.tsx, which
+   only writes two custom properties on the control under the pointer.
+   ══════════════════════════════════════════════════════════ */
+
+@property --lg-light {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+:root {
+  /* Shared material tokens (classic pages and the venue chrome). */
+  --lg-glass-tint: linear-gradient(160deg, rgba(30, 44, 44, 0.30) 0%, rgba(6, 11, 12, 0.42) 70%);
+  --lg-glass-blur: blur(20px) saturate(1.7) brightness(0.9);
+  --lg-glass-edge: rgba(226, 242, 238, 0.10);
+  --lg-glass-lift:
+    inset 0 1px 1px rgba(255, 255, 255, 0.14),
+    inset 0 -10px 18px rgba(255, 255, 255, 0.025),
+    0 10px 30px rgba(0, 0, 0, 0.34),
+    0 1px 2px rgba(0, 0, 0, 0.28);
+  /* An expanded sheet is more opaque: it holds focus on the task. */
+  --lg-sheet-tint: linear-gradient(165deg, rgba(22, 32, 32, 0.86) 0%, rgba(6, 11, 12, 0.92) 70%);
+  /* The rim: bright where light enters (top-left), a faint bounce opposite. */
+  --lg-rim: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.50) 0%, rgba(255, 255, 255, 0.10) 22%, rgba(255, 255, 255, 0) 48%,
+    rgba(255, 255, 255, 0.04) 72%, rgba(255, 255, 255, 0.24) 100%);
+  --lg-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --lg-radius-sheet: 30px;
+}
+
+/* ── the rim and the pointer light, shared by every glass control ── */
+
+.lg-glass,
+.lg-glass-pill,
+.lg-glass-sheet,
+.lg-btn {
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(150px circle at var(--lg-x, 50%) var(--lg-y, 0%),
+      rgba(255, 255, 255, calc(var(--lg-light) * 0.16)), transparent 70%),
+    var(--lg-glass-tint);
+  transition: --lg-light 0.35s ease, transform 0.45s var(--lg-spring), box-shadow 0.3s ease, color 0.2s ease, filter 0.2s ease;
+}
+.lg-glass::after,
+.lg-glass-pill::after,
+.lg-glass-sheet::after,
+.lg-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--lg-rim);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
+  z-index: 1;
+}
+.lg-glass-pill:hover,
+.lg-btn:hover { --lg-light: 1; }
+
+/* ── controls are capsules that respond to a press ── */
+
+.lg-btn {
+  border-radius: 999px;
+  border-color: var(--lg-glass-edge);
+}
+.lg-btn:active { transform: scale(1.04); }
+
+/* The one prominent action is tinted glass: a bright, mostly opaque fill
+   (dark ink must stay legible on it) that still carries the rim and the
+   pointer light, so it reads as the same material, only charged. */
+.lg-btn-primary {
+  background:
+    radial-gradient(150px circle at var(--lg-x, 50%) var(--lg-y, 0%),
+      rgba(255, 255, 255, calc(0.14 + var(--lg-light) * 0.22)), transparent 70%),
+    linear-gradient(180deg, color-mix(in srgb, var(--glow) 84%, white) 0%, var(--glow) 100%);
+  border-color: transparent;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.45),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.12),
+    0 8px 24px color-mix(in srgb, var(--glow) 26%, transparent),
+    0 1px 2px rgba(0, 0, 0, 0.3);
+}
+.lg-btn-primary:hover { color: var(--ink); filter: brightness(1.04); }
+.lg-btn-primary::after { opacity: 0.8; }
+
+/* ── navigation ── */
+
+/* The page header no longer turns into an opaque bar. The controls keep
+   floating; content scrolling beneath them is blurred and faded out along
+   the top edge instead (the scroll edge effect). */
+.lg-scroll-edge {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 128px;
+  z-index: 40;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  /* Dense behind the controls (they end ~92 px down), then a soft fall-off. */
+  background: linear-gradient(180deg,
+    color-mix(in srgb, var(--paper, #090807) 94%, transparent) 0%,
+    color-mix(in srgb, var(--paper, #090807) 86%, transparent) 62%,
+    color-mix(in srgb, var(--paper, #090807) 0%, transparent) 100%);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
+  backdrop-filter: blur(14px) saturate(1.3);
+  -webkit-mask: linear-gradient(180deg, #000 0%, #000 66%, transparent 100%);
+  mask: linear-gradient(180deg, #000 0%, #000 66%, transparent 100%);
+}
+.lg-scroll-edge[data-on="true"] { opacity: 1; }
+
+.lg-glass-pill { border-radius: 999px; }
+.lg-nav-link {
+  position: relative;
+  border-radius: 999px;
+  padding: 7px 12px;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+.lg-nav-link:hover { background-color: rgba(255, 255, 255, 0.07); }
+.lg-nav-link[aria-current="page"] { color: var(--text); background-color: rgba(255, 255, 255, 0.09); }
+
+/* Menus open as a sheet inset from the screen edge, with the larger radius
+   of a sheet and a more opaque tint, so the page peeks around it. */
+.lg-glass-sheet {
+  border-radius: var(--lg-radius-sheet);
+  background:
+    radial-gradient(220px circle at var(--lg-x, 50%) var(--lg-y, 0%),
+      rgba(255, 255, 255, calc(var(--lg-light) * 0.08)), transparent 70%),
+    var(--lg-sheet-tint);
+  -webkit-backdrop-filter: var(--lg-glass-blur);
+  backdrop-filter: var(--lg-glass-blur);
+  box-shadow: var(--lg-glass-lift);
+}
+/* Items inside a sheet are concentric with it: sheet radius minus padding. */
+.lg-glass-sheet .lg-sheet-item { border-radius: calc(var(--lg-radius-sheet) - 12px); }
+
+/* ── content is not glass ──
+   The service cards were frosted panels. Glass belongs to the control
+   layer, so the cards become a quiet solid surface; the page grade still
+   shows at the edges, and the blur cost is gone. */
+.lg-surface-card {
+  background: linear-gradient(155deg, rgba(39, 35, 30, 0.72), rgba(16, 15, 14, 0.66));
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* ── adaptation ── */
+
+@media (pointer: coarse) {
+  :root { --lg-glass-blur: blur(14px) saturate(1.5) brightness(0.9); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lg-btn,
+  .lg-glass-pill,
+  .lg-glass-sheet,
+  .lg-glass { transition: color 0.2s ease, filter 0.2s ease; }
+  .lg-btn:active { transform: none; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --lg-glass-blur: none;
+    --lg-glass-tint: rgba(16, 20, 20, 0.97);
+    --lg-sheet-tint: rgba(14, 18, 18, 0.98);
+  }
+  .lg-scroll-edge { background: rgba(10, 10, 9, 0.96); -webkit-backdrop-filter: none; backdrop-filter: none; -webkit-mask: none; mask: none; height: 76px; }
+}
+@media (prefers-contrast: more) {
+  :root {
+    --lg-glass-blur: none;
+    --lg-glass-tint: rgba(8, 10, 10, 0.98);
+    --lg-sheet-tint: rgba(8, 10, 10, 0.99);
+    --lg-rim: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7));
+  }
+}
+@media (forced-colors: active) {
+  .lg-glass,
+  .lg-glass-pill,
+  .lg-glass-sheet,
+  .lg-btn { border: 1px solid CanvasText; }
+  .lg-glass::after,
+  .lg-glass-pill::after,
+  .lg-glass-sheet::after,
+  .lg-btn::after { display: none; }
+}

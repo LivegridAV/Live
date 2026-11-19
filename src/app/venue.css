@@ -1174,3 +1174,269 @@ html[data-grand-clean=true] .venue .v-review-recorder button {visibility:hidden!
 .v-dock > .v-stall-visit,
 .v-dock > .v-guide { position: relative; left: auto; right: auto; bottom: auto; transform: none; z-index: auto; }
 @media (max-width: 700px) { .v-dock { bottom: 12px; gap: 8px; } }
+
+/* ══════════════════════════════════════════════════════════
+   Liquid Glass — venue chrome
+   ------------------------------------------------------------------
+   The same material as app/liquid-glass.css, tuned for a live 3D scene:
+   the backdrop is darkened a little more (LED walls run bright behind the
+   chrome) and blur radii stay modest because every pixel of blur is paid
+   for again on every frame of the WebGL render beneath it.
+
+   Shapes follow the concentric rule: controls are capsules; containers
+   that hold controls are capsules or use radius = inner radius + padding;
+   sheets are inset from the screen edge with a sheet radius and a more
+   opaque tint, so the venue still frames them.
+   ══════════════════════════════════════════════════════════ */
+
+:root {
+  --v-glass-tint: linear-gradient(160deg, rgba(24, 34, 37, 0.50) 0%, rgba(6, 11, 14, 0.60) 70%);
+  --v-glass-clear: linear-gradient(160deg, rgba(20, 30, 33, 0.30) 0%, rgba(5, 10, 13, 0.40) 70%);
+  --v-sheet-tint: linear-gradient(165deg, rgba(16, 25, 27, 0.90) 0%, rgba(5, 10, 12, 0.94) 70%);
+  --v-glass-blur: blur(18px) saturate(1.7) brightness(0.82);
+  --v-glass-edge: rgba(226, 242, 238, 0.07);
+  --v-glass-lift:
+    inset 0 1px 1px rgba(255, 255, 255, 0.13),
+    inset 0 -10px 18px rgba(255, 255, 255, 0.02),
+    0 10px 30px rgba(0, 0, 0, 0.36),
+    0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.v-btn,
+.v-nav-brand,
+.v-nav-links,
+.v-nav-toggle,
+.v-rail,
+.v-stagemode-switch,
+.v-prompt,
+.v-guide,
+.v-stall-visit,
+.v-projection-views,
+.v-hud-fade,
+.v-contact-card {
+  isolation: isolate;
+  background:
+    radial-gradient(150px circle at var(--lg-x, 50%) var(--lg-y, 0%),
+      rgba(255, 255, 255, calc(var(--lg-light) * 0.15)), transparent 70%),
+    var(--v-glass-tint);
+  -webkit-backdrop-filter: var(--v-glass-blur);
+  backdrop-filter: var(--v-glass-blur);
+  border: 1px solid var(--v-glass-edge);
+  box-shadow: var(--v-glass-lift);
+  transition: --lg-light 0.35s ease, transform 0.45s var(--lg-spring), border-color 0.2s, color 0.2s, opacity 0.45s ease;
+}
+/* Give the rim a containing block only where a control had none; fixed and
+   docked controls keep their own placement (see the note on the sheen). */
+.v-hud-fade,
+.v-contact-card { position: relative; }
+
+/* The rim: a hairline of light, bright where light enters. */
+.v-btn::after,
+.v-nav-brand::after,
+.v-nav-links::after,
+.v-nav-toggle::after,
+.v-rail::after,
+.v-stagemode-switch::after,
+.v-prompt::after,
+.v-guide::after,
+.v-stall-visit::after,
+.v-projection-views::after,
+.v-hud-fade::after,
+.v-contact-card::after,
+.v-nav-sheet::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--lg-rim);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.v-btn:hover,
+.v-nav-brand:hover,
+.v-nav-links:hover,
+.v-nav-toggle:hover,
+.v-guide:hover,
+.v-stall-visit:hover,
+.v-projection-views:hover,
+.v-stagemode-switch:hover,
+.v-rail:hover,
+.v-prompt:hover { --lg-light: 1; }
+
+/* ── controls: capsules that swell slightly when pressed ── */
+.v-btn { border-radius: 999px; }
+.v-btn:hover { border-color: var(--v-glass-edge); }
+.v-btn:active,
+.v-nav-toggle:active,
+.v-nav-link:active,
+.v-stall-visit button:active,
+.v-projection-views button:active,
+.v-stagemode-btn:active { transform: scale(1.05); }
+.v-nav-toggle { width: 44px; height: 44px; }
+.v-nav-link,
+.v-stall-visit button,
+.v-projection-views button,
+.v-stagemode-btn { transition: background-color 0.2s, color 0.2s, transform 0.45s var(--lg-spring); }
+
+/* The prominent action: tinted glass, a charged and mostly opaque fill that
+   keeps dark ink legible, with the same rim and pointer light. */
+.v-btn--primary {
+  background:
+    radial-gradient(150px circle at var(--lg-x, 50%) var(--lg-y, 0%),
+      rgba(255, 255, 255, calc(0.14 + var(--lg-light) * 0.22)), transparent 70%),
+    linear-gradient(180deg, color-mix(in srgb, var(--v-glow) 82%, white) 0%, var(--v-glow) 100%);
+  border-color: transparent;
+  color: #06100f;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.45),
+    inset 0 -1px 1px rgba(0, 0, 0, 0.14),
+    0 8px 24px rgba(0, 0, 0, 0.34);
+}
+.v-btn--primary:hover { color: #06100f; border-color: transparent; filter: brightness(1.04); }
+.v-btn--primary::after { opacity: 0.8; }
+
+/* ── grouped toolbars: a capsule around capsules ── */
+.v-guide { border-radius: 999px; padding: 6px; gap: 6px; }
+.v-stagemode-switch { border-radius: 999px; padding: 4px; }
+.v-stagemode-btn { border-radius: 999px; }
+.v-stagemode-btn[aria-pressed="true"] { box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4), 0 2px 8px rgba(0, 0, 0, 0.3); }
+.v-rail { border-radius: 999px; }
+
+.v-projection-views { border-radius: 999px; padding: 4px; gap: 2px; }
+.v-projection-views button {
+  border-radius: 999px;
+  padding: 8px 12px;
+  font: 500 10px/1.2 var(--font-space-grotesk), system-ui, sans-serif;
+  letter-spacing: 0.02em;
+  color: var(--v-muted);
+}
+.v-projection-views button[aria-pressed="true"],
+.v-stall-visit button[aria-pressed=true] {
+  color: var(--v-text);
+  background: rgba(255, 255, 255, 0.13);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.18);
+}
+.v-projection-views button:hover:not([aria-pressed="true"]),
+.v-stall-visit button:hover:not([aria-pressed=true]) { color: var(--v-text); background: rgba(255, 255, 255, 0.06); }
+.v-rental-views button:last-child { border-left: 0; border-radius: 999px; }
+
+/* Radius 24 with 8 px padding: the buttons inside are 16, concentric. */
+.v-stall-visit { border-radius: 24px; padding: 8px; color: var(--v-text); }
+.v-stall-visit-name { font: 500 10px/1.3 var(--font-space-grotesk), system-ui, sans-serif; letter-spacing: 0.08em; color: var(--v-muted); }
+.v-stall-visit button {
+  border-radius: 16px;
+  font: 500 10px/1.2 var(--font-space-grotesk), system-ui, sans-serif;
+  color: var(--v-muted);
+}
+.v-stall-visit .v-stall-back { border-color: var(--v-glass-edge); color: var(--v-text); }
+
+/* ── floating cards ── */
+.v-prompt { border-radius: 24px; }
+.v-contact-card { border-radius: 28px; }
+/* The zone caption is a title over the scene, so it takes the clearer glass. */
+.v-hud-fade {
+  border-radius: 24px;
+  background:
+    radial-gradient(150px circle at var(--lg-x, 50%) var(--lg-y, 0%),
+      rgba(255, 255, 255, calc(var(--lg-light) * 0.12)), transparent 70%),
+    var(--v-glass-clear);
+}
+
+/* ── sheets: inset from the edges, larger radius, more opaque ── */
+.v-nav-sheet {
+  inset: 10px;
+  border-radius: 30px;
+  isolation: isolate;
+  background: var(--v-sheet-tint);
+  -webkit-backdrop-filter: var(--v-glass-blur);
+  backdrop-filter: var(--v-glass-blur);
+  border: 1px solid var(--v-glass-edge);
+  box-shadow: var(--v-glass-lift);
+  animation: vSheetIn 0.45s var(--lg-spring);
+  /* The inset sheet is shorter than the old full-screen menu: scroll rather
+     than clip when the list is taller than the window. */
+  align-content: safe center;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.v-nav-sheet .v-nav-link { border-radius: 18px; border-bottom: 0; padding: 14px; }
+.v-nav-sheet .v-nav-link:hover { background: rgba(255, 255, 255, 0.06); }
+@keyframes vSheetIn { from { opacity: 0; transform: translateY(-8px) scale(0.98); } }
+
+/* The detail panel: a scrolling sheet, so its light edge is the border and
+   the inner top glow (an absolute rim would scroll away with the content). */
+.v-panel-body {
+  position: relative;
+  isolation: isolate;
+  margin: 12px 12px 12px 0;
+  border-radius: 30px;
+  border: 1px solid var(--v-glass-edge);
+  border-top-color: rgba(255, 255, 255, 0.16);
+  background: var(--v-sheet-tint);
+  -webkit-backdrop-filter: var(--v-glass-blur);
+  backdrop-filter: var(--v-glass-blur);
+  box-shadow: var(--v-glass-lift);
+}
+.v-panel-head {
+  border-radius: 30px 30px 0 0;
+  background: rgba(10, 17, 19, 0.82);
+  border-bottom: 1px solid var(--v-glass-edge);
+}
+/* Content inside the sheet is not glass on glass. */
+.v-panel-inner {
+  background: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border: 0;
+  box-shadow: none;
+}
+@media (max-width: 900px) {
+  .v-panel-body { margin: 8px; }
+}
+
+/* ── adaptation (re-declared after the tokens above) ── */
+@media (pointer: coarse) {
+  :root { --v-glass-blur: blur(12px) saturate(1.4) brightness(0.84); }
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  :root {
+    --v-glass-tint: linear-gradient(170deg, rgba(14, 26, 25, 0.9), rgba(5, 11, 11, 0.94));
+    --v-glass-clear: linear-gradient(170deg, rgba(14, 26, 25, 0.9), rgba(5, 11, 11, 0.94));
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  :root {
+    --v-glass-blur: none;
+    --v-glass-tint: rgba(8, 14, 15, 0.96);
+    --v-glass-clear: rgba(8, 14, 15, 0.96);
+    --v-sheet-tint: rgba(7, 12, 13, 0.98);
+  }
+}
+@media (prefers-contrast: more) {
+  :root {
+    --v-glass-blur: none;
+    --v-glass-tint: rgba(5, 8, 9, 0.98);
+    --v-glass-clear: rgba(5, 8, 9, 0.98);
+    --v-sheet-tint: rgba(5, 8, 9, 0.99);
+    --v-glass-edge: rgba(255, 255, 255, 0.55);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .v-btn:active,
+  .v-nav-toggle:active,
+  .v-nav-link:active,
+  .v-stall-visit button:active,
+  .v-projection-views button:active,
+  .v-stagemode-btn:active { transform: none; }
+  .v-nav-sheet { animation: none; }
+}
+@media (forced-colors: active) {
+  .v-btn::after, .v-nav-brand::after, .v-nav-links::after, .v-nav-toggle::after, .v-rail::after,
+  .v-stagemode-switch::after, .v-prompt::after, .v-guide::after, .v-stall-visit::after,
+  .v-projection-views::after, .v-hud-fade::after, .v-contact-card::after, .v-nav-sheet::after { display: none; }
+}

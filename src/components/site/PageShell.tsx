@@ -1,6 +1,7 @@
 "use client";
 import { ReactNode, useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import SignalGrid from "../SignalGrid";
 import Wordmark from "../Wordmark";
@@ -25,6 +26,7 @@ const NAV = [
 export default function PageShell({ children }: { children: ReactNode }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const pathname = usePathname() ?? "";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -35,30 +37,30 @@ export default function PageShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="lg-dark flex min-h-full flex-col bg-paper text-text">
-      <header
-        className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
-          scrolled ? "lg-glass-nav" : "border-b border-transparent bg-transparent"
-        }`}
-      >
+      {/* Scroll edge: content passing under the floating controls softens
+          instead of meeting an opaque bar (Liquid Glass, liquid-glass.css). */}
+      <div aria-hidden className="lg-scroll-edge" data-on={scrolled || open} />
+      <header className="fixed inset-x-0 top-0 z-50">
         <nav className="mx-auto flex max-w-[1180px] items-center justify-between px-6 py-4 md:px-12">
           <Link href="/" className="flex items-center gap-3 text-text">
             <SignalGrid cell={14} gap={3} palette="dark" animate={false} glow={false} />
             <Wordmark className="text-xl" accent="glow" />
           </Link>
 
-          <div className="lg-glass-pill hidden items-center gap-5 px-5 py-2 lg:flex">
+          <div className="lg-glass-pill hidden items-center gap-1 py-1.5 pl-2 pr-1.5 lg:flex">
             {NAV.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
-                className="text-sm text-muted transition-colors hover:text-text"
+                aria-current={pathname === l.href || pathname.startsWith(l.href + "/") ? "page" : undefined}
+                className="lg-nav-link text-sm text-muted hover:text-text"
               >
                 {l.label}
               </Link>
             ))}
             <Link
               href="/contact"
-              className="lg-btn lg-btn-primary !rounded-full !px-5 !py-2.5 text-sm"
+              className="lg-btn lg-btn-primary ml-2 !px-5 !py-2.5 text-sm"
             >
               Start a project
             </Link>
@@ -68,7 +70,7 @@ export default function PageShell({ children }: { children: ReactNode }) {
             aria-label="Toggle menu"
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="lg-glass-pill flex h-10 w-10 items-center justify-center text-text lg:hidden"
+            className="lg-glass-pill flex h-11 w-11 items-center justify-center text-text lg:hidden"
           >
             <div className="space-y-1.5">
               <span className="block h-0.5 w-6 bg-current" />
@@ -80,19 +82,21 @@ export default function PageShell({ children }: { children: ReactNode }) {
         <AnimatePresence>
           {open && (
             <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.25 }}
-              className="lg-glass-nav overflow-hidden lg:hidden"
+              initial={{ opacity: 0, y: -10, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -8, scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 420, damping: 32 }}
+              style={{ transformOrigin: "top right" }}
+              className="lg-glass-sheet mx-3 overflow-hidden lg:hidden"
             >
-              <div className="flex flex-col gap-1 px-6 py-4">
+              <div className="flex flex-col gap-1 p-3">
                 {NAV.map((l) => (
                   <Link
                     key={l.href}
                     href={l.href}
                     onClick={() => setOpen(false)}
-                    className="rounded-lg px-2 py-3 text-text/80 hover:bg-line/50"
+                    aria-current={pathname === l.href ? "page" : undefined}
+                    className="lg-sheet-item px-4 py-3 text-text/85 transition-colors hover:bg-white/5 aria-[current=page]:bg-white/[0.07] aria-[current=page]:text-text"
                   >
                     {l.label}
                   </Link>
@@ -100,7 +104,7 @@ export default function PageShell({ children }: { children: ReactNode }) {
                 <Link
                   href="/contact"
                   onClick={() => setOpen(false)}
-                  className="mt-2 rounded-xl bg-aqua px-5 py-3 text-center font-medium text-white"
+                  className="lg-btn lg-btn-primary mt-2 px-5 py-3 text-center"
                 >
                   Start a project
                 </Link>
