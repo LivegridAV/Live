@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { ANAMORPHIC_VIEW } from "./anamorphic";
 import { TECHNICAL_VIEW } from "./technical";
-import { PROJECTION_VIEW } from "./projection";
+import { PROJECTION_VIEW, PROJECTION_VIEWS } from "./projection";
 import { RENTAL2026_VIEWS } from "./ledRental2026";
 import { PLACEMENTS, SECOND_PAIR_SHIFT, transformOldWorldToNew, type InstallationId } from "./placements";
 import { ARENA_SHIFT } from "./grand";
@@ -25,6 +25,13 @@ export interface Keyframe {
   pos: [number, number, number];
   look: [number, number, number];
   fov: number;
+  /**
+   * Viewport heights of scrolling spent arriving at this frame. Frames without
+   * it use the base rate (BASE_SCROLL_VH for the whole 0 → 1 journey). The
+   * exhibition walk sets it per move so that turns and dollies stay gentle:
+   * about 60° of turn and 18 m of travel per screen of scroll at most.
+   */
+  scroll?: number;
 }
 
 /** The arena retains its original 61-frame tangent multiplier and boundary neighbours, independent of exhibition edits. */
@@ -52,7 +59,8 @@ const receptionPosition=transformOldWorldToNew("R",[-1.445,2.448,-64]);
 const receptionLook=transformOldWorldToNew("R",[1.05,4.56,-83.79]);
 /** Forum positions are tied to installation anchors, never imported pivots. */
 const forum=(id:InstallationId,x:number,y:number,offsetZ:number):[number,number,number]=>[x,y,PLACEMENTS[id].root[2]+offsetZ];
-const focus=(id:InstallationId,y:number):[number,number,number]=>[PLACEMENTS[id].root[0],y,PLACEMENTS[id].root[2]];
+/** A point offset (world axes, metres) from an installation's anchor. */
+const rel=(id:InstallationId,dx:number,y:number,dz:number):[number,number,number]=>[PLACEMENTS[id].root[0]+dx,y,PLACEMENTS[id].root[2]+dz];
 
 
 export const KEYFRAMES:Keyframe[]=[
@@ -60,46 +68,93 @@ export const KEYFRAMES:Keyframe[]=[
   {p:.03,pos:[-.25,1.7,6],look:[0,4.8,-14.4],fov:54},
   {p:.062,pos:[.25,1.7,3],look:[0,4.2,-16],fov:56},
   {p:.095,pos:[.2,1.7,1],look:[0,3.2,-19],fov:54},
-  {p:.122,pos:[0,1.7,-5],look:[0,3,-22],fov:56},
-  {p:.15,pos:[0,1.7,-12],look:[0,3,-26],fov:62},
+  {p:.122,pos:[0,1.7,-5],look:[0,3,-22],fov:56,scroll:.45},
+  {p:.15,pos:[0,1.7,-12],look:[0,3,-26],fov:60,scroll:.5},
   {p:.186,pos:[-.52,1.7,-16.8],look:[.35,3,-30],fov:66},
   {p:.222,pos:[.56,1.7,-20],look:[-.3,2.5,-34],fov:66},
   {p:.256,pos:[-.26,1.7,-24],look:[.16,2.1,-38],fov:64},
   {p:.282,pos:[0,1.7,-27.6],look:[0,2.45,-40],fov:60},
-  {p:.3,pos:[0,1.82,-31.5],look:[0,3.3,-44],fov:56},
-  {p:.318,pos:forum("P1",0,1.82,6.695),look:focus("P1",6.5),fov:58},
-  {p:.34,pos:forum("P1",1.5,1.82,3.695),look:focus("P1",6.5),fov:52},
-  {p:.354,pos:forum("P2",0,1.82,.195),look:focus("P2",5.9),fov:52},
-  {p:.366,pos:forum("P3",-1.2,1.82,6.695),look:focus("P3",5.3),fov:54},
-  {p:.376,pos:forum("P4",-1,1.82,2.195),look:focus("P4",4.8),fov:56},
-  {p:.4,pos:forum("R",0,1.82,-6.805),look:focus("R",4.3),fov:60},
-  {p:.42,pos:[receptionPosition[0],1.82,receptionPosition[2]],look:receptionLook,fov:64.924},
-  {p:.446,pos:receptionPosition,look:receptionLook,fov:64.924},
-  {p:.462,pos:receptionPosition,look:receptionLook,fov:64.924},
-  {p:.48,pos:forum("R",4,2.1,-9.805),look:focus("R",4),fov:62},
-  {p:.5,pos:forum("R",1,2.1,-18.805),look:focus("R",4),fov:58},
-  {p:.52,pos:forum("S1",0,2.1,29.15),look:focus("S1",4.5),fov:56},
-  {p:.536,pos:forum("S1",0,2.15,6.15),look:focus("S1",5.6),fov:48},
-  {p:.552,pos:ANAMORPHIC_VIEW.position,look:ANAMORPHIC_VIEW.look,fov:ANAMORPHIC_VIEW.fov},
-  {p:.568,pos:ANAMORPHIC_VIEW.position,look:ANAMORPHIC_VIEW.look,fov:ANAMORPHIC_VIEW.fov},
-  {p:.58,pos:forum("S1",-1,2.15,-19.35),look:focus("S1",5.6),fov:44},
-  {p:.59,pos:forum("S2",-4,2.4,-13.85),look:focus("S2",5),fov:45},
-  {p:.605,pos:RENTAL2026_VIEWS.front.position,look:RENTAL2026_VIEWS.front.look,fov:RENTAL2026_VIEWS.front.fov},
-  {p:.622,pos:RENTAL2026_VIEWS.front.position,look:RENTAL2026_VIEWS.front.look,fov:RENTAL2026_VIEWS.front.fov},
-  {p:.635,pos:forum("S2",-3,2.3,-19.85),look:focus("S2",4.5),fov:52},
-  {p:.647,pos:forum("S3",0,2.2,31.28),look:focus("S3",3.5),fov:54},
-  {p:.659,pos:forum("S3",3,2.2,10.28),look:focus("S3",3.5),fov:45},
-  {p:.672,pos:TECHNICAL_VIEW.position,look:TECHNICAL_VIEW.look,fov:TECHNICAL_VIEW.fov},
-  {p:.69,pos:TECHNICAL_VIEW.position,look:TECHNICAL_VIEW.look,fov:TECHNICAL_VIEW.fov},
-  {p:.702,pos:forum("S3",1,2.2,-13.72),look:focus("S3",3.4),fov:48},
-  {p:.708,pos:forum("S4",-3,2.7,-10.72),look:focus("S4",6.5),fov:45},
-  {p:.718,pos:PROJECTION_VIEW.position,look:PROJECTION_VIEW.look,fov:PROJECTION_VIEW.fov},
-  {p:.738,pos:PROJECTION_VIEW.position,look:PROJECTION_VIEW.look,fov:PROJECTION_VIEW.fov},
-  {p:.754,pos:forum("S4",-2,2.2,-18.72),look:forum("S4",16,4,-5.72),fov:52},
+  {p:.3,pos:[0,1.82,-31.5],look:[0,3.3,-44],fov:58,scroll:.3},
+  // Pillar gallery: walk straight in between the four LED pillars, hold on all
+  // of them, then a gentle glance left and right. The look stays far ahead so
+  // the view never whips round a pillar the camera is passing.
+  {p:.318,pos:rel("P1",7.5,1.8,9.2),look:rel("P3",7.5,5,5.2),fov:60,scroll:.3},
+  {p:.34,pos:rel("P1",7.5,1.8,7.7),look:rel("P3",7.5,5.2,4.2),fov:62,scroll:.3},
+  {p:.354,pos:rel("P1",7.5,1.8,6.7),look:rel("P3",7.5,5.2,3.2),fov:62,scroll:.4},
+  {p:.376,pos:rel("P1",7.2,1.8,2.7),look:rel("P3",2.5,5,-1.8),fov:60,scroll:.5},
+  {p:.4,pos:rel("P4",-7,1.85,8.7),look:rel("P4",-1.5,5,-4.8),fov:60,scroll:.9},
+  // Reception: turn right onto the curved LED and hold.
+  {p:.42,pos:rel("R",-17.6,2,.7),look:rel("R",-4,4.6,-4.8),fov:62,scroll:.8},
+  {p:.44,pos:receptionPosition,look:receptionLook,fov:64.924,scroll:.7},
+  {p:.462,pos:receptionPosition,look:receptionLook,fov:64.924,scroll:.5},
+  {p:.48,pos:rel("R",-17.5,2.4,-5.8),look:rel("R",2,4.6,-10.8),fov:60,scroll:.5},
+  // LED Rental from across the aisle: right angle, front (hold), left angle.
+  {p:.5,pos:rel("S2",-20,2.4,23.65),look:rel("S2",0,5,8.65),fov:52,scroll:.6},
+  {p:.512,pos:rel("S2",-24.5,2.8,15.15),look:rel("S2",0,5,2.65),fov:44,scroll:.6},
+  {p:.525,pos:RENTAL2026_VIEWS.right.position,look:RENTAL2026_VIEWS.right.look,fov:RENTAL2026_VIEWS.right.fov,scroll:.5},
+  {p:.535,pos:RENTAL2026_VIEWS.front.position,look:RENTAL2026_VIEWS.front.look,fov:RENTAL2026_VIEWS.front.fov,scroll:1.1},
+  {p:.548,pos:RENTAL2026_VIEWS.front.position,look:RENTAL2026_VIEWS.front.look,fov:RENTAL2026_VIEWS.front.fov,scroll:.5},
+  {p:.56,pos:RENTAL2026_VIEWS.left.position,look:RENTAL2026_VIEWS.left.look,fov:RENTAL2026_VIEWS.left.fov,scroll:.5},
+  // Content Studio: its folded artwork resolves only from its calibrated point
+  // beyond the stall, so the view turns slowly back over the right shoulder.
+  {p:.578,pos:rel("S1",13.5,2.6,-17.35),look:rel("S2",-20,4.5,6.75),fov:38,scroll:1.2},
+  {p:.596,pos:ANAMORPHIC_VIEW.position,look:ANAMORPHIC_VIEW.look,fov:ANAMORPHIC_VIEW.fov,scroll:1.2},
+  {p:.614,pos:ANAMORPHIC_VIEW.position,look:ANAMORPHIC_VIEW.look,fov:ANAMORPHIC_VIEW.fov,scroll:.5},
+  // AV Engineering: its near corner, then its calibrated front (hold).
+  {p:.64,pos:rel("S3",22.5,2.2,12.28),look:rel("S3",.3,3.6,18.28),fov:44,scroll:.8},
+  {p:.672,pos:TECHNICAL_VIEW.position,look:TECHNICAL_VIEW.look,fov:TECHNICAL_VIEW.fov,scroll:1},
+  {p:.69,pos:TECHNICAL_VIEW.position,look:TECHNICAL_VIEW.look,fov:TECHNICAL_VIEW.fov,scroll:.5},
+  // Projection Mapping: look ahead down the aisle, then round to its front
+  // (hold) and on to its far angle.
+  {p:.704,pos:rel("S3",24,2.3,-4.72),look:rel("S3",12,3.8,-18.72),fov:48,scroll:1.1},
+  {p:.711,pos:rel("S3",20,2.4,-5.22),look:rel("S4",-16,4,-31.72),fov:50,scroll:.9},
+  {p:.718,pos:PROJECTION_VIEW.position,look:PROJECTION_VIEW.look,fov:PROJECTION_VIEW.fov,scroll:1.8},
+  {p:.738,pos:PROJECTION_VIEW.position,look:PROJECTION_VIEW.look,fov:PROJECTION_VIEW.fov,scroll:.5},
+  {p:.754,pos:PROJECTION_VIEWS.left.position,look:PROJECTION_VIEWS.left.look,fov:PROJECTION_VIEWS.left.fov,scroll:.7},
   // Leaving the projection stall: turn down the last stretch of hall to the portal.
-  {p:.767,pos:forum("S4",0,2.2,-36.72+(ARENA_SHIFT-SECOND_PAIR_SHIFT)*.6),look:[0,3.8,-244+ARENA_SHIFT],fov:54},
+  // Turn from the projection stall back to the portal, spread evenly.
+  {p:.7605,pos:rel("S4",-25.5,2.5,-16.22),look:rel("S4",-5,4.2,-30.52),fov:45,scroll:1.1},
+  {p:.767,pos:forum("S4",0,2.2,-36.72+(ARENA_SHIFT-SECOND_PAIR_SHIFT)*.6),look:[0,3.8,-244+ARENA_SHIFT],fov:54,scroll:1.1},
   ...ARENA_BASELINE_FRAMES.filter(frame=>frame.p>=FROZEN_CONNECTION_START),
 ];
+
+/* ── scroll plan ───────────────────────────────────────── */
+
+/** Viewport heights the whole journey would take at the base rate. */
+export const BASE_SCROLL_VH = 13;
+/**
+ * Cumulative [progress, viewport heights] at every keyframe: the page's scroll
+ * position maps piecewise-linearly onto progress through this table, so a
+ * frame's `scroll` budget is exactly the scrolling its move takes.
+ */
+/**
+ * The arena frames are authored and protected; only the scrolling they take
+ * is set here, so the dolly, crane-up and zooms read at a walking pace.
+ */
+const ARENA_SCROLL:Record<number,number>={.789:.45,.812:.6,.83:.5,.846:.55,.862:1,.884:.6,.906:.55,.932:.35,.95:.3,.968:.55,.986:.35,1:.25};
+export const SCROLL_PLAN:[number,number][]=(()=>{
+  const plan:[number,number][]=[[0,0]];
+  for(let i=1;i<KEYFRAMES.length;i++){
+    const k=KEYFRAMES[i],prev=KEYFRAMES[i-1];
+    plan.push([k.p,plan[i-1][1]+(k.scroll??ARENA_SCROLL[k.p]??(k.p-prev.p)*BASE_SCROLL_VH)]);
+  }
+  return plan;
+})();
+export const SCROLL_PLAN_VH=SCROLL_PLAN[SCROLL_PLAN.length-1][1];
+
+/** Fraction of the scroll track (0 → 1) to journey progress, and back. */
+export function scrollFractionToProgress(fraction:number){
+  const vh=THREE.MathUtils.clamp(fraction,0,1)*SCROLL_PLAN_VH;
+  let i=1;while(i<SCROLL_PLAN.length-1&&SCROLL_PLAN[i][1]<vh)i++;
+  const [p0,v0]=SCROLL_PLAN[i-1],[p1,v1]=SCROLL_PLAN[i];
+  return p0+(p1-p0)*(v1>v0?(vh-v0)/(v1-v0):0);
+}
+export function progressToScrollFraction(progress:number){
+  const p=THREE.MathUtils.clamp(progress,0,1);
+  let i=1;while(i<SCROLL_PLAN.length-1&&SCROLL_PLAN[i][0]<p)i++;
+  const [p0,v0]=SCROLL_PLAN[i-1],[p1,v1]=SCROLL_PLAN[i];
+  return (v0+(v1-v0)*(p1>p0?(p-p0)/(p1-p0):0))/SCROLL_PLAN_VH;
+}
 
 /* ── Hermite interpolation with Catmull-Rom tangents ───── */
 

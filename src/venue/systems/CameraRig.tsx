@@ -152,7 +152,7 @@ export function CameraRig() {
     smoothPos.current.lerp(tmp.current,follow);
     smoothLook.current.lerp(sample.look,Math.min(1,delta*5));
     camera.position.copy(smoothPos.current);camera.lookAt(smoothLook.current);
-    if(!active)camera.rotation.z+=THREE.MathUtils.clamp(journey.velocity*.6,-.035,.035)*(s.reducedMotion?.2:1);
+    // No banking on scroll: rolling the horizon is a common motion-sickness trigger.
     // Keep a credible lens. Portrait views can crop architecture; side and
     // interior controls expose the rest without a 100-degree stretched lens.
     const portrait=Math.max(0,Math.min(1,(1.2-aspect)/.8));

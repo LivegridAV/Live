@@ -94,8 +94,11 @@ export const PILLAR_INSTALLATION_IDS = {
 const chapter=(start:number,end:number,overview:number,hold:[number,number])=>({
   start,end,range:[start,end] as [number,number],overview,hold,
 });
-const CONTENT_PROGRESS=chapter(.520,.585,.560,[.552,.568]);
-const RENTAL_PROGRESS=chapter(.590,.635,.612,[.605,.622]);
+// The walk visits LED Rental before the Content Studio: the studio's artwork is
+// calibrated from a point beyond both stalls, so this keeps the camera moving
+// forward. See path.ts for the moves inside each chapter.
+const RENTAL_PROGRESS=chapter(.500,.575,.541,[.535,.548]);
+const CONTENT_PROGRESS=chapter(.575,.640,.605,[.596,.614]);
 /** Shared exhibition timing; arena p>=.812 is authored independently. */
 export const EXHIBITION_PROGRESS = {
   pillars:chapter(.318,.400,.340,[.340,.354]),
@@ -104,8 +107,8 @@ export const EXHIBITION_PROGRESS = {
   content:CONTENT_PROGRESS,
   rental:RENTAL_PROGRESS,
   "led-rental":RENTAL_PROGRESS,
-  technical:chapter(.650,.704,.681,[.672,.690]),
-  projection:chapter(.708,.754,.728,[.718,.738]),
+  technical:chapter(.640,.704,.681,[.672,.690]),
+  projection:chapter(.704,.754,.728,[.718,.738]),
 } as const;
 
 export function inExhibitionRange(id:keyof typeof EXHIBITION_PROGRESS,progress:number) {

@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef } from "react";
 import { journey } from "./journey";
 import { useVenue } from "./store";
 import { zoneAt } from "../data/zones";
+import { BASE_SCROLL_VH, SCROLL_PLAN_VH, progressToScrollFraction, scrollFractionToProgress } from "../data/path";
 
 /**
  * Scroll → journey.
@@ -14,9 +15,13 @@ import { zoneAt } from "../data/zones";
  * rather than from taking the scroll over.
  */
 
-/** How many viewport heights the whole walkthrough occupies. */
-const SCROLL_VH_DESKTOP = 13;
-const SCROLL_VH_MOBILE = 11;
+/**
+ * How many viewport heights the whole walkthrough occupies: the camera path's
+ * scroll plan (path.ts), which gives each move enough scrolling to stay
+ * comfortable. Phones keep the same proportions, a little shorter.
+ */
+const SCROLL_VH_DESKTOP = SCROLL_PLAN_VH;
+const SCROLL_VH_MOBILE = SCROLL_PLAN_VH * 11 / BASE_SCROLL_VH;
 
 /**
  * The walkthrough is measured against its own scroll track, not the document.
@@ -50,7 +55,7 @@ export function ScrollRig() {
 
   const read = useCallback(() => {
     if (useVenue.getState().stallVisit) return;
-    journey.target = Math.min(1, Math.max(0, window.scrollY / trackRange()));
+    journey.target = scrollFractionToProgress(window.scrollY / trackRange());
   }, []);
 
   useEffect(() => {
@@ -66,7 +71,7 @@ export function ScrollRig() {
       resizeFrame=requestAnimationFrame(()=>{
         // A visit locks manual scrolling, but its document anchor must still
         // follow the new viewport height or the HUD mistakes it for an article.
-        window.scrollTo({top:current*trackRange(),behavior:"instant"});
+        window.scrollTo({top:progressToScroll(current),behavior:"instant"});
         resizing=false;read();
       });
     };
@@ -128,5 +133,5 @@ export function scrollToProgress(p: number, behavior: ScrollBehavior = "smooth")
 
 /** Where on the page is progress `p`, in pixels. */
 export function progressToScroll(p: number) {
-  return Math.max(0, Math.min(1, p)) * trackRange();
+  return progressToScrollFraction(p) * trackRange();
 }

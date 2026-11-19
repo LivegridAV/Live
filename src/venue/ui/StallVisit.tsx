@@ -39,21 +39,15 @@ export function StallVisitControls() {
     window.addEventListener("keydown",key);
     return()=>{journey.locked=false;document.body.style.overflow=previous;window.removeEventListener("keydown",key);};
   },[visit?.stall]);
-  if(!state.entered||state.pastVenue||state.activePavilion||!current)return null;
-  const select=(view:StallView)=>{
-    scrollToProgress(STALL_VISITS[current].progress,"instant");
-    journey.progress=journey.target=STALL_VISITS[current].progress;
-    journey.velocity=0;
-    state.setStallVisit({stall:current,view});
-    const url=new URL(location.href);url.searchParams.set("shot",current);url.searchParams.set("view",view);history.replaceState(history.state,"",url);
-  };
+  // The walkthrough itself shows every stall from its left, front and right,
+  // so there are no per-stall angle buttons. Review links (?shot=…&view=…)
+  // still open a visit; Escape or the button below returns to the venue.
+  if(!state.entered||state.pastVenue||state.activePavilion||!visit)return null;
   return <>
-    <nav className="v-stall-visit" aria-label={`${STALL_VISITS[current].label} 3D views`}>
-      <span className="v-stall-visit-name">{STALL_VISITS[current].label}</span>
+    <nav className="v-stall-visit" aria-label={`${STALL_VISITS[visit.stall].label} review view`}>
+      <span className="v-stall-visit-name">{STALL_VISITS[visit.stall].label} · {labels[visit.view]}</span>
       <div className="v-stall-visit-actions">
-        {VIEWS.map(view=><button key={view} aria-pressed={visit?.view===view} onClick={()=>select(view)}>{view==="interior"&&current==="anamorphic"?"Enter Studio":labels[view]}</button>)}
-        {current==="led-rental"&&<button aria-pressed={state.rentalModelsRotate} onClick={()=>state.setRentalModelsRotate(!state.rentalModelsRotate)}>Rotate models</button>}
-        {visit&&<button className="v-stall-back" onClick={()=>state.setStallVisit({...visit,view:"return"})}>Back to Venue</button>}
+        <button className="v-stall-back" onClick={()=>state.setStallVisit({...visit,view:"return"})}>Back to Venue</button>
       </div>
     </nav>
     {isStallDiagnostic(visit)&&<aside className="v-stall-dimensions" data-diagnostic-view={visit?.view}>
