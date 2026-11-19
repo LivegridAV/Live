@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useMemo } from "react";
-import { useVenue, type ProjectionAngle } from "../systems/store";
+import { useMemo } from "react";
+import { useVenue } from "../systems/store";
 import { NAV_STOPS, ZONES, zoneAt, zoneLocal } from "../data/zones";
 import { scrollToProgress } from "../systems/ScrollRig";
 import { VENUE_PAVILIONS, PAVILION_RANGE } from "../data/pavilions";
@@ -101,46 +101,3 @@ export function ScrollCue() {
   );
 }
 
-/** Real camera positions; the top angle opens the architectural roof cutaway. */
-export function ProjectionViews(){
-  const entered=useVenue(s=>s.entered),progress=useVenue(s=>s.progress);
-  const angle=useVenue(s=>s.projectionAngle),setAngle=useVenue(s=>s.setProjectionAngle);
-  const panel=useVenue(s=>s.activePavilion),past=useVenue(s=>s.pastVenue);
-  useEffect(()=>{
-    const view=new URLSearchParams(location.search).get("view");
-    if(view&&["front","left","right","top"].includes(view))setAngle(view as ProjectionAngle);
-  },[setAngle]);
-  if(!entered||past||panel||!inProjectionShowcase(progress))return null;
-  return <nav className="v-projection-views" aria-label="Projection stall views">
-    {(["front","left","right","top"] as const).map(view=><button key={view} type="button"
-      aria-pressed={view===angle} onClick={()=>{
-        scrollToProgress(EP.projection.overview,"instant");
-        setAngle(view);
-        const url=new URL(location.href);
-        if(["projection","projection-mapping","spatial"].includes(url.searchParams.get("shot")??"")){
-          url.searchParams.set("view",view);history.replaceState(history.state,"",url);
-        }
-      }}>{view==="top"?"Top · cutaway":`${view} view`}</button>)}
-  </nav>;
-}
-
-/** Camera positions inspect the authored pavilion; the top view opens its roof. */
-export function RentalViews(){
-  const entered=useVenue(s=>s.entered),progress=useVenue(s=>s.progress);
-  const angle=useVenue(s=>s.rentalAngle),setAngle=useVenue(s=>s.setRentalAngle);
-  const rotate=useVenue(s=>s.rentalModelsRotate),setRotate=useVenue(s=>s.setRentalModelsRotate);
-  const panel=useVenue(s=>s.activePavilion),past=useVenue(s=>s.pastVenue);
-  useEffect(()=>{
-    const query=new URLSearchParams(location.search),view=query.get("view");
-    if(["led-rental","rentals"].includes(query.get("shot")??"")&&view&&["front","left","right","top"].includes(view))setAngle(view as ProjectionAngle);
-  },[setAngle]);
-  if(!entered||past||panel||!inRental2026(progress))return null;
-  return <nav className="v-projection-views v-rental-views" aria-label="LED rental stall views">
-    {(["front","left","right","top"] as const).map(view=><button key={view} type="button" aria-pressed={view===angle} onClick={()=>{
-      scrollToProgress(EP.rental.overview,"instant");setAngle(view);
-      const url=new URL(location.href);
-      if(["led-rental","rentals"].includes(url.searchParams.get("shot")??"")){url.searchParams.set("view",view);history.replaceState(history.state,"",url);}
-    }}>{view==="top"?"Top · cutaway":`${view} view`}</button>)}
-    <button type="button" aria-pressed={rotate} onClick={()=>setRotate(!rotate)}>Rotate models</button>
-  </nav>;
-}

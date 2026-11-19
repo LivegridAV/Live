@@ -31,7 +31,7 @@ test("GPU warm-up restores hidden zones and renderer state on completion, failur
     setRenderTarget: value => { target = value; },
     render: () => {
       rendered++;
-      assert.equal(compiled, 1);
+      assert.equal(compiled, 2, "both colour-space variants are submitted before the upload draw");
       assert.equal(zone.visible, true);
       assert.equal(mesh.frustumCulled, false);
       assert.equal(source.visible, false, "virtual sources must never enter the light layout");
@@ -41,7 +41,7 @@ test("GPU warm-up restores hidden zones and renderer state on completion, failur
     },
   };
   await warmScene(renderer, scene, new THREE.PerspectiveCamera());
-  assert.equal(rendered, 1); assert.equal(compiled, 2);
+  assert.equal(rendered, 1); assert.equal(compiled, 3, "a final pass submits anything the draw added");
   assert.equal(zone.visible, false); assert.equal(mesh.frustumCulled, true);
   assert.equal(spot.shadow.autoUpdate, false); assert.equal(target, previous); assert.equal(disposed, true);
   renderer.render = () => { throw new Error("simulated context failure"); };

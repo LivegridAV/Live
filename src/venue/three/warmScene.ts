@@ -71,7 +71,7 @@ async function programsReady(gl: THREE.WebGLRenderer, cancelled: () => boolean,
   const start = performance.now();
   for (;;) {
     if (cancelled()) return;
-    const programs = gl.info.programs ?? [];
+    const programs = gl.info?.programs ?? [];
     let ready = 0;
     // isReady() exists at runtime (r185) but is missing from the type declarations.
     for (const program of programs) if ((program as unknown as { isReady(): boolean }).isReady()) ready++;
