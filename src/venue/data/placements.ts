@@ -22,23 +22,32 @@ type InstallationPlacement = Pose & {
 };
 
 const HALF_TURN = Math.PI / 2;
+/**
+ * The hall used to leave an empty 26.5 m bay between the gallery and the first
+ * stall pair, and another between the two pairs. Both bays are gone: each pair
+ * moves forward by whole bays, so the roof and column rhythm still lines up.
+ * Baselines stay as recorded; every rebased input follows the new roots.
+ */
+export const HALL_BAY_LENGTH = 26.5;
+export const FIRST_PAIR_SHIFT = HALL_BAY_LENGTH;
+export const SECOND_PAIR_SHIFT = 2 * HALL_BAY_LENGTH;
 const define = (placement: InstallationPlacement) => Object.freeze(placement);
 
 export const INSTALLATION_PLACEMENTS: Record<InstallationId, InstallationPlacement> = {
   S1: define({ id:"S1",label:"Content / Anamorphic Studio",
-    baseline:{root:[-18,0,-113],yaw:HALF_TURN},root:[-20,0,-109.15],yaw:HALF_TURN,
+    baseline:{root:[-18,0,-113],yaw:HALF_TURN},root:[-20,0,-109.15+FIRST_PAIR_SHIFT],yaw:HALF_TURN,
     nativeFloorAnchor:[0,.12,0],nativeFront:[0,0,1],scale:1,
     nativeCompleteBounds:{min:[-12,0,-8],max:[12,12.8210001,8]} }),
   S2: define({ id:"S2",label:"LED Rental Solutions",
-    baseline:{root:[-18,0,-175],yaw:HALF_TURN},root:[20,0,-109.15],yaw:-HALF_TURN,
+    baseline:{root:[-18,0,-175],yaw:HALF_TURN},root:[20,0,-109.15+FIRST_PAIR_SHIFT],yaw:-HALF_TURN,
     nativeFloorAnchor:[0,.12,0],nativeFront:[0,0,1],scale:1,
     nativeCompleteBounds:{min:[-16.00371933,0,-11],max:[16.00371933,12.46199989,12]} }),
   S3: define({ id:"S3",label:"AV Engineering / Show Control / Live Production",
-    baseline:{root:[-18,0,-145],yaw:HALF_TURN},root:[-20,0,-179.28],yaw:HALF_TURN,
+    baseline:{root:[-18,0,-145],yaw:HALF_TURN},root:[-20,0,-179.28+SECOND_PAIR_SHIFT],yaw:HALF_TURN,
     nativeFloorAnchor:[0,.12,0],nativeFront:[0,0,1],scale:1,
     nativeCompleteBounds:{min:[-20.00264359,0,-15.00263786],max:[20.00264359,10.29399967,19.00263786]} }),
   S4: define({ id:"S4",label:"Projection Mapping",
-    baseline:{root:[18,0,-205],yaw:-HALF_TURN},root:[20,0,-179.28],yaw:-HALF_TURN,
+    baseline:{root:[18,0,-205],yaw:-HALF_TURN},root:[20,0,-179.28+SECOND_PAIR_SHIFT],yaw:-HALF_TURN,
     nativeFloorAnchor:[0,.12,0],nativeFront:[0,0,1],scale:1,
     nativeCompleteBounds:{min:[-18.00382805,.025,-11],max:[18.19300079,16.52300072,12]} }),
   R: define({ id:"R",label:"Reception / Curved LED",

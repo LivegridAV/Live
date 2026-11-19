@@ -3,6 +3,7 @@ import { useEffect, useMemo } from "react";
 import { useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
+import { afterWarmup } from "./warmScene";
 import { HorizontalBlurShader } from "three/examples/jsm/shaders/HorizontalBlurShader.js";
 import { VerticalBlurShader } from "three/examples/jsm/shaders/VerticalBlurShader.js";
 
@@ -12,7 +13,8 @@ export function ProjectionContactShadow({boothUrl,visitorsUrl,detailsUrl,width,d
   const {scene:details}=useGLTF(detailsUrl??boothUrl,false);
   const {gl}=useThree();
   const target=useMemo(()=>new THREE.WebGLRenderTarget(1024,512,{minFilter:THREE.LinearFilter,magFilter:THREE.LinearFilter}),[]);
-  useEffect(()=>{
+  // Baked once every shader is ready, so the bake never compiles inside a frame.
+  useEffect(()=>afterWarmup(()=>{
     const stage=new THREE.Scene();
     for(const source of detailsUrl?[booth,visitors,details]:[booth,visitors]){
       const model=source.clone(true);
@@ -47,7 +49,7 @@ export function ProjectionContactShadow({boothUrl,visitorsUrl,detailsUrl,width,d
       gl.setRenderTarget(before.target);gl.setClearColor(before.color,before.alpha);gl.autoClear=before.autoClear;gl.shadowMap.autoUpdate=before.shadow;
       depth.dispose();horizontal.dispose();vertical.dispose();temporary.dispose();geometry.dispose();
     }
-  },[booth,visitors,details,detailsUrl,gl,target,width,depthSize,centerZ,floorHeight]);
+  }),[booth,visitors,details,detailsUrl,gl,target,width,depthSize,centerZ,floorHeight]);
   useEffect(()=>()=>target.dispose(),[target]);
   return <mesh position={[0,floorHeight+.005,centerZ]} rotation={[-Math.PI/2,0,0]} renderOrder={2}>
     <planeGeometry args={[width,depthSize]}/>

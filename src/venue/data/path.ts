@@ -3,7 +3,8 @@ import { ANAMORPHIC_VIEW } from "./anamorphic";
 import { TECHNICAL_VIEW } from "./technical";
 import { PROJECTION_VIEW } from "./projection";
 import { RENTAL2026_VIEWS } from "./ledRental2026";
-import { PLACEMENTS, transformOldWorldToNew, type InstallationId } from "./placements";
+import { PLACEMENTS, SECOND_PAIR_SHIFT, transformOldWorldToNew, type InstallationId } from "./placements";
+import { ARENA_SHIFT } from "./grand";
 
 /**
  * The camera path through the venue.
@@ -27,7 +28,7 @@ export interface Keyframe {
 }
 
 /** The arena retains its original 61-frame tangent multiplier and boundary neighbours, independent of exhibition edits. */
-const ARENA_BASELINE_FRAMES:Keyframe[]=[
+const ARENA_AUTHORED_FRAMES:Keyframe[]=[
   {"p":0.767,"pos":[0,2.2,-228],"look":[0,4,-246],"fov":56},
   {"p":0.789,"pos":[0,2.2,-229],"look":[0,4.8,-249],"fov":56},
   {"p":0.812,"pos":[0,2.05,-237],"look":[0,4.8,-252],"fov":54},
@@ -42,6 +43,9 @@ const ARENA_BASELINE_FRAMES:Keyframe[]=[
   {"p":0.986,"pos":[0,8.2,-307],"look":[0,9.8,-353],"fov":40},
   {"p":1,"pos":[0,7,-309],"look":[0,8.8,-353],"fov":39},
 ];
+/** Same frames and timing, carried with the arena when the last hall bay was removed. */
+const ARENA_BASELINE_FRAMES:Keyframe[]=ARENA_AUTHORED_FRAMES.map(frame=>({...frame,
+  pos:[frame.pos[0],frame.pos[1],frame.pos[2]+ARENA_SHIFT],look:[frame.look[0],frame.look[1],frame.look[2]+ARENA_SHIFT]}));
 export const ARENA_PATH_START=.812;
 const FROZEN_CONNECTION_START=.789, ORIGINAL_TANGENT_MULTIPLIER=60, ORIGINAL_ARENA_FRAME_OFFSET=48;
 const receptionPosition=transformOldWorldToNew("R",[-1.445,2.448,-64]);
@@ -92,7 +96,8 @@ export const KEYFRAMES:Keyframe[]=[
   {p:.718,pos:PROJECTION_VIEW.position,look:PROJECTION_VIEW.look,fov:PROJECTION_VIEW.fov},
   {p:.738,pos:PROJECTION_VIEW.position,look:PROJECTION_VIEW.look,fov:PROJECTION_VIEW.fov},
   {p:.754,pos:forum("S4",-2,2.2,-18.72),look:forum("S4",16,4,-5.72),fov:52},
-  {p:.767,pos:forum("S4",0,2.2,-36.72),look:[0,3.8,-244],fov:54},
+  // Leaving the projection stall: turn down the last stretch of hall to the portal.
+  {p:.767,pos:forum("S4",0,2.2,-36.72+(ARENA_SHIFT-SECOND_PAIR_SHIFT)*.6),look:[0,3.8,-244+ARENA_SHIFT],fov:54},
   ...ARENA_BASELINE_FRAMES.filter(frame=>frame.p>=FROZEN_CONNECTION_START),
 ];
 

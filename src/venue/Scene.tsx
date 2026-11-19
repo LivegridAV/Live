@@ -1,5 +1,5 @@
 "use client";
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useProgress } from "@react-three/drei";
 import { MediaProvider } from "./media/MediaContext";
@@ -9,6 +9,8 @@ import { ShowCue } from "./systems/ShowCue";
 import { LightRig, VenueEnvironment } from "./three/environment";
 import { ArenaPortal, ArenaShell, Ground, HallShell } from "./zones/Architecture";
 import { EntranceP01 } from "./zones/EntranceP01";
+import { HallAtmosphere } from "./zones/HallAtmosphere";
+import { HallDressing } from "./zones/HallDressing";
 import { Gallery } from "./zones/Gallery";
 import { Boulevard } from "./zones/ServicePavilion";
 import { Arena } from "./zones/Arena";
@@ -16,19 +18,35 @@ import { useVenue } from "./systems/store";
 import { ZoneGroup } from "./three/ZoneGroup";
 import { RenderMetrics } from "./systems/RenderMetrics";
 import { LocalLightPool } from "./three/LocalLights";
-import { warmScene } from "./three/warmScene";
+import { closeWarmupGate, openWarmupGate, warmScene, warmupHold } from "./three/warmScene";
 import { StallDimensions } from "./three/StallDimensions";
 import { EXHIBITION_RANGES } from "./data/placements";
 import { PlacementInspection, placementInspectionEnabled } from "./systems/PlacementInspection";
 
 /**
+ * While mounted, R3F skips its own on-screen draw (a priority subscriber takes
+ * over rendering) and draws nothing. The loader is opaque, so nothing is lost;
+ * what is gained is that no frame compiles shaders synchronously before the
+ * warm-up has submitted them all to the driver.
+ */
+function RenderHold() {
+  useEffect(() => {
+    warmupHold.active = true;
+    closeWarmupGate();
+    return () => { warmupHold.active = false; };
+  }, []);
+  useFrame(() => {}, 1);
+  return null;
+}
+
+/**
  * Warm-up.
  *
- * Wait for authored GLBs and textures before shader compilation. Compiling
- * several hundred programs inside
- * the first animated frame is what would otherwise produce a two second freeze
- * the moment the visitor scrolls. So we force it to happen while the loader is
- * still up, and report honest progress while it does.
+ * Wait for authored GLBs and textures, then prepare every shader behind the
+ * loader. Compiling several hundred programs inside the first animated frame
+ * is what would otherwise freeze the page the moment the visitor scrolls. The
+ * compile runs on the driver's threads while the loader reports honest
+ * progress, and the screen is not drawn until it has finished.
  */
 function Warmup() {
   const { gl, scene, camera } = useThree();
@@ -40,6 +58,8 @@ function Warmup() {
   const compiling = useRef(false);
   const compiled = useRef(false);
   const alive = useRef(true);
+  const compileFraction = useRef(0);
+  const [holding, setHolding] = useState(true);
   useEffect(() => {
     alive.current = true;
     return () => { alive.current = false; };
@@ -62,7 +82,17 @@ function Warmup() {
       compiling.current = true;
       // Await GPU readiness, not just shader submission. The old fixed 26-frame
       // delay let the visitor enter while the driver was still compiling.
-      void warmScene(gl, scene, camera, () => !alive.current).then(() => {
+      const cancelled = () => !alive.current;
+      void (async () => {
+        await warmScene(gl, scene, camera, cancelled, f => { compileFraction.current = f * 0.85; });
+        if (cancelled()) return;
+        // Every shader is ready: let the gated work in (contact-shadow bakes,
+        // the floor reflection), give it a few frames to mount, then prepare
+        // the handful of programs it added.
+        openWarmupGate();
+        await new Promise(resolve => setTimeout(resolve, 120));
+        await warmScene(gl, scene, camera, cancelled, f => { compileFraction.current = 0.85 + f * 0.15; });
+      })().then(() => {
         if (alive.current) compiled.current = true;
       }).catch(error => {
         console.error("Venue shader warm-up failed", error);
@@ -70,15 +100,16 @@ function Warmup() {
       });
     }
 
-    const p = compiled.current ? 1 : 0.85 + Math.min(1, frame.current / 26) * 0.13;
+    const p = compiled.current ? 1 : 0.85 + compileFraction.current * 0.14;
     setLoadPercent(p);
     if (frame.current >= 26 && compiled.current) {
       done.current = true;
+      setHolding(false);
       setLoaded(true);
     }
   });
 
-  return null;
+  return holding ? <RenderHold /> : null;
 }
 
 export function Scene({inspection=false}:{inspection?:boolean}) {
@@ -98,6 +129,8 @@ export function Scene({inspection=false}:{inspection?:boolean}) {
       <group>
       <Ground />
       <HallShell />
+      <HallAtmosphere />
+      <Suspense fallback={null}><HallDressing /></Suspense>
       <ArenaPortal />
       <ArenaShell />
 

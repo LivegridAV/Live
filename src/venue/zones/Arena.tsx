@@ -13,6 +13,7 @@ import { ReflectionStreak } from "../three/Reflection";
 import { journey, show } from "../systems/journey";
 import { useVenue } from "../systems/store";
 import { ZoneGroup } from "../three/ZoneGroup";
+import { ARENA_SHIFT } from "../data/grand";
 
 /**
  * The arena and the main stage.
@@ -566,11 +567,13 @@ function Stage() {
 
 export function Arena() {
   return (
-    <group>
-      <ZoneGroup from={-214} to={-250} ahead={46} behind={30}>
+    // Authored in the original coordinates; the whole arena moves with the
+    // removed hall bay. Zone gates are world-space, so they shift explicitly.
+    <group position={[0, 0, ARENA_SHIFT]}>
+      <ZoneGroup from={-214 + ARENA_SHIFT} to={-250 + ARENA_SHIFT} ahead={46} behind={30}>
         <Approach />
       </ZoneGroup>
-      <ZoneGroup from={-244} to={-380} ahead={74} behind={52}>
+      <ZoneGroup from={-244 + ARENA_SHIFT} to={-380 + ARENA_SHIFT} ahead={74} behind={52}>
         <Stage />
       </ZoneGroup>
     </group>

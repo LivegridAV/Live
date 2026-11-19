@@ -3,6 +3,7 @@ import { useEffect, useMemo } from "react";
 import { useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
+import { afterWarmup } from "./warmScene";
 import { HorizontalBlurShader } from "three/examples/jsm/shaders/HorizontalBlurShader.js";
 import { VerticalBlurShader } from "three/examples/jsm/shaders/VerticalBlurShader.js";
 
@@ -14,7 +15,8 @@ export function TechnicalContactShadow() {
   const target = useMemo(() => new THREE.WebGLRenderTarget(1024, 1024, {
     minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, depthBuffer: true,
   }), []);
-  useEffect(() => {
+  // Baked once every shader is ready, so the bake never compiles inside a frame.
+  useEffect(() => afterWarmup(() => {
     const stage = new THREE.Scene();
     const model = source.clone(true);
     model.traverse(object => {
@@ -60,8 +62,8 @@ export function TechnicalContactShadow() {
       gl.autoClear = before.autoClear; gl.shadowMap.autoUpdate = before.shadow;
       depth.dispose(); horizontal.dispose(); vertical.dispose(); blurGeometry.dispose(); temporary.dispose();
     }
-    return () => target.dispose();
-  }, [gl, source, target]);
+  }), [gl, source, target]);
+  useEffect(() => () => target.dispose(), [target]);
   return <mesh position={[.5, .099, 3.5]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={3}>
     <planeGeometry args={[32, 26]} />
     <meshBasicMaterial map={target.texture} transparent opacity={.56} depthWrite={false} toneMapped={false} />

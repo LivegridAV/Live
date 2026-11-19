@@ -1,3 +1,5 @@
+import * as THREE from "three";
+import { ARENA_SHIFT } from "./grand";
 /** QA-only historical cameras, extracted from the pre-implementation manifest.
  * This copies camera numbers and capture metadata, never reference pixels.
  * Replaying a camera does not restore old lighting, media, geometry or viewport.
@@ -204,10 +206,25 @@ export function baselineCameraForSearch(search: string): BaselineSelection {
   cachedSearch = search;
   cachedSelection = null;
   const query = new URLSearchParams(search);
+  if (query.get("camera") === "qa") {
+    // Review-only free camera: ?camera=qa&pos=x,y,z&look=x,y,z&fov=50
+    const pos = (query.get("pos") ?? "").split(",").map(Number), look = (query.get("look") ?? "").split(",").map(Number);
+    if (pos.length !== 3 || look.length !== 3 || [...pos, ...look].some(n => !Number.isFinite(n))) return null;
+    const m = new THREE.Matrix4().lookAt(new THREE.Vector3(...pos), new THREE.Vector3(...look), new THREE.Vector3(0, 1, 0));
+    const q = new THREE.Quaternion().setFromRotationMatrix(m);
+    const fov = Number(query.get("fov") ?? 50);
+    cachedSelection = {shot: "arena", camera: {...BASELINE_CAMERAS.arena, id: "qa", position: [pos[0], pos[1], pos[2]], quaternion: [q.x, q.y, q.z, q.w],
+      fov: Number.isFinite(fov) ? fov : 50, aspect: innerWidth / Math.max(1, innerHeight), far: 340}};
+    return cachedSelection;
+  }
   if (query.get("camera") !== "baseline") return null;
   const raw = query.get("shot") ?? "";
   const shot = (aliases[raw] ?? raw) as BaselineShot;
   if (!Object.prototype.hasOwnProperty.call(BASELINE_CAMERAS, shot)) return null;
-  cachedSelection = {shot, camera: BASELINE_CAMERAS[shot]};
+  const camera = BASELINE_CAMERAS[shot];
+  // The recorded arena camera stays verbatim above; it moves with the arena.
+  cachedSelection = {shot, camera: shot === "arena"
+    ? {...camera, position: [camera.position[0], camera.position[1], camera.position[2] + ARENA_SHIFT]}
+    : camera};
   return cachedSelection;
 }

@@ -1,6 +1,7 @@
 "use client";
 import { useMemo } from "react";
 import { MeshReflectorMaterial } from "@react-three/drei";
+import { useWarmupOpen } from "../three/warmScene";
 import * as THREE from "three";
 import { ExpoAsset } from "../three/ExpoAsset";
 import { M } from "../three/materials";
@@ -9,7 +10,7 @@ import { ZoneGroup } from "../three/ZoneGroup";
 import { LightPool } from "../three/environment";
 import { useVenue } from "../systems/store";
 import { preparePolishedFloor } from "../three/polishedFloor";
-import { GRAND } from "../data/grand";
+import { GRAND, ARENA_SHIFT, HALL_BAYS } from "../data/grand";
 import { VENUE_FLOOR, venueFloorMaps } from "../three/venueFloor";
 
 /**
@@ -25,9 +26,15 @@ import { VENUE_FLOOR, venueFloorMaps } from "../three/venueFloor";
 /* ── venue dimensions (metres) ─────────────────────────── */
 export const V = {
   hall: { x: GRAND.hall.halfWidth, y: GRAND.hall.roofHeight, from: GRAND.hall.from, to: GRAND.hall.to },
-  arena: { x: 44, y: 34, from: -244, to: -380 },
+  arena: { x: 44, y: 34, from: -244 + ARENA_SHIFT, to: -380 + ARENA_SHIFT },
   plaza: { from: 46, to: -1 },
 } as const;
+
+/** The polished hall floor: from the entrance ramp to the arena ramp. */
+const HALL_FLOOR = (() => {
+  const near = -30, far = GRAND.hall.to - 2;
+  return { depth: near - far, centerZ: (near + far) / 2 };
+})();
 
 function segments(from: number, to: number, size: number) {
   const out: { z: number; len: number }[] = [];
@@ -42,9 +49,10 @@ function segments(from: number, to: number, size: number) {
 
 export function Ground() {
   const quality = useVenue((s) => s.quality);
+  const reflect = useWarmupOpen();
   const stone = useMemo(() => venueFloorMaps(), []);
   const geometry = useMemo(() => {
-    const width = GRAND.hall.halfWidth * 2 + 16, depth = 210, centerZ = -135;
+    const width = GRAND.hall.halfWidth * 2 + 16, depth = HALL_FLOOR.depth, centerZ = HALL_FLOOR.centerZ;
     const plane = new THREE.PlaneGeometry(width, depth);
     const position = plane.getAttribute("position"), uv = plane.getAttribute("uv");
     // Equivalent to world-space mapping: all UVs derive from the same world
@@ -56,8 +64,12 @@ export function Ground() {
     return plane;
   }, []);
   return <group><mesh name="Continuous venue stone · world registered 2 m joints"
-    receiveShadow rotation={[-Math.PI/2,0,0]} position={[0,GRAND.master.floor,-135]}
+    receiveShadow rotation={[-Math.PI/2,0,0]} position={[0,GRAND.master.floor,HALL_FLOOR.centerZ]}
     geometry={geometry} userData={{venuePlanarReflection:true,grandRole:"venue-floor"}}>
+    {/* The live reflection draws the whole scene every frame, so it waits
+        for the warm-up; before then the loader hides the plain stone. */}
+    {!reflect ? <meshStandardMaterial color={VENUE_FLOOR.colour} map={stone.map} roughnessMap={stone.roughnessMap}
+      normalMap={stone.normalMap} normalScale={[.045,.045]} metalness={.035} roughness={.43} envMapIntensity={.48}/> :
     <MeshReflectorMaterial color={VENUE_FLOOR.colour}
       onUpdate={material=>preparePolishedFloor(material)}
       map={stone.map} roughnessMap={stone.roughnessMap} normalMap={stone.normalMap}
@@ -65,7 +77,7 @@ export function Ground() {
       resolution={quality==="high"?1024:512}
       blur={quality==="low"?[100,45]:[240,100]} mixBlur={1.5}
       mixStrength={1.3} mirror={.46} depthScale={0}
-      minDepthThreshold={.85} maxDepthThreshold={1} />
+      minDepthThreshold={.85} maxDepthThreshold={1} />}
   </mesh>
     {/* Existing arrival and arena retain their original floor datum. The brief
         standardizes the exhibition hall; transition ramps meet those areas. */}
@@ -77,7 +89,7 @@ export function Ground() {
       <planeGeometry args={[96,352]}/>
     </mesh>
     <FloorTransition from={-28.4} to={-30} fromY={0} toY={GRAND.master.floor}/>
-    <FloorTransition from={-240} to={-244} fromY={GRAND.master.floor} toY={0}/>
+    <FloorTransition from={-240+ARENA_SHIFT} to={-244+ARENA_SHIFT} fromY={GRAND.master.floor} toY={0}/>
   </group>;
 }
 
@@ -110,7 +122,7 @@ export function HallShell() {
   const diagnostic = visit?.view==="plan" || visit?.view==="section";
   // A fixed building envelope. Diagnostic views deliberately remove the hall
   // roof; entering a stall never resizes walls, columns or the shared floor.
-  return <group visible={!diagnostic}>{Array.from({length:8},(_,i)=>{
+  return <group visible={!diagnostic}>{Array.from({length:HALL_BAYS},(_,i)=>{
     const z=-39.25-i*26.5;
     return <ZoneGroup key={i} from={z+13.25} to={z-13.25} ahead={82} behind={48}>
       <group position={[0,0,z]} scale={[GRAND.hall.halfWidth/19,GRAND.hall.roofHeight/15,26.5/26]}>
@@ -245,7 +257,7 @@ export function ArenaShell() {
 
 /* ── the joint between hall and arena ──────────────────── */
 
-export function ArenaPortal({ z = -241 }: { z?: number }) {
+export function ArenaPortal({ z = -241 + ARENA_SHIFT }: { z?: number }) {
   const h = 11;
   const w = 14;
   return (

@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { warmupHold } from "./warmScene";
 import type { EntranceUniforms } from "./entranceF01";
 
 /** One planar capture serves both 1.2 m side rills. Real basin geometry remains
@@ -44,6 +45,8 @@ export function createEntranceWater(uniforms: EntranceUniforms) {
 
 export function captureEntranceWater(r:ReturnType<typeof createEntranceWater>,gl:THREE.WebGLRenderer,
   scene:THREE.Scene,camera:THREE.Camera,water:THREE.Mesh[],elapsed:number) {
+  // Behind the loader the warm-up owns every full-scene draw.
+  if (warmupHold.active) return;
   if (!(camera instanceof THREE.PerspectiveCamera) || !water.length || elapsed-r.last<1/12 || camera.position.y<0) return;
   if(camera.position.distanceToSquared(r.origin)>70*70) return;
   for(let p:THREE.Object3D|null=water[0];p;p=p.parent)if(!p.visible)return;
