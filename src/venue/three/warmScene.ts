@@ -82,6 +82,28 @@ async function programsReady(gl: THREE.WebGLRenderer, cancelled: () => boolean,
 }
 
 /**
+ * Submit programs for whatever part of the scene has arrived, without waiting
+ * for any of them. Called while the rest of the venue is still downloading:
+ * the driver compiles on its own threads while the network is the bottleneck,
+ * so the warm-up after the last download finds most programs already built.
+ * Both colour-space variants are submitted, as in warmScene. Returns the
+ * number of programs the renderer holds.
+ */
+export function submitPrograms(gl: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera,
+  target: THREE.WebGLRenderTarget) {
+  const previousTarget = gl.getRenderTarget();
+  try {
+    gl.setRenderTarget(target);
+    gl.compile(scene, camera);
+    gl.setRenderTarget(previousTarget);
+    gl.compile(scene, camera);
+  } finally {
+    gl.setRenderTarget(previousTarget);
+  }
+  return gl.info?.programs?.length ?? 0;
+}
+
+/**
  * Prepare every shader variant and upload buffers/textures behind the loader.
  *
  * 1. Submit both colour-space variants of every material without waiting:

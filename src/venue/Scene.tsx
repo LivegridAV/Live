@@ -18,7 +18,11 @@ import { useVenue } from "./systems/store";
 import { ZoneGroup } from "./three/ZoneGroup";
 import { RenderMetrics } from "./systems/RenderMetrics";
 import { LocalLightPool } from "./three/LocalLights";
-import { closeWarmupGate, openWarmupGate, warmScene, warmupHold } from "./three/warmScene";
+import * as THREE from "three";
+import { closeWarmupGate, openWarmupGate, submitPrograms, warmScene, warmupHold } from "./three/warmScene";
+import { shareTextureDownloads } from "./three/sharedTextures";
+
+shareTextureDownloads();
 import { StallDimensions } from "./three/StallDimensions";
 import { EXHIBITION_RANGES } from "./data/placements";
 import { PlacementInspection, placementInspectionEnabled } from "./systems/PlacementInspection";
@@ -60,20 +64,33 @@ function Warmup() {
   const alive = useRef(true);
   const compileFraction = useRef(0);
   const [holding, setHolding] = useState(true);
+  const early = useRef({ target: null as THREE.WebGLRenderTarget | null, loaded: -1, at: 0 });
   useEffect(() => {
     alive.current = true;
-    return () => { alive.current = false; };
+    const state = early.current;
+    return () => { alive.current = false; state.target?.dispose(); state.target = null; };
   }, []);
   useFrame(() => {
     if (done.current) return;
     // Read the loader in the frame loop. Subscribing the component to its
     // store triggers a cross-component render update when a GLB suspends.
-    const { active, progress: assetProgress } = useProgress.getState();
+    const { active, progress: assetProgress, loaded } = useProgress.getState();
     if (active) {
       setLoadPercent(Math.min(0.85, assetProgress / 100 * 0.85));
       frame.current = 0;
+      // Hand the driver the shaders of every zone that has already arrived,
+      // so it compiles them while the network is still busy. Throttled, and
+      // only when something new has loaded since the last submission.
+      const now = performance.now();
+      if (loaded !== early.current.loaded && now - early.current.at > 900) {
+        early.current.loaded = loaded; early.current.at = now;
+        early.current.target ??= new THREE.WebGLRenderTarget(32, 32);
+        try { submitPrograms(gl, scene, camera, early.current.target); }
+        catch (error) { console.warn("Early shader submission skipped", error); }
+      }
       return;
     }
+    if (early.current.target) { early.current.target.dispose(); early.current.target = null; }
     frame.current++;
 
     // Give the media engine a couple of frames to fill its targets first, so

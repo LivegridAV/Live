@@ -1,7 +1,7 @@
 import type { PaintCtx } from "./painters";
 
 /** Independent screen content for the technical showcase, never a room plate. */
-export const TECHNICAL_STAGE_SOURCE = "/media/final/technical-control.png";
+export const TECHNICAL_STAGE_SOURCE = "/media/final/technical-control.webp";
 
 type Crop = readonly [number, number, number, number];
 const PGM: Crop = [1398, 150, 245, 172];

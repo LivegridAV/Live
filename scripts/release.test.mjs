@@ -57,6 +57,33 @@ test("GPU warm-up restores hidden zones and renderer state on completion, failur
   mesh.geometry.dispose(); mesh.material.dispose(); previous.dispose(); spot.dispose();
 });
 
+test("a texture shared by several GLBs downloads once and reaches every model", async () => {
+  const { shareTextureDownloads } = await import("../src/venue/three/sharedTextures.ts");
+  const fetches = [], bitmap = { width: 4, height: 4 };
+  const saved = { window: globalThis.window, fetch: globalThis.fetch, createImageBitmap: globalThis.createImageBitmap };
+  globalThis.window = globalThis;
+  globalThis.fetch = async url => { fetches.push(url); await new Promise(r => setTimeout(r, 20)); return { blob: async () => "blob" }; };
+  globalThis.createImageBitmap = async () => bitmap;
+  try {
+    shareTextureDownloads();
+    const loader = new THREE.ImageBitmapLoader();
+    const load = url => new Promise((resolve, reject) => loader.load(url, resolve, undefined, reject));
+    // Two stalls ask for the same atlas while it is still downloading (the
+    // r185 in-flight promise used to hand the second one `undefined`).
+    const [first, second, third] = await Promise.all([load("/models/expo/../../textures/a.webp"),
+      load("/models/expo/../../textures/a.webp"), load("/models/expo/../../textures/a.webp")]);
+    assert.equal(first, bitmap); assert.equal(second, bitmap); assert.equal(third, bitmap);
+    assert.equal(await load("/models/expo/../../textures/a.webp"), bitmap, "later loads reuse the decoded image");
+    assert.equal(fetches.length, 1);
+    // Anything outside /textures/ is never kept in memory.
+    await load("/media/other.webp"); await load("/media/other.webp");
+    assert.equal(fetches.length, 3);
+  } finally {
+    THREE.Cache.clear(); THREE.Cache.enabled = false;
+    Object.assign(globalThis, saved);
+  }
+});
+
 test("exploring cannot change shader light counts or rebuild quality tiers", () => {
   for (const file of files("src/venue/zones").filter(f=>f.endsWith(".tsx"))) {
     assert.doesNotMatch(read(file), /<pointLight\b/, `${file}: use the fixed local light pool`);

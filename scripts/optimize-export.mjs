@@ -14,10 +14,13 @@
 //    code that reads geometry, bounding boxes or node transforms is unaffected.
 //    The runtime decoder is already enabled by drei's useGLTF (useMeshopt
 //    defaults to true even when Draco is disabled).
+//    A texture embedded identically in several GLBs is written once to
+//    /textures/ and referenced from each GLB by relative URI.
 // 3. Fail the build if any file exceeds the host's per-file limit.
 //
 // Usage: node scripts/optimize-export.mjs [--dry-run] [--no-compress]
-import { readdirSync, readFileSync, statSync, rmSync, writeFileSync, existsSync } from "node:fs";
+import { readdirSync, readFileSync, statSync, rmSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
+import { createHash } from "node:crypto";
 import path from "node:path";
 import { NodeIO } from "@gltf-transform/core";
 import { ALL_EXTENSIONS, EXTMeshoptCompression, EXTTextureWebP } from "@gltf-transform/extensions";
@@ -103,28 +106,94 @@ console.log(`Pruned ${pruned.length} unreferenced assets (${mib(prunedBytes)})${
 console.log(`Kept runtime-built directories: ${[...keepDirs].join(", ") || "none"}`);
 
 // ---------------------------------------------------------------- compress
-const report = { pruned, compressed: [] };
+const report = { pruned, compressed: [], sharedTextures: [] };
 if (compress) {
   await MeshoptEncoder.ready; await MeshoptDecoder.ready;
   const io = new NodeIO().registerExtensions(ALL_EXTENSIONS)
     .registerDependencies({ "meshopt.encoder": MeshoptEncoder, "meshopt.decoder": MeshoptDecoder });
+  const glbs = walk(OUT).filter(f => f.toLowerCase().endsWith(".glb"));
+
+  // Textures embedded byte-for-byte in more than one GLB (the licensed avatar
+  // atlases repeat in every stall's visitors file; finish maps repeat across
+  // interiors). Each is written once to /textures/ (named by content hash, so
+  // it can be cached for good; see public/_headers) and referenced by URI,
+  // so the browser downloads and caches it once instead of once per stall.
+  const textureFiles = new Map();
+  for (const file of glbs) {
+    const document = await io.read(file);
+    const hashes = new Set(document.getRoot().listTextures().map(texture => texture.getImage()).filter(Boolean).map(contentHash));
+    for (const hash of hashes) textureFiles.set(hash, (textureFiles.get(hash) ?? 0) + 1);
+  }
+  const shared = new Set([...textureFiles].filter(([, count]) => count > 1).map(([hash]) => hash));
+  const sharedWritten = new Map();
+
   let saved = 0, textureSaved = 0;
-  for (const file of walk(OUT).filter(f => f.toLowerCase().endsWith(".glb"))) {
+  for (const file of glbs) {
     const original = statSync(file).size;
     const document = await io.read(file);
     const used = document.getRoot().listExtensionsUsed().map(e => e.extensionName);
     if (used.includes("EXT_meshopt_compression") || used.includes("KHR_draco_mesh_compression")) continue;
+    const sourceHashes = new Map(document.getRoot().listTextures().map(texture => [texture, texture.getImage() ? contentHash(texture.getImage()) : null]));
     textureSaved += await texturesToWebP(document);
     await document.transform(reorder({ encoder: MeshoptEncoder, target: "size" }));
     document.createExtension(EXTMeshoptCompression).setRequired(true)
       .setEncoderOptions({ method: EXTMeshoptCompression.EncoderMethod.FILTER });
-    const output = await io.writeBinary(document);
+
+    // Detach shared images and record the URI to patch into the GLB's JSON
+    // afterwards. The writer pairs image data with images by position, so a
+    // detached image keeps a 1-byte placeholder whose bufferView the patch
+    // then disconnects (an unused bufferView is valid glTF).
+    const externalImages = new Map();
+    document.getRoot().listTextures().forEach((texture, index) => {
+      const hash = sourceHashes.get(texture);
+      if (!hash || !shared.has(hash)) return;
+      const extension = texture.getMimeType() === "image/webp" ? "webp" : texture.getMimeType() === "image/jpeg" ? "jpg" : "png";
+      const target = `textures/${hash.slice(0, 20)}.${extension}`;
+      if (!sharedWritten.has(target)) {
+        sharedWritten.set(target, texture.getImage().byteLength);
+        if (!dryRun) { mkdirSync(path.join(OUT, "textures"), { recursive: true }); writeFileSync(path.join(OUT, target), texture.getImage()); }
+      }
+      externalImages.set(index, path.posix.relative(path.posix.dirname(rel(file)), target));
+      texture.setImage(new Uint8Array(1));
+    });
+
+    let output = await io.writeBinary(document);
+    if (externalImages.size) output = setImageURIs(output, externalImages);
     if (output.byteLength >= original) continue;
     if (!dryRun) writeFileSync(file, output);
     saved += original - output.byteLength;
-    report.compressed.push({ file: rel(file), before: original, after: output.byteLength });
+    report.compressed.push({ file: rel(file), before: original, after: output.byteLength, sharedImages: externalImages.size });
   }
+  const sharedBytes = [...sharedWritten.values()].reduce((sum, bytes) => sum + bytes, 0);
+  report.sharedTextures = [...sharedWritten.keys()];
   console.log(`Compressed ${report.compressed.length} GLBs, saving ${mib(saved)} (of which textures ${mib(textureSaved)})${dryRun ? " [dry run]" : ""}.`);
+  console.log(`Shared ${sharedWritten.size} textures used by several GLBs (${mib(sharedBytes)} written once).`);
+}
+
+function contentHash(bytes) {
+  return createHash("sha256").update(bytes).digest("hex");
+}
+
+/** Give the listed images an external `uri` in a GLB's JSON chunk. */
+function setImageURIs(glb, uris) {
+  const view = new DataView(glb.buffer, glb.byteOffset, glb.byteLength);
+  const jsonLength = view.getUint32(12, true);
+  const json = JSON.parse(new TextDecoder().decode(glb.subarray(20, 20 + jsonLength)));
+  for (const [index, uri] of uris) {
+    const image = json.images[index];
+    if (json.bufferViews[image.bufferView]?.byteLength !== 1) throw new Error(`image ${index} is not a detached placeholder`);
+    delete image.bufferView;
+    image.uri = uri;
+  }
+  let text = JSON.stringify(json);
+  while (Buffer.byteLength(text) % 4) text += " ";
+  const jsonBytes = Buffer.from(text);
+  const rest = glb.subarray(20 + jsonLength);
+  const out = Buffer.alloc(20 + jsonBytes.length + rest.byteLength);
+  out.writeUInt32LE(0x46546c67, 0); out.writeUInt32LE(2, 4); out.writeUInt32LE(out.length, 8);
+  out.writeUInt32LE(jsonBytes.length, 12); out.writeUInt32LE(0x4e4f534a, 16);
+  jsonBytes.copy(out, 20); Buffer.from(rest).copy(out, 20 + jsonBytes.length);
+  return new Uint8Array(out.buffer, out.byteOffset, out.byteLength);
 }
 
 /** Re-encode PNG/JPEG textures as WebP at full resolution; returns bytes saved. */

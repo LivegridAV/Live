@@ -165,11 +165,11 @@ export const MEDIA: Record<string, MediaDesc> = {
   "rental2026-application-3": {kind:"canvas",painter:"rental2026Applications",variant:3,res:[1024,576],fps:2},
 
   /* Arena approach */
-  "approach-portrait": { kind: "image", desktop: "/media/final/creative-world.png", brightness: 0.92 },
+  "approach-portrait": { kind: "image", desktop: "/media/final/creative-world.webp", brightness: 0.92 },
 
   /* Main stage */
-  "stage-main": { kind: "image", desktop: "/media/final/stage-conference.png", festival: "/media/final/stage-social.png", brightness: 0.9, syncGroup: "stage" },
-  "stage-side": { kind: "image", desktop: "/media/final/stage-conference.png", festival: "/media/final/stage-social.png", brightness: 0.9, syncGroup: "stage" },
+  "stage-main": { kind: "image", desktop: "/media/final/stage-conference.webp", festival: "/media/final/stage-social.webp", brightness: 0.9, syncGroup: "stage" },
+  "stage-side": { kind: "image", desktop: "/media/final/stage-conference.webp", festival: "/media/final/stage-social.webp", brightness: 0.9, syncGroup: "stage" },
   "stage-strip": {
     kind: "shader",
     program: "pillarWrap",
@@ -181,10 +181,10 @@ export const MEDIA: Record<string, MediaDesc> = {
     fps: 30,
     syncGroup: "stage",
   },
-  "stage-portrait": { kind: "image", desktop: "/media/final/stage-conference.png", festival: "/media/final/stage-social.png", brightness: 0.9, syncGroup: "stage" },
-  "stage-outer": { kind: "image", desktop: "/media/final/stage-conference.png", festival: "/media/final/stage-social.png", brightness: 0.9, syncGroup: "stage" },
-  "stage-floor": { kind: "image", desktop: "/media/final/stage-conference.png", festival: "/media/final/stage-social.png", brightness: 0.9, syncGroup: "stage" },
-  "stage-wing": { kind: "image", desktop: "/media/final/stage-conference.png", festival: "/media/final/stage-social.png", brightness: 0.9, syncGroup: "stage" },
+  "stage-portrait": { kind: "image", desktop: "/media/final/stage-conference.webp", festival: "/media/final/stage-social.webp", brightness: 0.9, syncGroup: "stage" },
+  "stage-outer": { kind: "image", desktop: "/media/final/stage-conference.webp", festival: "/media/final/stage-social.webp", brightness: 0.9, syncGroup: "stage" },
+  "stage-floor": { kind: "image", desktop: "/media/final/stage-conference.webp", festival: "/media/final/stage-social.webp", brightness: 0.9, syncGroup: "stage" },
+  "stage-wing": { kind: "image", desktop: "/media/final/stage-conference.webp", festival: "/media/final/stage-social.webp", brightness: 0.9, syncGroup: "stage" },
 
   /* Finale */
   "finale": { kind: "shader", program: "finaleBrand", accent: ACCENT.brand, res: [1024, 448], fps: 30, syncGroup: "finale" },

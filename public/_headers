@@ -1,0 +1,19 @@
+# Cloudflare Pages response headers (copied to out/ by the static export).
+#
+# Pages serves every asset with "max-age=0, must-revalidate" by default, so a
+# returning visitor re-checks every venue file before the scene can open.
+# Rules must not overlap: Pages joins two values of the same header.
+
+# Content-hashed names never change meaning: cache for a year.
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
+/textures/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Models and media keep their names across revisions (some carry ?v= hashes,
+# some do not). Serve them from cache straight away and refresh in the
+# background, so an updated file is picked up by the next visit at the latest.
+/models/*
+  Cache-Control: public, max-age=3600, stale-while-revalidate=2592000
+/media/*
+  Cache-Control: public, max-age=3600, stale-while-revalidate=2592000
