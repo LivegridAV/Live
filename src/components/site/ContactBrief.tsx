@@ -188,7 +188,7 @@ export default function ContactBrief() {
         <legend className="font-mono text-xs uppercase tracking-[0.2em] text-aqua">The details</legend>
         <div className="mt-5 grid gap-5 sm:grid-cols-2">
           <Field label="Event date" name="date" placeholder="March 2026 / TBC" />
-          <Field label="City" name="city" placeholder="Hyderabad" />
+          <Field label="City" name="city" placeholder="Delhi" />
           <Field label="Venue" name="venue" placeholder="Convention centre / TBC" />
           <Field label="Approx. screen size" name="dimensions" placeholder="e.g. 6m × 3.5m" />
           <Field label="Audience" name="audience" placeholder="e.g. 500" />

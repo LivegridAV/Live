@@ -119,7 +119,7 @@ test("home copy, canonical and crawlable business fallback", () => {
   const html = read("out/index.html");
   assert.match(html, /rel="canonical" href="https:\/\/livegridav.com\/?"/);
   assert.doesNotMatch(html, /noindex|Explore this pavilion|our venue|Walk through an event we built/i);
-  for (const text of ["tel:+917801013919", "livegridav@gmail.com", "/services/av-engineering"]) assert.ok(html.includes(text));
+  for (const text of ["tel:+917801013919", "info@livegridav.com", "/services/av-engineering"]) assert.ok(html.includes(text));
   assert.match(read("out/robots.txt"), /sitemap/i);
   assert.match(read("out/sitemap.xml"), /https:\/\/livegridav.com\/services/);
   assert.match(read("src/app/venue.css"), /\.v-seo\s*\{\s*color: #eef3f2;/);

@@ -65,10 +65,10 @@ export default function Home() {
         telephone: CONTACT.phone,
         address: {
           "@type": "PostalAddress",
-          streetAddress: "20-1320 Serilingampally",
-          addressLocality: "Hyderabad",
-          addressRegion: "Telangana",
-          postalCode: "500050",
+          streetAddress: "Uday Vihar 2, Khushi Ram Park, Nangloi",
+          addressLocality: "Delhi",
+          addressRegion: "Delhi",
+          postalCode: "110041",
           addressCountry: "IN",
         },
         description:
@@ -107,7 +107,7 @@ export default function Home() {
       <section className="v-seo">
         <div className="v-seo-inner">
           <div>
-            <p className="v-mono">livegridAV · Hyderabad</p>
+            <p className="v-mono">livegridAV · Delhi</p>
             <h1>We turn ideas into unforgettable experiences</h1>
             <p style={{ marginTop: 18 }}>
               livegridAV designs, engineers and operates the visual side of live

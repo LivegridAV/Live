@@ -1,10 +1,10 @@
 /** Central contact endpoints (source of truth: Contact.txt). */
 export const CONTACT = {
-  email: "livegridav@gmail.com",
+  email: "info@livegridav.com",
   phone: "+917801013919",
   phoneDisplay: "+91 78010 13919",
   whatsapp: "917801013919", // digits only for wa.me
-  address: "20-1320 Serilingampally, Hyderabad, Telangana 500050",
+  address: "Uday Vihar 2, Khushi Ram Park, Nangloi, Delhi 110041",
 } as const;
 
 export const contactLinks = {
