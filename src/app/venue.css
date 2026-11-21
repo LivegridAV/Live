@@ -741,6 +741,20 @@
   border-top: 1px solid var(--v-line);
   padding: 72px 24px 96px;
 }
+/* Visitors see only the walkthrough. The text stays in the page for search
+   engines, AI crawlers and screen readers; it appears only when a keyboard
+   user tabs into its links, so focus never lands on something invisible. */
+.v-seo:not(:focus-within) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 .v-seo-inner { max-width: 1180px; margin: 0 auto; display: grid; gap: 44px; }
 .v-seo h1 {
   font-size: clamp(28px, 4.4vw, 46px);
