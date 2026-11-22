@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { PROJECTION_SCALE, PROJECTION_DECK_POLYGON, inProjectionShowcase } from "../data/projection";
 import { useVenue } from "../systems/store";
 import { technicalFloorSurface } from "./technicalMaterials";
-import { placeholderTexture } from "./textureLoading";
+import { cloneShared, placeholderTexture } from "./textureLoading";
 
 /** Raised island, in physical local X/Z metres. The deck is kept
  * separate from the existing hall reflector at Y=.009. */
@@ -14,15 +14,18 @@ export { PROJECTION_DECK_POLYGON } from "../data/projection";
 
 type StoneMaps = { map: THREE.Texture; roughnessMap: THREE.Texture; normalMap: THREE.Texture };
 const STONE_PLACEHOLDERS: StoneMaps = { map: placeholderTexture("#808080"), roughnessMap: placeholderTexture("#ff8000"), normalMap: placeholderTexture("#8080ff") };
-let loadedStone: StoneMaps | null = null;
-
-/** The licensed stone photography (the technical floor's shared maps), once loaded. */
+/**
+ * The licensed stone photography (the technical floor's shared maps): the
+ * loaded maps straight away when they have arrived (the usual case, since
+ * they load with the start group's floor), else placeholders until then.
+ */
 function useStoneMaps() {
   const gl = useThree(state => state.gl);
-  const [maps, setMaps] = useState(() => loadedStone ?? STONE_PLACEHOLDERS);
+  const [maps, setMaps] = useState(() => technicalFloorSurface(gl).loaded ?? STONE_PLACEHOLDERS);
   useEffect(() => {
     let live = true;
-    technicalFloorSurface(gl).ready.then(result => { loadedStone = result; if (live) setMaps(result); }, () => {});
+    const surface = technicalFloorSurface(gl);
+    if (!surface.loaded) surface.ready.then(result => { if (live) setMaps(result); }, () => {});
     return () => { live = false; };
   }, [gl]);
   return maps;
@@ -31,8 +34,9 @@ function useStoneMaps() {
 function stoneTextures(source: StoneMaps) {
   // Reuse the licensed stone photography, with independent native-metre UVs.
   function texture(original:THREE.Texture) {
-    const result=original.clone(); result.repeat.set(.4,.4);
-    result.anisotropy=8; result.needsUpdate=true; return result;
+    // Configured before its first draw; no needsUpdate (it would re-upload the shared image).
+    const result=cloneShared(original); result.repeat.set(.4,.4);
+    result.anisotropy=8; return result;
   }
   return {colour:texture(source.map),roughness:texture(source.roughnessMap),normal:texture(source.normalMap)};
 }
@@ -83,8 +87,10 @@ export function ProjectionFloor({polygonXZ=PROJECTION_DECK_POLYGON,active=inProj
     };
     const material = new THREE.MeshPhysicalMaterial({
       name: "Projection Mapping polished charcoal deck",
-      color: tint, map: stone.colour, roughnessMap: stone.roughness,
-      normalMap:stone.normal,normalScale:new THREE.Vector2(.055,.055),
+      // The stone maps are set by the layout effect below, before the first
+      // draw, and swapped there (same program) if they arrive later, so the
+      // target and material are never rebuilt for them.
+      color: tint, normalScale:new THREE.Vector2(.055,.055),
       metalness: .035, roughness: .34, clearcoat: .15, clearcoatRoughness: .32,
       envMapIntensity: .75,
     });
@@ -150,7 +156,11 @@ export function ProjectionFloor({polygonXZ=PROJECTION_DECK_POLYGON,active=inProj
       viewport: new THREE.Vector4(), scissor: new THREE.Vector4(), clearColour: new THREE.Color(),
       hidden: [] as { object: THREE.Object3D; visible: boolean }[], last: -Infinity,
     };
-  }, [resolution, stone, polygonXZ,tint]);
+  }, [resolution, polygonXZ,tint]);
+  useLayoutEffect(() => {
+    const material = reflection.material;
+    material.map = stone.colour; material.roughnessMap = stone.roughness; material.normalMap = stone.normal;
+  }, [reflection, stone]);
 
   useFrame(({ gl, scene, camera, clock }) => {
     const state = useVenue.getState(), surface = mesh.current, r = reflection;

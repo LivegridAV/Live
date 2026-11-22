@@ -426,3 +426,25 @@ test("every useGLTF call and plain venue texture load goes through textureLoadin
     assert.match(read(file), /loadVenueTexture\(/);
   }
 });
+
+// Fix round 1: no texture re-upload or deck rebuild when the venue textures arrive.
+test("cloned venue textures never re-upload their shared image, and the deck is never rebuilt for its maps", () => {
+  // three r185: clone() bumps the shared Source (a full re-upload); cloneShared undoes that.
+  const base = new THREE.Texture({ width: 4, height: 4 }); base.needsUpdate = true;
+  const sourceVersion = base.source.version;
+  assert.ok(base.clone() && base.source.version > sourceVersion, "r185 clone() marks the shared image for upload");
+  const cloneShared = texture => { const version = texture.source.version; const copy = texture.clone(); texture.source.version = version; return copy; };
+  const again = base.source.version, copy = cloneShared(base);
+  assert.ok(copy.version > 0, "the clone is bound");
+  assert.equal(copy.source, base.source);
+  assert.equal(base.source.version, again, "cloneShared leaves the shared image alone");
+  const loading = read("src/venue/three/textureLoading.ts");
+  assert.match(loading, /const version = texture\.source\.version;\s*const copy = texture\.clone\(\) as T;\s*texture\.source\.version = version;/, "textureLoading's cloneShared is the function above");
+  assert.match(loading, /return base\.then\(cloneShared\)/);
+  for (const file of ["src/venue/three/venueFloor.ts", "src/venue/three/technicalMaterials.ts", "src/venue/three/ProjectionFloor.tsx"]) {
+    assert.doesNotMatch(read(file), /\b(result|t)\.needsUpdate\s*=\s*true|\.clone\(\)/, `${file} re-marks a shared texture for upload`);
+  }
+  const floor = read("src/venue/three/ProjectionFloor.tsx");
+  assert.match(floor, /\}, \[resolution, polygonXZ,\s*tint\]\);/, "the deck's target and material do not depend on the stone maps");
+  assert.match(floor, /material\.map = stone\.colour/, "the stone maps are swapped on the existing material");
+});

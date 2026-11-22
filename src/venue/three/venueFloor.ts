@@ -26,7 +26,9 @@ function stoneTexture(gl: THREE.WebGLRenderer, file: string, colour: boolean) {
     result.magFilter = THREE.LinearFilter; result.minFilter = THREE.LinearMipmapLinearFilter;
     // A KTX2 file carries its own mip chain; three cannot generate one for it.
     result.generateMipmaps = !isCompressed(result);
-    result.anisotropy = 8; result.needsUpdate = true;
+    // A fresh clone (cloneShared), configured before its first draw: setting
+    // needsUpdate would re-upload the shared image.
+    result.anisotropy = 8;
     return result;
   });
 }

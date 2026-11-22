@@ -76,11 +76,24 @@ export function loadVenueTexture(url: string, gl: THREE.WebGLRenderer): Promise<
     loads.set(url, base);
     base.catch(() => loads.delete(url));
   }
-  return base.then(texture => {
-    const copy = texture.clone();
-    copy.needsUpdate = true;
-    return copy;
-  });
+  return base.then(cloneShared);
+}
+
+/**
+ * Clone a texture without marking its shared image for upload again. In r185
+ * `clone()` (Texture.copy) sets `needsUpdate`, which also bumps the shared
+ * Source's version, so three re-uploads the whole image for every clone made
+ * after the first upload. The clone keeps its own bumped version, so three
+ * binds it: it shares the GPU texture of a clone with the same sampler
+ * settings, and uploads only when the settings differ or the image has never
+ * been uploaded. Configure the clone before its first draw; never set
+ * `needsUpdate` on it.
+ */
+export function cloneShared<T extends THREE.Texture>(texture: T): T {
+  const version = texture.source.version;
+  const copy = texture.clone() as T;
+  texture.source.version = version;
+  return copy;
 }
 
 export const isCompressed = (texture: THREE.Texture) => (texture as THREE.CompressedTexture).isCompressedTexture === true;

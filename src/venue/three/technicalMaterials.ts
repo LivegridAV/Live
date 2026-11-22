@@ -12,7 +12,8 @@ type PackId = "floor" | "steel" | "cast" | "wool";
  * the loaded textures.
  */
 type Slot = { value: THREE.Texture };
-type Pack = { map: Slot; orm: Slot; normal: Slot; ready: Promise<{ map: THREE.Texture; orm: THREE.Texture; normal: THREE.Texture }> };
+type Maps = { map: THREE.Texture; orm: THREE.Texture; normal: THREE.Texture };
+type Pack = { map: Slot; orm: Slot; normal: Slot; ready: Promise<Maps>; loaded: Maps | null };
 const packs = new Map<PackId, Pack>();
 const prepared = new WeakSet<THREE.Material>();
 const acrylicMaterials = new WeakMap<THREE.Material,THREE.MeshPhysicalMaterial>();
@@ -45,8 +46,9 @@ async function texture(gl: THREE.WebGLRenderer, file: string, colour = false, re
   t.minFilter = THREE.LinearMipmapLinearFilter;
   // A KTX2 file carries its own mip chain; three cannot generate one for it.
   t.generateMipmaps = !isCompressed(t);
+  // A fresh clone (cloneShared), configured before its first draw: setting
+  // needsUpdate would re-upload the shared image.
   t.anisotropy = 8;
-  t.needsUpdate = true;
   return t;
 }
 function pack(id: PackId, gl: THREE.WebGLRenderer) {
@@ -56,9 +58,12 @@ function pack(id: PackId, gl: THREE.WebGLRenderer) {
     const slot = (colour: string): Slot => ({ value: placeholderTexture(colour) });
     const map = slot("#808080"), orm = slot("#ff8000"), normal = slot("#8080ff");
     const ready = Promise.all([texture(gl,`${id}-color.webp`,true,repeat), texture(gl,`${id}-orm.webp`,false,repeat), texture(gl,`${id}-normal.webp`,false,repeat)])
-      .then(([colour, data, bump]) => { map.value = colour; orm.value = data; normal.value = bump; return { map: colour, orm: data, normal: bump }; });
+      .then(([colour, data, bump]) => {
+        map.value = colour; orm.value = data; normal.value = bump;
+        return created.loaded = { map: colour, orm: data, normal: bump };
+      });
     ready.catch(error => console.warn(`[venue] technical ${id} surface failed to load`, error));
-    p = { map, orm, normal, ready };
+    const created: Pack = p = { map, orm, normal, ready, loaded: null };
     packs.set(id,p);
   }
   return p;
@@ -67,11 +72,13 @@ function pack(id: PackId, gl: THREE.WebGLRenderer) {
 /**
  * The technical stone floor's maps (loaded once, shared). `ready` resolves
  * with the colour, roughness (ORM) and normal maps for 4 m clouded slabs
- * across the existing 88 x 360 m reflector.
+ * across the existing 88 x 360 m reflector; `loaded` has them already once
+ * they have arrived (null before).
  */
 export function technicalFloorSurface(gl: THREE.WebGLRenderer) {
   const p = pack("floor", gl);
-  return { ready: p.ready.then(({ map, orm, normal }) => ({ map, roughnessMap: orm, normalMap: normal })),
+  const surface = (m: Maps) => ({ map: m.map, roughnessMap: m.orm, normalMap: m.normal });
+  return { ready: p.ready.then(surface), loaded: p.loaded && surface(p.loaded),
     repeat:[22,90] as const, recommendedTint:"#5d6470", normalScale:new THREE.Vector2(.08,.08) };
 }
 
