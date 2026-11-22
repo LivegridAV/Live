@@ -1,0 +1,23 @@
+(node:16004) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///D:/Livegrid_AV/livegridav-site/src/venue/loading/groups.ts is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to \\?\D:\Livegrid_AV\livegridav-site\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+rail stops: Entrance, LED Tunnel, LED Pillars, Reception, LED Rental Solutions, Content Studio, Technical Showcase, Projection Mapping, Arena, Main Stage, Finale
+ok   jump  Entrance               open 33.6 s, target start full +15 ms, gapFrames 0/2569, cue 0, errors 0, long tasks 9 (max 89 ms), full order start>anamorphic>technical>rental>arena>projection
+ok   jump  LED Tunnel             open 33.6 s, target start full +12 ms, gapFrames 0/2297, cue 0, errors 0, long tasks 6 (max 65 ms), full order start>anamorphic>technical>rental>arena>projection
+ok   jump  LED Pillars            open 33.6 s, target start full +12 ms, gapFrames 0/2514, cue 0, errors 0, long tasks 11 (max 63 ms), full order start>anamorphic>technical>rental>arena>projection
+ok   jump  Reception              open 33.6 s, target start full +16 ms, gapFrames 0/2601, cue 0, errors 0, long tasks 2 (max 61 ms), full order start>anamorphic>technical>rental>arena>projection
+ok   jump  LED Rental Solutions   open 33.6 s, target rental full +24475 ms, gapFrames 0/2502, cue 0, errors 0, long tasks 3 (max 64 ms), full order start>anamorphic>technical>rental>arena>projection
+ok   jump  Content Studio         open 33.5 s, target anamorphic full +15243 ms, gapFrames 0/2599, cue 0, errors 0, long tasks 3 (max 69 ms), full order start>anamorphic>technical>rental>arena>projection
+ok   jump  Technical Showcase     open 33.6 s, target technical full +24212 ms, gapFrames 0/2236, cue 0, errors 0, long tasks 4 (max 166 ms), full order start>anamorphic>technical>rental>arena>projection
+ok   jump  Projection Mapping     open 33.6 s, target projection full +43065 ms, gapFrames 0/2582, cue 0, errors 0, long tasks 4 (max 67 ms), full order start>anamorphic>rental>arena>technical>projection
+ok   jump  Arena                  open 33.7 s, target arena full +17477 ms, gapFrames 0/2597, cue 0, errors 0, long tasks 3 (max 59 ms), full order start>anamorphic>arena>rental>technical>projection
+ok   jump  Main Stage             open 33.7 s, target arena full +17209 ms, gapFrames 0/2598, cue 0, errors 0, long tasks 2 (max 57 ms), full order start>anamorphic>arena>rental>technical>projection
+ok   jump  Finale                 open 33.7 s, target arena full +17082 ms, gapFrames 0/2602, cue 0, errors 0, long tasks 2 (max 61 ms), full order start>anamorphic>arena>rental>technical>projection
+ok   visit reception              open 69.0 s, target start full +16 ms, gapFrames 0/126, cue 0, errors 0, long tasks 0 (max 0 ms), full order start>rental>anamorphic>technical>projection>arena
+ok   visit anamorphic             open 69.0 s, target anamorphic full +6 ms, gapFrames 0/131, cue 0, errors 0, long tasks 0 (max 0 ms), full order start>rental>anamorphic>technical>projection>arena
+ok   visit technical              open 69.1 s, target technical full +42 ms, gapFrames 0/92, cue 0, errors 0, long tasks 0 (max 0 ms), full order start>rental>anamorphic>technical>projection>arena
+ok   visit led-rental             open 69.1 s, target rental full +17 ms, gapFrames 0/116, cue 0, errors 0, long tasks 0 (max 0 ms), full order start>rental>anamorphic>technical>projection>arena
+ok   visit projection             open 69.1 s, target projection full +21 ms, gapFrames 0/92, cue 0, errors 0, long tasks 0 (max 0 ms), full order start>rental>anamorphic>technical>projection>arena
+16 runs, 0 with gap frames, a loading cue, console errors or a missed stop
+exit 0

@@ -8,7 +8,8 @@ comes later and gets its own plan.
 
 **Opening.** The entrance view looks exactly as it does today (your decision 2). On a typical phone connection
 ("Fast 4G") the venue opens after about **36 seconds**, down from about **74 seconds**. The download before the
-door opens is **35 MB**, down from **77 MB**. On a weak connection ("Slow 4G") it opens after about
+door opens is **35 MB**, down from **77 MB**. (Re-measured after the final review's fixes: 36.4 s and 34.7 MB,
+the same as before those fixes.) On a weak connection ("Slow 4G") it opens after about
 **2 minutes 25 seconds** (145 s; before the work about 5 minutes, estimated from the download size, not measured).
 
 **After the door opens: no stops, no loading text, no spinner** (your decision 1). In every test run the
@@ -23,20 +24,35 @@ replace the light versions one by one. On Fast 4G the last stall (Projection Map
 What the light version looks like: the stall's building, furniture, plants and people are all there, in the right
 place. **The stall's LED screens and artwork are dark** until full detail arrives. Picture pair below.
 
+**If something goes wrong while loading** (added after the final review). The venue now opens even if the
+texture helper fails or is blocked. Some stalls use a special compressed picture format that needs a small helper
+program the browser downloads separately. The entrance no longer uses that format at all, so the opening never
+waits for the helper. If the helper cannot be downloaded or never starts, the venue still opens; those stalls'
+pictures fall back to the normal format where we have one, and where we do not, the stall simply stays in its
+light version instead of waiting for ever. A download that hangs no longer blocks the others: after a generous
+wait it is tried again, then given up, and the light version stays. We tested this by blocking the helper on
+purpose: the venue opened in about 3 seconds (locally), every area showed at least its light version, and no
+error reached the screen; LED Rental and Projection Mapping then stayed in their light version for the rest of
+that visit, the other stalls reached full detail. **Returning visitors always get the current file list**: the one small file that tells
+the venue which files belong to the current version is now checked with the server on every visit, so after an
+update nobody gets last version's list with this version's code. (We also tested the venue with that file
+blocked: it still opens, it just waits for every stall in full detail first, about 17 seconds locally.)
+
 **Never empty space.** We checked every frame of a walk at a normal pace, every one of the 11 menu jumps right
 after opening, and every stall visit: not one frame showed an area without at least its light version.
 
 **Jumping ahead.** If a visitor uses the menu to jump straight to a far stall right after opening, they land in
 the light version of that stall, and the loader now fetches *that stall's* full version first, then the next area
 along. On Fast 4G the stall sharpens 15 to 24 seconds after opening (Content Studio, LED Rental, Technical
-Showcase), 17 seconds for the Arena, and about 42 seconds for Projection Mapping. Projection Mapping cannot come
+Showcase), 17 seconds for the Arena, and about 42 to 43 seconds for Projection Mapping. Projection Mapping cannot come
 sooner on this connection: when the venue opens, two other stalls are already downloading (about 23 MB), we never
 cancel a download that has started, and Projection Mapping is itself the biggest stall (about 24 MB).
 (This final check first found the loader fetching the *next* area first; that is fixed, see the table further down.)
 
 **Smoothness.** No stops, but there are still a handful of short hitches (frames that take longer than they should).
 The longest happens when someone jumps from the very end of the venue straight back to the entrance: the picture
-freezes for up to about a fifth of a second (0.1 to 0.23 s). A menu jump to Technical Showcase right after opening
+freezes for up to about a fifth of a second (0.1 to 0.25 s). **The live site has the same hitch** (0.21 to 0.28 s
+in the same test on `main`), so it is not something this work introduced. A menu jump to Technical Showcase right after opening
 reliably causes one hitch of about 0.13 to 0.17 s (seen in both test runs), and one jump to the LED Tunnel showed
 one of 0.11 s. During a normal walk the hitches are about a tenth of a second or less (0.05 to 0.1 s). Details
 under "Open points".
@@ -53,22 +69,25 @@ they can no longer be tracked one by one; for those, the screenshots above are t
 Measured on this computer with Chrome, cold cache (as a first-time visitor), screen 1600×900.
 "Fast 4G" = 9 Mbit/s, "Slow 4G" = 2 Mbit/s, as set in the plan.
 
-| | Before (baseline) | After (final) | Target in the plan | Met? |
+After the final review's fixes the Fast 4G run, the menu jumps and the stall visits were measured again
+(`final-fix`); the Slow 4G run was not repeated (its numbers are from before those fixes).
+
+| | Before (baseline) | After (final-fix) | Target in the plan | Met? |
 |---|---|---|---|---|
-| Download before the door opens | 77.1 MB (141 files) | 34.7 MB (106 files) | about 20 MB | No (see note 1) |
-| Time to open, Fast 4G | 74.1 s | 36.2 s | 12 s | No (see note 1) |
-| Time to open, Slow 4G | about 310 s (estimated, not measured) | 145.1 s | opens later, then no gaps | Yes |
-| Everything in full detail, Fast 4G | 74.1 s (all before opening) | 78.7 s (after opening, in the background) | | |
-| Frames with empty space, walk after opening | not applicable (all loaded first) | 0 of 2,427 (Fast), 0 of 10,548 (Slow) | 0 | Yes |
-| Frames with empty space, 11 menu jumps right after opening | | 0 of 27,003 | 0 | Yes |
+| Download before the door opens | 77.1 MB (141 files) | 34.7 MB (104 files) | about 20 MB | No (see note 1) |
+| Time to open, Fast 4G | 74.1 s | 36.4 s | 12 s | No (see note 1) |
+| Time to open, Slow 4G | about 310 s (estimated, not measured) | 145.1 s (before the fixes) | opens later, then no gaps | Yes |
+| Everything in full detail, Fast 4G | 74.1 s (all before opening) | 79.4 s (after opening, in the background) | | |
+| Frames with empty space, walk after opening | not applicable (all loaded first) | 0 of 2,475 (Fast), 0 of 10,548 (Slow) | 0 | Yes |
+| Frames with empty space, 11 menu jumps right after opening | | 0 of 27,697 | 0 | Yes |
 | Loading text or spinner after opening | none | none | none | Yes |
 | Draw calls at the entrance (desktop, "high") | 1,239 to 1,849 | 1,203 to 1,801 | 500 or fewer | No (note 2) |
 | Draw calls, worst point on the walk | 3,194 | 2,419 | 700 or fewer | No (note 2) |
 | Triangles at the entrance (desktop) | 5.1 to 7.7 million | 5.2 to 7.8 million | | |
 | Triangles, worst point on the walk, phone tier ("medium") | 8.67 million (measured in Task 5, not at the baseline) | 7.5 million (phone emulation, 375×812; measured differently, not directly comparable) | 2 million | No (note 3) |
-| Hitches over 50 ms after opening (Fast 4G run) | 12 (longest 151 ms) | 10 (longest 229 ms) | none | No (note 4) |
+| Hitches over 50 ms after opening (Fast 4G run) | 12 (longest 151 ms) | 7 (longest 221 ms) | none | No (note 4) |
 | ...of which over 100 ms | 5 | 1 (in the end-to-entrance jump) | | |
-| Looks: largest screenshot difference (0 to 255 scale, limit 1.5) | | 1.13 (LED Rental) | 1.5 or less | Yes |
+| Looks: largest screenshot difference (0 to 255 scale, limit 1.5) | | 1.15 (LED Rental); entrance 0.01 | 1.5 or less | Yes |
 | Objects moved (391 still-standing objects trackable by name; 259 that move by design left out; 613 combined, covered by the screenshots) | | 0 | 0 | Yes |
 
 Notes:
@@ -143,6 +162,15 @@ expected with the processor slowed 4×; a real phone may be better or worse.
 
 ## Things to know
 
+- **Browsers with WebAssembly switched off cannot show the venue, on the live site or here.** iPhones in
+  Lockdown Mode and some locked-down company browsers turn off WebAssembly, a browser feature. Every 3D model of
+  the venue is stored compressed in a way that needs it to unpack, on `main` as well, so in those browsers the
+  venue never opens. We tested this branch with WebAssembly switched off (it did not open within two minutes);
+  for `main` this follows from its build and code (the same compression and the same model loader), it was not
+  run there. This work does not make that better or worse, and it no longer adds a second reason (the picture
+  helper). Fixing it would mean shipping a second, uncompressed set
+  of models for those browsers; that is a decision for later.
+
 - **An old safety check now reports one difference.** A check written in October compares the source code of the
   Content Studio's water basin with a frozen copy. The light version of the stall now leaves out the basin's
   reflection (it is not needed at a distance), so the check sees a small wrapper around the basin code and reports
@@ -167,9 +195,10 @@ expected with the processor slowed 4×; a real phone may be better or worse.
    which we chose not to do, or making that stall's full version smaller.
 3. **Draw calls** about 3.5× the target (note 2). Planned for the WebGPU stage.
 4. **Phone triangles** nearly 4× the target (about 7.5 million against 2 million, note 3).
-5. **Hitches**: the end-to-entrance jump still causes one heavy frame (100 to 230 ms). We checked that this
-   happens even with every stall fully loaded before opening (no background downloading at all), so it is not
-   caused by the new loading; it is the graphics chip drawing the whole venue at once. A menu jump to Technical
+5. **Hitches**: the end-to-entrance jump still causes one heavy frame (100 to 250 ms). We checked that this
+   happens even with every stall fully loaded before opening (no background downloading at all), and that the
+   live site (`main`) has it too, at 210 to 275 ms in the same test, so it is not caused by this work; it is the
+   graphics chip drawing the whole venue at once. A menu jump to Technical
    Showcase right after opening reliably causes one hitch of 130 to 168 ms, and one LED Tunnel jump showed one of
    108 ms. The other hitches after opening are 50 to 81 ms (note 4).
 6. **Entrance download headroom**: the entrance group is 22.7 MiB against the 24 MiB budget the tests enforce,
@@ -177,6 +206,20 @@ expected with the processor slowed 4×; a real phone may be better or worse.
    20 MiB or less" test was replaced after your decision 3.)
 
 ---
+
+## Before going live
+
+1. **A Cloudflare preview build.** Push the branch to a preview (not `main`) and check, in the build log, that
+   Cloudflare used Node **24.22.1** (the version now pinned in `.nvmrc`); that `out/models/load-manifest.json`
+   exists in the build output (the log prints "Load manifest written for 6 groups"); and that the preview serves
+   `/basis/basis_transcoder.js` and `/basis/basis_transcoder.wasm` (open both URLs; each should download, not
+   show a 404 page).
+2. **A memory check on real phones.** On a real mid-range iPhone and a mid-range Android phone, walk the venue
+   from the entrance to the end, once on this branch's preview and once on the live site, and compare how much
+   memory the browser tab uses at the end of the walk (Safari's Web Inspector on a Mac for the iPhone, Chrome's
+   remote debugging for Android), and whether either tab reloads itself or crashes. This branch keeps a few
+   things in memory that the live site does not (combined models, prepared artwork, the light versions until the
+   full ones arrive), and this computer cannot tell how much that costs on a phone.
 
 ## Engineering detail
 
@@ -195,6 +238,11 @@ Chrome via playwright-core, `--ignore-gpu-blocklist`.
 | Nav jumps, before the fix | `node scripts/check-nav-jumps.mjs --label final --only jumps --throttle fast4g` | `final/nav-jumps-jumps.json` |
 | Stall visits, before the fix | `node scripts/check-nav-jumps.mjs --label final --only visits --throttle none` | `final/nav-jumps-visits.json` |
 | Fly-back | `node scripts/measure-flyback.mjs --label final --runs 3` | `final/flyback.json` |
+| Fast 4G after the final review's fixes | `node scripts/measure-venue.mjs --label final-fix --throttle fast4g` | `reports/perf/final-fix/` |
+| Look after the fixes | `node scripts/compare-shots.mjs reports/perf/baseline reports/perf/final-fix` | exit 0, worst mean 1.15 |
+| Nav jumps + visits after the fixes | `node scripts/check-nav-jumps.mjs --label final-fix` | `final-fix/nav-jumps.json`: 16/16 ok, 0 gaps |
+| Failure paths | `node scripts/check-failure-paths.mjs` | `final-fix/failure-paths.json` |
+| Fly-back, main vs branch | `node <repo>/scripts/measure-flyback.mjs --plain --runs 3 --out …` (from the main worktree, then here) | `final-fix/flyback-main/`, `final-fix/flyback-branch-plain/`, `final-fix/flyback.json` |
 | Phone walk | `node scripts/walk-mobile.mjs --label final` | `final/mobile/walk.json`, `final/mobile/*.jpg` |
 
 ### History (Fast 4G unless noted; long tasks = all > 50 ms observed after opening by `measure-venue`)
@@ -211,23 +259,32 @@ Chrome via playwright-core, `--ignore-gpu-blocklist`.
 | t8 | 34.7 | 36.3 | 78.7 | 1203–1801 | 2419 | 10.50 M | 11 (206) | 0 |
 | **final** (fix round 1) | **34.7** | **36.2** | **78.7** | **1203–1801** | **2419** | **10.50 M** | **10 (229)** | **0** |
 | **final-slow (Slow 4G)** | **34.7** | **145.1** | **332.4** | **1203–1801** | **2419** | **10.50 M** | **6 (133)** | **0** |
+| **final-fix** (final review fixes) | **34.7** | **36.4** | **79.4** | **1203–1801** | **2419** | **10.50 M** | **7 (221)** | **0** |
 
 From t6b on, the long-task count includes the fly-back (an instant p = 1 → 0 jump the harness makes before the
 stats walk) and the fill-in walk, which earlier runs did not have. Final long tasks after opening:
 63, 50, 54, 60, 58 ms at p 0.73–0.76 (fill-in walk, while projection streams and warms), 87, 229, 55 ms at
 p 0.23–0.13 (fly-back), 51 ms at p 0.30 and 58 ms at p 0.51 (stats walk). The pre-fix final run had 10 (214 ms):
-no regression.
+no regression. `final-fix` long tasks after opening: 61, 57, 57 ms at p 0.75–0.76 (fill-in walk), 84, 221, 50 ms
+at p 0.35–0.25 (fly-back), 74 ms at p 0.51 (stats walk). Before opening the run made no `/basis/` request (the
+start group uses no KTX2; `check-failure-paths.mjs`'s normal case logs every request: 0 before opening, 2 after).
 
 ### Group sizes (build output)
 
-start 22.7 MiB (mobile 21.7), rental 9.8 (lite 1.3), anamorphic 12.3 (lite 1.5), technical 10.4 (lite 1.1),
-projection 23.0 (lite 3.2), arena 1.2 (lite 0.3). Lite total 7.4 MiB. Export 856 files, 184.9 MiB, largest file under 25 MiB.
+After the final review's fixes (start never KTX2; the Basis transcoder, 0.58 MB, now counts in rental, the first
+group that uses KTX2): start 22.69 MiB (23,795,314 B; before 22.74 MiB with the transcoder), rental 10.3 (lite 1.3),
+anamorphic 12.7 (lite 1.5), technical 10.7 (lite 1.1), projection 23.3 (lite 3.2), arena 1.2 (lite 0.3).
+Anamorphic, technical and projection grew 0.3 to 0.4 MiB: the textures they share with the entrance (15 to 22
+files each, counted in every group that uses them) were KTX2 under the old start rule and now stay WebP. Lite total
+7.4 MiB. Export 850 files, 184.2 MiB, largest file under 25 MiB. Before those fixes: start 22.7 MiB (mobile 21.7),
+rental 9.8, anamorphic 12.3, technical 10.4, projection 23.0, arena 1.2; export 856 files, 184.9 MiB.
 
 ### KTX2 and the `KEEP_WEBP` list
 
 `KEEP_WEBP = [/logo|letter|sign|brand/i]` (`scripts/encode-ktx2.mjs`): lettering, logos and signage are never
-converted. In this build it matched **0** textures. 15 textures use KTX2 (9 of them `/media` files), 25 stay WebP
-because their KTX2 would be larger; no cache misses.
+converted. In this build it matched **0** textures. After the final review's fixes: 9 textures use KTX2 (8 of them
+`/media` files, all Technical Showcase), 31 stay WebP (the start group's never use KTX2; elsewhere because the KTX2
+would be over 1.25× larger); no cache misses. (Before: 15 use KTX2, 9 of them `/media`.)
 
 ### Fill-in timeline, Fast 4G (ms after opening; walk at 6 m/s from opening)
 
@@ -309,6 +366,25 @@ zones that were culled a moment before; open target, not chased here. The stats-
 (50–100 ms) also appears in both modes. A first run of this script overlapped other local work and is not used
 (its numbers were in the same range: full 100–197 ms, stream 114–228 ms).
 
+**Main against this branch (final review, Recommendation 5).** `main` has no `?perf` hook, so
+`measure-flyback.mjs --plain` measures without it: long tasks from an init-script `PerformanceObserver` (progress
+read from `data-camera-progress`), scroll offsets from `path.ts`'s scroll plan (identical on `main`) over the page's
+`[data-venue-track]`, ready = the loader gone (plus `allReady()` where the hook exists). `main` (7298426) was built
+in a temporary worktree outside the repo (fresh `npm ci`; removed afterwards) and served by its own
+`serve-export.mjs`. Same machine, unthrottled, 3 runs each, right after one another:
+
+| Build and method | Fly-back longest task per run (ms) | Fly-back tasks (ms@p) |
+|---|---|---|
+| `main` 7298426, `--plain` | **242, 209, 275** | 111@0.33 242@0.19 85@0.13 · 76@0.33 209@0.21 · 115@0.22 275@0.19 78@0.13 |
+| this branch (after the fixes), `--plain` | **251, 99, 72** | 91@0.35 251@0.19 · 84@0.25 99@0.21 · 57@0.35 72@0.21 |
+| this branch, `full` (`?perf&capture=1`) | **117, 189, 234** | 83, 66@0.18 100@0.14 117@0.09 · 189@0.22 · 54@0.35 234@0.14 |
+| this branch, `stream` (`?perf`) | **242, 231, 192** | 83@0.33 59, 242@0.18 55@0.12 · 231@0.22 · 79@0.33 60@0.24 192@0.18 |
+
+Answer: **pre-existing, not a regression.** `main` shows the same heavy frame where the camera crosses p ≈ 0.2
+(209–275 ms); the branch's range (72–251 ms) is the same or lower. `main`'s walk also has 130–166 ms tasks at
+p ≈ 0.51–0.54 that the branch does not (`reports/perf/final-fix/flyback-main/flyback.json`,
+`flyback-branch-plain/flyback.json`, `final-fix/flyback.json`).
+
 ### Phone emulation walk (Step 3)
 
 `scripts/walk-mobile.mjs`: 375×812 at dpr 3, touch, Android Chrome UA, `Emulation.setCPUThrottlingRate {rate: 4}`,
@@ -330,7 +406,15 @@ never see that panel.
 
 ### Other checks
 
-- `npm test` 81/81 (78 + 3 jump-priority tests from fix round 1), `npm run typecheck` clean, `npm run build` clean.
+- `npm test` 93/93 after the final review's fixes (81 + 12: start group without KTX2, streamer timeout ×3,
+  manifest revalidation ×2, KTX2 transcoder failures ×5, Node pin), `npm run typecheck` clean, `npm run build` clean.
+- Failure paths (`node scripts/check-failure-paths.mjs`, unthrottled, `reports/perf/final-fix/failure-paths.json`):
+  normal: opens 3.4 s, 0/934 gap frames, 0 `/basis/` requests before opening. `/basis/*` blocked: opens 3.1 s,
+  0/1,012 gap frames, rental and projection (the two groups with KTX2 GLB textures) fail after 4 attempts and keep
+  their light packs, technical's KTX2 media fall back to WebP, 0 page errors. Manifest blocked: opens 17.0 s on
+  every full group, 0/983 gap frames, 0 page errors. WebAssembly deleted (init script): `typeof WebAssembly` was
+  "undefined" in the page, 0 `/basis/` requests, but the venue cannot open (every GLB is meshopt-compressed, which
+  needs WebAssembly; the 2 page errors are GLTFLoader's meshopt error, which `main` shares by construction).
 - ESLint: full repo 184 errors (baseline 184). The branch had added the vendored three.js Basis transcoder
   (`public/basis/basis_transcoder.js`, byte-identical to `three/examples/jsm/libs/basis/`), which brought 2 errors
   (`require()` in Emscripten glue); it is now in `globalIgnores` as vendored code (accepted by the controller). Changed files: 0 errors.
