@@ -136,6 +136,7 @@ export class MediaEngine {
   private mode: StageMode = "corporate";
   private isMobile = false;
   private elapsed = 0;
+  private frozenAt: number | null = null;
   private fallback: THREE.Texture;
   /**
    * One clock per synchronised group.
@@ -498,6 +499,12 @@ export class MediaEngine {
     };
   }
 
+  /** Measurement only (`?perf` hook): pin media time to `t` seconds and hold every video there. */
+  freeze(t: number) {
+    this.frozenAt = t;
+    for (const e of this.entries.values()) if (e.kind === "video") { e.video.pause(); try { e.video.currentTime = t % (e.video.duration || t + 1); } catch {} }
+  }
+
   /** Screens call this every frame with how much the camera cares about them. */
   touch(id: string, importance: number) {
     const e = this.entries.get(id);
@@ -509,6 +516,7 @@ export class MediaEngine {
    * render pass, from a single component.
    */
   update(dt: number) {
+    if (this.frozenAt !== null) { dt = 0; this.elapsed = this.frozenAt; }
     this.elapsed += dt;
     const budget = FRAME_BUDGET_MP[this.quality] * 1e6;
 
@@ -650,3 +658,6 @@ export class MediaEngine {
     this.fallback.dispose();
   }
 }
+
+/** The live engine, for the `?perf` measurement hook only. */
+export const perfHandle: { engine: MediaEngine | null } = { engine: null };

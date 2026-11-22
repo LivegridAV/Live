@@ -40,8 +40,8 @@ try {
   await waitServer();
   browser = await chromium.launch({ channel: "chrome", args: ["--ignore-gpu-blocklist"] });
 
-  async function newPage(throttled) {
-    const context = await browser.newContext({ viewport: { width: 1600, height: 900 }, deviceScaleFactor: 1 });
+  async function newPage(throttled, reducedMotion = "no-preference") {
+    const context = await browser.newContext({ viewport: { width: 1600, height: 900 }, deviceScaleFactor: 1, reducedMotion });
     const page = await context.newPage();
     const cdp = await context.newCDPSession(page);
     await cdp.send("Network.enable");
@@ -68,7 +68,6 @@ try {
 
   const snapshot = await page.evaluate(() => window.__venuePerf.snapshot());
   writeFileSync(path.join(outDir, "snapshot.json"), JSON.stringify(snapshot, null, 1));
-  await page.screenshot({ path: path.join(outDir, "shots", "entrance.png") });
 
   const walk = [];
   let gapFrames = 0;
@@ -81,19 +80,32 @@ try {
       const pose = document.querySelector("[data-render-metrics]")?.dataset.cameraPose;
       return { stats: window.__venuePerf.stats(), ready: window.__venuePerf.groupsReady(), z: pose ? JSON.parse(pose).position[2] : null };
     });
-    walk.push({ progress, calls: sample.stats.calls, triangles: sample.stats.triangles });
+    const st = sample.stats;
+    walk.push({ progress, callsMin: st.callsMin, callsMax: st.callsMax, trianglesMin: st.trianglesMin, trianglesMax: st.trianglesMax });
     // Gap: the camera has passed a group switch-on z (the walk heads toward -z) but the group is not ready.
     if (sample.z != null && groups.some(g => sample.z <= g.switchOnZ && !sample.ready.includes(g.id))) gapFrames++;
   }
   const longTasksAfterOpen = await page.evaluate(() => window.__venuePerf.longTasks());
   await context.close();
 
-  // ---- baseline shots (unthrottled; only the image matters) ----
-  for (const shot of SHOTS) {
-    const s = await newPage(false);
-    await s.page.goto(`${ORIGIN}/?perf&camera=baseline&shot=${shot}`, { waitUntil: "commit" });
-    await waitPerf(s.page, () => window.__venuePerf?.allReady());
-    await s.page.evaluate(() => new Promise(res => { let n = 0; const f = () => (++n >= 60 ? res() : requestAnimationFrame(f)); requestAnimationFrame(f); }));
+  // ---- shots ----
+  // Deterministic: reduced motion, a fake page clock stepped one 16 ms frame at a time (so every
+  // time-driven system accumulates the same amount), media time pinned, fps readout hidden.
+  for (const shot of ["entrance", ...SHOTS]) {
+    const s = await newPage(false, "reduce");
+    await s.page.clock.install({ time: 0 });
+    await s.page.goto(shot === "entrance" ? `${ORIGIN}/?perf` : `${ORIGIN}/?perf&camera=baseline&shot=${shot}`, { waitUntil: "commit" });
+    await s.page.clock.pauseAt(1000);
+    for (let n = 0; !(await s.page.evaluate(() => window.__venuePerf?.allReady() ?? false)); n++) {
+      if (n > 100000) throw new Error(`shot ${shot} never became ready`);
+      await s.page.clock.runFor(16);
+      await sleep(5); // real time for network and GPU work
+    }
+    for (let i = 0; i < 120; i++) await s.page.clock.runFor(16);
+    await s.page.evaluate(() => window.__venuePerf.freeze(1));
+    for (let i = 0; i < 30; i++) await s.page.clock.runFor(16);
+    await s.page.addStyleTag({ content: "[data-render-metrics]{visibility:hidden!important}" });
+    await s.page.clock.runFor(16);
     await s.page.screenshot({ path: path.join(outDir, "shots", `${shot}.png`) });
     await s.context.close();
   }
@@ -101,8 +113,9 @@ try {
   const metrics = { label, throttle, bytesBeforeOpen, msToOpen, requestsBeforeOpen, walk, longTasksAfterOpen, gapFrames };
   writeFileSync(path.join(outDir, "metrics.json"), JSON.stringify(metrics, null, 1));
   const max = k => Math.max(...walk.map(w => w[k]));
+  const w0 = walk[0];
   console.log(`${label} [${throttle}] bytesBeforeOpen=${(bytesBeforeOpen / 1e6).toFixed(1)}MB msToOpen=${msToOpen} requests=${requestsBeforeOpen}`);
-  console.log(`calls@0=${walk[0].calls} maxCalls=${max("calls")} tris@0=${walk[0].triangles} maxTris=${max("triangles")} longTasks=${longTasksAfterOpen.length} gapFrames=${gapFrames}`);
+  console.log(`calls@0=${w0.callsMin}-${w0.callsMax} maxCalls=${max("callsMax")} tris@0=${w0.trianglesMin}-${w0.trianglesMax} maxTris=${max("trianglesMax")} longTasks=${longTasksAfterOpen.length} gapFrames=${gapFrames}`);
 } finally {
   await browser?.close();
   server.kill();

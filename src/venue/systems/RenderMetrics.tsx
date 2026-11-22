@@ -6,15 +6,19 @@ import { useVenue } from "./store";
 import { journey } from "./journey";
 import { baselineCameraForSearch } from "../data/baselineCameras";
 import { progressToScroll } from "./ScrollRig";
+import { perfHandle } from "../media/engine";
 
 type PerfSnapshot = Record<string, {position:[number,number,number]; quaternion:[number,number,number,number]; size:[number,number,number]}>;
 declare global { interface Window { __venuePerf?: {
   loaded(): boolean; groupsReady(): string[]; allReady(): boolean;
-  stats(): {calls:number; triangles:number; textures:number; geometries:number};
+  /** Min and max over the last 6 frames; some frames add an extra pass, targets are judged on the max. */
+  stats(): {callsMin:number; callsMax:number; trianglesMin:number; trianglesMax:number; textures:number; geometries:number};
   longTasks(): {ms:number; progress:number}[];
   snapshot(): PerfSnapshot;
-  /** Page scroll offset (px) at which the journey sits at progress p. */
+  /** Harness extra: page scroll offset (px) at which the journey sits at progress p. */
   scrollTop(p: number): number;
+  /** Harness extra: pin media time (LED screens, videos) to t seconds so screenshots repeat. */
+  freeze(t: number): void;
 }; } }
 
 const mm = (v: number) => Math.round(v * 1000) / 1000;
@@ -47,7 +51,7 @@ function snapshotScene(root: Object3D): PerfSnapshot {
 export function RenderMetrics() {
   const gl = useThree(s => s.gl);
   const scene = useThree(s => s.scene);
-  // Recent frames; stats() reports the lowest-calls one so alternate-frame extra passes do not alias into the numbers.
+  // Last 6 frames of render stats (see stats()).
   const recentStats = useRef<{calls:number; triangles:number; textures:number; geometries:number}[]>([]);
   const allTasks = useRef<{ms:number; progress:number}[]>([]);
   const hardware=useMemo(()=>{
@@ -79,10 +83,14 @@ export function RenderMetrics() {
         loaded: () => useVenue.getState().loaded,
         groupsReady: () => [],
         allReady: () => useVenue.getState().loaded,
-        stats: () => ({ ...(recentStats.current.reduce((m, f) => (f.calls < m.calls ? f : m), recentStats.current[0] ?? {calls:0, triangles:0, textures:0, geometries:0})) }),
+        stats: () => {
+          const f = recentStats.current, calls = f.map(x => x.calls), tris = f.map(x => x.triangles), last = f[f.length - 1] ?? {textures:0, geometries:0};
+          return { callsMin: Math.min(...calls), callsMax: Math.max(...calls), trianglesMin: Math.min(...tris), trianglesMax: Math.max(...tris), textures: last.textures, geometries: last.geometries };
+        },
         longTasks: () => [...allTasks.current],
         snapshot: () => snapshotScene(scene),
         scrollTop: progressToScroll,
+        freeze: (t: number) => perfHandle.engine?.freeze(t),
       };
     }
     return () => { observer?.disconnect(); gl.info.autoReset = autoReset; delete window.__venuePerf; };

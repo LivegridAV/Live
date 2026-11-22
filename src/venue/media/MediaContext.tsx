@@ -2,7 +2,7 @@
 import { createContext, useContext, useEffect, useMemo, useRef, type ReactNode } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { MediaEngine } from "./engine";
+import { MediaEngine, perfHandle } from "./engine";
 import { CRITICAL_MEDIA } from "../data/media";
 import { useVenue } from "../systems/store";
 
@@ -33,7 +33,8 @@ export function MediaProvider({ children }: { children: ReactNode }) {
     engine.setMobile(isMobile);
     engine.setQuality(quality);
     engine.prime(CRITICAL_MEDIA);
-    return () => engine.dispose();
+    if (new URLSearchParams(location.search).has("perf")) perfHandle.engine = engine;
+    return () => { if (perfHandle.engine === engine) perfHandle.engine = null; engine.dispose(); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [engine]);
 
