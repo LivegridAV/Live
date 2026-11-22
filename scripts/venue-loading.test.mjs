@@ -265,7 +265,7 @@ test("every /media and .glb literal the mounted venue references is in exactly o
 
 // ---- streamer (Task 4) ----
 
-const { startStreaming, RETRY_DELAYS_MS, MAX_IN_FLIGHT, itemTimeoutMs, isItemTimeout, TIMEOUT_FLOOR_MS } = await import("../src/venue/loading/streamer.ts");
+const { startStreaming, RETRY_DELAYS_MS, MAX_IN_FLIGHT, itemTimeoutMs, isItemTimeout, TIMEOUT_FLOOR_MS, MANIFEST_TIMEOUT_MS } = await import("../src/venue/loading/streamer.ts");
 
 /** A fetchGroup whose calls are recorded and settled by the test. */
 function fakeFetcher(clock) {
@@ -454,6 +454,46 @@ test("streamer: the load manifest is fetched with cache: no-cache", async t => {
   try {
     for (let i = 0; i < 20; i++) await Promise.resolve();
     assert.deepEqual(requests.map(r => [r.url, r.init?.cache]), [["/models/load-manifest.json", "no-cache"]]);
+  } finally {
+    handle.stop();
+    globalThis.fetch = realFetch;
+    t.mock.timers.reset();
+  }
+});
+
+// Final-fix re-review: nothing streams (not even start) until the manifest is
+// adopted, and no-cache sends every visit to the network for it, so a manifest
+// request that never settles must time out into the 1/3/9 s retries.
+test("streamer: a manifest request that never settles is aborted after its timeout and retried", async t => {
+  const requests = [];
+  t.mock.timers.enable({ apis: ["setTimeout"] });
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = (url, init) => {
+    requests.push({ url, init });
+    if (requests.length === 1) {
+      return new Promise((_, reject) => init.signal.addEventListener("abort", () => reject(init.signal.reason ?? new Error("aborted"))));
+    }
+    return Promise.resolve({ ok: true, status: 200, json: async () => manifestOf(["start"]) });
+  };
+  const retries = [];
+  const fetched = [];
+  const handle = startStreaming({
+    manifestUrl: "/models/load-manifest.json",
+    fetchGroup: id => { fetched.push(id); return new Promise(() => {}); },
+    onRetry: (id, attempt, delayMs) => retries.push([id, attempt, delayMs]),
+  });
+  const flush = async () => { for (let i = 0; i < 20; i++) await Promise.resolve(); };
+  try {
+    await flush();
+    assert.ok(requests[0].init?.signal, "the manifest fetch can be aborted");
+    t.mock.timers.tick(MANIFEST_TIMEOUT_MS - 1); await flush();
+    assert.deepEqual(retries, [], "nothing times out early");
+    t.mock.timers.tick(1); await flush();
+    assert.deepEqual(retries, [["manifest", 1, 1000]]);
+    assert.ok(requests[0].init.signal.aborted, "the hung request is aborted");
+    t.mock.timers.tick(1000); await flush();
+    assert.equal(requests.length, 2, "retried after 1 s");
+    assert.deepEqual(fetched, ["start"], "the venue starts streaming on the retried manifest");
   } finally {
     handle.stop();
     globalThis.fetch = realFetch;

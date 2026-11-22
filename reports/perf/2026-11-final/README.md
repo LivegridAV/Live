@@ -51,7 +51,7 @@ cancel a download that has started, and Projection Mapping is itself the biggest
 
 **Smoothness.** No stops, but there are still a handful of short hitches (frames that take longer than they should).
 The longest happens when someone jumps from the very end of the venue straight back to the entrance: the picture
-freezes for up to about a fifth of a second (0.1 to 0.25 s). **The live site has the same hitch** (0.21 to 0.28 s
+freezes for up to about a quarter of a second (0.07 to 0.25 s). **The live site has the same hitch** (0.21 to 0.28 s
 in the same test on `main`), so it is not something this work introduced. A menu jump to Technical Showcase right after opening
 reliably causes one hitch of about 0.13 to 0.17 s (seen in both test runs), and one jump to the LED Tunnel showed
 one of 0.11 s. During a normal walk the hitches are about a tenth of a second or less (0.05 to 0.1 s). Details

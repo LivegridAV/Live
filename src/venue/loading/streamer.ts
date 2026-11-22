@@ -47,6 +47,12 @@ export const TIMEOUT_ASSUMED_BPS = 50_000;
 export const TIMEOUT_MAX_BPS = 500_000;
 /** Bytes assumed for an item whose size is unknown (the manifest failed to load). */
 export const TIMEOUT_UNKNOWN_BYTES = 32 * 2 ** 20;
+/**
+ * The manifest is a few kB, but nothing streams (not even start) until it is
+ * adopted, and it is revalidated on every visit: a request that never settles
+ * is aborted after this and goes into the usual 1/3/9 s retries.
+ */
+export const MANIFEST_TIMEOUT_MS = 20_000;
 
 /**
  * How long an item of `bytes` may run before it counts as hung: the slack
@@ -226,9 +232,16 @@ export function startStreaming(opts: {
       // Always revalidated: /models/* may be served from cache for an hour (and
       // stale for 30 days), and a returning visitor after a deploy must not get
       // the previous build's manifest with the new code (final review, Important 2).
-      const response = await fetch(opts.manifestUrl, { cache: "no-cache" });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const manifest = await response.json() as LoadManifest;
+      const abort = new AbortController();
+      const timer = setTimeout(() => abort.abort(new Error(`manifest timed out after ${MANIFEST_TIMEOUT_MS} ms`)), MANIFEST_TIMEOUT_MS);
+      let manifest: LoadManifest;
+      try {
+        const response = await fetch(opts.manifestUrl, { cache: "no-cache", signal: abort.signal });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        manifest = await response.json() as LoadManifest;
+      } finally {
+        clearTimeout(timer);
+      }
       if (!stopped) adoptManifest(manifest);
     } catch (error) {
       if (stopped) return;

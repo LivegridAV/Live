@@ -78,10 +78,11 @@ function readyKtx2Loader(gl: THREE.WebGLRenderer): Promise<KTX2Loader> {
 }
 
 /**
- * Load and transcode one KTX2 texture. Rejects, never hangs: when KTX2 is
- * unavailable (nothing is fetched then), when the file or the transcoder
- * fails to load, or when the transcoder start or the transcode runs past its
- * timeout (the loader is then replaced).
+ * Load and transcode one KTX2 texture. Rejects when KTX2 is unavailable
+ * (nothing is fetched then), when the file or the transcoder fails to load,
+ * or when the transcoder start or the transcode runs past its timeout (the
+ * loader is then replaced). A .ktx2 file request that never settles is not
+ * bounded here: the streamer's per-item timeout fails its group instead.
  */
 export async function loadKtx2(url: string, gl: THREE.WebGLRenderer): Promise<THREE.CompressedTexture> {
   if (!ktx2Available()) throw new Error(`KTX2 textures are not available on this page (${url.startsWith("blob:") ? "a GLB texture" : url})`);
