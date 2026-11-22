@@ -180,3 +180,17 @@ test("tunnel panorama covers the front 180 degrees without rear repetition", () 
   assert.deepEqual(uv(0, -Math.PI / 4), [.5, 0]);
   assert.ok(uv(Math.PI)[0] > 1, "rear direction must not wrap into the image");
 });
+
+test("build writes a byte manifest per load group, with an opening that fits the budget", () => {
+  const manifest = JSON.parse(read("out/models/load-manifest.json"));
+  const groups = JSON.parse(read("src/venue/loading/groups.json"));
+  assert.deepEqual(manifest.groups.map(g => g.id), groups.map(g => g.id));
+  for (const group of manifest.groups) {
+    assert.ok(group.bytes > 0, `${group.id} has no bytes`);
+    assert.deepEqual(Object.keys(group.bytesByCondition).sort(), ["festival", "mobile"]);
+    assert.ok(Array.isArray(group.lite));
+  }
+  assert.ok(Array.isArray(manifest.ktx2Media));
+  const start = manifest.groups.find(g => g.id === "start");
+  assert.ok(start.bytes <= 24 * 2 ** 20, `start is ${(start.bytes / 2 ** 20).toFixed(1)} MiB, over the 24 MiB budget`);
+});

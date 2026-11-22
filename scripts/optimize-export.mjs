@@ -17,6 +17,8 @@
 //    A texture embedded identically in several GLBs is written once to
 //    /textures/ and referenced from each GLB by relative URI.
 // 3. Fail the build if any file exceeds the host's per-file limit.
+// 4. Write out/models/load-manifest.json: the final transfer size of every load
+//    group in src/venue/loading/groups.json (the runtime plans the opening from it).
 //
 // Usage: node scripts/optimize-export.mjs [--dry-run] [--no-compress]
 import { readdirSync, readFileSync, statSync, rmSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
@@ -25,6 +27,7 @@ import path from "node:path";
 import { NodeIO } from "@gltf-transform/core";
 import { ALL_EXTENSIONS, EXTMeshoptCompression, EXTTextureWebP } from "@gltf-transform/extensions";
 import { reorder, listTextureSlots } from "@gltf-transform/functions";
+import { LOAD_GROUPS, assetsFor } from "../src/venue/loading/groups.ts";
 import { MeshoptEncoder, MeshoptDecoder } from "meshoptimizer";
 // Must be the same sharp that @gltf-transform/functions loads (via
 // ndarray-pixels): two libvips builds in one process corrupt each other.
@@ -46,6 +49,8 @@ const args = new Set(process.argv.slice(2));
 const dryRun = args.has("--dry-run");
 const compress = !args.has("--no-compress");
 
+// groups.ts is imported as TypeScript, which needs Node's built-in type stripping.
+if (!process.features.typescript) throw new Error("optimize-export needs Node >= 22.18 (built-in TypeScript support) to read src/venue/loading/groups.ts.");
 if (!existsSync(OUT)) throw new Error("out/ not found — run `next build` first.");
 
 function walk(directory, files = []) {
@@ -225,3 +230,45 @@ if (!dryRun && oversized.length) {
   throw new Error("Files exceed the 25 MiB hosting limit:\n" + oversized.map(f => `  ${f.file} (${mib(f.bytes)})`).join("\n"));
 }
 if (after.length > MAX_FILES) throw new Error(`Export has ${after.length} files; host limit is ${MAX_FILES}.`);
+
+// ---------------------------------------------------------- load manifest
+/** Files a GLB pulls in besides itself: external images named by relative URI. */
+function externalImages(file) {
+  const glb = readFileSync(file);
+  const json = JSON.parse(glb.subarray(20, 20 + glb.readUInt32LE(12)).toString("utf8"));
+  return (json.images ?? []).map(image => image.uri).filter(uri => uri && !uri.startsWith("data:"))
+    .map(uri => path.resolve(path.dirname(file), decodeURIComponent(uri)));
+}
+
+/** Transfer size of a set of assets; a file shared between them counts once. */
+function transferBytes(assets) {
+  const files = new Set();
+  for (const asset of assets) {
+    const file = path.join(OUT, asset);
+    if (!existsSync(file)) throw new Error(`load group asset missing from out/: ${asset}`);
+    files.add(file);
+    if (asset.toLowerCase().endsWith(".glb")) {
+      for (const image of externalImages(file)) {
+        if (!existsSync(image)) throw new Error(`${asset} references missing texture ${rel(image)}`);
+        files.add(image);
+      }
+    }
+  }
+  return { bytes: [...files].reduce((sum, file) => sum + statSync(file).size, 0), files: [...files] };
+}
+
+function writeLoadManifest() {
+  const manifest = {
+    groups: LOAD_GROUPS.map(group => ({
+      id: group.id,
+      bytes: transferBytes(assetsFor(group, new Set())).bytes,
+      bytesByCondition: Object.fromEntries(["mobile", "festival"].map(c => [c, transferBytes(assetsFor(group, new Set([c]))).bytes])),
+      lite: [],
+    })),
+    ktx2Media: [],
+  };
+  if (!dryRun) writeFileSync(path.join(OUT, "models", "load-manifest.json"), JSON.stringify(manifest, null, 2));
+  for (const g of manifest.groups) console.log(`  ${g.id}: ${mib(g.bytes)} (mobile ${mib(g.bytesByCondition.mobile)}, festival ${mib(g.bytesByCondition.festival)})`);
+  console.log(`Load manifest written for ${manifest.groups.length} groups.`);
+}
+writeLoadManifest();
