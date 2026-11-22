@@ -294,6 +294,20 @@ test("streamer: bandwidth is the bytes per second of finished fetches", async t 
   }, { measure: () => ({ bytes: 6e6, startMs: 1000, endMs: 3000 }) });
 });
 
+test("streamer: held groups wait until released, then stream in journey order", async t => {
+  await withStreamer(t, ["start", "a", "b", "c"], async ({ handle, fake, flush }) => {
+    handle.hold(["a", "b", "c"]);
+    fake.pending("start").resolve(); await flush();
+    assert.deepEqual(fake.calls.map(c => c.id), ["start"], "nothing starts while held");
+    handle.prioritize("c"); await flush();
+    assert.deepEqual(fake.calls.map(c => c.id), ["start"], "priority does not override a hold");
+    handle.release(["a"]); await flush();
+    assert.deepEqual(fake.calls.map(c => c.id), ["start", "a"]);
+    handle.release(["b", "c"]); await flush();
+    assert.deepEqual(fake.calls.map(c => c.id), ["start", "a", "c"], "the prioritized group goes next, still at most 2 in flight");
+  });
+});
+
 test("streamer: stop() starts nothing more", async t => {
   await withStreamer(t, ["start", "a"], async ({ handle, fake, flush }) => {
     handle.stop();

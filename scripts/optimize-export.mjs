@@ -17,12 +17,12 @@
 //    A texture embedded identically in several GLBs is written once to
 //    /textures/ and referenced from each GLB by relative URI.
 // 3. Write the derived models next to the final GLBs (scripts/derived-models.mjs):
-//    `<name>.lite.glb` for every non-start group GLB (the light pack, fetched with
-//    start) and `<name>.lod1.glb` for the visitors and the projection interior.
+//    `<name>.lite.glb` for every non-start group GLB (the light pack) and `<name>.lod1.glb` for the visitors and the projection interior.
 // 4. Fail the build if any file exceeds the host's per-file limit.
 // 5. Write out/models/load-manifest.json: the final transfer size of every load
 //    group in src/venue/loading/groups.json (the runtime plans the opening from it),
-//    each group's light pack (counted in start) and the lod1 models.
+//    each group's light pack (fetched after opening, only for the groups that
+//    stream in later; not counted in any group's bytes) and the lod1 models.
 //
 // Usage: node scripts/optimize-export.mjs [--dry-run] [--no-compress]
 import { readdirSync, readFileSync, statSync, rmSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
@@ -252,21 +252,21 @@ function transferBytes(assets) {
 }
 
 function writeLoadManifest() {
-  // The light pack downloads with start, so start's bytes include it.
-  const lightPack = dryRun ? [] : Object.values(derived.lite).flat();
-  const files = (group, conditions) => [...assetsFor(group, conditions), ...(group.id === START_GROUP ? lightPack : [])];
+  // A group's light pack is fetched after opening, and only when that group
+  // streams in later, so it is not part of any group's bytes.
   const manifest = {
     groups: LOAD_GROUPS.map(group => ({
       id: group.id,
-      bytes: transferBytes(files(group, new Set())).bytes,
-      bytesByCondition: Object.fromEntries(["mobile", "festival"].map(c => [c, transferBytes(files(group, new Set([c]))).bytes])),
+      bytes: transferBytes(assetsFor(group, new Set())).bytes,
+      bytesByCondition: Object.fromEntries(["mobile", "festival"].map(c => [c, transferBytes(assetsFor(group, new Set([c]))).bytes])),
       lite: derived.lite[group.id] ?? [],
     })),
     lod1: derived.lod1,
     ktx2Media: [],
   };
   if (!dryRun) writeFileSync(path.join(OUT, "models", "load-manifest.json"), JSON.stringify(manifest, null, 2));
-  for (const g of manifest.groups) console.log(`  ${g.id}: ${mib(g.bytes)} (mobile ${mib(g.bytesByCondition.mobile)}, festival ${mib(g.bytesByCondition.festival)})`);
+  const liteBytes = paths => dryRun ? 0 : paths.reduce((sum, p) => sum + statSync(path.join(OUT, p)).size, 0);
+  for (const g of manifest.groups) console.log(`  ${g.id}: ${mib(g.bytes)} (mobile ${mib(g.bytesByCondition.mobile)}, festival ${mib(g.bytesByCondition.festival)}); light pack ${mib(liteBytes(g.lite))} in ${g.lite.length} files`);
   console.log(`Load manifest written for ${manifest.groups.length} groups.`);
 }
 writeLoadManifest();

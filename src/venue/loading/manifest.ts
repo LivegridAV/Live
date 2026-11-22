@@ -13,6 +13,9 @@ let known: LoadManifest | null | undefined;
 export function settleManifest(manifest: LoadManifest | null) {
   if (known !== undefined) return;
   known = manifest;
+  // Mark the promise settled the way React's use() reads it, so a component
+  // mounted later (a light pack after opening) does not suspend for a tick.
+  Object.assign(settled, { status: "fulfilled", value: manifest });
   settle(manifest);
 }
 

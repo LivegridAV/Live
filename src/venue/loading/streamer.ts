@@ -13,6 +13,9 @@
  *   failure it is reported failed and is not retried on its own (its zone
  *   keeps the lite pack). Prioritizing a failed group, i.e. a visitor jumping
  *   to it, arms it again.
+ * - A held group does not start until it is released (the venue holds the
+ *   later groups until the opening plan is known, and the groups that stream
+ *   after opening until their light pack has arrived).
  */
 export const MAX_IN_FLIGHT = 2;
 export const RETRY_DELAYS_MS: readonly number[] = [1000, 3000, 9000];
@@ -34,6 +37,10 @@ export type StreamHandle = {
   prioritize(id: string): void;
   /** Bytes per second over every finished fetch; 0 until one has finished. */
   bandwidth(): number;
+  /** Do not start these groups until they are released (a running fetch is not affected). */
+  hold(ids: readonly string[]): void;
+  /** Let held groups start again. */
+  release(ids: readonly string[]): void;
   /** Stop starting fetches and cancel pending retries. */
   stop(): void;
 };
@@ -60,6 +67,7 @@ export function startStreaming(opts: {
   const state = new Map<string, State>();
   const failures = new Map<string, number>();
   const timers = new Set<ReturnType<typeof setTimeout>>();
+  const held = new Set<string>();
   const samples: FetchSample[] = [];
   let ids: string[] = [];
   let bytes = new Map<string, number>();
@@ -72,7 +80,7 @@ export function startStreaming(opts: {
   };
   const inFlight = () => ids.filter(id => state.get(id) === "inflight").length;
   const pick = () => {
-    const free = (id: string) => state.get(id) === "pending";
+    const free = (id: string) => state.get(id) === "pending" && !held.has(id);
     if (priority !== undefined && free(priority)) return priority;
     return ids.find(free);
   };
@@ -165,6 +173,13 @@ export function startStreaming(opts: {
       busy += to - from;
       if (busy <= 0) return total > 0 ? Infinity : 0;
       return total / (busy / 1000);
+    },
+    hold(holdIds) {
+      for (const id of holdIds) held.add(id);
+    },
+    release(releaseIds) {
+      for (const id of releaseIds) held.delete(id);
+      pump();
     },
     stop() {
       stopped = true;

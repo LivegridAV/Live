@@ -222,14 +222,16 @@ const namedNodes = document => document.getRoot().listNodes().filter(n => n.getN
 const triangles = document => document.getRoot().listMeshes().flatMap(m => m.listPrimitives())
   .reduce((sum, p) => sum + (p.getIndices()?.getCount() ?? p.getAttribute("POSITION").getCount()) / 3, 0);
 
-test("every non-start GLB has a light-pack sibling, and the light pack fits 3 MiB", () => {
+// The light pack is off the opening path (fetched after opening, only for
+// groups that stream later), so its budget is 8 MiB (fix-round ruling).
+test("every non-start GLB has a light-pack sibling, and the light pack fits 8 MiB", () => {
   assert.ok(nonStartGlbs.length >= 10);
   let total = 0;
   for (const p of nonStartGlbs) {
     assert.ok(existsSync(outFile(sibling(p, "lite"))), `missing ${sibling(p, "lite")}`);
     total += readFileSync(outFile(sibling(p, "lite"))).byteLength;
   }
-  assert.ok(total <= 3 * 2 ** 20, `light pack is ${(total / 2 ** 20).toFixed(2)} MiB, over 3 MiB`);
+  assert.ok(total <= 8 * 2 ** 20, `light pack is ${(total / 2 ** 20).toFixed(2)} MiB, over 8 MiB`);
 });
 
 test("every lite and lod1 model keeps its source's named nodes", async () => {
@@ -262,7 +264,20 @@ test("lite models drop morphs and skins and shrink every texture to 128 px", asy
   }
 });
 
-test("the manifest lists each group's light pack, counts it in start, and lists the lod1 models", () => {
+/** Transfer size of a set of out/ files plus the external textures their GLBs reference, each counted once. */
+function transferSize(paths) {
+  const files = new Set();
+  for (const p of paths) {
+    files.add(outFile(p));
+    if (!p.endsWith(".glb")) continue;
+    const glb = readFileSync(outFile(p));
+    const json = JSON.parse(glb.subarray(20, 20 + glb.readUInt32LE(12)).toString("utf8"));
+    for (const image of json.images ?? []) if (image.uri) files.add(path.resolve(path.dirname(outFile(p)), decodeURIComponent(image.uri)));
+  }
+  return [...files].reduce((sum, f) => sum + readFileSync(f).byteLength, 0);
+}
+
+test("the manifest lists each group's light pack (not counted in start) and the lod1 models", () => {
   const manifest = JSON.parse(read("out/models/load-manifest.json"));
   for (const group of loadGroups) {
     const entry = manifest.groups.find(g => g.id === group.id);
@@ -270,11 +285,8 @@ test("the manifest lists each group's light pack, counts it in start, and lists 
     assert.deepEqual([...entry.lite].sort(), expected.sort(), `${group.id} lite`);
   }
   assert.deepEqual([...manifest.lod1].sort(), lod1Sources.map(p => sibling(p, "lod1")).sort());
-  const liteBytes = manifest.groups.flatMap(g => g.lite).reduce((sum, p) => sum + readFileSync(outFile(p)).byteLength, 0);
-  const startAssets = loadGroups[0].assets.filter(p => p.endsWith(".glb"));
-  const startGlbBytes = startAssets.reduce((sum, p) => sum + readFileSync(outFile(p)).byteLength, 0);
   const start = manifest.groups.find(g => g.id === "start");
-  assert.ok(start.bytes >= startGlbBytes + liteBytes, "the light pack downloads with start");
+  assert.equal(start.bytes, transferSize(loadGroups[0].assets), "start's bytes are its own files only; the light pack is fetched after opening");
 });
 
 test("lite mode and lod1 choice live in the venue's model loading", () => {
@@ -286,4 +298,7 @@ test("lite mode and lod1 choice live in the venue's model loading", () => {
   assert.match(gate, /<LiteGroup id=\{id\}>/, "the gate renders the zone in lite mode until it is warm");
   assert.match(gate, /unsubscribe\(\)/, "the gate stops listening to the store once its group is ready");
   assert.match(read("src/venue/three/ExpoAsset.tsx"), /useModelUrl\(/);
+  assert.match(scene, /planOpening\(/, "the opening plan tells the streamer which groups stream later");
+  assert.match(scene, /venueOpened\(/, "the light pack is fetched once the venue opens");
+  assert.doesNotMatch(read("src/venue/loading/stream.ts"), /loadModel\(path, false, "lite"\)/, "start no longer joins the light pack");
 });

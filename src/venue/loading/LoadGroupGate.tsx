@@ -38,9 +38,11 @@ function claim(id: string) {
 /**
  * Holds a load group's part of the scene back until its files are in memory.
  *
- * Until the group is warm it renders `lite`: by default the zone's own
- * children in lite mode (LiteGroup), i.e. the light pack at the same
- * transforms. Once the streamer reports the group ready it mounts `children`
+ * Until the group is warm it renders `lite`: by default, once the group's
+ * light pack has arrived (only groups that stream in after opening get one),
+ * the zone's own children in lite mode (LiteGroup), i.e. the light pack at the
+ * same transforms, shader-warmed before it shows; nothing before that, as in
+ * Task 4. Once the streamer reports the group ready it mounts `children`
  * hidden, warms that subtree's shaders and uploads during idle time, runs the
  * group's deferred bakes, then swaps lite for full in one commit and reports
  * the group warm. The swap happens as soon as the group is warm: usually
@@ -50,6 +52,7 @@ function claim(id: string) {
  */
 export function LoadGroupGate({ id, children, lite }: { id: string; children: ReactNode; lite?: ReactNode }): JSX.Element {
   const [ready, setReady] = useState(() => useVenue.getState().readyGroups.includes(id));
+  const [liteReady, setLiteReady] = useState(() => useVenue.getState().liteGroups.includes(id));
   const [warm, setWarm] = useState(false);
   const release = useRef<((warmed: boolean) => void) | null>(null);
   useEffect(() => {
@@ -60,7 +63,9 @@ export function LoadGroupGate({ id, children, lite }: { id: string; children: Re
   useEffect(() => {
     if (ready) return;
     // Listen only until the group is ready: the store updates every scroll frame.
-    const check = (state: { readyGroups: string[] }) => {
+    let liteSeen = false;
+    const check = (state: { readyGroups: string[]; liteGroups: string[] }) => {
+      if (!liteSeen && state.liteGroups.includes(id)) { liteSeen = true; setLiteReady(true); }
       if (!state.readyGroups.includes(id)) return;
       unsubscribe();
       // A transition lets React yield between the group's models while they
@@ -76,8 +81,15 @@ export function LoadGroupGate({ id, children, lite }: { id: string; children: Re
   const onWarm = useMemo(() => () => { setWarm(true); release.current?.(true); }, []);
   return <>
     {ready && <WarmGroup shown={warm} onWarm={onWarm}>{children}</WarmGroup>}
-    {!warm && (lite === undefined ? <LiteGroup id={id}>{children}</LiteGroup> : lite)}
+    {!warm && (lite !== undefined ? lite : liteReady ? <LiteLayer id={id}>{children}</LiteLayer> : null)}
   </>;
+}
+
+/** The light pack, mounted after opening: warmed like a group before it shows, so it never compiles in a frame. */
+function LiteLayer({ id, children }: { id: string; children: ReactNode }) {
+  const [shown, setShown] = useState(false);
+  const onWarm = useMemo(() => () => setShown(true), []);
+  return <WarmGroup shown={shown} onWarm={onWarm}><LiteGroup id={id}>{children}</LiteGroup></WarmGroup>;
 }
 
 const nextFrame = () => new Promise<void>(resolve => requestAnimationFrame(() => resolve()));

@@ -3,7 +3,8 @@
 // - `<name>.lite.glb` for every GLB of a non-start load group: the light pack
 //   a zone shows until its full group is warm. Triangles simplified to 15 %
 //   (error 0.02), every texture shrunk to at most 128 px and embedded, morph
-//   targets and skins dropped. Fetched with the start group.
+//   targets and skins dropped. Fetched right after opening, only for the
+//   groups the opening plan leaves to stream in later.
 // - `<name>.lod1.glb` for every `*-visitors.glb` and the projection interior:
 //   simplified to 40 % (error 0.01) for the medium and low quality tiers.
 //   Textures are unchanged, and shared `/textures/` files stay shared, so a

@@ -101,10 +101,7 @@ async function fetchGroup(id: string) {
   const paths = assetsFor(group, loadConditions());
   const models = paths.filter(path => path.endsWith(".glb"));
   if (id === START_GROUP) {
-    // The light pack downloads with start: the gated zones show it until
-    // their groups are warm, and their lite-mode components load it too.
-    const lightPack = (manifest?.groups ?? []).flatMap(g => g.lite ?? []).map(sourceOfLite);
-    await Promise.all([...models.map(path => loadModel(path, false)), ...lightPack.map(path => loadModel(path, false, "lite"))]);
+    await Promise.all(models.map(path => loadModel(path, false)));
     await loadersIdle();
     return;
   }
@@ -114,7 +111,7 @@ async function fetchGroup(id: string) {
 
 const sourceOfLite = (path: string) => path.replace(/\.lite\.glb$/i, ".glb");
 
-/** A group's own files, including the derived models it may load instead (lod1; the light pack for start). */
+/** A group's own files, including the lod1 models it may load instead. */
 function ownFiles(ids: readonly string[]) {
   const files = new Set<string>();
   for (const group of LOAD_GROUPS) {
@@ -123,7 +120,6 @@ function ownFiles(ids: readonly string[]) {
       files.add(path);
       if (path.endsWith(".glb")) files.add(variantPath(path, "lod1"));
     }
-    if (group.id === START_GROUP) for (const entry of manifest?.groups ?? []) for (const path of entry.lite ?? []) files.add(path);
   }
   return files;
 }
@@ -155,7 +151,8 @@ export function startVenueStreaming() {
   handle?.stop();
   manifest = null;
   failed.clear();
-  useVenue.setState({ readyGroups: [], warmGroups: [] });
+  liteFor = null;
+  useVenue.setState({ readyGroups: [], warmGroups: [], liteGroups: [] });
   // The default buffer (250) fills before the last group arrives.
   try { performance.setResourceTimingBufferSize(2000); } catch { /* not supported */ }
   const current = startStreaming({
@@ -176,6 +173,8 @@ export function startVenueStreaming() {
       console.warn(`[venue] load group ${id} failed ${id === "manifest" ? "" : "4 times "}and is not retried; its zone keeps the light pack`, error);
     },
   });
+  // Later groups wait for the opening plan (planOpening).
+  current.hold(LOAD_GROUPS.map(group => group.id).filter(id => id !== START_GROUP));
   handle = current;
   const unsubscribe = perf() ? reportDuplicatesWhenWarm() : () => {};
   return () => {
@@ -183,6 +182,45 @@ export function startVenueStreaming() {
     current.stop();
     if (handle === current) handle = null;
   };
+}
+
+/** Groups left out of the opening, waiting for their light pack once the venue opens. */
+let liteFor: string[] | null = null;
+
+/**
+ * The opening plan is decided: the groups in it stream now. A group left out
+ * of it streams in after opening, so it gets its light pack first: those
+ * groups stay held until `venueOpened` has fetched their lite files. When
+ * every group is in the plan, no lite file is ever fetched.
+ */
+export function planOpening(plan: readonly string[]) {
+  const later = LOAD_GROUPS.map(group => group.id).filter(id => id !== START_GROUP && !plan.includes(id));
+  liteFor = later.length ? later : null;
+  handle?.release(plan);
+}
+
+/**
+ * The venue has opened: fetch the light pack of the groups left out of the
+ * opening, before any of their full files, then let them stream. A group
+ * whose lite files fail keeps rendering nothing until it is warm.
+ */
+export function venueOpened() {
+  const ids = liteFor, current = handle;
+  liteFor = null;
+  if (!ids || !current) return;
+  void Promise.all(ids.map(async id => {
+    const paths = manifest?.groups.find(g => g.id === id)?.lite ?? [];
+    if (!paths.length) return;
+    try {
+      await Promise.all(paths.map(path => loadModel(sourceOfLite(path), true, "lite")));
+      useVenue.getState().markLiteReady(id);
+    } catch (error) {
+      console.warn(`[venue] light pack for ${id} failed; the zone stays empty until its group is warm`, error);
+    }
+  })).then(() => {
+    if (perf()) console.info(`[venue] light pack for ${ids.join(", ")} ready at ${Math.round(performance.now())} ms`);
+    current.release(ids);
+  });
 }
 
 /** Move the group needed at camera z `z` to the front of the queue (nav jumps, stall visits). */

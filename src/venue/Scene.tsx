@@ -30,7 +30,7 @@ import { START_GROUP } from "./loading/groups";
 import { groupsBeforeOpening } from "./loading/plan";
 import { journeyStartZ } from "./data/path";
 import { VenueStreaming } from "./loading/LoadGroupGate";
-import { downloadedBytes, fullLoadRequested, groupFailed, plannerGroups, streamBandwidth } from "./loading/stream";
+import { downloadedBytes, fullLoadRequested, groupFailed, planOpening, plannerGroups, streamBandwidth, venueOpened } from "./loading/stream";
 
 /**
  * While mounted, R3F skips its own on-screen draw (a priority subscriber takes
@@ -98,6 +98,8 @@ function Warmup({ full }: { full: boolean }) {
         const startZ = journeyStartZ(size.width / Math.max(1, size.height));
         plan.current = full ? groups.map(g => g.id)
           : groupsBeforeOpening({ bytesPerSecond, groups, startZ });
+        // The plan's groups stream now; the rest get their light pack at opening.
+        planOpening(plan.current);
         if (new URLSearchParams(location.search).has("perf")) {
           console.info(`[venue] opening with ${plan.current.join(", ")} (${Math.round(bytesPerSecond / 1000)} kB/s, start z ${startZ.toFixed(1)})`);
         }
@@ -166,6 +168,7 @@ function Warmup({ full }: { full: boolean }) {
       setHolding(false);
       markGroupWarm(START_GROUP);
       setLoaded(true);
+      venueOpened();
     }
   });
 
