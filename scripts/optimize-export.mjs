@@ -286,26 +286,32 @@ function transferBytes(assets) {
 const BASIS_FILES = ["basis_transcoder.js", "basis_transcoder.wasm"].map(file => path.join(OUT, "basis", file));
 
 function writeLoadManifest() {
-  // A group's light pack is fetched after opening, and only when that group
-  // streams in later, so it is not part of any group's bytes.
+  // A group's light pack is not part of its bytes: it is counted on its own
+  // (liteBytes), since a group may open on its light pack alone.
   // The first group (journey order) that uses KTX2 also fetches the transcoder.
   const transcoderGroup = LOAD_GROUPS.findIndex(group => transferBytes(assetsFor(group, new Set())).usesKtx2);
   if (transcoderGroup >= 0 && !BASIS_FILES.every(file => existsSync(file))) throw new Error("KTX2 is used but out/basis/ has no Basis transcoder (public/basis/).");
   const transcoderBytes = transcoderGroup >= 0 ? BASIS_FILES.reduce((sum, file) => sum + statSync(file).size, 0) : 0;
   const groupBytes = (group, i, conditions) => transferBytes(assetsFor(group, conditions)).bytes + (i === transcoderGroup ? transcoderBytes : 0);
+  // The light pack's size: what the opening planner (liteBeforeOpening) and
+  // the opening bar count for a group that opens on its light pack.
+  const liteBytes = paths => dryRun ? 0 : paths.reduce((sum, p) => sum + statSync(path.join(OUT, p)).size, 0);
   const manifest = {
-    groups: LOAD_GROUPS.map((group, i) => ({
-      id: group.id,
-      bytes: groupBytes(group, i, new Set()),
-      bytesByCondition: Object.fromEntries(["mobile", "festival"].map(c => [c, groupBytes(group, i, new Set([c]))])),
-      lite: derived.lite[group.id] ?? [],
-    })),
+    groups: LOAD_GROUPS.map((group, i) => {
+      const lite = derived.lite[group.id] ?? [];
+      return {
+        id: group.id,
+        bytes: groupBytes(group, i, new Set()),
+        bytesByCondition: Object.fromEntries(["mobile", "festival"].map(c => [c, groupBytes(group, i, new Set([c]))])),
+        lite,
+        liteBytes: liteBytes(lite),
+      };
+    }),
     lod1: derived.lod1,
     ktx2Media,
   };
   if (!dryRun) writeFileSync(path.join(OUT, "models", "load-manifest.json"), JSON.stringify(manifest, null, 2));
-  const liteBytes = paths => dryRun ? 0 : paths.reduce((sum, p) => sum + statSync(path.join(OUT, p)).size, 0);
-  for (const g of manifest.groups) console.log(`  ${g.id}: ${mib(g.bytes)} (mobile ${mib(g.bytesByCondition.mobile)}, festival ${mib(g.bytesByCondition.festival)}); light pack ${mib(liteBytes(g.lite))} in ${g.lite.length} files`);
+  for (const g of manifest.groups) console.log(`  ${g.id}: ${mib(g.bytes)} (mobile ${mib(g.bytesByCondition.mobile)}, festival ${mib(g.bytesByCondition.festival)}); light pack ${mib(g.liteBytes)} in ${g.lite.length} files`);
   console.log(`Load manifest written for ${manifest.groups.length} groups.`);
 }
 writeLoadManifest();

@@ -7,43 +7,56 @@ import { WarmScope, afterWarmup, warmSubtree, warmupGateOpen, type WarmWork } fr
 import { startVenueStreaming } from "./stream";
 import { LiteGroup } from "./LiteGroup";
 
-/** Starts the background streamer for this venue's lifetime. Rendered once in Scene. */
-export function VenueStreaming() {
+/**
+ * Starts the background streamer for this venue's lifetime. Rendered once in
+ * Scene. `full`: review, capture and inspection modes, which load every full
+ * group before opening and never fetch a light pack.
+ */
+export function VenueStreaming({ full }: { full: boolean }) {
   const gl = useThree(state => state.gl);
   useEffect(() => {
-    warmedSome.clear();
-    return startVenueStreaming(gl);
-  }, [gl]);
+    fullClaims.reset();
+    liteClaims.reset();
+    return startVenueStreaming(gl, { full });
+  }, [gl, full]);
   return null;
 }
 
 /*
  * A group may be gated in several places (e.g. a zone and the hall bay beside
- * it). It counts as warm once every gate instance mounted for it has warmed.
+ * it). It counts as warm (its full version, or its light pack) once every
+ * instance mounted for it has warmed.
  */
-const unwarmed = new Map<string, number>();
-const warmedSome = new Set<string>();
-function claim(id: string) {
-  unwarmed.set(id, (unwarmed.get(id) ?? 0) + 1);
-  let open = true;
-  return (warmed: boolean) => {
-    if (!open) return;
-    open = false;
-    const left = (unwarmed.get(id) ?? 1) - 1;
-    unwarmed.set(id, left);
-    if (warmed) warmedSome.add(id);
-    if (left === 0 && warmedSome.has(id)) useVenue.getState().markGroupWarm(id);
+function claims(mark: (id: string) => void) {
+  const unwarmed = new Map<string, number>();
+  const warmedSome = new Set<string>();
+  return {
+    reset() { warmedSome.clear(); },
+    claim(id: string) {
+      unwarmed.set(id, (unwarmed.get(id) ?? 0) + 1);
+      let open = true;
+      return (warmed: boolean) => {
+        if (!open) return;
+        open = false;
+        const left = (unwarmed.get(id) ?? 1) - 1;
+        unwarmed.set(id, left);
+        if (warmed) warmedSome.add(id);
+        if (left === 0 && warmedSome.has(id)) mark(id);
+      };
+    },
   };
 }
+const fullClaims = claims(id => useVenue.getState().markGroupWarm(id));
+const liteClaims = claims(id => useVenue.getState().markLiteWarm(id));
 
 /**
  * Holds a load group's part of the scene back until its files are in memory.
  *
  * Until the group is warm it renders `lite`: by default, once the group's
- * light pack has arrived (only groups that stream in after opening get one),
+ * light pack has arrived (normal visits; review modes load full groups only),
  * the zone's own children in lite mode (LiteGroup), i.e. the light pack at the
- * same transforms, shader-warmed before it shows; nothing before that, as in
- * Task 4. Once the streamer reports the group ready it mounts `children`
+ * same transforms, shader-warmed before it shows (then reported lite-warm);
+ * nothing before that. Once the streamer reports the group ready it mounts `children`
  * hidden, warms that subtree's shaders and uploads during idle time, runs the
  * group's deferred bakes, then swaps lite for full in one commit and reports
  * the group warm. The swap happens as soon as the group is warm: usually
@@ -57,7 +70,7 @@ export function LoadGroupGate({ id, children, lite }: { id: string; children: Re
   const [warm, setWarm] = useState(false);
   const release = useRef<((warmed: boolean) => void) | null>(null);
   useEffect(() => {
-    const done = claim(id);
+    const done = fullClaims.claim(id);
     release.current = done;
     return () => { done(false); release.current = null; };
   }, [id]);
@@ -86,10 +99,16 @@ export function LoadGroupGate({ id, children, lite }: { id: string; children: Re
   </>;
 }
 
-/** The light pack, mounted after opening: warmed like a group before it shows, so it never compiles in a frame. */
+/** The light pack: warmed like a group before it shows, so it never compiles in a frame. */
 function LiteLayer({ id, children }: { id: string; children: ReactNode }) {
   const [shown, setShown] = useState(false);
-  const onWarm = useMemo(() => () => setShown(true), []);
+  const release = useRef<((warmed: boolean) => void) | null>(null);
+  useEffect(() => {
+    const done = liteClaims.claim(id);
+    release.current = done;
+    return () => { done(false); release.current = null; };
+  }, [id]);
+  const onWarm = useMemo(() => () => { setShown(true); release.current?.(true); }, []);
   return <WarmGroup shown={shown} onWarm={onWarm}><LiteGroup id={id}>{children}</LiteGroup></WarmGroup>;
 }
 

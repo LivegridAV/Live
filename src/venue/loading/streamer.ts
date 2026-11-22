@@ -4,18 +4,23 @@
  * fake `fetchGroup`, a fake clock and mocked timers.
  *
  * Policy:
- * - The groups come from the build's byte manifest, in journey order.
+ * - The queue comes from the build's byte manifest: its groups in journey
+ *   order, or the items `items` derives from it (the venue queues each
+ *   group's light pack ahead of the full groups).
  * - The first group (`start`) downloads alone: the opening decision measures
  *   bandwidth while it arrives, and nothing should compete with it.
- * - After it, at most `MAX_IN_FLIGHT` groups download at once, the
- *   prioritized group first, otherwise in journey order.
+ * - After it, at most `MAX_IN_FLIGHT` items download at once, the
+ *   prioritized items first (in the order given), otherwise in queue order.
+ *   Prioritizing never cancels a running download.
  * - A failed group is retried after 1 s, 3 s and 9 s. After the fourth
  *   failure it is reported failed and is not retried on its own (its zone
  *   keeps the lite pack). Prioritizing a failed group, i.e. a visitor jumping
  *   to it, arms it again.
  * - A held group does not start until it is released (the venue holds the
  *   later groups until the opening plan is known, and the groups that stream
- *   after opening until their light pack has arrived).
+ *   after opening until the venue has opened).
+ * - A dropped item is never started (a light pack whose full group is
+ *   already in memory).
  */
 export const MAX_IN_FLIGHT = 2;
 export const RETRY_DELAYS_MS: readonly number[] = [1000, 3000, 9000];
@@ -25,6 +30,8 @@ export type ManifestGroup = {
   bytes: number;
   bytesByCondition?: Readonly<Record<string, number>>;
   lite?: readonly string[];
+  /** Summed size of `lite` (bytes). */
+  liteBytes?: number;
 };
 /** `lod1`: the build's simplified models for the medium and low tiers (see modelVariants.ts). */
 export type LoadManifest = { groups: readonly ManifestGroup[]; lod1?: readonly string[]; ktx2Media?: readonly string[] };
@@ -33,19 +40,22 @@ export type LoadManifest = { groups: readonly ManifestGroup[]; lod1?: readonly s
 export type FetchSample = { bytes: number; startMs: number; endMs: number };
 
 export type StreamHandle = {
-  /** Move `id` to the front of the queue (last call wins). */
-  prioritize(id: string): void;
+  /** Move `ids` (in this order) to the front of the queue (last call wins). */
+  prioritize(ids: string | readonly string[]): void;
   /** Bytes per second over every finished fetch; 0 until one has finished. */
   bandwidth(): number;
   /** Do not start these groups until they are released (a running fetch is not affected). */
   hold(ids: readonly string[]): void;
   /** Let held groups start again. */
   release(ids: readonly string[]): void;
+  /** Never start these items (a running fetch is not affected). */
+  drop(ids: readonly string[]): void;
   /** Stop starting fetches and cancel pending retries. */
   stop(): void;
 };
 
-type State = "pending" | "inflight" | "waiting" | "ready" | "failed";
+type State = "pending" | "inflight" | "waiting" | "ready" | "failed" | "dropped";
+export type QueueItem = { id: string; bytes: number };
 
 export function startStreaming(opts: {
   manifestUrl: string;
@@ -56,6 +66,8 @@ export function startStreaming(opts: {
    * falls back to the manifest bytes over the time `fetchGroup` took.
    */
   measure?: (id: string, startMs: number, endMs: number) => FetchSample | undefined;
+  /** The queue, in order, for a manifest. Defaults to its groups. The first item downloads alone. */
+  items?: (manifest: LoadManifest) => readonly QueueItem[];
   /** Group ids to stream if the manifest cannot be loaded (bytes then count as 0). */
   fallbackIds?: readonly string[];
   onManifest?: (manifest: LoadManifest) => void;
@@ -71,7 +83,7 @@ export function startStreaming(opts: {
   const samples: FetchSample[] = [];
   let ids: string[] = [];
   let bytes = new Map<string, number>();
-  let priority: string | undefined;
+  let priority: string[] = [];
   let stopped = false;
 
   const later = (ms: number, run: () => void) => {
@@ -81,8 +93,7 @@ export function startStreaming(opts: {
   const inFlight = () => ids.filter(id => state.get(id) === "inflight").length;
   const pick = () => {
     const free = (id: string) => state.get(id) === "pending" && !held.has(id);
-    if (priority !== undefined && free(priority)) return priority;
-    return ids.find(free);
+    return priority.find(free) ?? ids.find(free);
   };
 
   function pump() {
@@ -105,7 +116,7 @@ export function startStreaming(opts: {
       const endMs = now();
       samples.push(opts.measure?.(id, startMs, endMs) ?? { bytes: bytes.get(id) ?? 0, startMs, endMs });
       state.set(id, "ready");
-      if (priority === id) priority = undefined;
+      priority = priority.filter(p => p !== id);
       opts.onReady?.(id);
       pump();
     }, error => {
@@ -115,7 +126,7 @@ export function startStreaming(opts: {
       const delay = RETRY_DELAYS_MS[attempt - 1];
       if (delay === undefined) {
         state.set(id, "failed");
-        if (priority === id) priority = undefined;
+        priority = priority.filter(p => p !== id);
         opts.onFailed?.(id, error);
       } else {
         state.set(id, "waiting");
@@ -127,8 +138,9 @@ export function startStreaming(opts: {
   }
 
   function adoptManifest(manifest: LoadManifest) {
-    ids = manifest.groups.map(group => group.id);
-    bytes = new Map(manifest.groups.map(group => [group.id, group.bytes]));
+    const items = opts.items?.(manifest) ?? manifest.groups;
+    ids = items.map(item => item.id);
+    bytes = new Map(items.map(item => [item.id, item.bytes]));
     for (const id of ids) state.set(id, "pending");
     opts.onManifest?.(manifest);
     pump();
@@ -155,10 +167,10 @@ export function startStreaming(opts: {
   void loadManifest(0);
 
   return {
-    prioritize(id) {
+    prioritize(first) {
       if (stopped) return;
-      priority = id;
-      if (state.get(id) === "failed") { failures.set(id, 0); state.set(id, "pending"); }
+      priority = typeof first === "string" ? [first] : [...first];
+      for (const id of priority) if (state.get(id) === "failed") { failures.set(id, 0); state.set(id, "pending"); }
       pump();
     },
     bandwidth() {
@@ -180,6 +192,12 @@ export function startStreaming(opts: {
     release(releaseIds) {
       for (const id of releaseIds) held.delete(id);
       pump();
+    },
+    drop(dropIds) {
+      for (const id of dropIds) {
+        const current = state.get(id);
+        if (current === "pending" || current === "waiting" || current === "failed") state.set(id, "dropped");
+      }
     },
     stop() {
       stopped = true;

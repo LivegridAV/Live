@@ -44,6 +44,37 @@ export function groupsBeforeOpening(input: {
 }
 
 /**
+ * The groups whose light pack must arrive before opening (owner decision 3:
+ * open once the entrance is ready, fill in after). The same deadline rule as
+ * `groupsBeforeOpening`, applied to the lite sizes of the non-start groups
+ * (`groups`, journey order): after opening the light packs download one after
+ * another in journey order, and a pack may stream in only if it arrives a
+ * safety margin before a visitor walking from the start reaches its zone.
+ * A pack that would be late is loaded before opening instead, so it leaves
+ * the queue and the packs behind it no longer wait for it. Full groups never
+ * block opening. With no usable bandwidth estimate, every pack is waited for.
+ */
+export function liteBeforeOpening(input: {
+  bytesPerSecond: number;
+  groups: readonly { id: string; switchOnZ: number; liteBytes: number }[];
+  startZ: number;
+  paceMps?: number;
+  marginS?: number;
+}): string[] {
+  const { bytesPerSecond, groups, startZ, paceMps = WALK_PACE_MPS, marginS = SAFETY_MARGIN_S } = input;
+  if (!(bytesPerSecond > 0)) return groups.map(g => g.id);
+  const before: string[] = [];
+  let elapsed = 0;
+  for (const group of groups) {
+    const arrives = elapsed + group.liteBytes / bytesPerSecond;
+    const reachedAt = (startZ - group.switchOnZ) / paceMps;
+    if (arrives + marginS > reachedAt) before.push(group.id);
+    else elapsed = arrives;
+  }
+  return before;
+}
+
+/**
  * The next group to download: `priority` if it is a known group that is
  * neither ready nor in flight, otherwise the first such group in order.
  */

@@ -34,8 +34,10 @@ export interface VenueState {
   readyGroups: string[];
   /** Load groups that are mounted and shader-warmed, so they can be shown. */
   warmGroups: string[];
-  /** Load groups whose light pack has arrived (only groups that stream in after opening). */
+  /** Load groups whose light pack has arrived (normal visits only; review modes load full groups). */
   liteGroups: string[];
+  /** Load groups whose light pack is mounted and shader-warmed, so it can be shown in place of the full group. */
+  liteWarmGroups: string[];
 
   /* ── interaction ── */
   /** Slug of the pavilion whose detail panel is open, or null. */
@@ -67,6 +69,7 @@ export interface VenueState {
   markGroupReady: (id: string) => void;
   markGroupWarm: (id: string) => void;
   markLiteReady: (id: string) => void;
+  markLiteWarm: (id: string) => void;
   openPavilion: (slug: string) => void;
   closePavilion: () => void;
   setStageMode: (m: StageMode) => void;
@@ -92,6 +95,7 @@ export const useVenue = create<VenueState>((set, get) => ({
   readyGroups: [],
   warmGroups: [],
   liteGroups: [],
+  liteWarmGroups: [],
   activePavilion: null,
   restoreProgress: null,
   stageMode: "corporate",
@@ -123,6 +127,9 @@ export const useVenue = create<VenueState>((set, get) => ({
   },
   markLiteReady: (id) => {
     if (!get().liteGroups.includes(id)) set({ liteGroups: [...get().liteGroups, id] });
+  },
+  markLiteWarm: (id) => {
+    if (!get().liteWarmGroups.includes(id)) set({ liteWarmGroups: [...get().liteWarmGroups, id] });
   },
 
   openPavilion: (slug) =>

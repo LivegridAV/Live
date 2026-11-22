@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { LOAD_GROUPS, START_GROUP, assetsFor, groupForZ } from "../src/venue/loading/groups.ts";
-import { groupsBeforeOpening, nextToFetch, WALK_PACE_MPS, SAFETY_MARGIN_S } from "../src/venue/loading/plan.ts";
+import { groupsBeforeOpening, liteBeforeOpening, nextToFetch, WALK_PACE_MPS, SAFETY_MARGIN_S } from "../src/venue/loading/plan.ts";
 
 const GROUPS = [
   { id: "start", switchOnZ: 21, bytes: 20e6 },
@@ -46,6 +46,43 @@ test("when only the last group fails, the list extends to include it", () => {
 test("pace and margin are overridable", () => {
   // At walking pace 1 m/s, a is reached at 81 s, so even 2 Mbps streams both.
   assert.deepEqual(groupsBeforeOpening({ bytesPerSecond: 250_000, groups: GROUPS, startZ: 21, paceMps: 1, marginS: 0 }), ["start"]);
+});
+
+// ---- open early, fill in (Task 6b) ----
+
+const LITE = [
+  { id: "a", switchOnZ: -8.64, liteBytes: 1.3e6 },
+  { id: "b", switchOnZ: -12.65, liteBytes: 1.5e6 },
+  { id: "c", switchOnZ: -48.27, liteBytes: 1.1e6 },
+];
+
+test("liteBeforeOpening at 9 Mbps: the lite packs that would arrive late load before opening", () => {
+  // a needs 1.16 s against a deadline of (8 + 8.64) / 6 - 4 = -1.23 s: late. b
+  // is late too. c then arrives 0.98 s after opening, against 5.4 s.
+  assert.deepEqual(liteBeforeOpening({ bytesPerSecond: 1_125_000, groups: LITE, startZ: 8 }), ["a", "b"]);
+});
+
+test("liteBeforeOpening: a negative deadline is missed at any speed", () => {
+  assert.deepEqual(liteBeforeOpening({ bytesPerSecond: 30_000_000, groups: LITE, startZ: 8 }), ["a", "b"]);
+});
+
+test("liteBeforeOpening: no usable bandwidth estimate waits for every lite pack", () => {
+  for (const bytesPerSecond of [0, -1, NaN]) {
+    assert.deepEqual(liteBeforeOpening({ bytesPerSecond, groups: LITE, startZ: 8 }), ["a", "b", "c"], `bytesPerSecond ${bytesPerSecond}`);
+  }
+});
+
+test("liteBeforeOpening: a pack loaded before opening leaves the queue behind it", () => {
+  // At 1 MB/s from z 30: a arrives 1 s (+4) against 6.4 s, fine; b alone would take
+  // 4 s after a, 9 s against 6.9 s: late, so it loads before opening; c then queues
+  // behind a only: 2 s (+4) against 10.5 s. Only b is pulled in.
+  const groups = [
+    { id: "a", switchOnZ: -8.4, liteBytes: 1e6 },
+    { id: "b", switchOnZ: -11.4, liteBytes: 4e6 },
+    { id: "c", switchOnZ: -33, liteBytes: 1e6 },
+  ];
+  assert.deepEqual(liteBeforeOpening({ bytesPerSecond: 1e6, groups, startZ: 30 }), ["b"]);
+  assert.deepEqual(liteBeforeOpening({ bytesPerSecond: 1e6, groups, startZ: 30, paceMps: 1, marginS: 0 }), []);
 });
 
 test("nextToFetch honours priority, then journey order", () => {
@@ -305,6 +342,41 @@ test("streamer: held groups wait until released, then stream in journey order", 
     assert.deepEqual(fake.calls.map(c => c.id), ["start", "a"]);
     handle.release(["b", "c"]); await flush();
     assert.deepEqual(fake.calls.map(c => c.id), ["start", "a", "c"], "the prioritized group goes next, still at most 2 in flight");
+  });
+});
+
+test("streamer: items() orders the queue (light packs before full groups)", async t => {
+  const items = manifest => [manifest.groups[0], ...manifest.groups.slice(1).map(g => ({ id: `${g.id}.lite`, bytes: 1 })), ...manifest.groups.slice(1)];
+  await withStreamer(t, ["start", "a", "b"], async ({ fake, flush }) => {
+    fake.pending("start").resolve(); await flush();
+    assert.deepEqual(fake.calls.map(c => c.id), ["start", "a.lite", "b.lite"]);
+    fake.pending("a.lite").resolve(); fake.pending("b.lite").resolve(); await flush();
+    assert.deepEqual(fake.calls.map(c => c.id), ["start", "a.lite", "b.lite", "a", "b"]);
+  }, { items });
+});
+
+test("streamer: prioritize([x, y]) starts x then y ahead of the queue, not ahead of running fetches", async t => {
+  await withStreamer(t, ["start", "a", "b", "c", "d"], async ({ handle, fake, flush }) => {
+    fake.pending("start").resolve(); await flush();
+    assert.deepEqual(fake.calls.map(c => c.id), ["start", "a", "b"]);
+    handle.prioritize(["d", "c"]); await flush();
+    assert.deepEqual(fake.calls.map(c => c.id), ["start", "a", "b"], "in-flight downloads are not pre-empted");
+    fake.pending("a").resolve(); await flush();
+    assert.deepEqual(fake.calls.map(c => c.id), ["start", "a", "b", "d"]);
+    fake.pending("b").resolve(); await flush();
+    assert.deepEqual(fake.calls.map(c => c.id), ["start", "a", "b", "d", "c"]);
+  });
+});
+
+test("streamer: a dropped item is never fetched", async t => {
+  await withStreamer(t, ["start", "a", "b", "c"], async ({ handle, fake, events, flush }) => {
+    handle.drop(["a"]);
+    fake.pending("start").resolve(); await flush();
+    assert.deepEqual(fake.calls.map(c => c.id), ["start", "b", "c"]);
+    handle.prioritize("a"); await flush();
+    fake.pending("b").resolve(); fake.pending("c").resolve(); await flush();
+    assert.deepEqual(fake.calls.map(c => c.id), ["start", "b", "c"]);
+    assert.ok(!events.some(e => e[1] === "a"), "a is neither ready nor failed");
   });
 });
 

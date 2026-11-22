@@ -27,10 +27,9 @@ import { StallDimensions } from "./three/StallDimensions";
 import { EXHIBITION_RANGES } from "./data/placements";
 import { PlacementInspection, placementInspectionEnabled } from "./systems/PlacementInspection";
 import { START_GROUP } from "./loading/groups";
-import { groupsBeforeOpening } from "./loading/plan";
-import { journeyStartZ } from "./data/path";
 import { VenueStreaming } from "./loading/LoadGroupGate";
-import { downloadedBytes, fullLoadRequested, groupFailed, planOpening, plannerGroups, streamBandwidth, venueOpened } from "./loading/stream";
+import { fullLoadRequested, venueOpened } from "./loading/stream";
+import { useOpeningPlan } from "./loading/useOpeningPlan";
 
 /**
  * While mounted, R3F skips its own on-screen draw (a priority subscriber takes
@@ -51,20 +50,22 @@ function RenderHold() {
 /**
  * Warm-up.
  *
- * Wait for the groups the venue must open with, then prepare every shader
- * behind the loader. Compiling several hundred programs inside the first
+ * Wait for what the venue must open with (useOpeningPlan), then prepare
+ * every shader behind the loader. Compiling several hundred programs inside the first
  * animated frame is what would otherwise freeze the page the moment the
  * visitor scrolls. The compile runs on the driver's threads while the loader
  * reports honest progress, and the screen is not drawn until it has finished.
  *
- * Which groups: the entrance group always. Its download measures the
- * connection, and the planner adds every later group that could not stream in
- * ahead of a visitor walking from the start (loading/plan.ts). Those stream
- * and warm in their own gates first. Review, capture and inspection modes wait
- * for every group. Everything else streams in after the venue opens.
+ * What: the entrance group always. Its download measures the connection,
+ * and the planner adds the light pack of every later group whose pack could
+ * not stream in ahead of a visitor walking from the start (loading/plan.ts).
+ * Those packs arrive and warm in their own gates first. Review, capture and
+ * inspection modes wait for every full group. Everything else streams in
+ * after the venue opens: the remaining light packs, then the full groups.
  */
 function Warmup({ full }: { full: boolean }) {
-  const { gl, scene, camera, size } = useThree();
+  const { gl, scene, camera } = useThree();
+  const opening = useOpeningPlan(full);
 
   const frame = useRef(0);
   const setLoadPercent = useVenue((s) => s.setLoadPercent);
@@ -77,9 +78,6 @@ function Warmup({ full }: { full: boolean }) {
   const compileFraction = useRef(0);
   const [holding, setHolding] = useState(true);
   const early = useRef({ target: null as THREE.WebGLRenderTarget | null, loaded: -1, at: 0 });
-  /** Groups the venue opens with, once the entrance group has measured the connection. */
-  const plan = useRef<string[] | null>(null);
-  const bar = useRef({ value: 0, at: -Infinity });
   useEffect(() => {
     alive.current = true;
     const state = early.current;
@@ -87,38 +85,9 @@ function Warmup({ full }: { full: boolean }) {
   }, []);
   useFrame(() => {
     if (done.current) return;
-    const venueState = useVenue.getState();
-    const startReady = venueState.readyGroups.includes(START_GROUP);
-    if (!plan.current && startReady) {
-      const groups = plannerGroups();
-      if (groups) {
-        const bytesPerSecond = streamBandwidth();
-        // The visitor starts walking at the journey's p = 0 camera (with the
-        // portrait push-back on narrow frames), whatever this frame's camera is.
-        const startZ = journeyStartZ(size.width / Math.max(1, size.height));
-        plan.current = full ? groups.map(g => g.id)
-          : groupsBeforeOpening({ bytesPerSecond, groups, startZ });
-        // The plan's groups stream now; the rest get their light pack at opening.
-        planOpening(plan.current);
-        if (new URLSearchParams(location.search).has("perf")) {
-          console.info(`[venue] opening with ${plan.current.join(", ")} (${Math.round(bytesPerSecond / 1000)} kB/s, start z ${startZ.toFixed(1)})`);
-        }
-      }
-    }
-    const required = plan.current ?? [START_GROUP];
-    const waiting = !plan.current || required.some(id =>
-      id !== START_GROUP && !venueState.warmGroups.includes(id) && !groupFailed(id));
-    if (waiting) {
-      const now = performance.now();
-      // 0-0.85: bytes of the groups the venue opens with.
-      if (now - bar.current.at > 250) {
-        bar.current.at = now;
-        const groups = plannerGroups();
-        const expected = groups?.filter(g => required.includes(g.id)).reduce((sum, g) => sum + g.bytes, 0) ?? 0;
-        const fraction = expected > 0 ? Math.min(1, downloadedBytes(required) / expected) : 0;
-        bar.current.value = Math.max(bar.current.value, fraction * 0.85);
-        setLoadPercent(bar.current.value);
-      }
+    const now = performance.now();
+    if (opening.waiting(now)) {
+      if (useVenue.getState().loadPercent !== opening.bar()) setLoadPercent(opening.bar());
       frame.current = 0;
       // Hand the driver the shaders of everything that has already arrived,
       // so it compiles them while the network is still busy. Throttled, and
@@ -162,7 +131,7 @@ function Warmup({ full }: { full: boolean }) {
     }
 
     const p = compiled.current ? 1 : 0.85 + compileFraction.current * 0.14;
-    setLoadPercent(Math.max(bar.current.value, p));
+    setLoadPercent(Math.max(opening.bar(), p));
     if (frame.current >= 26 && compiled.current) {
       done.current = true;
       setHolding(false);
@@ -185,7 +154,7 @@ export function Scene({inspection=false}:{inspection?:boolean}) {
       <VenueEnvironment />
       <LightRig />
       {!inspection && (placementInspectionEnabled()?<PlacementInspection />:<CameraRig />)}
-      <VenueStreaming />
+      <VenueStreaming full={full} />
       <Warmup full={full} />
       <RenderMetrics />
       <StallDimensions />

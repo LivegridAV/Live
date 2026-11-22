@@ -1,7 +1,7 @@
 import { useGLTF, useProgress } from "@react-three/drei";
 import type * as THREE from "three";
 import { LOAD_GROUPS, START_GROUP, assetsFor, groupForZ } from "./groups";
-import { startStreaming, type FetchSample, type LoadManifest, type StreamHandle } from "./streamer";
+import { startStreaming, type FetchSample, type LoadManifest, type QueueItem, type StreamHandle } from "./streamer";
 import { mediaRequests, modelRequest, pathOf } from "./assetUrls";
 import { rememberImage } from "./prefetched";
 import { settleManifest } from "./manifest";
@@ -14,6 +14,17 @@ import { gltfExtender, ktx2Sibling, loadVenueTexture } from "../three/textureLoa
  * Browser glue for the streamer: what "fetching a group" means in the venue,
  * how bandwidth is measured, and the state the loader and the gates read.
  * One streamer runs per mounted venue (`startVenueStreaming`).
+ *
+ * The queue (owner decision 3, open early and fill in): the start group
+ * alone, then every later group's light pack in journey order, then the full
+ * groups in journey order. Before opening only the opening set runs: the
+ * start group and the light packs the planner says must arrive first
+ * (`planOpening`). Everything else is held until the venue opens; then the
+ * remaining light packs run, and the full groups only once every light pack
+ * has settled, so no full download takes bandwidth from a pack a visitor is
+ * walking towards (the planner assumes the packs arrive back to back). Review,
+ * capture and inspection modes queue no light pack and open on every full
+ * group.
  */
 export const MANIFEST_URL = "/models/load-manifest.json";
 
@@ -22,6 +33,21 @@ let handle: StreamHandle | null = null;
 let renderer: THREE.WebGLRenderer | null = null;
 let manifest: LoadManifest | null = null;
 const failed = new Set<string>();
+/** Review, capture and inspection modes: every full group, no light pack. */
+let fullMode = false;
+/** What the venue must have before it opens; null until the plan is known. */
+let opening: { full: string[]; lite: string[] } | null = null;
+let opened = false;
+/** Light packs that have arrived, failed for good or been dropped (their full group arrived first). */
+const liteSettled = new Set<string>();
+
+const LITE = ".lite";
+/** The queue item of a group's light pack. */
+export const liteItem = (id: string) => `${id}${LITE}`;
+const isLiteItem = (item: string) => item.endsWith(LITE);
+const groupOfItem = (item: string) => isLiteItem(item) ? item.slice(0, -LITE.length) : item;
+const liteFiles = (id: string) => manifest?.groups.find(g => g.id === id)?.lite ?? [];
+const laterIds = () => LOAD_GROUPS.map(group => group.id).filter(id => id !== START_GROUP);
 const perf = () => typeof location !== "undefined" && new URLSearchParams(location.search).has("perf");
 
 /**
@@ -120,13 +146,20 @@ async function fetchGroup(id: string) {
     ...ktx2.map(path => loadVenueTexture(path, renderer!))]);
 }
 
+/** A light pack: its lite models, parsed into the cache its LiteGroup reads. */
+async function fetchLite(id: string) {
+  const paths = liteFiles(id);
+  if (!paths.length) throw new Error(`load group ${id} has no light pack`);
+  await Promise.all(paths.map(path => loadModel(sourceOfLite(path), true, "lite")));
+}
+
 const hasKtx2 = (path: string) => !!manifest?.ktx2Media?.includes(ktx2Sibling(path));
 
 const sourceOfLite = (path: string) => path.replace(/\.lite\.glb$/i, ".glb");
 
-/** A group's own files, including the lod1 models it may load instead. */
-function ownFiles(ids: readonly string[]) {
-  const files = new Set<string>();
+/** A group's own files, including the lod1 models it may load instead, plus the light packs of `liteIds`. */
+function ownFiles(ids: readonly string[], liteIds: readonly string[] = []) {
+  const files = new Set<string>(liteIds.flatMap(liteFiles));
   for (const group of LOAD_GROUPS) {
     if (!ids.includes(group.id)) continue;
     for (const path of [...group.assets, ...Object.values(group.variants ?? {}).flat()]) {
@@ -146,9 +179,10 @@ const entryPath = (entry: PerformanceEntry) => { try { return new URL(entry.name
  * to its last response, and every asset byte that arrived inside it (shared
  * /textures/ files arrive alongside and share the same connection).
  */
-function measure(id: string): FetchSample | undefined {
+function measure(item: string): FetchSample | undefined {
+  const id = groupOfItem(item);
   if (!LOAD_GROUPS.some(g => g.id === id) || typeof performance === "undefined") return undefined;
-  const own = ownFiles([id]);
+  const own = isLiteItem(item) ? ownFiles([], [id]) : ownFiles([id]);
   const entries = performance.getEntriesByType("resource") as PerformanceResourceTiming[];
   const mine = entries.filter(entry => own.has(pathOf(entryPath(entry))));
   if (!mine.length) return undefined;
@@ -160,36 +194,65 @@ function measure(id: string): FetchSample | undefined {
   return { bytes, startMs, endMs };
 }
 
-/** Start streaming for a mounted venue (on its renderer). Returns the stop function for effect cleanup. */
-export function startVenueStreaming(gl: THREE.WebGLRenderer) {
+/** The queue for a manifest: start, the light packs (normal visits), then the full groups. */
+function queueItems(loaded: LoadManifest): QueueItem[] {
+  const [first, ...rest] = loaded.groups;
+  if (!first) return [];
+  const lite = fullMode ? [] : rest.filter(group => group.lite?.length)
+    .map(group => ({ id: liteItem(group.id), bytes: group.liteBytes ?? 0 }));
+  return [first, ...lite, ...rest];
+}
+
+/**
+ * Start streaming for a mounted venue (on its renderer). `full`: review,
+ * capture and inspection modes (`fullLoadRequested`). Returns the stop
+ * function for effect cleanup.
+ */
+export function startVenueStreaming(gl: THREE.WebGLRenderer, { full = false }: { full?: boolean } = {}) {
   handle?.stop();
   renderer = gl;
   manifest = null;
   failed.clear();
-  liteFor = null;
-  useVenue.setState({ readyGroups: [], warmGroups: [], liteGroups: [] });
+  fullMode = full;
+  opening = null;
+  opened = false;
+  liteSettled.clear();
+  useVenue.setState({ readyGroups: [], warmGroups: [], liteGroups: [], liteWarmGroups: [] });
   // The default buffer (250) fills before the last group arrives.
   try { performance.setResourceTimingBufferSize(2000); } catch { /* not supported */ }
-  const current = startStreaming({
+  const current: StreamHandle = startStreaming({
     manifestUrl: MANIFEST_URL,
-    fetchGroup,
-    measure: id => measure(id),
+    items: queueItems,
+    fetchGroup: item => isLiteItem(item) ? fetchLite(groupOfItem(item)) : fetchGroup(item),
+    measure: item => measure(item),
     fallbackIds: LOAD_GROUPS.map(group => group.id),
     onManifest: loaded => { manifest = loaded; settleManifest(loaded); },
-    onReady: id => {
-      if (perf()) console.info(`[venue] load group ${id} ready at ${Math.round(performance.now())} ms`);
+    onReady: item => {
+      const id = groupOfItem(item);
+      if (perf()) console.info(`[venue] ${isLiteItem(item) ? "light pack" : "load group"} ${id} ready at ${Math.round(performance.now())} ms`);
+      if (isLiteItem(item)) { useVenue.getState().markLiteReady(id); settleLite(id); return; }
       useVenue.getState().markGroupReady(id);
+      // The full files are in memory: the light pack is no longer needed.
+      current.drop([liteItem(id)]);
+      settleLite(id);
     },
-    onRetry: (id, attempt, delayMs, error) =>
-      console.warn(`[venue] load group ${id} failed (attempt ${attempt}); retrying in ${delayMs / 1000} s`, error),
-    onFailed: (id, error) => {
-      if (id === "manifest") settleManifest(null);
-      failed.add(id);
-      console.warn(`[venue] load group ${id} failed ${id === "manifest" ? "" : "4 times "}and is not retried; its zone keeps the light pack`, error);
+    onRetry: (item, attempt, delayMs, error) =>
+      console.warn(`[venue] ${isLiteItem(item) ? "light pack" : "load group"} ${groupOfItem(item)} failed (attempt ${attempt}); retrying in ${delayMs / 1000} s`, error),
+    onFailed: (item, error) => {
+      if (item === "manifest") settleManifest(null);
+      failed.add(item);
+      if (isLiteItem(item)) {
+        const id = groupOfItem(item);
+        console.warn(`[venue] light pack for ${id} failed 4 times and is not retried; the zone waits for its full group`, error);
+        liteFailed(id);
+        settleLite(id);
+        return;
+      }
+      console.warn(`[venue] load group ${item} failed ${item === "manifest" ? "" : "4 times "}and is not retried; its zone keeps the light pack`, error);
     },
   });
-  // Later groups wait for the opening plan (planOpening).
-  current.hold(LOAD_GROUPS.map(group => group.id).filter(id => id !== START_GROUP));
+  // Later groups and light packs wait for the opening plan (planOpening).
+  current.hold([...laterIds(), ...laterIds().map(liteItem)]);
   handle = current;
   const unsubscribe = perf() ? reportDuplicatesWhenWarm() : () => {};
   return () => {
@@ -199,54 +262,73 @@ export function startVenueStreaming(gl: THREE.WebGLRenderer) {
   };
 }
 
-/** Groups left out of the opening, waiting for their light pack once the venue opens. */
-let liteFor: string[] | null = null;
-
 /**
- * The opening plan is decided: the groups in it stream now. A group left out
- * of it streams in after opening, so it gets its light pack first: those
- * groups stay held until `venueOpened` has fetched their lite files. When
- * every group is in the plan, no lite file is ever fetched.
+ * The opening plan is decided: `full` groups and the light packs of `lite`
+ * groups stream now, and the venue opens once they are warm. A group in
+ * `lite` that has no light pack (or whose pack has already failed) needs its
+ * full group instead: a reachable zone is never left with nothing to show.
  */
-export function planOpening(plan: readonly string[]) {
-  const later = LOAD_GROUPS.map(group => group.id).filter(id => id !== START_GROUP && !plan.includes(id));
-  liteFor = later.length ? later : null;
-  handle?.release(plan);
+export function planOpening(plan: { full: readonly string[]; lite: readonly string[] }) {
+  const lite = plan.lite.filter(id => !plan.full.includes(id));
+  const withPack = fullMode ? [] : lite.filter(id => liteFiles(id).length > 0 && !failed.has(liteItem(id)));
+  opening = { full: [...plan.full, ...lite.filter(id => !withPack.includes(id))], lite: withPack };
+  handle?.release([...opening.full, ...opening.lite.map(liteItem)]);
+}
+
+/** A light pack failed for good: before opening, its group's full version becomes required. */
+function liteFailed(id: string) {
+  if (opened || !opening?.lite.includes(id)) return;
+  opening = { full: [...opening.full, id], lite: opening.lite.filter(other => other !== id) };
+  handle?.release([id]);
+}
+
+/** What the venue opens with: full groups to be warm, groups whose light pack must be warm (null before the plan). */
+export const openingSet = (): { readonly full: readonly string[]; readonly lite: readonly string[] } | null => opening;
+
+/** Groups that queue a light pack on this visit. */
+const withLitePack = () => fullMode ? [] : laterIds().filter(id => liteFiles(id).length > 0);
+
+function settleLite(id: string) {
+  liteSettled.add(id);
+  releaseFullWhenLiteDone();
+}
+
+/** After opening, once every light pack has settled: the full groups stream, in journey order. */
+function releaseFullWhenLiteDone() {
+  if (opened && withLitePack().every(id => liteSettled.has(id))) handle?.release(laterIds());
 }
 
 /**
- * The venue has opened: fetch the light pack of the groups left out of the
- * opening, before any of their full files, then let them stream. A group
- * whose lite files fail keeps rendering nothing until it is warm.
+ * The venue has opened: the remaining light packs stream in journey order,
+ * then the full groups (releaseFullWhenLiteDone), at most two at a time.
  */
 export function venueOpened() {
-  const ids = liteFor, current = handle;
-  liteFor = null;
-  if (!ids || !current) return;
-  void Promise.all(ids.map(async id => {
-    const paths = manifest?.groups.find(g => g.id === id)?.lite ?? [];
-    if (!paths.length) return;
-    try {
-      await Promise.all(paths.map(path => loadModel(sourceOfLite(path), true, "lite")));
-      useVenue.getState().markLiteReady(id);
-    } catch (error) {
-      console.warn(`[venue] light pack for ${id} failed; the zone stays empty until its group is warm`, error);
-    }
-  })).then(() => {
-    if (perf()) console.info(`[venue] light pack for ${ids.join(", ")} ready at ${Math.round(performance.now())} ms`);
-    current.release(ids);
-  });
+  opened = true;
+  handle?.release(laterIds().map(liteItem));
+  releaseFullWhenLiteDone();
 }
 
-/** Move the group needed at camera z `z` to the front of the queue (nav jumps, stall visits). */
+/**
+ * Move the group needed at camera z `z` to the front of the queue (nav jumps,
+ * stall visits): its light pack first unless it is already in memory (or the
+ * full group is), then its full group. Running downloads are not cancelled.
+ */
 export function prioritizeZ(z: number) {
-  if (Number.isFinite(z)) handle?.prioritize(groupForZ(z).id);
+  if (!Number.isFinite(z)) return;
+  const id = groupForZ(z).id;
+  const { readyGroups, liteGroups } = useVenue.getState();
+  const order = !fullMode && !readyGroups.includes(id) && !liteGroups.includes(id) ? [liteItem(id), id] : [id];
+  // A jump's target need not wait for the other light packs.
+  if (opened) handle?.release(order);
+  handle?.prioritize(order);
 }
 
 export const streamBandwidth = () => handle?.bandwidth() ?? 0;
 export const groupFailed = (id: string) => failed.has(id);
+/** The build's load manifest could not be fetched (the streamer runs on its fallback). */
+export const manifestFailed = () => failed.has("manifest");
 
-/** Groups with their switch-on z and the bytes they cost under the current conditions. */
+/** Groups with their switch-on z, the bytes they cost under the current conditions, and their light pack's bytes. */
 export function plannerGroups() {
   if (!manifest) return null;
   const conditions = loadConditions();
@@ -255,14 +337,14 @@ export function plannerGroups() {
     const base = entry?.bytes ?? 0;
     // Each active condition adds what it changes: bytes + Σ (bytesByCondition[c] − bytes).
     const bytes = [...conditions].reduce((sum, c) => sum + ((entry?.bytesByCondition?.[c] ?? base) - base), base);
-    return { id: group.id, switchOnZ: group.switchOnZ, bytes };
+    return { id: group.id, switchOnZ: group.switchOnZ, bytes, liteBytes: entry?.liteBytes ?? 0 };
   });
 }
 
-/** Bytes of `ids`' own files (and shared textures) that have arrived so far. */
-export function downloadedBytes(ids: readonly string[]) {
+/** Bytes of `ids`' own files, `liteIds`' light packs (and shared textures) that have arrived so far. */
+export function downloadedBytes(ids: readonly string[], liteIds: readonly string[] = []) {
   if (typeof performance === "undefined") return 0;
-  const own = ownFiles(ids);
+  const own = ownFiles(ids, liteIds);
   return (performance.getEntriesByType("resource") as PerformanceResourceTiming[])
     .filter(entry => { const p = pathOf(entryPath(entry)); return own.has(p) || p.startsWith("/textures/") || p.startsWith("/basis/"); })
     .reduce((sum, entry) => sum + (entry.transferSize || entry.encodedBodySize || 0), 0);

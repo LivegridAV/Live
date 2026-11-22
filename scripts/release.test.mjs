@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync, existsSync, readdirSync } from "node:fs";
+import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
 import * as THREE from "three";
@@ -310,14 +310,18 @@ test("each group's bytes are its own files, KTX2 media in place of their WebP, a
 test("lite mode and lod1 choice live in the venue's model loading", () => {
   assert.match(read("src/venue/systems/Quality.tsx"), /get\("quality"\)/, "?quality= override is read in detectQuality");
   const scene = read("src/venue/Scene.tsx");
-  assert.doesNotMatch(scene, /startZ:\s*camera\.position\.z/, "the planner start is the journey's p=0 camera, not the live camera");
-  assert.match(scene, /journeyStartZ\(/);
+  // The opening plan runs in the warm-up's hook (Task 6b).
+  const opening = read("src/venue/loading/useOpeningPlan.ts");
+  assert.match(scene, /useOpeningPlan\(full\)/);
+  assert.doesNotMatch(opening, /startZ:\s*camera\.position\.z/, "the planner start is the journey's p=0 camera, not the live camera");
+  assert.match(opening, /journeyStartZ\(/);
+  assert.match(opening, /liteBeforeOpening\(/, "normal visits open on the entrance and the late light packs");
   const gate = read("src/venue/loading/LoadGroupGate.tsx");
   assert.match(gate, /<LiteGroup id=\{id\}>/, "the gate renders the zone in lite mode until it is warm");
   assert.match(gate, /unsubscribe\(\)/, "the gate stops listening to the store once its group is ready");
   assert.match(read("src/venue/three/ExpoAsset.tsx"), /useModelUrl\(/);
-  assert.match(scene, /planOpening\(/, "the opening plan tells the streamer which groups stream later");
-  assert.match(scene, /venueOpened\(/, "the light pack is fetched once the venue opens");
+  assert.match(opening, /planOpening\(/, "the opening plan tells the streamer what streams before opening");
+  assert.match(scene, /venueOpened\(/, "the rest of the venue streams once it opens");
   assert.doesNotMatch(read("src/venue/loading/stream.ts"), /loadModel\(path, false, "lite"\)/, "start no longer joins the light pack");
 });
 
@@ -391,9 +395,20 @@ test("KTX2 media sit next to their WebP and follow the group rule", async () => 
   }
 });
 
-test("start fits 20 MiB", () => {
+// Owner decision 3: the venue opens once the entrance is ready, at its
+// current size (20 MiB needs lighter models, which were not chosen).
+test("start fits 24 MiB", () => {
   const start = JSON.parse(read("out/models/load-manifest.json")).groups.find(g => g.id === "start");
-  assert.ok(start.bytes <= 20 * 2 ** 20, `start is ${(start.bytes / 2 ** 20).toFixed(1)} MiB, over 20 MiB`);
+  assert.ok(start.bytes <= 24 * 2 ** 20, `start is ${(start.bytes / 2 ** 20).toFixed(1)} MiB, over 24 MiB`);
+});
+
+test("every non-start group lists liteBytes: the size of its lite files", () => {
+  const manifest = JSON.parse(read("out/models/load-manifest.json"));
+  for (const group of manifest.groups) {
+    const sum = group.lite.reduce((total, p) => total + statSync(path.join("out", p)).size, 0);
+    assert.equal(group.liteBytes, sum, `${group.id} liteBytes`);
+    if (group.id !== "start") assert.ok(group.liteBytes > 0, `${group.id} has a light pack`);
+  }
 });
 
 test("the Basis transcoder is served from /basis/ with a cache rule", () => {

@@ -8,16 +8,24 @@ import { baselineCameraForSearch } from "../data/baselineCameras";
 import { progressToScroll } from "./ScrollRig";
 import { perfHandle } from "../media/engine";
 import { LOAD_GROUPS } from "../loading/groups";
+import { createSample, samplePath } from "../data/path";
 
 type PerfSnapshot = Record<string, {position:[number,number,number]; quaternion:[number,number,number,number]; size:[number,number,number]}>;
 declare global { interface Window { __venuePerf?: {
-  loaded(): boolean; groupsReady(): string[]; allReady(): boolean;
+  loaded(): boolean;
+  /** Groups whose full version is warm. */
+  groupsReady(): string[];
+  /** Groups with something to show: a warm full version or a warm light pack. */
+  groupsShown(): string[];
+  allReady(): boolean;
   /** Min and max over the last 6 frames; some frames add an extra pass, targets are judged on the max. */
   stats(): {callsMin:number; callsMax:number; trianglesMin:number; trianglesMax:number; textures:number; geometries:number};
   longTasks(): {ms:number; progress:number}[];
   snapshot(): PerfSnapshot;
   /** Harness extra: page scroll offset (px) at which the journey sits at progress p. */
   scrollTop(p: number): number;
+  /** Harness extra: camera path z at journey progress p (no portrait push-back). */
+  pathZ(p: number): number;
   /** Harness extra: pin media time (LED screens, videos) to t seconds so screenshots repeat. */
   freeze(t: number): void;
 }; } }
@@ -84,6 +92,10 @@ export function RenderMetrics() {
         loaded: () => useVenue.getState().loaded,
         // Warm groups: mounted, shader-warmed and shown when in range.
         groupsReady: () => [...useVenue.getState().warmGroups],
+        groupsShown: () => {
+          const { warmGroups, liteWarmGroups } = useVenue.getState();
+          return [...new Set([...warmGroups, ...liteWarmGroups])];
+        },
         allReady: () => {
           const state = useVenue.getState();
           return state.loaded && LOAD_GROUPS.every(group => state.warmGroups.includes(group.id));
@@ -95,6 +107,7 @@ export function RenderMetrics() {
         longTasks: () => [...allTasks.current],
         snapshot: () => snapshotScene(scene),
         scrollTop: progressToScroll,
+        pathZ: (() => { const sample = createSample(); return (p: number) => samplePath(p, sample).pos.z; })(),
         freeze: (t: number) => perfHandle.engine?.freeze(t),
       };
     }
