@@ -1,6 +1,6 @@
 # Venue speed: fast loading and smooth walkthrough (stage 1 of the WebGPU move)
 
-Date: 2026-11-21 · Status: awaiting owner approval · Branch: `perf/venue-speed`
+Date: 2026-11-21 · Status: approved by owner 2026-11-22 · Branch: `perf/venue-speed`
 
 ## Intent
 
