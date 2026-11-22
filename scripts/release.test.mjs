@@ -194,3 +194,96 @@ test("build writes a byte manifest per load group, with an opening that fits the
   const start = manifest.groups.find(g => g.id === "start");
   assert.ok(start.bytes <= 24 * 2 ** 20, `start is ${(start.bytes / 2 ** 20).toFixed(1)} MiB, over the 24 MiB budget`);
 });
+
+// ------------------------------------------------------------ derived models
+const loadGroups = JSON.parse(read("src/venue/loading/groups.json"));
+const groupGlbs = group => [...new Set([...group.assets, ...Object.values(group.variants ?? {}).flat()])].filter(p => p.endsWith(".glb"));
+const nonStartGlbs = loadGroups.filter(g => g.id !== "start").flatMap(groupGlbs);
+const lod1Sources = loadGroups.flatMap(groupGlbs).filter(p => /-visitors\.glb$/.test(p) || p.endsWith("/projection-finish-v2-blender-interior.glb"));
+const outFile = p => path.join("out", p);
+const sibling = (p, kind) => p.replace(/\.glb$/, `.${kind}.glb`);
+let gltfIO;
+async function readModel(p) {
+  if (!gltfIO) {
+    const { NodeIO } = await import("@gltf-transform/core");
+    const { ALL_EXTENSIONS } = await import("@gltf-transform/extensions");
+    const { MeshoptDecoder } = await import("meshoptimizer");
+    await MeshoptDecoder.ready;
+    gltfIO = new NodeIO().registerExtensions(ALL_EXTENSIONS).registerDependencies({ "meshopt.decoder": MeshoptDecoder });
+  }
+  return gltfIO.read(outFile(p));
+}
+/** Named nodes with their named ancestry, so the hierarchy is compared too. */
+const namedNodes = document => document.getRoot().listNodes().filter(n => n.getName()).map(node => {
+  const chain = [];
+  for (let n = node; n; n = n.getParentNode()) chain.unshift(n.getName());
+  return chain.join("/");
+}).sort();
+const triangles = document => document.getRoot().listMeshes().flatMap(m => m.listPrimitives())
+  .reduce((sum, p) => sum + (p.getIndices()?.getCount() ?? p.getAttribute("POSITION").getCount()) / 3, 0);
+
+test("every non-start GLB has a light-pack sibling, and the light pack fits 3 MiB", () => {
+  assert.ok(nonStartGlbs.length >= 10);
+  let total = 0;
+  for (const p of nonStartGlbs) {
+    assert.ok(existsSync(outFile(sibling(p, "lite"))), `missing ${sibling(p, "lite")}`);
+    total += readFileSync(outFile(sibling(p, "lite"))).byteLength;
+  }
+  assert.ok(total <= 3 * 2 ** 20, `light pack is ${(total / 2 ** 20).toFixed(2)} MiB, over 3 MiB`);
+});
+
+test("every lite and lod1 model keeps its source's named nodes", async () => {
+  const pairs = [...nonStartGlbs.map(p => [p, sibling(p, "lite")]), ...lod1Sources.map(p => [p, sibling(p, "lod1")])];
+  for (const [source, derived] of pairs) {
+    assert.ok(existsSync(outFile(derived)), `missing ${derived}`);
+    assert.deepEqual(namedNodes(await readModel(derived)), namedNodes(await readModel(source)), `${derived} changed its named nodes`);
+  }
+});
+
+test("each lod1 has at most 45% of its source's triangles, with its textures unchanged", async () => {
+  assert.ok(lod1Sources.length >= 7);
+  for (const p of lod1Sources) {
+    const source = await readModel(p), lod1 = await readModel(sibling(p, "lod1"));
+    assert.ok(triangles(lod1) <= 0.45 * triangles(source), `${sibling(p, "lod1")}: ${triangles(lod1)} of ${triangles(source)} triangles`);
+    assert.equal(lod1.getRoot().listTextures().length, source.getRoot().listTextures().length);
+  }
+});
+
+test("lite models drop morphs and skins and shrink every texture to 128 px", async () => {
+  for (const p of nonStartGlbs) {
+    const lite = await readModel(sibling(p, "lite"));
+    assert.equal(lite.getRoot().listSkins().length, 0, `${p}: skins`);
+    assert.ok(lite.getRoot().listMeshes().every(m => m.listPrimitives().every(prim => prim.listTargets().length === 0)), `${p}: morph targets`);
+    for (const texture of lite.getRoot().listTextures()) {
+      assert.ok(!texture.getURI(), `${p}: lite textures are embedded`);
+      const { width, height } = await sharp(Buffer.from(texture.getImage())).metadata();
+      assert.ok(width <= 128 && height <= 128, `${p}: ${width}x${height} texture`);
+    }
+  }
+});
+
+test("the manifest lists each group's light pack, counts it in start, and lists the lod1 models", () => {
+  const manifest = JSON.parse(read("out/models/load-manifest.json"));
+  for (const group of loadGroups) {
+    const entry = manifest.groups.find(g => g.id === group.id);
+    const expected = group.id === "start" ? [] : groupGlbs(group).map(p => sibling(p, "lite"));
+    assert.deepEqual([...entry.lite].sort(), expected.sort(), `${group.id} lite`);
+  }
+  assert.deepEqual([...manifest.lod1].sort(), lod1Sources.map(p => sibling(p, "lod1")).sort());
+  const liteBytes = manifest.groups.flatMap(g => g.lite).reduce((sum, p) => sum + readFileSync(outFile(p)).byteLength, 0);
+  const startAssets = loadGroups[0].assets.filter(p => p.endsWith(".glb"));
+  const startGlbBytes = startAssets.reduce((sum, p) => sum + readFileSync(outFile(p)).byteLength, 0);
+  const start = manifest.groups.find(g => g.id === "start");
+  assert.ok(start.bytes >= startGlbBytes + liteBytes, "the light pack downloads with start");
+});
+
+test("lite mode and lod1 choice live in the venue's model loading", () => {
+  assert.match(read("src/venue/systems/Quality.tsx"), /get\("quality"\)/, "?quality= override is read in detectQuality");
+  const scene = read("src/venue/Scene.tsx");
+  assert.doesNotMatch(scene, /startZ:\s*camera\.position\.z/, "the planner start is the journey's p=0 camera, not the live camera");
+  assert.match(scene, /journeyStartZ\(/);
+  const gate = read("src/venue/loading/LoadGroupGate.tsx");
+  assert.match(gate, /<LiteGroup id=\{id\}>/, "the gate renders the zone in lite mode until it is warm");
+  assert.match(gate, /unsubscribe\(\)/, "the gate stops listening to the store once its group is ready");
+  assert.match(read("src/venue/three/ExpoAsset.tsx"), /useModelUrl\(/);
+});

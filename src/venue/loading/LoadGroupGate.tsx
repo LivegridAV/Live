@@ -5,6 +5,7 @@ import type * as THREE from "three";
 import { useVenue } from "../systems/store";
 import { WarmScope, afterWarmup, warmSubtree, warmupGateOpen, type WarmWork } from "../three/warmScene";
 import { startVenueStreaming } from "./stream";
+import { LiteGroup } from "./LiteGroup";
 
 /** Starts the background streamer for this venue's lifetime. Rendered once in Scene. */
 export function VenueStreaming() {
@@ -37,11 +38,15 @@ function claim(id: string) {
 /**
  * Holds a load group's part of the scene back until its files are in memory.
  *
- * Until the streamer reports the group ready it renders `lite` (Task 5's
- * light pack; nothing until then). Once ready it mounts `children` hidden,
- * warms that subtree's shaders and uploads during idle time, runs the
- * group's deferred bakes, then shows it and reports the group warm. The
- * surrounding `ZoneGroup` still decides distance visibility as before.
+ * Until the group is warm it renders `lite`: by default the zone's own
+ * children in lite mode (LiteGroup), i.e. the light pack at the same
+ * transforms. Once the streamer reports the group ready it mounts `children`
+ * hidden, warms that subtree's shaders and uploads during idle time, runs the
+ * group's deferred bakes, then swaps lite for full in one commit and reports
+ * the group warm. The swap happens as soon as the group is warm: usually
+ * while the zone is still beyond its switch-on distance (hidden), and at once
+ * when a visitor has jumped inside it. The surrounding `ZoneGroup` still
+ * decides distance visibility as before.
  */
 export function LoadGroupGate({ id, children, lite }: { id: string; children: ReactNode; lite?: ReactNode }): JSX.Element {
   const [ready, setReady] = useState(() => useVenue.getState().readyGroups.includes(id));
@@ -53,18 +58,25 @@ export function LoadGroupGate({ id, children, lite }: { id: string; children: Re
     return () => { done(false); release.current = null; };
   }, [id]);
   useEffect(() => {
+    if (ready) return;
+    // Listen only until the group is ready: the store updates every scroll frame.
     const check = (state: { readyGroups: string[] }) => {
+      if (!state.readyGroups.includes(id)) return;
+      unsubscribe();
       // A transition lets React yield between the group's models while they
       // are cloned and prepared, instead of one long task.
-      if (state.readyGroups.includes(id)) startTransition(() => setReady(true));
+      startTransition(() => setReady(true));
     };
+    const unsubscribe = useVenue.subscribe(check);
     check(useVenue.getState());
-    return useVenue.subscribe(check);
-  }, [id]);
+    return unsubscribe;
+  }, [id, ready]);
+  // Both state changes land in one commit: the lite subtree unmounts and the
+  // full one is shown (WarmGroup's layout effect) before the next frame.
   const onWarm = useMemo(() => () => { setWarm(true); release.current?.(true); }, []);
   return <>
-    {ready && <WarmGroup onWarm={onWarm}>{children}</WarmGroup>}
-    {!warm && (lite ?? null)}
+    {ready && <WarmGroup shown={warm} onWarm={onWarm}>{children}</WarmGroup>}
+    {!warm && (lite === undefined ? <LiteGroup id={id}>{children}</LiteGroup> : lite)}
   </>;
 }
 
@@ -99,12 +111,13 @@ function createScope() {
   };
 }
 
-function WarmGroup({ children, onWarm }: { children: ReactNode; onWarm: () => void }) {
+function WarmGroup({ children, shown, onWarm }: { children: ReactNode; shown: boolean; onWarm: () => void }) {
   const ref = useRef<THREE.Group>(null);
   const get = useThree(state => state.get);
   const scope = useMemo(() => createScope(), []);
-  // Hidden from the first frame: only the warm-up draws it until it is ready.
-  useLayoutEffect(() => { if (ref.current) ref.current.visible = false; }, []);
+  // Hidden from the first frame: only the warm-up draws it until it is warm.
+  // Shown in the same commit that unmounts the light pack.
+  useLayoutEffect(() => { if (ref.current) ref.current.visible = shown; }, [shown]);
   useEffect(() => {
     let cancelled = false;
     const isCancelled = () => cancelled;
@@ -120,7 +133,6 @@ function WarmGroup({ children, onWarm }: { children: ReactNode; onWarm: () => vo
       if (cancelled) return;
       await scope.open();
       if (cancelled || !ref.current) return;
-      ref.current.visible = true;
       onWarm();
     })();
     return () => { cancelled = true; };

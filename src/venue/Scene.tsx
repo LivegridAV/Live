@@ -28,6 +28,7 @@ import { EXHIBITION_RANGES } from "./data/placements";
 import { PlacementInspection, placementInspectionEnabled } from "./systems/PlacementInspection";
 import { START_GROUP } from "./loading/groups";
 import { groupsBeforeOpening } from "./loading/plan";
+import { journeyStartZ } from "./data/path";
 import { VenueStreaming } from "./loading/LoadGroupGate";
 import { downloadedBytes, fullLoadRequested, groupFailed, plannerGroups, streamBandwidth } from "./loading/stream";
 
@@ -63,7 +64,7 @@ function RenderHold() {
  * for every group. Everything else streams in after the venue opens.
  */
 function Warmup({ full }: { full: boolean }) {
-  const { gl, scene, camera } = useThree();
+  const { gl, scene, camera, size } = useThree();
 
   const frame = useRef(0);
   const setLoadPercent = useVenue((s) => s.setLoadPercent);
@@ -92,11 +93,13 @@ function Warmup({ full }: { full: boolean }) {
       const groups = plannerGroups();
       if (groups) {
         const bytesPerSecond = streamBandwidth();
-        // The visitor walks from wherever the journey has put the camera.
+        // The visitor starts walking at the journey's p = 0 camera (with the
+        // portrait push-back on narrow frames), whatever this frame's camera is.
+        const startZ = journeyStartZ(size.width / Math.max(1, size.height));
         plan.current = full ? groups.map(g => g.id)
-          : groupsBeforeOpening({ bytesPerSecond, groups, startZ: camera.position.z });
+          : groupsBeforeOpening({ bytesPerSecond, groups, startZ });
         if (new URLSearchParams(location.search).has("perf")) {
-          console.info(`[venue] opening with ${plan.current.join(", ")} (${Math.round(bytesPerSecond / 1000)} kB/s, start z ${camera.position.z.toFixed(1)})`);
+          console.info(`[venue] opening with ${plan.current.join(", ")} (${Math.round(bytesPerSecond / 1000)} kB/s, start z ${startZ.toFixed(1)})`);
         }
       }
     }

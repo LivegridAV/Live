@@ -14,6 +14,8 @@ import { inRental2026 } from "../data/ledRental2026";
 import { applyRental2026Materials } from "./rental2026Materials";
 import type { InstallationId } from "../data/placements";
 import { refineAvatarSkin } from "./surfaceDetail";
+import { releaseLiteModel, useModelUrl } from "../loading/useModelUrl";
+import { useLiteMode } from "../loading/liteMode";
 
 function installationFinishId(name:string):InstallationId|undefined {
   if(name.startsWith("grand-anamorphic"))return "S1";
@@ -50,8 +52,8 @@ function shareAvatarTextures(model:THREE.Object3D){
     }
   });
 }
-function Model({ name, revision, darkHall=false, hideHallColumns=false }: AssetProps) {
-  const { scene } = useGLTF(expoAssetUrl(name,revision), false);
+function Model({ name, url, lite, darkHall=false, hideHallColumns=false }: AssetProps&{url:string;lite:boolean}) {
+  const { scene } = useGLTF(url, false);
   const {clone,owned,overhead,sectionWalls} = useMemo(() => {
     const model = scene.clone(true);
     shareAvatarTextures(model);
@@ -126,7 +128,9 @@ function Model({ name, revision, darkHall=false, hideHallColumns=false }: AssetP
         }
       }
     });
-    if (name === "technical-showcase"||name.startsWith("grand-technical")) applyTechnicalMaterials(model);
+    // The light pack keeps the authored materials: the CC0 surface sets are
+    // the technical group's own files, which lite mode never fetches.
+    if (!lite&&(name === "technical-showcase"||name.startsWith("grand-technical"))) applyTechnicalMaterials(model);
     if(name.startsWith("led-rental-2026-")||name.startsWith("grand-rental")||name.startsWith("grand-reception")||name.startsWith("grand-pillar"))applyRental2026Materials(model,name.startsWith("grand-rental-finish-v2-"));
     if (name.startsWith("projection-mapping-stall")||name.startsWith("projection-interior-details")||name.startsWith("projection-projectors")||name==="projection-grand-v1") applyProjectionBoothMaterials(model);
     if(name.startsWith("projection-finish-v2-"))applyProjectionFinishV2Materials(model);
@@ -145,8 +149,10 @@ function Model({ name, revision, darkHall=false, hideHallColumns=false }: AssetP
       if(object.userData.ledRentalOverhead)overhead.push(object);
     });
     return {clone:model,owned,overhead,sectionWalls};
-  }, [scene,darkHall,hideHallColumns,name]);
+  }, [scene,darkHall,hideHallColumns,name,lite]);
   useEffect(()=>()=>owned.forEach(material=>material.dispose()),[owned]);
+  // Only a light-pack file is released; start files drawn in lite mode stay shared.
+  useEffect(()=>/\.lite\.glb(?:$|\?)/.test(url)?()=>releaseLiteModel(url,scene):undefined,[url,scene]);
   useFrame(()=>{
     const state=useVenue.getState();
     const diagnostic=state.stallVisit?.view==="plan"||state.stallVisit?.view==="section";
@@ -158,6 +164,12 @@ function Model({ name, revision, darkHall=false, hideHallColumns=false }: AssetP
   },-2);
   return <primitive object={clone} dispose={null} />;
 }
+/** Picks the file (full, lod1 below high quality, or the lite model in lite mode), then mounts it. */
+function ModelChoice(props: AssetProps) {
+  const lite = useLiteMode();
+  const url = useModelUrl(expoAssetUrl(props.name, props.revision));
+  return url ? <Model {...props} url={url} lite={lite}/> : null;
+}
 export function ExpoAsset(props: AssetProps) {
-  return <Suspense fallback={null}><Model {...props}/></Suspense>;
+  return <Suspense fallback={null}><ModelChoice {...props}/></Suspense>;
 }

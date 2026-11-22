@@ -3,6 +3,9 @@ import { LOAD_GROUPS, START_GROUP, assetsFor, groupForZ } from "./groups";
 import { startStreaming, type FetchSample, type LoadManifest, type StreamHandle } from "./streamer";
 import { mediaRequests, modelRequest, pathOf } from "./assetUrls";
 import { rememberImage } from "./prefetched";
+import { settleManifest } from "./manifest";
+import { variantPath, type ModelVariant } from "./modelVariants";
+import { streamedVariant } from "./useModelUrl";
 import { useVenue } from "../systems/store";
 
 /**
@@ -49,8 +52,9 @@ const isThenable = (value: unknown): value is PromiseLike<unknown> =>
 // the same loader, the same cache entry the component will read.
 const readGLTF = useGLTF;
 
-async function loadModel(path: string, owned: boolean) {
-  const { url, useDraco } = modelRequest(path);
+/** Load `path` (a groups.json GLB) as the variant the mounted component will ask for. */
+async function loadModel(path: string, owned: boolean, variant: ModelVariant = streamedVariant(path)) {
+  const { url, useDraco } = modelRequest(path, variant);
   for (;;) {
     try {
       readGLTF(url, useDraco);
@@ -97,12 +101,31 @@ async function fetchGroup(id: string) {
   const paths = assetsFor(group, loadConditions());
   const models = paths.filter(path => path.endsWith(".glb"));
   if (id === START_GROUP) {
-    await Promise.all(models.map(path => loadModel(path, false)));
+    // The light pack downloads with start: the gated zones show it until
+    // their groups are warm, and their lite-mode components load it too.
+    const lightPack = (manifest?.groups ?? []).flatMap(g => g.lite ?? []).map(sourceOfLite);
+    await Promise.all([...models.map(path => loadModel(path, false)), ...lightPack.map(path => loadModel(path, false, "lite"))]);
     await loadersIdle();
     return;
   }
   const images = paths.filter(path => !path.endsWith(".glb")).flatMap(mediaRequests);
   await Promise.all([...models.map(path => loadModel(path, true)), ...images.map(loadImage)]);
+}
+
+const sourceOfLite = (path: string) => path.replace(/\.lite\.glb$/i, ".glb");
+
+/** A group's own files, including the derived models it may load instead (lod1; the light pack for start). */
+function ownFiles(ids: readonly string[]) {
+  const files = new Set<string>();
+  for (const group of LOAD_GROUPS) {
+    if (!ids.includes(group.id)) continue;
+    for (const path of [...group.assets, ...Object.values(group.variants ?? {}).flat()]) {
+      files.add(path);
+      if (path.endsWith(".glb")) files.add(variantPath(path, "lod1"));
+    }
+    if (group.id === START_GROUP) for (const entry of manifest?.groups ?? []) for (const path of entry.lite ?? []) files.add(path);
+  }
+  return files;
 }
 
 const STREAMED = /^\/(models|media|textures)\//;
@@ -114,9 +137,8 @@ const entryPath = (entry: PerformanceEntry) => { try { return new URL(entry.name
  * /textures/ files arrive alongside and share the same connection).
  */
 function measure(id: string): FetchSample | undefined {
-  const group = LOAD_GROUPS.find(g => g.id === id);
-  if (!group || typeof performance === "undefined") return undefined;
-  const own = new Set([...group.assets, ...Object.values(group.variants ?? {}).flat()]);
+  if (!LOAD_GROUPS.some(g => g.id === id) || typeof performance === "undefined") return undefined;
+  const own = ownFiles([id]);
   const entries = performance.getEntriesByType("resource") as PerformanceResourceTiming[];
   const mine = entries.filter(entry => own.has(pathOf(entryPath(entry))));
   if (!mine.length) return undefined;
@@ -141,7 +163,7 @@ export function startVenueStreaming() {
     fetchGroup,
     measure: id => measure(id),
     fallbackIds: LOAD_GROUPS.map(group => group.id),
-    onManifest: loaded => { manifest = loaded; },
+    onManifest: loaded => { manifest = loaded; settleManifest(loaded); },
     onReady: id => {
       if (perf()) console.info(`[venue] load group ${id} ready at ${Math.round(performance.now())} ms`);
       useVenue.getState().markGroupReady(id);
@@ -149,6 +171,7 @@ export function startVenueStreaming() {
     onRetry: (id, attempt, delayMs, error) =>
       console.warn(`[venue] load group ${id} failed (attempt ${attempt}); retrying in ${delayMs / 1000} s`, error),
     onFailed: (id, error) => {
+      if (id === "manifest") settleManifest(null);
       failed.add(id);
       console.warn(`[venue] load group ${id} failed ${id === "manifest" ? "" : "4 times "}and is not retried; its zone keeps the light pack`, error);
     },
@@ -186,8 +209,7 @@ export function plannerGroups() {
 /** Bytes of `ids`' own files (and shared textures) that have arrived so far. */
 export function downloadedBytes(ids: readonly string[]) {
   if (typeof performance === "undefined") return 0;
-  const own = new Set(LOAD_GROUPS.filter(group => ids.includes(group.id))
-    .flatMap(group => [...group.assets, ...Object.values(group.variants ?? {}).flat()]));
+  const own = ownFiles(ids);
   return (performance.getEntriesByType("resource") as PerformanceResourceTiming[])
     .filter(entry => { const p = pathOf(entryPath(entry)); return own.has(p) || p.startsWith("/textures/"); })
     .reduce((sum, entry) => sum + (entry.transferSize || entry.encodedBodySize || 0), 0);

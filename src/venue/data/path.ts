@@ -250,6 +250,23 @@ export function samplePath(progress:number,out:PathSample):PathSample{
   return out;
 }
 
+/**
+ * Narrow (portrait) frames pull the camera back along the approach so the
+ * arrival panels fit, fading out by p = 0.15. CameraRig adds this to z.
+ */
+export function portraitPushBack(progress: number, aspect: number) {
+  if (progress >= .15) return 0;
+  return Math.max(0, 1.5 / aspect - 1) * 24 * (1 - THREE.MathUtils.smoothstep(progress, 0, .15));
+}
+
+/**
+ * Camera z at the start of the journey (p = 0) for a frame of `aspect`: where
+ * a visitor starts walking, independent of where the camera is this frame.
+ */
+export function journeyStartZ(aspect: number) {
+  return samplePath(0, createSample()).pos.z + portraitPushBack(0, aspect);
+}
+
 function smooth(t: number) {
   return t * t * (3 - 2 * t);
 }

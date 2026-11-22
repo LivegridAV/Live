@@ -2,6 +2,7 @@
 import { useEffect, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
+import { useModelUrl } from "../loading/useModelUrl";
 import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import { useVenue } from "../systems/store";
@@ -358,7 +359,9 @@ function DressedZone({ zone, visitors }: { zone: Zone; visitors: THREE.Object3D 
 
 export function HallDressing() {
   const diagnostic = useVenue(s => s.stallVisit?.view === "plan" || s.stallVisit?.view === "section");
-  const { scene: visitors } = useGLTF(expoAssetUrl("grand-rental-finish-v2-visitors", rentalLayout.stats.visitors.sha256), false);
+  // The same file the rental booth draws (its lod1 below high quality), so it loads once.
+  const visitorsUrl = useModelUrl(expoAssetUrl("grand-rental-finish-v2-visitors", rentalLayout.stats.visitors.sha256))!;
+  const { scene: visitors } = useGLTF(visitorsUrl, false);
   useMemo(() => refineAvatarSkin(visitors), [visitors]);
   const zones = useMemo(() => hallZones(), []);
   return <group visible={!diagnostic} name="Hall dressing">

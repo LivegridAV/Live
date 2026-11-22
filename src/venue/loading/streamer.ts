@@ -23,7 +23,8 @@ export type ManifestGroup = {
   bytesByCondition?: Readonly<Record<string, number>>;
   lite?: readonly string[];
 };
-export type LoadManifest = { groups: readonly ManifestGroup[]; ktx2Media?: readonly string[] };
+/** `lod1`: the build's simplified models for the medium and low tiers (see modelVariants.ts). */
+export type LoadManifest = { groups: readonly ManifestGroup[]; lod1?: readonly string[]; ktx2Media?: readonly string[] };
 
 /** One finished download: its bytes and when it ran, in the `now()` time base (ms). */
 export type FetchSample = { bytes: number; startMs: number; endMs: number };

@@ -301,3 +301,41 @@ test("streamer: stop() starts nothing more", async t => {
     assert.deepEqual(fake.calls.map(c => c.id), ["start"]);
   });
 });
+
+// ---- model variants (Task 5) ----
+
+const { chooseModelVariant, variantUrl, variantPath } = await import("../src/venue/loading/modelVariants.ts");
+
+test("variant URLs keep the revision query", () => {
+  assert.equal(variantUrl("/models/expo/a.glb?v=abc-1", "lite"), "/models/expo/a.lite.glb?v=abc-1");
+  assert.equal(variantUrl("/models/expo/a.glb", "lod1"), "/models/expo/a.lod1.glb");
+  assert.equal(variantUrl("/models/expo/a.glb?v=1", "full"), "/models/expo/a.glb?v=1");
+  assert.equal(variantPath("/models/expo/a.glb", "lite"), "/models/expo/a.lite.glb");
+});
+
+test("lite mode loads a group's lite model and never its full file", () => {
+  const manifest = {
+    groups: [{ id: "start", lite: [] }, { id: "rental", lite: ["/models/expo/grand-rental-finish-v2-shell.lite.glb"] }],
+    lod1: ["/models/expo/grand-rental-finish-v2-visitors.lod1.glb"],
+  };
+  const start = LOAD_GROUPS.find(g => g.id === START_GROUP);
+  const startFiles = new Set([...start.assets, ...variantPaths(start)]);
+  const choose = (path, lite, quality, m = manifest) => chooseModelVariant(path, { lite, quality, manifest: m, startFiles });
+  assert.equal(choose("/models/expo/grand-rental-finish-v2-shell.glb", true, "high"), "lite");
+  // A non-start file without a lite model (or before the manifest) is not drawn at all.
+  assert.equal(choose("/models/expo/grand-rental-finish-v2-interior.glb", true, "high"), "none");
+  assert.equal(choose("/models/expo/grand-rental-finish-v2-shell.glb", true, "high", null), "none");
+  // A start file is already in memory: lite mode shows it as the venue does elsewhere.
+  assert.equal(choose("/models/expo/grand-rental-finish-v2-visitors.glb", true, "high"), "full");
+  assert.equal(choose("/models/expo/grand-rental-finish-v2-visitors.glb", true, "medium"), "lod1");
+});
+
+test("lod1 replaces the full file below high quality when the manifest lists it", () => {
+  const manifest = { groups: [], lod1: ["/models/expo/x-visitors.lod1.glb"] };
+  const choose = (path, quality, m = manifest) => chooseModelVariant(path, { lite: false, quality, manifest: m, startFiles: new Set() });
+  assert.equal(choose("/models/expo/x-visitors.glb", "high"), "full");
+  assert.equal(choose("/models/expo/x-visitors.glb", "medium"), "lod1");
+  assert.equal(choose("/models/expo/x-visitors.glb", "low"), "lod1");
+  assert.equal(choose("/models/expo/y-shell.glb", "medium"), "full");
+  assert.equal(choose("/models/expo/x-visitors.glb", "medium", null), "full");
+});

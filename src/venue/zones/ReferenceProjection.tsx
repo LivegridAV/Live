@@ -15,6 +15,8 @@ import { PROJECTION_ROOT, PROJECTION_ROTATION, PROJECTION_SCALE, PROJECTION_SCUL
 import { useVenue } from "../systems/store";
 import { journey } from "../systems/journey";
 import { preloadProjectionArtwork } from "../media/projectionPainters";
+import { useLiteMode } from "../loading/liteMode";
+import { useModelUrl } from "../loading/useModelUrl";
 import layout from "../../../public/models/expo/projection-finish-v2-blender-layout.json";
 import sculptureLayout from "../../../public/models/expo/projection-finish-v2-crystals-layout.json";
 
@@ -84,7 +86,11 @@ function ProjectionDisplay({a}:{a:DisplayAperture&{flipU?:boolean}}){
 }
 
 function MappedSculpture(){
-  const {scene}=useGLTF(expoAssetUrl("projection-finish-v2-crystals",sculptureLayout.sha256),false);
+  const url=useModelUrl(expoAssetUrl("projection-finish-v2-crystals",sculptureLayout.sha256));
+  return url?<MappedSculptureModel url={url}/>:null;
+}
+function MappedSculptureModel({url}:{url:string}){
+  const {scene}=useGLTF(url,false);
   const media=useMedia(),entered=useVenue(s=>s.entered);
   const texture=useMemo(()=>media.acquire("projection-crystal-pattern"),[media]);
   const projection=useMemo(()=>{
@@ -109,7 +115,9 @@ function MappedSculpture(){
 export function ReferenceProjection(){
   const open=useVenue(s=>s.openPavilion),hotspot=projectionLayout.interaction;
   const visit=useVenue(s=>s.stallVisit);
-  useEffect(()=>preloadProjectionArtwork(),[]);
+  // The light pack shows plain screens: no artwork fetch until the full group.
+  const lite=useLiteMode();
+  useEffect(()=>lite?undefined:preloadProjectionArtwork(),[lite]);
   useEffect(()=>()=>{document.body.style.cursor="";},[]);
   return <group position={PROJECTION_ROOT} rotation={PROJECTION_ROTATION} scale={PROJECTION_SCALE}
     userData={{projectionPavilion:true,placementId:"S4"}} name="Projection mapping · crystalline architecture pavilion">

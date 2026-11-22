@@ -1,4 +1,5 @@
 import { expoAssetUrl } from "../three/ExpoAsset";
+import { variantUrl, type ModelVariant } from "./modelVariants";
 import { MEDIA } from "../data/media";
 import { LED_RENTAL_2026_ART } from "../media/ledRental2026Painters";
 import { PROJECTION_ART } from "../media/projectionPainters";
@@ -50,10 +51,13 @@ const GLB_REVISIONS: Record<string, string | undefined> = {
 
 export type ModelRequest = { url: string; useDraco: boolean };
 
-/** How the venue requests a GLB: its URL and the `useGLTF` draco flag the component passes. */
-export function modelRequest(path: string): ModelRequest {
+/**
+ * How the venue requests a GLB: its URL and the `useGLTF` draco flag the
+ * component passes. A derived variant (lite, lod1) keeps its source's `?v=`.
+ */
+export function modelRequest(path: string, variant: ModelVariant = "full"): ModelRequest {
   const expo = /^\/models\/expo\/([^/]+)\.glb$/.exec(path);
-  if (expo) return { url: expoAssetUrl(expo[1], GLB_REVISIONS[expo[1]]), useDraco: false };
+  if (expo) return { url: variantUrl(expoAssetUrl(expo[1], GLB_REVISIONS[expo[1]]), variant), useDraco: false };
   // EntranceP01 calls useGLTF(path) with drei's default flags.
   return { url: path, useDraco: true };
 }

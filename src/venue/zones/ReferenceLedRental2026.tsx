@@ -12,6 +12,7 @@ import { RENTAL2026_ROOT, RENTAL2026_ROTATION, inRental2026 } from "../data/ledR
 import { useVenue } from "../systems/store";
 import { journey } from "../systems/journey";
 import { preloadLedRental2026Artwork } from "../media/ledRental2026Painters";
+import { useLiteMode } from "../loading/liteMode";
 import layout from "../../../public/models/expo/grand-rental-finish-v2-layout.json";
 
 type Vec3=[number,number,number];
@@ -158,7 +159,9 @@ function RotatingProduct({p,index}:{p:Product;index:number}){
 
 export function ReferenceLedRental2026(){
   const open=useVenue(s=>s.openPavilion);
-  useEffect(()=>preloadLedRental2026Artwork(),[]);
+  // The light pack shows plain screens: no artwork fetch until the full group.
+  const lite=useLiteMode();
+  useEffect(()=>lite?undefined:preloadLedRental2026Artwork(),[lite]);
   return <group name="LED Rental Solutions · October 2026 pavilion" userData={{rental2026Pavilion:true,placementId:"S2"}} position={RENTAL2026_ROOT} rotation={RENTAL2026_ROTATION}>
     <ExpoAsset name="grand-rental-finish-v2-shell" revision={layout.stats.shell.sha256}/>
     <ExpoAsset name="grand-rental-finish-v2-interior" revision={layout.stats.interior.sha256}/>

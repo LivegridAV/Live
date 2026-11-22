@@ -16,9 +16,13 @@
 //    defaults to true even when Draco is disabled).
 //    A texture embedded identically in several GLBs is written once to
 //    /textures/ and referenced from each GLB by relative URI.
-// 3. Fail the build if any file exceeds the host's per-file limit.
-// 4. Write out/models/load-manifest.json: the final transfer size of every load
-//    group in src/venue/loading/groups.json (the runtime plans the opening from it).
+// 3. Write the derived models next to the final GLBs (scripts/derived-models.mjs):
+//    `<name>.lite.glb` for every non-start group GLB (the light pack, fetched with
+//    start) and `<name>.lod1.glb` for the visitors and the projection interior.
+// 4. Fail the build if any file exceeds the host's per-file limit.
+// 5. Write out/models/load-manifest.json: the final transfer size of every load
+//    group in src/venue/loading/groups.json (the runtime plans the opening from it),
+//    each group's light pack (counted in start) and the lod1 models.
 //
 // Usage: node scripts/optimize-export.mjs [--dry-run] [--no-compress]
 import { readdirSync, readFileSync, statSync, rmSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
@@ -27,7 +31,8 @@ import path from "node:path";
 import { NodeIO } from "@gltf-transform/core";
 import { ALL_EXTENSIONS, EXTMeshoptCompression, EXTTextureWebP } from "@gltf-transform/extensions";
 import { reorder, listTextureSlots } from "@gltf-transform/functions";
-import { LOAD_GROUPS, assetsFor } from "../src/venue/loading/groups.ts";
+import { LOAD_GROUPS, START_GROUP, assetsFor } from "../src/venue/loading/groups.ts";
+import { setImageURIs, writeDerivedModels } from "./derived-models.mjs";
 import { MeshoptEncoder, MeshoptDecoder } from "meshoptimizer";
 // Must be the same sharp that @gltf-transform/functions loads (via
 // ndarray-pixels): two libvips builds in one process corrupt each other.
@@ -111,11 +116,11 @@ console.log(`Pruned ${pruned.length} unreferenced assets (${mib(prunedBytes)})${
 console.log(`Kept runtime-built directories: ${[...keepDirs].join(", ") || "none"}`);
 
 // ---------------------------------------------------------------- compress
-const report = { pruned, compressed: [], sharedTextures: [] };
+const report = { pruned, compressed: [], sharedTextures: [], derived: [] };
+await MeshoptEncoder.ready; await MeshoptDecoder.ready;
+const io = new NodeIO().registerExtensions(ALL_EXTENSIONS)
+  .registerDependencies({ "meshopt.encoder": MeshoptEncoder, "meshopt.decoder": MeshoptDecoder });
 if (compress) {
-  await MeshoptEncoder.ready; await MeshoptDecoder.ready;
-  const io = new NodeIO().registerExtensions(ALL_EXTENSIONS)
-    .registerDependencies({ "meshopt.encoder": MeshoptEncoder, "meshopt.decoder": MeshoptDecoder });
   const glbs = walk(OUT).filter(f => f.toLowerCase().endsWith(".glb"));
 
   // Textures embedded byte-for-byte in more than one GLB (the licensed avatar
@@ -179,28 +184,6 @@ function contentHash(bytes) {
   return createHash("sha256").update(bytes).digest("hex");
 }
 
-/** Give the listed images an external `uri` in a GLB's JSON chunk. */
-function setImageURIs(glb, uris) {
-  const view = new DataView(glb.buffer, glb.byteOffset, glb.byteLength);
-  const jsonLength = view.getUint32(12, true);
-  const json = JSON.parse(new TextDecoder().decode(glb.subarray(20, 20 + jsonLength)));
-  for (const [index, uri] of uris) {
-    const image = json.images[index];
-    if (json.bufferViews[image.bufferView]?.byteLength !== 1) throw new Error(`image ${index} is not a detached placeholder`);
-    delete image.bufferView;
-    image.uri = uri;
-  }
-  let text = JSON.stringify(json);
-  while (Buffer.byteLength(text) % 4) text += " ";
-  const jsonBytes = Buffer.from(text);
-  const rest = glb.subarray(20 + jsonLength);
-  const out = Buffer.alloc(20 + jsonBytes.length + rest.byteLength);
-  out.writeUInt32LE(0x46546c67, 0); out.writeUInt32LE(2, 4); out.writeUInt32LE(out.length, 8);
-  out.writeUInt32LE(jsonBytes.length, 12); out.writeUInt32LE(0x4e4f534a, 16);
-  jsonBytes.copy(out, 20); Buffer.from(rest).copy(out, 20 + jsonBytes.length);
-  return new Uint8Array(out.buffer, out.byteOffset, out.byteLength);
-}
-
 /** Re-encode PNG/JPEG textures as WebP at full resolution; returns bytes saved. */
 async function texturesToWebP(document) {
   let saved = 0, converted = 0;
@@ -218,6 +201,17 @@ async function texturesToWebP(document) {
   }
   if (converted) document.createExtension(EXTTextureWebP).setRequired(true);
   return saved;
+}
+
+// ---------------------------------------------------------- derived models
+// From the final files, so they inherit the WebP textures and the shared
+// /textures/ references; each derived file is meshopt-compressed in turn.
+const derived = await writeDerivedModels({ io, outDir: OUT, groups: LOAD_GROUPS, startId: START_GROUP, compress, dryRun });
+report.derived = derived.files;
+{
+  const liteBytes = derived.files.filter(f => f.kind === "lite").reduce((sum, f) => sum + f.bytes, 0);
+  console.log(`Derived ${derived.files.length} models: light pack ${mib(liteBytes)} in ${derived.files.filter(f => f.kind === "lite").length} files, ${derived.lod1.length} lod1${dryRun ? " [dry run]" : ""}.`);
+  for (const f of derived.files) console.log(`  ${f.file}: ${(f.bytes / 1024).toFixed(0)} KiB, ${f.triangles} of ${f.sourceTriangles} triangles`);
 }
 
 // ------------------------------------------------------------ host limits
@@ -258,13 +252,17 @@ function transferBytes(assets) {
 }
 
 function writeLoadManifest() {
+  // The light pack downloads with start, so start's bytes include it.
+  const lightPack = dryRun ? [] : Object.values(derived.lite).flat();
+  const files = (group, conditions) => [...assetsFor(group, conditions), ...(group.id === START_GROUP ? lightPack : [])];
   const manifest = {
     groups: LOAD_GROUPS.map(group => ({
       id: group.id,
-      bytes: transferBytes(assetsFor(group, new Set())).bytes,
-      bytesByCondition: Object.fromEntries(["mobile", "festival"].map(c => [c, transferBytes(assetsFor(group, new Set([c]))).bytes])),
-      lite: [],
+      bytes: transferBytes(files(group, new Set())).bytes,
+      bytesByCondition: Object.fromEntries(["mobile", "festival"].map(c => [c, transferBytes(files(group, new Set([c]))).bytes])),
+      lite: derived.lite[group.id] ?? [],
     })),
+    lod1: derived.lod1,
     ktx2Media: [],
   };
   if (!dryRun) writeFileSync(path.join(OUT, "models", "load-manifest.json"), JSON.stringify(manifest, null, 2));

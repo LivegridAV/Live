@@ -4,11 +4,26 @@ import { useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { programsReady, useAfterWarmup } from "./warmScene";
+import { useLiteMode } from "../loading/liteMode";
+import { useModelUrl } from "../loading/useModelUrl";
 import { HorizontalBlurShader } from "three/examples/jsm/shaders/HorizontalBlurShader.js";
 import { VerticalBlurShader } from "three/examples/jsm/shaders/VerticalBlurShader.js";
 
-/** A single geometry-derived capture grounds guests, chair legs and planters. */
-export function ProjectionContactShadow({boothUrl,visitorsUrl,detailsUrl,width,depth:depthSize,centerZ=0,floorHeight=.10}:{boothUrl:string;visitorsUrl:string;detailsUrl?:string;width:number;depth:number;centerZ?:number;floorHeight?:number}) {
+type ContactShadowProps={boothUrl:string;visitorsUrl:string;detailsUrl?:string;width:number;depth:number;centerZ?:number;floorHeight?:number};
+/**
+ * A single geometry-derived capture grounds guests, chair legs and planters.
+ * Not baked in a zone's light pack (lite mode). Bakes from the same files the
+ * zone draws (the lod1 models below high quality), so nothing loads twice.
+ */
+export function ProjectionContactShadow(props:ContactShadowProps){
+  return useLiteMode()?null:<ContactShadowFiles {...props}/>;
+}
+function ContactShadowFiles({boothUrl,visitorsUrl,detailsUrl,...rest}:ContactShadowProps){
+  const booth=useModelUrl(boothUrl),visitors=useModelUrl(visitorsUrl),details=useModelUrl(detailsUrl??boothUrl);
+  if(!booth||!visitors||!details)return null;
+  return <ContactShadowBake {...rest} boothUrl={booth} visitorsUrl={visitors} detailsUrl={detailsUrl?details:undefined}/>;
+}
+function ContactShadowBake({boothUrl,visitorsUrl,detailsUrl,width,depth:depthSize,centerZ=0,floorHeight=.10}:ContactShadowProps) {
   const {scene:booth}=useGLTF(boothUrl,false),{scene:visitors}=useGLTF(visitorsUrl,false);
   const {scene:details}=useGLTF(detailsUrl??boothUrl,false);
   const {gl}=useThree();

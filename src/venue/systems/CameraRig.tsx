@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { createSample, samplePath } from "../data/path";
+import { createSample, portraitPushBack, samplePath } from "../data/path";
 import { journey } from "./journey";
 import { useVenue, venue } from "./store";
 import { GRAND, grandWorld } from "../data/grand";
@@ -69,7 +69,7 @@ export function CameraRig() {
     }
     samplePath(journey.progress,sample);
     // Fit narrow arrival panels along the approach while retaining 1.7 m eye height.
-    if(journey.progress<.15)sample.pos.z+=Math.max(0,1.5/aspect-1)*24*(1-THREE.MathUtils.smoothstep(journey.progress,0,.15));
+    sample.pos.z+=portraitPushBack(journey.progress,aspect);
     // Override ramps are wholly enclosed by their active intervals: no jump
     // from a partially blended target at either gate boundary.
     const rentalRange=EXHIBITION_PROGRESS["led-rental"],projectionRange=EXHIBITION_PROGRESS.projection;
