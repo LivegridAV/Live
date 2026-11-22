@@ -821,3 +821,127 @@ test("holdWarmUntil: a warm-up waits for the hold, and a hold that settles or is
   const failing = new THREE.Group(); parent.add(failing);
   holdWarmUntil(failing, Promise.reject(new Error("x"))); await preparedWithin(parent);
 });
+
+// ---- KTX2 transcoder failures (final review, Important 1b) ----
+// three's KTX2Loader keeps a failed (or never-settling) transcoder for the
+// session; loadKtx2 must reject instead, replace the loader, and give up on
+// KTX2 for the visit after KTX2_MAX_FAILURES broken loaders.
+
+/** The smallest committed KTX2 (a real container for ktx-parse). */
+const smallKtx2 = () => {
+  const dir = "assets-cache/ktx2";
+  const file = readdirSync(dir).filter(f => f.endsWith(".ktx2")).map(f => path.join(dir, f))
+    .sort((a, b) => readFileSync(a).byteLength - readFileSync(b).byteLength)[0];
+  return readFileSync(file);
+};
+
+/**
+ * A fresh textureLoading module with stubbed fetch, Request and Worker.
+ * `basis(n)` answers the n-th transcoder file request (a Response or a
+ * never-settling promise); `worker` is "ok" (answers transcodes) or "hang"
+ * (never initialises, like a worker whose WebAssembly failed).
+ */
+async function ktx2Harness(t, tag, { basis = () => new Response("basis", { status: 200 }), worker = "ok" } = {}) {
+  const { register } = await import("node:module");
+  register(new URL("./ts-extensionless-hook.mjs", import.meta.url));
+  t.mock.timers.enable({ apis: ["setTimeout"] });
+  const saved = { fetch: globalThis.fetch, Request: globalThis.Request, Worker: globalThis.Worker, ProgressEvent: globalThis.ProgressEvent };
+  const requests = [], workers = [];
+  let basisCount = 0;
+  const bytes = smallKtx2();
+  globalThis.Request = class { constructor(url) { this.url = url; } };
+  globalThis.ProgressEvent ??= class { constructor(type, init) { this.type = type; Object.assign(this, init); } };
+  globalThis.fetch = async req => {
+    requests.push(req.url);
+    if (req.url.startsWith("/basis/")) return basis(basisCount++);
+    return new Response(bytes, { status: 200 });
+  };
+  globalThis.Worker = class {
+    constructor() { this.listeners = []; this.terminated = false; workers.push(this); }
+    addEventListener(type, fn) { if (type === "message") this.listeners.push(fn); }
+    postMessage(msg) {
+      if (msg.type !== "transcode" || worker !== "ok") return;
+      const data = { faces: [{ mipmaps: [{ data: new Uint8Array(16), width: 4, height: 4 }], width: 4, height: 4 }], width: 4, height: 4, format: 1023, type: 1009, dfdFlags: 0 };
+      setImmediate(() => this.listeners.forEach(fn => fn({ data: { type: "transcode", id: msg.id, data } })));
+    }
+    terminate() { this.terminated = true; }
+  };
+  const warn = t.mock.method(console, "warn", () => {});
+  t.after(() => { Object.assign(globalThis, saved); t.mock.timers.reset(); });
+  const mod = await import(`../src/venue/three/textureLoading.ts?${tag}`);
+  const gl = { extensions: { has: () => false, get: () => null } };
+  const flush = async () => { for (let i = 0; i < 50; i++) await new Promise(r => setImmediate(r)); };
+  /** Settle a promise into { ok, value | error } without letting a rejection escape. */
+  const outcome = promise => { const box = { done: false }; promise.then(value => Object.assign(box, { done: true, ok: true, value }), error => Object.assign(box, { done: true, ok: false, error })); return box; };
+  return { ...mod, gl, requests, workers, warn, flush, outcome, basisRequests: () => requests.filter(u => u.startsWith("/basis/")).length };
+}
+
+test("KTX2: a failed transcoder fetch rejects the texture and the next texture starts a new transcoder", async t => {
+  const h = await ktx2Harness(t, "fetch-fails", { basis: n => new Response("", { status: n < 2 ? 503 : 200 }) });
+  const first = h.outcome(h.loadKtx2("/textures/a.ktx2", h.gl));
+  await h.flush();
+  assert.equal(first.done && first.ok, false, "rejects at once, does not hang");
+  assert.equal(h.warn.mock.callCount(), 1, "one broken transcoder reported");
+  assert.equal(h.ktx2Available(), true);
+  const second = h.outcome(h.loadKtx2("/textures/b.ktx2", h.gl));
+  await h.flush();
+  assert.equal(second.ok, true, String(second.error));
+  assert.equal(second.value.isCompressedTexture, true);
+  assert.equal(h.basisRequests(), 4, "the second texture fetched the transcoder again");
+});
+
+test("KTX2: a transcoder whose worker never starts times out, is replaced, and KTX2 turns off after three", async t => {
+  const h = await ktx2Harness(t, "worker-hangs", { worker: "hang" });
+  for (let n = 1; n <= h.KTX2_MAX_FAILURES; n++) {
+    const load = h.outcome(h.loadKtx2(`/textures/${n}.ktx2`, h.gl));
+    await h.flush();
+    t.mock.timers.tick(h.KTX2_TRANSCODE_TIMEOUT_MS - 1); await h.flush();
+    assert.equal(load.done, false, "no timeout early");
+    t.mock.timers.tick(1); await h.flush();
+    assert.equal(load.done && !load.ok, true, `texture ${n} rejects after the transcode timeout`);
+    assert.equal(h.workers.at(-1).terminated, true, "the broken loader's workers are stopped");
+  }
+  assert.equal(h.basisRequests(), 2 * h.KTX2_MAX_FAILURES, "each new loader fetched the transcoder once");
+  assert.equal(h.ktx2Available(), false);
+  const before = h.requests.length;
+  const off = h.outcome(h.loadKtx2("/textures/after.ktx2", h.gl));
+  await h.flush();
+  assert.equal(off.done && !off.ok, true);
+  assert.equal(h.requests.length, before, "nothing is fetched once KTX2 is off");
+});
+
+test("KTX2: a transcoder fetch that never settles times out", async t => {
+  const h = await ktx2Harness(t, "fetch-hangs", { basis: n => n < 2 ? new Promise(() => {}) : new Response("basis", { status: 200 }) });
+  const load = h.outcome(h.loadKtx2("/textures/a.ktx2", h.gl));
+  await h.flush();
+  t.mock.timers.tick(h.KTX2_INIT_TIMEOUT_MS); await h.flush();
+  assert.equal(load.done && !load.ok, true);
+  const next = h.outcome(h.loadKtx2("/textures/b.ktx2", h.gl));
+  await h.flush();
+  assert.equal(next.ok, true, String(next.error));
+  assert.ok(h.requests.includes("/basis/basis_transcoder.js?retry=1"), "the new loader does not join the hung request");
+});
+
+test("KTX2: without WebAssembly nothing is fetched and every KTX2 texture rejects at once", async t => {
+  const h = await ktx2Harness(t, "no-wasm");
+  const wasm = globalThis.WebAssembly;
+  t.after(() => { globalThis.WebAssembly = wasm; });
+  delete globalThis.WebAssembly;
+  assert.equal(h.ktx2Available(), false);
+  const load = h.outcome(h.loadKtx2("/textures/a.ktx2", h.gl));
+  await h.flush();
+  assert.equal(load.done && !load.ok, true);
+  assert.deepEqual(h.requests, [], "neither the texture nor the transcoder is fetched");
+});
+
+test("KTX2: a parsed GLB with a failed texture is detected (the streamer then fails the group)", async () => {
+  const { register } = await import("node:module");
+  register(new URL("./ts-extensionless-hook.mjs", import.meta.url));
+  const { usesKtx2, missingTextures } = await import("../src/venue/three/textureLoading.ts?glb");
+  const gltf = textures => ({ parser: { json: { extensionsUsed: ["KHR_texture_basisu"] }, textureCache: Object.fromEntries(textures.map((x, i) => [i, Promise.resolve(x)])) } });
+  assert.equal(usesKtx2(gltf([])), true);
+  assert.equal(usesKtx2({ parser: { json: { extensionsUsed: ["EXT_texture_webp"] } } }), false);
+  assert.equal(usesKtx2(null), false);
+  assert.equal(await missingTextures(gltf([{}, null, {}, null])), 2);
+  assert.equal(await missingTextures(gltf([{}, {}])), 0);
+});

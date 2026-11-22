@@ -1,7 +1,7 @@
 import { useGLTF, useProgress } from "@react-three/drei";
 import type * as THREE from "three";
 import { LOAD_GROUPS, START_GROUP, assetsFor, jumpOrder } from "./groups";
-import { startStreaming, type FetchSample, type LoadManifest, type QueueItem, type StreamHandle } from "./streamer";
+import { isItemTimeout, startStreaming, type FetchSample, type LoadManifest, type QueueItem, type StreamHandle } from "./streamer";
 import { mediaRequests, modelRequest, pathOf } from "./assetUrls";
 import { rememberBlob, rememberImage } from "./prefetched";
 import { BITMAP_SOURCES } from "../media/projectionPainters";
@@ -9,7 +9,7 @@ import { settleManifest } from "./manifest";
 import { variantPath, type ModelVariant } from "./modelVariants";
 import { streamedVariant } from "./useModelUrl";
 import { useVenue } from "../systems/store";
-import { gltfExtender, ktx2Sibling, loadVenueTexture } from "../three/textureLoading";
+import { forgetVenueTexture, gltfExtender, ktx2Available, ktx2Sibling, loadVenueTexture, missingTextures, usesKtx2 } from "../three/textureLoading";
 
 /**
  * Browser glue for the streamer: what "fetching a group" means in the venue,
@@ -85,13 +85,32 @@ const isThenable = (value: unknown): value is PromiseLike<unknown> =>
 // by the same extender (KTX2) the components pass.
 const readGLTF = useGLTF;
 
+/** GLBs that need KTX2 textures (seen once loaded): not loaded again once KTX2 is off. */
+const needsKtx2 = new Set<string>();
+
+/**
+ * GLTFLoader loads a GLB whose texture failed without that texture. For a
+ * KTX2 GLB that means a broken or missing transcoder (textureLoading.ts):
+ * fail the load instead, so the streamer retries it and, if KTX2 stays
+ * broken, reports the group failed and its zone keeps the light pack.
+ */
+async function requireTextures(url: string, gltf: unknown) {
+  if (!usesKtx2(gltf)) return;
+  needsKtx2.add(url);
+  const missing = await missingTextures(gltf);
+  if (missing) throw new Error(`${url}: ${missing} KTX2 GLB texture${missing > 1 ? "s" : ""} failed to load`);
+}
+
 /** Load `path` (a groups.json GLB) as the variant the mounted component will ask for. */
 async function loadModel(path: string, owned: boolean, variant: ModelVariant = streamedVariant(path)) {
   const { url, useDraco } = modelRequest(path, variant);
   if (!renderer) throw new Error("venue streaming has no renderer");
+  if (needsKtx2.has(url) && !ktx2Available()) throw new Error(`${url} needs KTX2 textures, which are off for this visit`);
   for (;;) {
     try {
-      readGLTF(url, useDraco, true, gltfExtender(renderer));
+      const gltf = readGLTF(url, useDraco, true, gltfExtender(renderer));
+      // A later group's GLB is not mounted yet: a failed KTX2 texture fails the load (the light pack stays).
+      if (owned) await requireTextures(url, gltf);
       return;
     } catch (thrown) {
       if (isThenable(thrown)) { await thrown; continue; }
@@ -166,6 +185,27 @@ async function fetchLite(id: string) {
 }
 
 const hasKtx2 = (path: string) => !!manifest?.ktx2Media?.includes(ktx2Sibling(path));
+
+/**
+ * An item that timed out (the streamer's per-item timeout) may have left a
+ * load that never settles in drei's cache or the texture cache: forget it so
+ * the retry downloads again instead of waiting on it. The start group is
+ * mounted and reads those entries itself, so it is left alone.
+ */
+function forgetItem(item: string) {
+  const id = groupOfItem(item);
+  if (id === START_GROUP) return;
+  if (isLiteItem(item)) {
+    for (const path of liteFiles(id)) useGLTF.clear(modelRequest(sourceOfLite(path), "lite").url);
+    return;
+  }
+  const group = LOAD_GROUPS.find(g => g.id === id);
+  if (!group) return;
+  for (const path of assetsFor(group, loadConditions())) {
+    if (path.endsWith(".glb")) useGLTF.clear(modelRequest(path, streamedVariant(path)).url);
+    else if (hasKtx2(path)) forgetVenueTexture(path);
+  }
+}
 
 const sourceOfLite = (path: string) => path.replace(/\.lite\.glb$/i, ".glb");
 
@@ -248,9 +288,12 @@ export function startVenueStreaming(gl: THREE.WebGLRenderer, { full = false }: {
       current.drop([liteItem(id)]);
       settleLite(id);
     },
-    onRetry: (item, attempt, delayMs, error) =>
-      console.warn(`[venue] ${isLiteItem(item) ? "light pack" : "load group"} ${groupOfItem(item)} failed (attempt ${attempt}); retrying in ${delayMs / 1000} s`, error),
+    onRetry: (item, attempt, delayMs, error) => {
+      if (isItemTimeout(error)) forgetItem(item);
+      console.warn(`[venue] ${isLiteItem(item) ? "light pack" : "load group"} ${groupOfItem(item)} failed (attempt ${attempt}); retrying in ${delayMs / 1000} s`, error);
+    },
     onFailed: (item, error) => {
+      if (isItemTimeout(error)) forgetItem(item);
       if (item === "manifest") settleManifest(null);
       failed.add(item);
       if (isLiteItem(item)) {
