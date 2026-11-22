@@ -1,0 +1,327 @@
+{
+ "label": "baseline",
+ "throttle": "fast4g",
+ "bytesBeforeOpen": 77079160,
+ "msToOpen": 73665,
+ "requestsBeforeOpen": 141,
+ "walk": [
+  {
+   "progress": 0,
+   "calls": 1239,
+   "triangles": 5137541
+  },
+  {
+   "progress": 0.02,
+   "calls": 1239,
+   "triangles": 5137541
+  },
+  {
+   "progress": 0.04,
+   "calls": 1239,
+   "triangles": 5137541
+  },
+  {
+   "progress": 0.06,
+   "calls": 1239,
+   "triangles": 5137541
+  },
+  {
+   "progress": 0.08,
+   "calls": 1239,
+   "triangles": 5137541
+  },
+  {
+   "progress": 0.1,
+   "calls": 1719,
+   "triangles": 6077605
+  },
+  {
+   "progress": 0.12,
+   "calls": 1719,
+   "triangles": 6077605
+  },
+  {
+   "progress": 0.14,
+   "calls": 1715,
+   "triangles": 6068205
+  },
+  {
+   "progress": 0.16,
+   "calls": 1703,
+   "triangles": 6032781
+  },
+  {
+   "progress": 0.18,
+   "calls": 2675,
+   "triangles": 8926305
+  },
+  {
+   "progress": 0.2,
+   "calls": 3085,
+   "triangles": 10483221
+  },
+  {
+   "progress": 0.22,
+   "calls": 3051,
+   "triangles": 10408413
+  },
+  {
+   "progress": 0.24,
+   "calls": 3041,
+   "triangles": 10384517
+  },
+  {
+   "progress": 0.26,
+   "calls": 3011,
+   "triangles": 10367529
+  },
+  {
+   "progress": 0.28,
+   "calls": 2981,
+   "triangles": 9620341
+  },
+  {
+   "progress": 0.3,
+   "calls": 2936,
+   "triangles": 9103267
+  },
+  {
+   "progress": 0.32,
+   "calls": 2827,
+   "triangles": 8096261
+  },
+  {
+   "progress": 0.34,
+   "calls": 2766,
+   "triangles": 7645215
+  },
+  {
+   "progress": 0.36,
+   "calls": 2698,
+   "triangles": 7503905
+  },
+  {
+   "progress": 0.38,
+   "calls": 2615,
+   "triangles": 7327821
+  },
+  {
+   "progress": 0.4,
+   "calls": 2452,
+   "triangles": 6727039
+  },
+  {
+   "progress": 0.42,
+   "calls": 2197,
+   "triangles": 6541992
+  },
+  {
+   "progress": 0.44,
+   "calls": 1621,
+   "triangles": 4669188
+  },
+  {
+   "progress": 0.46,
+   "calls": 660,
+   "triangles": 3305358
+  },
+  {
+   "progress": 0.48,
+   "calls": 576,
+   "triangles": 1885316
+  },
+  {
+   "progress": 0.5,
+   "calls": 775,
+   "triangles": 3535570
+  },
+  {
+   "progress": 0.52,
+   "calls": 1123,
+   "triangles": 4216812
+  },
+  {
+   "progress": 0.54,
+   "calls": 957,
+   "triangles": 3379464
+  },
+  {
+   "progress": 0.56,
+   "calls": 643,
+   "triangles": 2192025
+  },
+  {
+   "progress": 0.58,
+   "calls": 638,
+   "triangles": 2151668
+  },
+  {
+   "progress": 0.6,
+   "calls": 620,
+   "triangles": 3273060
+  },
+  {
+   "progress": 0.62,
+   "calls": 947,
+   "triangles": 4595250
+  },
+  {
+   "progress": 0.64,
+   "calls": 931,
+   "triangles": 4773894
+  },
+  {
+   "progress": 0.66,
+   "calls": 865,
+   "triangles": 4476050
+  },
+  {
+   "progress": 0.68,
+   "calls": 949,
+   "triangles": 5696391
+  },
+  {
+   "progress": 0.7,
+   "calls": 1068,
+   "triangles": 6185999
+  },
+  {
+   "progress": 0.72,
+   "calls": 1065,
+   "triangles": 6159669
+  },
+  {
+   "progress": 0.74,
+   "calls": 642,
+   "triangles": 3062505
+  },
+  {
+   "progress": 0.76,
+   "calls": 1240,
+   "triangles": 5172396
+  },
+  {
+   "progress": 0.78,
+   "calls": 496,
+   "triangles": 2804391
+  },
+  {
+   "progress": 0.8,
+   "calls": 1294,
+   "triangles": 1295445
+  },
+  {
+   "progress": 0.82,
+   "calls": 1491,
+   "triangles": 1202629
+  },
+  {
+   "progress": 0.84,
+   "calls": 1460,
+   "triangles": 1192465
+  },
+  {
+   "progress": 0.86,
+   "calls": 1402,
+   "triangles": 1174127
+  },
+  {
+   "progress": 0.88,
+   "calls": 1340,
+   "triangles": 1168209
+  },
+  {
+   "progress": 0.9,
+   "calls": 1257,
+   "triangles": 1144717
+  },
+  {
+   "progress": 0.92,
+   "calls": 1079,
+   "triangles": 1134085
+  },
+  {
+   "progress": 0.94,
+   "calls": 1059,
+   "triangles": 1119579
+  },
+  {
+   "progress": 0.96,
+   "calls": 1060,
+   "triangles": 1119591
+  },
+  {
+   "progress": 0.98,
+   "calls": 789,
+   "triangles": 1095035
+  },
+  {
+   "progress": 1,
+   "calls": 748,
+   "triangles": 1094237
+  }
+ ],
+ "longTasksAfterOpen": [
+  {
+   "ms": 55,
+   "progress": 0
+  },
+  {
+   "ms": 54,
+   "progress": 0
+  },
+  {
+   "ms": 140,
+   "progress": 0.148
+  },
+  {
+   "ms": 58,
+   "progress": 0.162
+  },
+  {
+   "ms": 58,
+   "progress": 0.162
+  },
+  {
+   "ms": 69,
+   "progress": 0.169
+  },
+  {
+   "ms": 53,
+   "progress": 0.203
+  },
+  {
+   "ms": 57,
+   "progress": 0.272
+  },
+  {
+   "ms": 50,
+   "progress": 0.272
+  },
+  {
+   "ms": 50,
+   "progress": 0.282
+  },
+  {
+   "ms": 57,
+   "progress": 0.342
+  },
+  {
+   "ms": 144,
+   "progress": 0.507
+  },
+  {
+   "ms": 51,
+   "progress": 0.519
+  },
+  {
+   "ms": 107,
+   "progress": 0.519
+  },
+  {
+   "ms": 203,
+   "progress": 0.531
+  }
+ ],
+ "gapFrames": 0
+}
