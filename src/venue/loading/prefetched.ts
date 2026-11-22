@@ -23,3 +23,14 @@ export function prefetchedImage(url: string): HTMLImageElement | undefined {
   const image = images.get(url);
   return image && image.complete && image.naturalWidth > 0 ? image : undefined;
 }
+
+/**
+ * The encoded bytes of an image the streamer fetched. createImageBitmap on an
+ * HTMLImageElement decodes synchronously on the main thread (about 40 ms for a
+ * 2K artwork); on a Blob it decodes on a worker. Painters that need a bitmap
+ * take the blob here instead of fetching the file again.
+ */
+const blobs = new Map<string, Blob>();
+export const rememberBlob = (url: string, blob: Blob) => { blobs.set(url, blob); };
+export const prefetchedBlob = (url: string) => blobs.get(url);
+export const releaseBlob = (url: string) => { blobs.delete(url); };

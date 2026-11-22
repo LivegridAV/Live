@@ -578,3 +578,36 @@ test("prepareBeforeWarm: a throwing preparation is reported, later roots still r
   assert.equal(warn.mock.callCount(), 1);
   assert.match(String(warn.mock.calls[0].arguments[1]), /unexpected geometry/);
 });
+
+test("projection painters: the graded surfaces are prepared from preload, off the paint path, from the streamer's bytes", async t => {
+  // The painters import extensionless TS paths; teach node to resolve them.
+  const { register } = await import("node:module");
+  register(new URL("./ts-extensionless-hook.mjs", import.meta.url));
+  const { rememberBlob, rememberImage } = await import("../src/venue/loading/prefetched.ts");
+  const { preloadProjectionArtwork, projectionCrystal, projectionBackdrop, PROJECTION_ART } = await import("../src/venue/media/projectionPainters.ts");
+  const calls = [];
+  const ctx = () => new Proxy({ drawn: [] }, { get: (o, k) => k === "drawn" ? o.drawn : k === "createLinearGradient" ? () => ({ addColorStop() {} }) : k === "getImageData" ? (x, y, w, h) => ({ data: new Uint8ClampedArray(w * h * 4) }) : k === "measureText" ? () => ({ width: 1 }) : (...a) => { if (k === "drawImage") o.drawn.push(a[0]); }, set: () => true });
+  const canvases = [];
+  t.after(() => { delete globalThis.document; });
+  globalThis.document = ({ createElement: () => { const c2 = ctx(); const canvas = { width: 0, height: 0, ctx: c2, getContext: () => c2 }; canvases.push(canvas); return canvas; } });
+  t.after(() => { delete globalThis.Image; });
+  globalThis.Image = (class { constructor() { this.naturalWidth = 8; this.naturalHeight = 8; this.complete = true; } decode() { return Promise.resolve(); } });
+  t.after(() => { delete globalThis.createImageBitmap; });
+  globalThis.createImageBitmap = (async source => { calls.push(source); return { width: 8, height: 8, close() {} }; });
+  const blobs = new Map();
+  for (const url of [PROJECTION_ART.crystal, PROJECTION_ART.sculpture, PROJECTION_ART.backdrop]) {
+    const image = new Image(); rememberImage(url, image); const blob = { url }; blobs.set(url, blob); rememberBlob(url, blob);
+  }
+  // Preload alone prepares both surfaces; no painter has run.
+  preloadProjectionArtwork();
+  for (let i = 0; i < 400 && canvases.length < 2; i++) await new Promise(r => setImmediate(r));
+  for (let i = 0; i < 400; i++) await new Promise(r => setImmediate(r));
+  assert.equal(calls.length, 3, "one bitmap per source layer, made before any paint");
+  assert.ok(calls.every(source => blobs.get([...blobs.keys()].find(u => blobs.get(u) === source))), "bitmaps are made from the streamer's bytes, not from an HTMLImageElement");
+  // A paint frame now draws the prepared canvas and does no decoding or grading.
+  const before = calls.length, made = canvases.length;
+  const p = { ctx: ctx(), w: 64, h: 64, t: 0, variant: 0, accent: "#fff" };
+  projectionCrystal(p); projectionBackdrop({ ...p, ctx: ctx() });
+  assert.equal(calls.length, before);
+  assert.equal(canvases.length, made);
+});

@@ -3,7 +3,7 @@ import type * as THREE from "three";
 import { LOAD_GROUPS, START_GROUP, assetsFor, groupForZ } from "./groups";
 import { startStreaming, type FetchSample, type LoadManifest, type QueueItem, type StreamHandle } from "./streamer";
 import { mediaRequests, modelRequest, pathOf } from "./assetUrls";
-import { rememberImage } from "./prefetched";
+import { rememberBlob, rememberImage } from "./prefetched";
 import { settleManifest } from "./manifest";
 import { variantPath, type ModelVariant } from "./modelVariants";
 import { streamedVariant } from "./useModelUrl";
@@ -103,12 +103,21 @@ async function loadModel(path: string, owned: boolean, variant: ModelVariant = s
 }
 
 async function loadImage(url: string) {
-  const image = new Image();
-  image.decoding = "async";
-  image.crossOrigin = "anonymous";
-  image.src = url;
-  await image.decode();
-  rememberImage(url, image);
+  // One request: the bytes are kept as a Blob (for painters that need an
+  // ImageBitmap decoded off the main thread) and the image is decoded from them.
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`${response.status} ${url}`);
+  const blob = await response.blob();
+  const objectUrl = URL.createObjectURL(blob);
+  try {
+    const image = new Image();
+    image.decoding = "async";
+    image.crossOrigin = "anonymous";
+    image.src = objectUrl;
+    await image.decode();
+    rememberImage(url, image);
+    rememberBlob(url, blob);
+  } finally { URL.revokeObjectURL(objectUrl); }
 }
 
 const wait = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms));
