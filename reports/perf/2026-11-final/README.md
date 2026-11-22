@@ -12,7 +12,8 @@ door opens is **35 MB**, down from **77 MB**. On a weak connection ("Slow 4G") i
 **2 minutes 25 seconds** (145 s; before the work about 5 minutes, estimated from the download size, not measured).
 
 **After the door opens: no stops, no loading text, no spinner** (your decision 1). In every test run the
-visitor could scroll freely from the first moment, and the words "loading" never appeared on screen.
+visitor could scroll freely from the first moment and the loading bar never came back; in the walk tests, which
+also search the screen for the word, "loading" never appeared.
 
 **Open early, fill in** (your decision 3). The venue opens as soon as the entrance and a *light version* of every
 other stall are ready. While the visitor walks, the full-detail stalls keep downloading in the background and
@@ -29,18 +30,23 @@ after opening, and every stall visit: not one frame showed an area without at le
 the light version of that stall, and the loader now fetches *that stall's* full version first, then the next area
 along. On Fast 4G the stall sharpens 15 to 24 seconds after opening (Content Studio, LED Rental, Technical
 Showcase), 17 seconds for the Arena, and about 42 seconds for Projection Mapping. Projection Mapping cannot come
-sooner on this connection: when the venue opens, two other stalls are already downloading (about 22 MB), we never
+sooner on this connection: when the venue opens, two other stalls are already downloading (about 23 MB), we never
 cancel a download that has started, and Projection Mapping is itself the biggest stall (about 24 MB).
 (This final check first found the loader fetching the *next* area first; that is fixed, see the table further down.)
 
 **Smoothness.** No stops, but there are still a handful of short hitches (frames that take longer than they should).
-The longest ones happen when someone jumps from the very end of the venue straight back to the entrance: the
-picture freezes for about a fifth of a second. During a normal walk the hitches are under a tenth of a second (in the 11 menu-jump tests, one hitch of
-0.13 s was seen once, after the jump to Technical Showcase). Details under "Open points".
+The longest happens when someone jumps from the very end of the venue straight back to the entrance: the picture
+freezes for up to about a fifth of a second (0.1 to 0.23 s). A menu jump to Technical Showcase right after opening
+reliably causes one hitch of about 0.13 to 0.17 s (seen in both test runs), and one jump to the LED Tunnel showed
+one of 0.11 s. During a normal walk the hitches are about a tenth of a second or less (0.05 to 0.1 s). Details
+under "Open points".
 
 **Looks.** The venue looks the same as before: we compared screenshots from eight fixed camera positions before
 and after, pixel by pixel. The largest difference is on the LED Rental stall (moving light beams that are never in
-exactly the same position from run to run). No object moved.
+exactly the same position from run to run). None of the objects we can still track moved. 650 objects kept their
+names; 259 of them move by design (walking guests, rotating display screens) and were left out, and the other 391
+were checked to the millimetre. The remaining 613 objects were combined into larger pieces to speed up drawing, so
+they can no longer be tracked one by one; for those, the screenshots above are the check.
 
 ## Before and after (numbers)
 
@@ -59,11 +65,11 @@ Measured on this computer with Chrome, cold cache (as a first-time visitor), scr
 | Draw calls at the entrance (desktop, "high") | 1,239 to 1,849 | 1,203 to 1,801 | 500 or fewer | No (note 2) |
 | Draw calls, worst point on the walk | 3,194 | 2,419 | 700 or fewer | No (note 2) |
 | Triangles at the entrance (desktop) | 5.1 to 7.7 million | 5.2 to 7.8 million | | |
-| Triangles, worst point on the walk, phone tier ("medium") | 8.67 million (measured in Task 5) | 7.5 million (phone emulation, 375×812) | 2 million | No (note 3) |
+| Triangles, worst point on the walk, phone tier ("medium") | 8.67 million (measured in Task 5, not at the baseline) | 7.5 million (phone emulation, 375×812; measured differently, not directly comparable) | 2 million | No (note 3) |
 | Hitches over 50 ms after opening (Fast 4G run) | 12 (longest 151 ms) | 10 (longest 229 ms) | none | No (note 4) |
 | ...of which over 100 ms | 5 | 1 (in the end-to-entrance jump) | | |
 | Looks: largest screenshot difference (0 to 255 scale, limit 1.5) | | 1.13 (LED Rental) | 1.5 or less | Yes |
-| Objects moved | | 0 | 0 | Yes |
+| Objects moved (391 still-standing objects trackable by name; 259 that move by design left out; 613 combined, covered by the screenshots) | | 0 | 0 | Yes |
 
 Notes:
 
@@ -75,15 +81,19 @@ Notes:
    Getting closer means making the light versions smaller (or showing the entrance before the light versions
    arrive, which would allow empty space after a fast jump).
 2. **Draw calls** (how many separate drawing jobs the graphics chip gets per frame) fell 24% at the worst point,
-   but are still about three times the target. Each object is drawn about four times per frame (the screen, the
+   but are still about 3.5 times the target (1,801 against 500 at the entrance, 2,419 against 700 on the walk).
+   Each object is drawn about four times per frame (the screen, the
    floor reflection, the shadows and one more pass), so merging objects alone cannot reach 500. The next step
    is to skip objects in the passes where they cannot be seen and to combine materials; that fits best into the
    WebGPU stage.
-3. **Phone triangle count** was not worked on in this stage (the triangle target for phones needs lighter models
-   on phones, which you did not choose for everyone; it remains open).
+3. **Phone triangle count.** Simplified versions of some of the largest stall models were added for phones in
+   this stage, but the phone setting still draws up to about 7.5 million triangles at the busiest point. Reaching
+   2 million would need much lighter models on phones; this stage did not go further, so it remains open.
 4. **Hitches.** The plan's "no hitch over 50 ms" target is not met. What is left: about five 50 to 65 ms hitches
    while the Projection Mapping stall's full version is being set up during a walk; one or two of 50 to 60 ms
-   mid-walk; and the end-to-entrance jump (one frame of 100 to 230 ms, see "Open points").
+   mid-walk; the end-to-entrance jump (one frame of 100 to 230 ms, see "Open points"); and after a menu jump right
+   after opening, 2 to 10 hitches of 55 to 81 ms per jump, plus one of 130 to 168 ms after the jump to Technical
+   Showcase (both runs) and one of 108 ms in one LED Tunnel jump.
 
 ## Pictures
 
@@ -100,7 +110,12 @@ Notes:
 | Projection Mapping | ![](../baseline/shots/projection.png) | ![](../final/shots/projection.png) |
 | Arena | ![](../baseline/shots/arena.png) | ![](../final/shots/arena.png) |
 
-### Light version, then full detail (LED Rental stall, Fast 4G: a few seconds after opening, then once its full version arrived)
+### Light version, then full detail (Fast 4G)
+
+Both pictures show the **LED Rental stall**: first a few seconds after opening (light version, screens dark), then
+once full detail had arrived. The files are named `projection-lite` / `projection-full` because the measuring script
+places this camera by the Projection Mapping group's switch-on point, which happens to stand in front of the LED
+Rental stall; both stalls were still in their light version for the first picture.
 
 | Light version | Full detail |
 |---|---|
@@ -138,7 +153,7 @@ expected with the processor slowed 4×; a real phone may be better or worse.
 ## What was not tested
 
 - **Real phones.** Only Chrome's phone emulation on this computer (screen size, touch, a 4× slower processor).
-  A real mid-range phone has a weaker graphics chip than this computer, so hitches will be larger there.
+  A real mid-range phone has a weaker graphics chip than this computer, so hitches are likely to be larger there.
 - **Other browsers.** Only Chrome. Not Safari (iPhone), Firefox or Samsung Internet.
 - **Real networks.** The 4G speeds are simulated by Chrome; real mobile networks vary more.
 - **Hosting.** Tested from a local copy of the export, not from Cloudflare.
@@ -150,12 +165,13 @@ expected with the processor slowed 4×; a real phone may be better or worse.
 2. **Projection Mapping after a jump** still takes about 42 seconds to sharpen on Fast 4G (the jump priority
    itself is fixed). Making it sooner would mean pausing a download that has already started when someone jumps,
    which we chose not to do, or making that stall's full version smaller.
-3. **Draw calls** about 3× the target (note 2). Planned for the WebGPU stage.
-4. **Phone triangles** about 4× the target (note 3).
+3. **Draw calls** about 3.5× the target (note 2). Planned for the WebGPU stage.
+4. **Phone triangles** nearly 4× the target (about 7.5 million against 2 million, note 3).
 5. **Hitches**: the end-to-entrance jump still causes one heavy frame (100 to 230 ms). We checked that this
    happens even with every stall fully loaded before opening (no background downloading at all), so it is not
-   caused by the new loading; it is the graphics chip drawing the whole venue at once. The other hitches are
-   50 to 65 ms (note 4).
+   caused by the new loading; it is the graphics chip drawing the whole venue at once. A menu jump to Technical
+   Showcase right after opening reliably causes one hitch of 130 to 168 ms, and one LED Tunnel jump showed one of
+   108 ms. The other hitches after opening are 50 to 81 ms (note 4).
 6. **Entrance download headroom**: the entrance group is 22.7 MiB against the 24 MiB budget the tests enforce,
    so only 1.3 MiB (about 1.4 MB) is left for new entrance content before a test fails. (The earlier "entrance
    20 MiB or less" test was replaced after your decision 3.)
@@ -319,7 +335,7 @@ never see that panel.
   (`public/basis/basis_transcoder.js`, byte-identical to `three/examples/jsm/libs/basis/`), which brought 2 errors
   (`require()` in Emscripten glue); it is now in `globalIgnores` as vendored code (accepted by the controller). Changed files: 0 errors.
 - Snapshots: 1,263 named nodes before; 650 still exist by name after Task 7's merging (613 merged into combined
-  meshes, by design). Of the shared nodes, 0 static nodes moved by more than 1 mm. The only differences are
+  meshes, by design). Of the shared nodes, 259 are animated and skipped; of the other 391, 0 moved by more than 1 mm. The only differences are
   walking hall guests and the rotating LED models in the rental pavilion, which also differ between two runs of
   the same build (animation, skipped).
 - Baselines re-captured on this branch: only `reports/perf/baseline` itself (Task 1, with a frozen clock for
