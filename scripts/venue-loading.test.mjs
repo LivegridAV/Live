@@ -611,3 +611,71 @@ test("projection painters: the graded surfaces are prepared from preload, off th
   assert.equal(calls.length, before);
   assert.equal(canvases.length, made);
 });
+
+async function paintersWith(t, tag, { bitmap }) {
+  const { register } = await import("node:module");
+  register(new URL("./ts-extensionless-hook.mjs", import.meta.url));
+  const { rememberBlob, rememberImage } = await import("../src/venue/loading/prefetched.ts");
+  const painters = await import(`../src/venue/media/projectionPainters.ts?${tag}`);
+  const drawn = [];
+  const ctx = new Proxy({}, { get: (_, k) => k === "createLinearGradient" ? () => ({ addColorStop() {} }) : k === "getImageData" ? (x, y, w, h) => ({ data: new Uint8ClampedArray(w * h * 4) }) : (...a) => { if (k === "drawImage") drawn.push(a[0]); }, set: () => true });
+  t.after(() => { delete globalThis.document; delete globalThis.Image; delete globalThis.createImageBitmap; });
+  globalThis.document = { createElement: () => ({ width: 0, height: 0, getContext: () => ctx }) };
+  globalThis.Image = class { constructor() { this.naturalWidth = 8; this.naturalHeight = 8; this.complete = true; } decode() { return Promise.resolve(); } };
+  globalThis.createImageBitmap = bitmap;
+  return { ...painters, rememberBlob, rememberImage, drawn, ctx };
+}
+const settle = async () => { for (let i = 0; i < 300; i++) await new Promise(r => setImmediate(r)); };
+
+test("projection painters: an artwork with no bytes is drawn as its decoded image", async t => {
+  const calls = [];
+  const m = await paintersWith(t, "nobytes", { bitmap: async source => { calls.push(source); return { width: 8, height: 8, close() {} }; } });
+  const image = new Image(); m.rememberImage(m.PROJECTION_ART.hero, image);
+  const p = { ctx: m.ctx, w: 64, h: 64, t: 0, variant: 0, accent: "#fff" };
+  for (let i = 0; i < 6; i++) { m.projectionHero(p); await settle(); }
+  assert.ok(m.drawn.includes(image), "the decoded image is drawn");
+  assert.equal(calls.length, 0);
+});
+
+test("projection painters: a bitmap that fails to decode falls back to the decoded image, and the bytes are dropped", async t => {
+  const m = await paintersWith(t, "rejects", { bitmap: async () => { throw new Error("out of memory"); } });
+  const image = new Image(); m.rememberImage(m.PROJECTION_ART.hero, image); m.rememberBlob(m.PROJECTION_ART.hero, { bytes: 1 });
+  const p = { ctx: m.ctx, w: 64, h: 64, t: 0, variant: 0, accent: "#fff" };
+  m.preloadProjectionArtwork(); await settle();
+  for (let i = 0; i < 6; i++) { m.projectionHero(p); await settle(); }
+  assert.ok(m.drawn.includes(image), "the decoded image is drawn after the failure");
+  const { prefetchedBlob } = await import("../src/venue/loading/prefetched.ts");
+  assert.equal(prefetchedBlob(m.PROJECTION_ART.hero), undefined);
+});
+
+test("projection painters: only artwork a painter converts keeps its bytes; prepare settles with bitmaps and surfaces ready", async t => {
+  const closed = [];
+  const m = await paintersWith(t, "prepare", { bitmap: async () => ({ width: 8, height: 8, close() { closed.push(1); } }) });
+  assert.ok(!m.BITMAP_SOURCES.includes(m.PROJECTION_ART.forest), "forest has no painter, so no bytes or bitmap");
+  assert.equal(m.BITMAP_SOURCES.length, 6);
+  for (const url of m.BITMAP_SOURCES) { m.rememberImage(url, new Image()); m.rememberBlob(url, { url }); }
+  await m.prepareProjectionArtwork();
+  const { prefetchedBlob } = await import("../src/venue/loading/prefetched.ts");
+  assert.ok(m.BITMAP_SOURCES.every(url => prefetchedBlob(url) === undefined), "bytes released once converted");
+  assert.equal(closed.length, 2, "the two compose-only bitmaps (crystal, backdrop) are closed after their surfaces are built");
+  // Without images prepare still settles (nothing is waited for).
+  const empty = await paintersWith(t, "prepare-empty", { bitmap: async () => { throw new Error("no"); } });
+  await empty.prepareProjectionArtwork();
+});
+
+test("holdWarmUntil: a warm-up waits for the hold, and a hold that settles or is released lets it go", async () => {
+  const { register } = await import("node:module");
+  register(new URL("./ts-extensionless-hook.mjs", import.meta.url));
+  const { holdWarmUntil, preparedWithin } = await import("../src/venue/three/warmScene.ts");
+  const parent = new THREE.Group(), child = new THREE.Group(); parent.add(child);
+  let resolve; const promise = new Promise(r => { resolve = r; });
+  holdWarmUntil(child, promise);
+  let done = false; const waiting = preparedWithin(parent).then(() => { done = true; });
+  await new Promise(r => setImmediate(r)); assert.equal(done, false);
+  resolve(); await waiting; assert.equal(done, true);
+  const other = new THREE.Group(); parent.add(other);
+  const release = holdWarmUntil(other, new Promise(() => {}));
+  const second = preparedWithin(parent); release(); await second;
+  const failing = new THREE.Group(); parent.add(failing);
+  holdWarmUntil(failing, Promise.reject(new Error("x"))); await preparedWithin(parent);
+});

@@ -4,6 +4,7 @@ import { LOAD_GROUPS, START_GROUP, assetsFor, groupForZ } from "./groups";
 import { startStreaming, type FetchSample, type LoadManifest, type QueueItem, type StreamHandle } from "./streamer";
 import { mediaRequests, modelRequest, pathOf } from "./assetUrls";
 import { rememberBlob, rememberImage } from "./prefetched";
+import { BITMAP_SOURCES } from "../media/projectionPainters";
 import { settleManifest } from "./manifest";
 import { variantPath, type ModelVariant } from "./modelVariants";
 import { streamedVariant } from "./useModelUrl";
@@ -116,7 +117,8 @@ async function loadImage(url: string) {
     image.src = objectUrl;
     await image.decode();
     rememberImage(url, image);
-    rememberBlob(url, blob);
+    // Only the artwork a painter makes a bitmap from keeps its bytes.
+    if (BITMAP_SOURCES.includes(url)) rememberBlob(url, blob);
   } finally { URL.revokeObjectURL(objectUrl); }
 }
 

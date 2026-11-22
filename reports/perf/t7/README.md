@@ -47,3 +47,17 @@ and canvas raster; none is over 100 ms because of a painter.
 
 `measure-venue` (Fast 4G): t7 -> t8 long tasks after opening 11 -> 9 (fill-in walk 6 -> 4), gapFrames 0, opened at 36.1 s
 (t7 36.4 s), all groups warm at 78.5 s (t7 79.0 s). compare-shots baseline vs t8 exits 0 (projection mean 0.05, was 0.06).
+
+## Fix round 2
+
+- A missing or failed bitmap no longer blanks a screen: such a url is recorded and its painter draws the decoded image.
+- Memory: bytes are kept only for the six urls that become bitmaps (the four drawn artworks plus crystal and backdrop);
+  forest, which no painter draws, gets neither bytes nor a bitmap. Bytes are released once converted, or on failure.
+  Compose-only bitmaps (crystal, backdrop) are closed once their graded surface exists. Pinned decoded bitmaps:
+  46.7 MB (applications 18.9, sculpture 12.6, cosmic 9.4, hero 5.8), was about 76 MB; pinned encoded bytes: 0 after
+  preparation (was 18.3 MB for every streamed image).
+- Readiness is deterministic: the projection group's warm-up waits (`holdWarmUntil` in warmScene.ts) for
+  `prepareProjectionArtwork()`, which never rejects, only waits for already-decoded artwork and uses no timers, and is
+  released on unmount. The lite pack stays visible meanwhile.
+- t8 re-measured on Fast 4G: opened at 36.3 s (t7 36.4), gapFrames 0/2331, 11 long tasks after opening (t7 11,
+  fix round 1 run 9), none over 101 ms except the known GPU-bound fly-back (206 ms); compare-shots exits 0.

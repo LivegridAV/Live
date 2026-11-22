@@ -35,44 +35,52 @@ function artwork(url: string) {
   return decodedImages.has(image) && image.complete && image.naturalWidth > 0 ? image : undefined;
 }
 
+/** Artworks a painter draws (forest is in PROJECTION_ART but no painter uses it; crystal and backdrop only feed graded surfaces). */
+const DRAWN = new Set<string>([PROJECTION_ART.applications, PROJECTION_ART.hero, PROJECTION_ART.sculpture, PROJECTION_ART.cosmic]);
+/** Every url whose bytes the streamer keeps for a bitmap. */
+export const BITMAP_SOURCES: readonly string[] = [...DRAWN, PROJECTION_ART.crystal, PROJECTION_ART.backdrop];
 const bitmaps = new Map<string, ImageBitmap>();
 const bitmapPending = new Map<string, Promise<ImageBitmap | undefined>>();
+/** Urls with no bitmap (no bytes, or the decode failed): their painter draws the decoded image. */
+const noBitmap = new Set<string>();
 
 /**
- * The artwork as an ImageBitmap decoded on a worker from the streamer's bytes.
- * drawImage of an HTMLImageElement decodes lazily on the main thread when the
- * canvas rasters (97 ms for a 2K artwork on the first frame it was drawn);
- * a bitmap is already pixels. Undefined when there are no bytes to decode
- * (the painter then draws the image, as before) or the decode fails.
+ * An ImageBitmap decoded on a worker from the streamer's bytes (drawImage of
+ * an HTMLImageElement decodes lazily on the main thread when the canvas
+ * rasters: 97 ms for a 2K artwork on the first frame it was drawn). Undefined
+ * when there are no bytes or the decode fails. Never rejects; the bytes are
+ * dropped either way.
  */
+async function makeBitmap(url: string): Promise<ImageBitmap | undefined> {
+  try {
+    const image = await artworkReady(url);
+    const blob = prefetchedBlob(url);
+    if (!image || !blob || typeof createImageBitmap === "undefined") return undefined;
+    await yieldTask();
+    return await createImageBitmap(blob);
+  } catch { return undefined; } finally { releaseBlob(url); }
+}
+
+/** The shared, kept bitmap of an artwork a painter draws. */
 function artworkBitmap(url: string): Promise<ImageBitmap | undefined> {
   const done = bitmaps.get(url);
   if (done) return Promise.resolve(done);
   let pending = bitmapPending.get(url);
   if (!pending) {
-    pending = (async () => {
-      try {
-        const image = await artworkReady(url);
-        const blob = prefetchedBlob(url);
-        if (!image || !blob || typeof createImageBitmap === "undefined") return undefined;
-        await yieldTask();
-        const bitmap = await createImageBitmap(blob);
-        bitmaps.set(url, bitmap); releaseBlob(url);
-        return bitmap;
-      } catch { return undefined; }
-    })();
+    pending = makeBitmap(url).then(bitmap => { if (bitmap) bitmaps.set(url, bitmap); else noBitmap.add(url); return bitmap; });
     bitmapPending.set(url, pending);
   }
   return pending;
 }
 
-/** What a painter draws: the bitmap once it exists, the decoded image when there are no bytes to make one from. */
+/** What a painter draws: the bitmap once it exists, the decoded image whenever there is none to wait for. */
 function drawable(url: string): CanvasImageSource | undefined {
   const bitmap = bitmaps.get(url);
   if (bitmap) return bitmap;
   const image = artwork(url);
   if (!image) return undefined;
-  if (!prefetchedBlob(url) && !bitmapPending.has(url)) return image;
+  if (noBitmap.has(url) || !DRAWN.has(url)) return image;
+  if (!bitmapPending.has(url) && !prefetchedBlob(url)) { noBitmap.add(url); return image; }
   void artworkBitmap(url);
   return undefined;
 }
@@ -86,8 +94,25 @@ function artworkReady(url: string): Promise<HTMLImageElement | undefined> {
 
 /** Start fetching and decoding the artwork and preparing the graded surfaces, before any painter's first frame. */
 export function preloadProjectionArtwork() {
-  for (const url of Object.values(PROJECTION_ART)) { artwork(url); void artworkBitmap(url); }
+  for (const url of BITMAP_SOURCES) { artwork(url); if (DRAWN.has(url)) void artworkBitmap(url); }
   backdropArtwork(); crystalArtwork();
+}
+
+/**
+ * Resolves when the artwork that is already decoded has its bitmaps and the
+ * graded surfaces are built, so the projection group's first shown frame has
+ * its content. Never rejects and never waits on a download: an artwork that is
+ * not decoded yet is not waited for (its painter draws it when it arrives).
+ */
+export async function prepareProjectionArtwork(): Promise<void> {
+  try {
+    preloadProjectionArtwork();
+    const decoded = (urls: string[]) => urls.every(url => artwork(url));
+    const waits: Promise<unknown>[] = [...DRAWN].filter(url => artwork(url)).map(artworkBitmap);
+    if (decoded([PROJECTION_ART.backdrop])) waits.push(backdropSurface.done ?? Promise.resolve());
+    if (decoded([PROJECTION_ART.crystal, PROJECTION_ART.sculpture])) waits.push(crystalSurface.done ?? Promise.resolve());
+    await Promise.all(waits);
+  } catch { /* a painter without its surface draws without it */ }
 }
 
 function start(p: PaintCtx, draw: (c: CanvasRenderingContext2D) => void, background = "#01050b") {
@@ -121,7 +146,7 @@ export function projectionApplications(p: PaintCtx) {
 /** Actual final crystal geometry rendered for the physical kiosk displays. */
 export function projectionHero(p: PaintCtx) { fullArtwork(p, PROJECTION_ART.hero); }
 
-type Graded = { surface?: CanvasImageSource; pending?: boolean };
+type Graded = { surface?: CanvasImageSource; pending?: boolean; done?: Promise<void> };
 /** Yield to the event loop (a message, not a timer: review captures run on a paused clock). */
 const yieldTask = () => new Promise<void>(resolve => { const channel = new MessageChannel(); channel.port1.onmessage = () => { channel.port1.close(); resolve(); }; channel.port2.postMessage(0); });
 /** Rows graded per task: about 256k pixels, a few ms. */
@@ -142,16 +167,23 @@ function gradedSurface(slot: Graded, urls: string[],
   if (slot.surface) return slot.surface;
   if (slot.pending || typeof document === "undefined" || typeof Image === "undefined") return undefined;
   slot.pending = true;
-  void (async () => {
+  slot.done = (async () => {
     // Never inside a paint frame: wait for the decoded images, then one step
     // per task. Bitmaps come from the streamer's bytes (a worker decodes a
     // Blob); an HTMLImageElement source would decode on the main thread.
     const sources = await Promise.all(urls.map(artworkReady));
     const first = sources[0];
     if (!first || sources.some(source => !source)) return; // never decoded: the painter keeps drawing without it
-    {
-      // Shared bitmaps (decoded on a worker); the decoded image when there are no bytes.
-      const layers: CanvasImageSource[] = await Promise.all(urls.map(async (url, i) => (await artworkBitmap(url)) ?? sources[i]!));
+    // Shared bitmaps (decoded on a worker); the decoded image when there are no bytes.
+    // Compose-only layers are not kept: closed once the surface is built (or fails).
+    const temporary: ImageBitmap[] = [];
+    try {
+      const layers: CanvasImageSource[] = await Promise.all(urls.map(async (url, i) => {
+        if (DRAWN.has(url)) return (await artworkBitmap(url)) ?? sources[i]!;
+        const bitmap = await makeBitmap(url);
+        if (bitmap) temporary.push(bitmap);
+        return bitmap ?? sources[i]!;
+      }));
       await yieldTask();
       const canvas = document.createElement("canvas"); ({ w: canvas.width, h: canvas.height } = sizeOf(layers[0]));
       const c = canvas.getContext("2d", { willReadFrequently: true });
@@ -165,7 +197,7 @@ function gradedSurface(slot: Graded, urls: string[],
         c.putImageData(band, 0, y);
       }
       slot.surface = canvas;
-    }
+    } finally { temporary.forEach(bitmap => bitmap.close()); }
   })().catch(() => { slot.surface = decodedFirst(urls[0]); });
   return undefined;
 }

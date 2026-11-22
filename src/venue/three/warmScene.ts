@@ -239,13 +239,26 @@ export function prepareBeforeWarm(root: THREE.Object3D, work: () => void) {
   return () => { if (preparing.delete(root)) notifyPrepared(); };
 }
 
+/**
+ * Roots whose warm-up waits for asynchronous preparation (a projection group's
+ * decoded artwork). `promise` must settle; the returned release also ends the
+ * hold, for effect cleanup.
+ */
+const held = new Set<THREE.Object3D>();
+export function holdWarmUntil(root: THREE.Object3D, promise: Promise<unknown>) {
+  held.add(root);
+  const release = () => { if (held.delete(root)) notifyPrepared(); };
+  promise.then(release, release);
+  return release;
+}
+
 const inside = (object: THREE.Object3D, subtree: THREE.Object3D) => {
   for (let node: THREE.Object3D | null = object; node; node = node.parent) if (node === subtree) return true;
   return false;
 };
 /** Resolves once no root inside `subtree` is waiting for its preparation. */
 export function preparedWithin(subtree: THREE.Object3D): Promise<void> {
-  const waiting = () => [...preparing.keys()].some(root => inside(root, subtree));
+  const waiting = () => [...preparing.keys(), ...held].some(root => inside(root, subtree));
   if (!waiting()) return Promise.resolve();
   return new Promise(resolve => {
     const check = () => { if (!waiting()) { preparedListeners.delete(check); resolve(); } };
