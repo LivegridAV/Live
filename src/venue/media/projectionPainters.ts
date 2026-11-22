@@ -69,20 +69,55 @@ export function projectionApplications(p: PaintCtx) {
 /** Actual final crystal geometry rendered for the physical kiosk displays. */
 export function projectionHero(p: PaintCtx) { fullArtwork(p, PROJECTION_ART.hero); }
 
-let backdropSurface:HTMLCanvasElement|undefined;
+type Graded = { surface?: CanvasImageSource; pending?: boolean };
+/** Yield to the event loop (a message, not a timer: review captures run on a paused clock). */
+const yieldTask = () => new Promise<void>(resolve => { const channel = new MessageChannel(); channel.port1.onmessage = () => resolve(); channel.port2.postMessage(0); });
+/** Rows graded per task: about 256k pixels, a few ms. */
+const sliceRows = (width: number) => Math.max(1, Math.floor(262_144 / Math.max(1, width)));
+
+/**
+ * A graded copy of an artwork, prepared off the frame. Grading in the paint
+ * call decoded the image, read a GPU canvas back and walked every pixel in
+ * one frame (87–125 ms long tasks when the projection zone swapped in, Task
+ * 6b trace). Here the sources are decoded off the main thread
+ * (createImageBitmap), drawn into a CPU-backed canvas, and `grade` adjusts
+ * one band of rows per task. Until it is done this returns undefined, as an
+ * artwork does until it is decoded.
+ */
+function gradedSurface(slot: Graded, sources: (HTMLImageElement | undefined)[],
+  compose: (c: CanvasRenderingContext2D, layers: ImageBitmap[], canvas: HTMLCanvasElement) => void,
+  grade: (pixels: Uint8ClampedArray) => void) {
+  if (slot.surface) return slot.surface;
+  const first = sources[0];
+  if (slot.pending || !first || sources.some(source => !source) || typeof document === "undefined") return undefined;
+  slot.pending = true;
+  void (async () => {
+    const layers = await Promise.all((sources as HTMLImageElement[]).map(source => createImageBitmap(source)));
+    const canvas = document.createElement("canvas"); canvas.width = first.naturalWidth; canvas.height = first.naturalHeight;
+    const c = canvas.getContext("2d", { willReadFrequently: true });
+    if (!c) { layers.forEach(layer => layer.close()); slot.surface = first; return; }
+    compose(c, layers, canvas);
+    layers.forEach(layer => layer.close());
+    const rows = sliceRows(canvas.width);
+    for (let y = 0; y < canvas.height; y += rows) {
+      await yieldTask();
+      const band = c.getImageData(0, y, canvas.width, Math.min(rows, canvas.height - y));
+      grade(band.data);
+      c.putImageData(band, 0, y);
+    }
+    slot.surface = canvas;
+  })().catch(() => { slot.surface = first; });
+  return undefined;
+}
+
+const backdropSurface: Graded = {};
 function backdropArtwork(){
-  const source=artwork(PROJECTION_ART.backdrop);
-  if(!source||typeof document==="undefined")return undefined;
-  if(backdropSurface)return backdropSurface;
-  const canvas=document.createElement("canvas");canvas.width=source.naturalWidth;canvas.height=source.naturalHeight;
-  const c=canvas.getContext("2d");if(!c)return source;
-  c.drawImage(source,0,0);
-  const field=c.getImageData(0,0,canvas.width,canvas.height),pixels=field.data;
-  for(let i=0;i<pixels.length;i+=4){
-    const luma=pixels[i]*.2126+pixels[i+1]*.7152+pixels[i+2]*.0722;
-    for(let channel=0;channel<3;channel++)pixels[i+channel]=pixels[i+channel]*.75+luma*.25;
-  }
-  c.putImageData(field,0,0);backdropSurface=canvas;return canvas;
+  return gradedSurface(backdropSurface, [artwork(PROJECTION_ART.backdrop)], (c, [source]) => c.drawImage(source,0,0), pixels => {
+    for(let i=0;i<pixels.length;i+=4){
+      const luma=(pixels[i]*.2126+pixels[i+1]*.7152+pixels[i+2]*.0722)*.25;
+      pixels[i]=pixels[i]*.75+luma;pixels[i+1]=pixels[i+1]*.75+luma;pixels[i+2]=pixels[i+2]*.75+luma;
+    }
+  });
 }
 
 /** Wide curved LED content with clear copy bands outside the central real model. */
@@ -193,27 +228,22 @@ export function projectionSculpture(p: PaintCtx) {
   c.restore();
 }
 
-let crystalSurface: HTMLCanvasElement | undefined;
+const crystalSurface: Graded = {};
 function crystalArtwork() {
-  const source=artwork(PROJECTION_ART.crystal);
-  const branching=artwork(PROJECTION_ART.sculpture);
-  if(!source||!branching||typeof document==="undefined")return undefined;
-  if(crystalSurface)return crystalSurface;
-  const canvas=document.createElement("canvas");canvas.width=source.naturalWidth;canvas.height=source.naturalHeight;
-  const c=canvas.getContext("2d");if(!c)return source;
-  c.drawImage(source,0,0);
-  // The reference mixes sparse branching blue-white light with the denser
-  // refracted field. Both are registered to the real model's shared domain.
-  c.globalAlpha=.80;c.drawImage(branching,0,0,canvas.width,canvas.height);c.globalAlpha=1;
-  const field=c.getImageData(0,0,canvas.width,canvas.height),pixels=field.data;
-  // Grade only blue troughs once. White vein cores and champagne light keep
-  // their source values, making the existing fine branches read at a distance.
-  for(let i=0;i<pixels.length;i+=4){
-    const blue=Math.max(0,Math.min(1,(pixels[i+2]-pixels[i]-12)/120));
-    const amount=.12*blue;
-    pixels[i]*=1-amount*.92;pixels[i+1]*=1-amount*.85;pixels[i+2]*=1-amount*.60;
-  }
-  c.putImageData(field,0,0);crystalSurface=canvas;return canvas;
+  return gradedSurface(crystalSurface, [artwork(PROJECTION_ART.crystal), artwork(PROJECTION_ART.sculpture)], (c, [source, branching], canvas) => {
+    c.drawImage(source,0,0);
+    // The reference mixes sparse branching blue-white light with the denser
+    // refracted field. Both are registered to the real model's shared domain.
+    c.globalAlpha=.80;c.drawImage(branching,0,0,canvas.width,canvas.height);c.globalAlpha=1;
+  }, pixels => {
+    // Grade only blue troughs once. White vein cores and champagne light keep
+    // their source values, making the existing fine branches read at a distance.
+    for(let i=0;i<pixels.length;i+=4){
+      const blue=Math.max(0,Math.min(1,(pixels[i+2]-pixels[i]-12)/120));
+      const amount=.12*blue;
+      pixels[i]*=1-amount*.92;pixels[i+1]*=1-amount*.85;pixels[i+2]*=1-amount*.60;
+    }
+  });
 }
 
 /** Blue, white and champagne light projected onto actual faceted crystal geometry. */

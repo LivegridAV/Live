@@ -135,9 +135,17 @@ try {
     await scrollToP(page, p);
     if (n % 10 === 0) {
       // Any loading wording on screen after opening (the opening bar is [data-venue-loading]).
-      const cue = await page.evaluate(() => [...document.querySelectorAll("body *")]
-        .filter(el => el.childElementCount === 0 && /\bloading\b/i.test(el.textContent ?? "") && el.getClientRects().length && getComputedStyle(el).visibility !== "hidden")
-        .map(el => el.textContent.trim().slice(0, 80)));
+      // A text-node walk (no layout) and a visibility check only for matches, so the probe itself stays cheap.
+      const cue = await page.evaluate(() => {
+        const found = [], walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+          const el = node.parentElement;
+          // The ?perf-only entrance review panel has a "Loading preview" toggle; it is not a loading cue.
+          if (!/\bloading\b/i.test(node.nodeValue ?? "") || !el || el.closest('script,style,noscript,[aria-label="Entrance atmosphere"]')) continue;
+          if (el.getClientRects().length && getComputedStyle(el).visibility !== "hidden") found.push(node.nodeValue.trim().slice(0, 80));
+        }
+        return found;
+      });
       if (cue.length) textCue.push({ progress: +p.toFixed(3), cue });
     }
     await sleep(100);
@@ -147,9 +155,12 @@ try {
   await waitPerf(page, () => window.__venuePerf.allReady());
   const msToAllReady = Date.now() - t0;
   const fillIn = await stopMonitor(page);
+  const longTasksUntilAllReady = (await page.evaluate(() => window.__venuePerf.longTasks())).length;
+  // Back to the start for the stats walk: an instant jump from p = 1 to 0 (the camera flies back through every zone).
   await scrollToP(page, 0);
   await sleep(2000);
   await page.evaluate(() => new Promise(res => { let n = 0; const f = () => (++n >= 60 ? res() : requestAnimationFrame(f)); requestAnimationFrame(f); }));
+  const longTasksAfterFlyBack = (await page.evaluate(() => window.__venuePerf.longTasks())).length;
 
   const snapshot = await page.evaluate(() => window.__venuePerf.snapshot());
   writeFileSync(path.join(outDir, "snapshot.json"), JSON.stringify(snapshot, null, 1));
@@ -224,6 +235,8 @@ try {
     fillIn: { walkMs: fillInWalkMs, paceMps: WALK_PACE_MPS, frames: fillIn.frames, gapFrames: fillIn.gapFrames, gaps: fillIn.gaps,
       loadingCueFrames: fillIn.loadingCue, loadingText: textCue, longTasks: longTasksDuringFillIn, timeline: fillIn.timeline, pair: fillInPair },
     walk, longTasksAfterOpen, gapFrames,
+    // Cumulative long-task counts at each phase end: fill-in walk, then until every group is warm, then the jump back to p = 0, then the stats walk (the rest).
+    longTaskPhases: { fillInWalk: longTasksDuringFillIn, untilAllReady: longTasksUntilAllReady, flyBack: longTasksAfterFlyBack, statsWalk: longTasksAfterOpen.length },
   };
   writeFileSync(path.join(outDir, "metrics.json"), JSON.stringify(metrics, null, 1));
   const max = k => Math.max(...walk.map(w => w[k]));

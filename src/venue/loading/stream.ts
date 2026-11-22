@@ -18,8 +18,9 @@ import { gltfExtender, ktx2Sibling, loadVenueTexture } from "../three/textureLoa
  * The queue (owner decision 3, open early and fill in): the start group
  * alone, then every later group's light pack in journey order, then the full
  * groups in journey order. Before opening only the opening set runs: the
- * start group and the light packs the planner says must arrive first
- * (`planOpening`). Everything else is held until the venue opens; then the
+ * start group and the light packs the opening plan names (every pack, on
+ * normal visits; see useOpeningPlan.ts) via `planOpening`. Everything else
+ * is held until the venue opens; then the
  * remaining light packs run, and the full groups only once every light pack
  * has settled, so no full download takes bandwidth from a pack a visitor is
  * walking towards (the planner assumes the packs arrive back to back). Review,
@@ -325,8 +326,6 @@ export function prioritizeZ(z: number) {
 
 export const streamBandwidth = () => handle?.bandwidth() ?? 0;
 export const groupFailed = (id: string) => failed.has(id);
-/** The build's load manifest could not be fetched (the streamer runs on its fallback). */
-export const manifestFailed = () => failed.has("manifest");
 
 /** Groups with their switch-on z, the bytes they cost under the current conditions, and their light pack's bytes. */
 export function plannerGroups() {

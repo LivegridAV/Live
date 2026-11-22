@@ -213,11 +213,12 @@ let warmChain: Promise<unknown> = Promise.resolve();
  * 1. Submit its materials in both colour-space variants, against the full
  *    scene's lights, fog and environment (`compile(root, camera, scene)`), and
  *    wait for the driver without blocking.
- * 2. Draw only that subtree once into a tiny target, so its geometry and
- *    textures upload and render-time variants appear. The camera sees a
+ * 2. Once the venue is open, upload its textures one per task (`uploadTextures`).
+ * 3. Draw only that subtree once into a tiny target, so its geometry
+ *    uploads and render-time variants appear. The camera sees a
  *    reserved layer that only the subtree and the lights in effect are put on,
  *    so the draw uses the real light set and costs a fraction of a frame.
- * 3. Submit again for anything the draw added.
+ * 4. Submit again for anything the draw added.
  *
  * `root` stays hidden (visible = false) throughout; the caller shows it after.
  * Calls are serialized, so two groups never warm at the same time.
@@ -237,12 +238,49 @@ async function warmSubtreeNow(gl: THREE.WebGLRenderer, scene: THREE.Scene, camer
     submitSubtree(gl, scene, camera, root, target);
     await programsReady(gl, cancelled);
     if (cancelled()) return;
+    // Only once the venue is open: behind the loader a long upload is unseen,
+    // and the review captures' frame count must not depend on decode time.
+    if (gate.open) await uploadTextures(gl, root, cancelled);
+    if (cancelled()) return;
     drawSubtree(gl, scene, camera, root, target);
     if (cancelled()) return;
     submitSubtree(gl, scene, camera, root, target);
     await programsReady(gl, cancelled, undefined, 30_000);
   } finally {
     target.dispose();
+  }
+}
+
+const nextFrame = () => new Promise<void>(resolve => requestAnimationFrame(() => resolve()));
+
+/**
+ * Upload the subtree's textures that are not on the GPU yet, one per task,
+ * ahead of its warm-up draw. Drawn together, a zone's large media images
+ * uploaded 5 at a time in one task (~200 ms during the walk, Task 6b trace),
+ * each re-decoding its image on the main thread. Here an image element is
+ * decoded off the main thread first (`decode()`), so its upload is a copy.
+ */
+async function uploadTextures(gl: THREE.WebGLRenderer, root: THREE.Object3D, cancelled: () => boolean) {
+  const textures = new Set<THREE.Texture>();
+  const collect = (value: unknown) => { if (value instanceof THREE.Texture) textures.add(value); };
+  root.traverse(object => {
+    const material = (object as THREE.Mesh).material;
+    if (!material) return;
+    for (const m of Array.isArray(material) ? material : [material]) {
+      for (const value of Object.values(m)) collect(value);
+      const uniforms = (m as THREE.ShaderMaterial).uniforms;
+      if (uniforms) for (const uniform of Object.values(uniforms)) collect(uniform?.value);
+    }
+  });
+  for (const texture of textures) {
+    if (cancelled()) return;
+    const uploaded = (gl.properties.get(texture) as { __version?: number }).__version === texture.version;
+    if (texture.isRenderTargetTexture || texture.version === 0 || uploaded || texture instanceof THREE.VideoTexture) continue;
+    const image = texture.image as unknown;
+    if (typeof HTMLImageElement !== "undefined" && image instanceof HTMLImageElement) await image.decode().catch(() => undefined);
+    if (cancelled()) return;
+    gl.initTexture(texture);
+    await nextFrame();
   }
 }
 

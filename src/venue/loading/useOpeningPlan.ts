@@ -6,22 +6,20 @@ import { liteBeforeOpening } from "./plan";
 import { journeyStartZ } from "../data/path";
 import { useVenue } from "../systems/store";
 import {
-  downloadedBytes, groupFailed, manifestFailed, openingSet, planOpening, plannerGroups, streamBandwidth,
+  downloadedBytes, groupFailed, openingSet, planOpening, plannerGroups, streamBandwidth,
 } from "./stream";
 
 /**
  * The opening plan, read once per frame by the venue's warm-up (Scene.tsx).
  *
  * Owner decision 3, open early and fill in: the venue opens once the start
- * group is warm and the light packs that could not stream in ahead of a
- * visitor walking from the start (`liteBeforeOpening`) are warm. Full groups
- * never hold the opening; they stream in afterwards and sharpen each zone.
- * The start group's download measures the connection. Review, capture and
- * inspection modes (`full`) wait for every full group instead.
+ * group is warm and every later group's light pack is warm (the "all lite"
+ * rule, see below). Full groups never hold the opening; they stream in
+ * afterwards and sharpen each zone. Review, capture and inspection modes
+ * (`full`) wait for every full group instead.
  *
- * If the manifest could not be loaded, every later group is in the plan
- * (stream.ts then requires each one's full group, having no light pack to
- * show).
+ * If the manifest could not be loaded there is no light pack to fetch:
+ * stream.ts then requires each later group's full version instead.
  */
 export function useOpeningPlan(full: boolean) {
   const get = useThree(state => state.get);
@@ -40,13 +38,19 @@ export function useOpeningPlan(full: boolean) {
           const { size } = get();
           const startZ = journeyStartZ(size.width / Math.max(1, size.height));
           const later = groups.filter(g => g.id !== START_GROUP);
+          // The "all lite" rule (Task 6b fix round 1): normal visits open with
+          // every later group's light pack (~7.4 MiB), so even a jump straight
+          // to the far end right after opening never meets empty space.
+          // liteBeforeOpening (the walk-pace minimum) is kept for the day the
+          // packs shrink; it is reported in ?perf for comparison.
           const plan = full ? { full: groups.map(g => g.id), lite: [] }
-            : { full: [START_GROUP], lite: manifestFailed() ? later.map(g => g.id) : liteBeforeOpening({ bytesPerSecond, groups: later, startZ }) };
+            : { full: [START_GROUP], lite: later.map(g => g.id) };
+          const walkMinimum = liteBeforeOpening({ bytesPerSecond, groups: later, startZ });
           current.planned = true;
           planOpening(plan);
           if (new URLSearchParams(location.search).has("perf")) {
             const set = openingSet();
-            console.info(`[venue] opening with ${set?.full.join(", ")}${set?.lite.length ? ` and the light packs of ${set.lite.join(", ")}` : ""} (${Math.round(bytesPerSecond / 1000)} kB/s, start z ${startZ.toFixed(1)})`);
+            console.info(`[venue] opening with ${set?.full.join(", ")}${set?.lite.length ? ` and the light packs of ${set.lite.join(", ")}` : ""} (${Math.round(bytesPerSecond / 1000)} kB/s, start z ${startZ.toFixed(1)}; walk-pace minimum would be ${walkMinimum.join(", ") || "none"})`);
           }
         }
       }
