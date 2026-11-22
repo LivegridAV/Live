@@ -265,7 +265,7 @@ test("every /media and .glb literal the mounted venue references is in exactly o
 
 // ---- streamer (Task 4) ----
 
-const { startStreaming, RETRY_DELAYS_MS, MAX_IN_FLIGHT } = await import("../src/venue/loading/streamer.ts");
+const { startStreaming, RETRY_DELAYS_MS, MAX_IN_FLIGHT, itemTimeoutMs, isItemTimeout, TIMEOUT_FLOOR_MS } = await import("../src/venue/loading/streamer.ts");
 
 /** A fetchGroup whose calls are recorded and settled by the test. */
 function fakeFetcher(clock) {
@@ -440,6 +440,65 @@ test("streamer: stop() starts nothing more", async t => {
     fake.pending("start").resolve(); await flush();
     assert.deepEqual(fake.calls.map(c => c.id), ["start"]);
   });
+});
+
+// Final review, Important 1c: a hung download frees its slot and is retried.
+
+test("streamer timeout: sized to bytes and bandwidth, never under the floor, never tight on Slow 4G", () => {
+  assert.equal(itemTimeoutMs(1e5, 1e6), TIMEOUT_FLOOR_MS, "small items get the floor");
+  assert.equal(itemTimeoutMs(24.1e6, 250e3), Math.ceil(4 * 2 * 24.1e6 / 250e3 * 1000), "4 x the shared time at the measured bandwidth");
+  assert.equal(itemTimeoutMs(24.1e6, 250e3, 1), Math.ceil(4 * 24.1e6 / 250e3 * 1000), "an item downloading alone has the whole connection");
+  // Slow 4G in scripts/measure-venue.mjs: 2 Mbit/s = 250 kB/s, shared by MAX_IN_FLIGHT downloads.
+  const slow4g = 2000 * 1000 / 8;
+  for (const bytes of [3e5, 1.3e6, 9.75 * 2 ** 20, 24.1e6, 40e6]) {
+    const healthyMs = bytes / (slow4g / MAX_IN_FLIGHT) * 1000;
+    // Whatever the estimate says, even a wildly optimistic one from cached files.
+    for (const estimate of [0, 50e3, slow4g, 1.1e6, 1e9, Infinity]) {
+      assert.ok(itemTimeoutMs(bytes, estimate) >= 2 * healthyMs, `${bytes} B at estimate ${estimate}: ${itemTimeoutMs(bytes, estimate)} ms < 2 x ${healthyMs} ms`);
+    }
+  }
+  // Unknown size (the manifest failed): sized as a large group.
+  assert.ok(itemTimeoutMs(0, slow4g) >= 2 * 24.1e6 / (slow4g / MAX_IN_FLIGHT) * 1000);
+});
+
+test("streamer timeout: a hung group frees its slot, enters the 1/3/9 s retries and its late result is ignored", async t => {
+  const retries = [];
+  await withStreamer(t, ["start", "a", "b", "c", "d"], async ({ handle, fake, events, flush, advance, clock }) => {
+    clock.now += 4000;
+    fake.pending("start").resolve(); await flush();
+    assert.deepEqual(fake.calls.map(c => c.id), ["start", "a", "b"]);
+    const timeout = itemTimeoutMs(1e6, handle.bandwidth());
+    assert.equal(timeout, TIMEOUT_FLOOR_MS);
+    const firstA = fake.pending("a");
+    await advance(timeout - 1);
+    assert.deepEqual(fake.calls.map(c => c.id), ["start", "a", "b"], "nothing times out early");
+    await advance(1);
+    assert.deepEqual(fake.calls.map(c => c.id), ["start", "a", "b", "c", "d"], "both hung slots are freed");
+    assert.deepEqual(retries.map(r => [r.id, r.attempt, r.delayMs, isItemTimeout(r.error)]), [["a", 1, 1000, true], ["b", 1, 1000, true]]);
+    firstA.resolve(); await flush();
+    assert.ok(!events.some(e => e[1] === "a"), "the timed-out attempt's late success is ignored");
+    fake.pending("c").resolve(); fake.pending("d").resolve(); await flush();
+    await advance(1000);
+    assert.deepEqual(fake.calls.map(c => c.id), ["start", "a", "b", "c", "d", "a", "b"], "retried after 1 s");
+    fake.pending("a").resolve(); fake.pending("b").resolve(); await flush();
+    assert.deepEqual(events.map(e => e.join(" ")), ["ready start", "ready c", "ready d", "ready a", "ready b"]);
+  }, { onRetry: (id, attempt, delayMs, error) => retries.push({ id, attempt, delayMs, error }) });
+});
+
+test("streamer timeout: a group that hangs every time is reported failed after four attempts", async t => {
+  const failed = [];
+  await withStreamer(t, ["start", "a"], async ({ handle, fake, flush, advance, clock }) => {
+    clock.now += 4000;
+    fake.pending("start").resolve(); await flush();
+    for (const delay of [...RETRY_DELAYS_MS, 0]) {
+      await advance(itemTimeoutMs(1e6, handle.bandwidth()));
+      if (delay) await advance(delay);
+    }
+    assert.equal(fake.calls.filter(c => c.id === "a").length, 4);
+    assert.deepEqual(failed.map(f => [f.id, isItemTimeout(f.error)]), [["a", true]], "failed once, with the timeout error");
+    await advance(3_600_000);
+    assert.equal(fake.calls.filter(c => c.id === "a").length, 4, "no more attempts");
+  }, { onFailed: (id, error) => failed.push({ id, error }) });
 });
 
 // ---- model variants (Task 5) ----

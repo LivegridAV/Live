@@ -21,9 +21,57 @@
  *   after opening until the venue has opened).
  * - A dropped item is never started (a light pack whose full group is
  *   already in memory).
+ * - A download that has not settled within `itemTimeoutMs` (sized to its
+ *   bytes and the measured bandwidth, with a generous floor) counts as a
+ *   failure: it frees its slot and enters the same 1/3/9 s retries. Its
+ *   late result, if it ever settles, is ignored.
  */
 export const MAX_IN_FLIGHT = 2;
 export const RETRY_DELAYS_MS: readonly number[] = [1000, 3000, 9000];
+
+/** No item times out sooner than this (ms): parsing and warming a group take main-thread time too. */
+export const TIMEOUT_FLOOR_MS = 60_000;
+/** The timeout allows this many times the expected download time. */
+export const TIMEOUT_SLACK = 4;
+/**
+ * Bytes per second assumed when nothing has been measured yet (400 kbit/s,
+ * a fifth of the Slow 4G profile in scripts/measure-venue.mjs).
+ */
+export const TIMEOUT_ASSUMED_BPS = 50_000;
+/**
+ * A measured bandwidth above this (4 Mbit/s, twice Slow 4G) is not trusted
+ * for the timeout: cached files make Resource Timing report far more than the
+ * network gives. So a healthy Slow 4G download always has at least twice its
+ * time, even when the estimate is wildly optimistic.
+ */
+export const TIMEOUT_MAX_BPS = 500_000;
+/** Bytes assumed for an item whose size is unknown (the manifest failed to load). */
+export const TIMEOUT_UNKNOWN_BYTES = 32 * 2 ** 20;
+
+/**
+ * How long an item of `bytes` may run before it counts as hung: the slack
+ * times its expected time at `bandwidth` (bytes per second, 0 when unknown)
+ * shared with `share` concurrent downloads, never under the floor.
+ */
+export function itemTimeoutMs(bytes: number, bandwidth: number, share = MAX_IN_FLIGHT): number {
+  const size = bytes > 0 ? bytes : TIMEOUT_UNKNOWN_BYTES;
+  const bps = bandwidth > 0 && Number.isFinite(bandwidth) ? Math.min(bandwidth, TIMEOUT_MAX_BPS) : TIMEOUT_ASSUMED_BPS;
+  return Math.max(TIMEOUT_FLOOR_MS, Math.ceil(TIMEOUT_SLACK * share * size / bps * 1000));
+}
+
+/** The error a download that ran past its timeout fails with. */
+export class ItemTimeoutError extends Error {
+  readonly item: string;
+  readonly timeoutMs: number;
+  constructor(item: string, timeoutMs: number) {
+    super(`${item} did not finish within ${Math.round(timeoutMs / 1000)} s`);
+    this.name = "ItemTimeoutError";
+    this.item = item;
+    this.timeoutMs = timeoutMs;
+  }
+}
+export const isItemTimeout = (error: unknown): error is ItemTimeoutError =>
+  error instanceof Error && error.name === "ItemTimeoutError";
 
 export type ManifestGroup = {
   id: string;
@@ -89,6 +137,7 @@ export function startStreaming(opts: {
   const later = (ms: number, run: () => void) => {
     const timer = setTimeout(() => { timers.delete(timer); if (!stopped) run(); }, ms);
     timers.add(timer);
+    return timer;
   };
   const inFlight = () => ids.filter(id => state.get(id) === "inflight").length;
   const pick = () => {
@@ -109,18 +158,20 @@ export function startStreaming(opts: {
   function launch(id: string) {
     state.set(id, "inflight");
     const startMs = now();
+    // The first item downloads alone; later ones share the connection.
+    const timeoutMs = itemTimeoutMs(bytes.get(id) ?? 0, bandwidth(), id === ids[0] ? 1 : MAX_IN_FLIGHT);
+    let settled = false;
+    /** Only the first of success, failure and timeout counts for this attempt. */
+    const once = <A extends unknown[]>(run: (...args: A) => void) => (...args: A) => {
+      if (settled || stopped) return;
+      settled = true;
+      clearTimeout(timer);
+      timers.delete(timer);
+      run(...args);
+    };
     let request: Promise<void>;
     try { request = opts.fetchGroup(id); } catch (error) { request = Promise.reject(error); }
-    request.then(() => {
-      if (stopped) return;
-      const endMs = now();
-      samples.push(opts.measure?.(id, startMs, endMs) ?? { bytes: bytes.get(id) ?? 0, startMs, endMs });
-      state.set(id, "ready");
-      priority = priority.filter(p => p !== id);
-      opts.onReady?.(id);
-      pump();
-    }, error => {
-      if (stopped) return;
+    const onFailure = once((error: unknown) => {
       const attempt = (failures.get(id) ?? 0) + 1;
       failures.set(id, attempt);
       const delay = RETRY_DELAYS_MS[attempt - 1];
@@ -135,6 +186,30 @@ export function startStreaming(opts: {
       }
       pump();
     });
+    const timer = later(timeoutMs, () => onFailure(new ItemTimeoutError(id, timeoutMs)));
+    request.then(once(() => {
+      const endMs = now();
+      samples.push(opts.measure?.(id, startMs, endMs) ?? { bytes: bytes.get(id) ?? 0, startMs, endMs });
+      state.set(id, "ready");
+      priority = priority.filter(p => p !== id);
+      opts.onReady?.(id);
+      pump();
+    }), onFailure);
+  }
+
+  /** Bytes per second over every finished fetch; 0 until one has finished. */
+  function bandwidth() {
+    if (samples.length === 0) return 0;
+    const total = samples.reduce((sum, sample) => sum + sample.bytes, 0);
+    // Time during which at least one finished fetch was running (union of intervals).
+    const spans = samples.map(s => [s.startMs, Math.max(s.startMs, s.endMs)]).sort((a, b) => a[0] - b[0]);
+    let busy = 0, from = spans[0][0], to = spans[0][1];
+    for (const [start, end] of spans.slice(1)) {
+      if (start > to) { busy += to - from; from = start; to = end; } else to = Math.max(to, end);
+    }
+    busy += to - from;
+    if (busy <= 0) return total > 0 ? Infinity : 0;
+    return total / (busy / 1000);
   }
 
   function adoptManifest(manifest: LoadManifest) {
@@ -173,19 +248,7 @@ export function startStreaming(opts: {
       for (const id of priority) if (state.get(id) === "failed") { failures.set(id, 0); state.set(id, "pending"); }
       pump();
     },
-    bandwidth() {
-      if (samples.length === 0) return 0;
-      const total = samples.reduce((sum, sample) => sum + sample.bytes, 0);
-      // Time during which at least one finished fetch was running (union of intervals).
-      const spans = samples.map(s => [s.startMs, Math.max(s.startMs, s.endMs)]).sort((a, b) => a[0] - b[0]);
-      let busy = 0, from = spans[0][0], to = spans[0][1];
-      for (const [start, end] of spans.slice(1)) {
-        if (start > to) { busy += to - from; from = start; to = end; } else to = Math.max(to, end);
-      }
-      busy += to - from;
-      if (busy <= 0) return total > 0 ? Infinity : 0;
-      return total / (busy / 1000);
-    },
+    bandwidth,
     hold(holdIds) {
       for (const id of holdIds) held.add(id);
     },
