@@ -1,0 +1,6 @@
+ok   normal       open 3.4 s, gapFrames 0/934, ready start,rental,anamorphic,technical,projection,arena, failed none, /basis before/after open 0/2, page errors 0, console errors 0 (unexpected 0)
+ok   no-basis     open 3.1 s, gapFrames 0/1012, ready start,anamorphic,technical,arena, failed rental,projection, /basis before/after open 0/6, page errors 0, console errors 8 (unexpected 0)
+ok   no-manifest  open 17.0 s, gapFrames 0/983, ready rental,anamorphic,technical,projection,arena,start, failed none, /basis before/after open 2/0, page errors 0, console errors 4 (unexpected 0)
+ok   no-wasm      did not open within 120 s (expected: meshopt geometry needs WebAssembly, on main too); WebAssembly undefined, /basis requests 0, GLB requests 7, page errors 2 (unexpected 0), console errors 0 (unexpected 0)
+4 cases, 0 failed
+exit 0
