@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useVenue } from "../systems/store";
 import { journey } from "../systems/journey";
 import { scrollToProgress } from "../systems/ScrollRig";
+import { prioritizeZ } from "../loading/stream";
 import { GRAND, type GrandStall } from "../data/grand";
 import { STALL_PLACEMENTS } from "../data/placements";
 import { zoneAt } from "../data/zones";
@@ -23,6 +24,9 @@ export function StallVisitControls() {
     if(stall in STALL_VISITS && VIEWS.includes(view as StallView)) {
       const progress=STALL_VISITS[stall].progress;
       scrollToProgress(progress,"instant");
+      // The visit camera stands at the stall itself (after the scroll's own
+      // request, so this one wins): stream that group first.
+      prioritizeZ(GRAND.placements[stall].root[2]);
       journey.progress=journey.target=progress;journey.velocity=0;
       state.setProgress(progress,0);state.setZone(zoneAt(progress).id);
       state.setStallVisit({stall,view:view as StallView});

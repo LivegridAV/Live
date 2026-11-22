@@ -11,6 +11,7 @@ import { SHADER_PROGRAMS, VERT, type ShaderProgramId } from "./programs";
 import { PAINTERS, type PaintCtx } from "./painters";
 import type { QualityTier, StageMode } from "../systems/store";
 import { mediaSlate } from "./fallback";
+import { prefetchedImage } from "../loading/prefetched";
 
 /**
  * One engine owns every moving pixel in the venue.
@@ -291,8 +292,10 @@ export class MediaEngine {
     if (asset.source === source) return;
     asset.source = source;
 
-    const cached = asset.images.get(source);
+    // A streamed load group's images arrive decoded before its screens mount.
+    const cached = asset.images.get(source) ?? prefetchedImage(source);
     if (cached?.complete && cached.naturalWidth > 0) {
+      asset.images.set(source, cached);
       this.applyImageAsset(asset, cached);
       return;
     }
@@ -329,6 +332,8 @@ export class MediaEngine {
     );
     for (const source of new Set(sources)) {
       if (asset.images.has(source)) continue;
+      const ready = prefetchedImage(source);
+      if (ready) { asset.images.set(source, ready); continue; }
       const image = new Image();
       image.decoding = "async";
       image.crossOrigin = "anonymous";

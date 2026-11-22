@@ -171,3 +171,133 @@ test("every /media and .glb literal the mounted venue references is in exactly o
   assert.deepEqual(missing, [], "referenced but not in any group");
   assert.ok(referenced.size >= 40, `scan found ${referenced.size} literals`);
 });
+
+// ---- streamer (Task 4) ----
+
+const { startStreaming, RETRY_DELAYS_MS, MAX_IN_FLIGHT } = await import("../src/venue/loading/streamer.ts");
+
+/** A fetchGroup whose calls are recorded and settled by the test. */
+function fakeFetcher(clock) {
+  const calls = [];
+  let inFlight = 0, maxInFlight = 0;
+  const fetchGroup = id => new Promise((resolve, reject) => {
+    inFlight++; maxInFlight = Math.max(maxInFlight, inFlight);
+    const done = fn => value => { inFlight--; fn(value); };
+    calls.push({ id, at: clock.now, resolve: done(resolve), reject: done(reject) });
+  });
+  return { calls, fetchGroup, maxInFlight: () => maxInFlight, pending: id => calls.filter(c => c.id === id).at(-1) };
+}
+
+const manifestOf = ids => ({ groups: ids.map(id => ({ id, bytes: 1e6, bytesByCondition: { mobile: 1e6, festival: 1e6 }, lite: [] })), ktx2Media: [] });
+
+/** Run a streamer against a stubbed manifest fetch, with mocked timers and a fake clock. */
+async function withStreamer(t, ids, body, extra = {}) {
+  t.mock.timers.enable({ apis: ["setTimeout"] });
+  const clock = { now: 0 };
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = async () => ({ ok: true, status: 200, json: async () => manifestOf(ids) });
+  const fake = fakeFetcher(clock);
+  const events = [];
+  const handle = startStreaming({
+    manifestUrl: "/models/load-manifest.json",
+    fetchGroup: fake.fetchGroup,
+    now: () => clock.now,
+    onReady: id => events.push(["ready", id]),
+    onFailed: id => events.push(["failed", id]),
+    ...extra,
+  });
+  const flush = async () => { for (let i = 0; i < 20; i++) await Promise.resolve(); };
+  const advance = async ms => { clock.now += ms; t.mock.timers.tick(ms); await flush(); };
+  try {
+    await flush();
+    await body({ handle, fake, events, flush, advance, clock });
+  } finally {
+    handle.stop();
+    globalThis.fetch = realFetch;
+    t.mock.timers.reset();
+  }
+}
+
+test("streamer constants", () => {
+  assert.equal(MAX_IN_FLIGHT, 2);
+  assert.deepEqual(RETRY_DELAYS_MS, [1000, 3000, 9000]);
+});
+
+test("streamer: start runs alone, then at most 2 groups are in flight", async t => {
+  await withStreamer(t, ["start", "a", "b", "c", "d"], async ({ fake, flush }) => {
+    assert.deepEqual(fake.calls.map(c => c.id), ["start"], "start downloads alone");
+    fake.pending("start").resolve(); await flush();
+    assert.deepEqual(fake.calls.map(c => c.id), ["start", "a", "b"]);
+    fake.pending("a").resolve(); await flush();
+    assert.deepEqual(fake.calls.map(c => c.id), ["start", "a", "b", "c"]);
+    fake.pending("b").resolve(); fake.pending("c").resolve(); await flush();
+    fake.pending("d").resolve(); await flush();
+    assert.deepEqual(fake.calls.map(c => c.id), ["start", "a", "b", "c", "d"]);
+    assert.equal(fake.maxInFlight(), 2);
+  });
+});
+
+test("streamer: prioritize(b) makes b the next group started", async t => {
+  await withStreamer(t, ["start", "a", "b", "c"], async ({ handle, fake, flush }) => {
+    handle.prioritize("c");
+    handle.prioritize("b");
+    fake.pending("start").resolve(); await flush();
+    assert.deepEqual(fake.calls.map(c => c.id), ["start", "b", "a"]);
+  });
+});
+
+test("streamer: a group that rejects twice is retried after 1 s and 3 s and ends ready", async t => {
+  await withStreamer(t, ["start", "a"], async ({ fake, events, flush, advance }) => {
+    fake.pending("start").resolve(); await flush();
+    fake.pending("a").reject(new Error("offline")); await flush();
+    await advance(999);
+    assert.equal(fake.calls.filter(c => c.id === "a").length, 1, "no retry before 1 s");
+    await advance(1);
+    assert.equal(fake.calls.filter(c => c.id === "a").length, 2, "first retry at +1 s");
+    fake.pending("a").reject(new Error("offline")); await flush();
+    await advance(2999);
+    assert.equal(fake.calls.filter(c => c.id === "a").length, 2, "no second retry before 3 s");
+    await advance(1);
+    assert.equal(fake.calls.filter(c => c.id === "a").length, 3, "second retry at +3 s");
+    fake.pending("a").resolve(); await flush();
+    assert.deepEqual(fake.calls.filter(c => c.id === "a").map(c => c.at), [0, 1000, 4000]);
+    assert.deepEqual(events, [["ready", "start"], ["ready", "a"]]);
+  });
+});
+
+test("streamer: a group that rejects 4 times is reported failed and not retried again", async t => {
+  await withStreamer(t, ["start", "a", "b"], async ({ fake, events, flush, advance }) => {
+    fake.pending("start").resolve(); await flush();
+    fake.pending("b").resolve(); await flush();
+    for (const delay of [1000, 3000, 9000]) {
+      fake.pending("a").reject(new Error("404")); await flush();
+      await advance(delay);
+    }
+    fake.pending("a").reject(new Error("404")); await flush();
+    assert.deepEqual(events.filter(e => e[1] === "a"), [["failed", "a"]]);
+    await advance(120_000);
+    assert.equal(fake.calls.filter(c => c.id === "a").length, 4, "initial attempt plus three retries, then no more");
+  });
+});
+
+test("streamer: bandwidth is the bytes per second of finished fetches", async t => {
+  await withStreamer(t, ["start", "a"], async ({ handle, fake, flush, clock }) => {
+    assert.equal(handle.bandwidth(), 0, "nothing finished yet");
+    clock.now += 4000;
+    fake.pending("start").resolve(); await flush();
+    assert.equal(handle.bandwidth(), 1e6 / 4, "manifest bytes over the fetch time");
+  });
+  // A measure hook (Resource Timing in the browser) replaces the streamer's own estimate.
+  await withStreamer(t, ["start", "a"], async ({ handle, fake, flush }) => {
+    fake.pending("start").resolve(); await flush();
+    assert.equal(handle.bandwidth(), 3e6);
+  }, { measure: () => ({ bytes: 6e6, startMs: 1000, endMs: 3000 }) });
+});
+
+test("streamer: stop() starts nothing more", async t => {
+  await withStreamer(t, ["start", "a"], async ({ handle, fake, flush }) => {
+    handle.stop();
+    fake.pending("start").resolve(); await flush();
+    assert.deepEqual(fake.calls.map(c => c.id), ["start"]);
+  });
+});

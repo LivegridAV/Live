@@ -1,4 +1,5 @@
 import type { PaintCtx } from "./painters";
+import { prefetchedImage } from "../loading/prefetched";
 
 /** Independent screen content for the technical showcase, never a room plate. */
 export const TECHNICAL_STAGE_SOURCE = "/media/final/technical-control.webp";
@@ -22,6 +23,9 @@ let source: HTMLImageElement | undefined;
 /** Optional prewarm; otherwise the first painter call starts the shared load. */
 export function preloadTechnicalArtwork() {
   if (source || typeof Image === "undefined") return;
+  // The streamer may already hold this file decoded (load group prefetch).
+  source = prefetchedImage(TECHNICAL_STAGE_SOURCE);
+  if (source) return;
   source = new Image();
   source.decoding = "async";
   source.crossOrigin = "anonymous";

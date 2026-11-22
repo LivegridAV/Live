@@ -1,4 +1,4 @@
-import { useSyncExternalStore } from "react";
+import { createContext, useContext, useSyncExternalStore } from "react";
 import * as THREE from "three";
 
 /**
@@ -15,7 +15,9 @@ export const warmupHold = { active: false };
  * at this gate. Drawing them earlier makes the driver finish those shaders
  * one by one inside a frame, with the page frozen; that cost about 23 s.
  */
-const gate = { open: false, queue: new Set<() => void>(), listeners: new Set<() => void>() };
+/** Gated work. It may return a promise (an async bake); the gate's opener can wait for it. */
+export type WarmWork = () => void | Promise<unknown>;
+const gate = { open: false, queue: new Set<WarmWork>(), listeners: new Set<() => void>() };
 const notify = () => gate.listeners.forEach(listener => listener());
 
 /** Close the gate for a new warm-up (the venue remounted). */
@@ -25,14 +27,21 @@ export function closeWarmupGate() {
   notify();
 }
 
-/** Open the gate: run queued bakes and let reflections mount. */
-export function openWarmupGate() {
-  if (gate.open) return;
+const settle = (result: void | Promise<unknown>) =>
+  Promise.resolve(result).then(() => undefined, error => { console.warn("Venue warm-up work failed", error); });
+
+/**
+ * Open the gate: run queued bakes and let reflections mount. Resolves once the
+ * queued work has finished, including async bakes.
+ */
+export function openWarmupGate(): Promise<void> {
+  if (gate.open) return Promise.resolve();
   gate.open = true;
   const queued = [...gate.queue];
   gate.queue.clear();
-  for (const run of queued) run();
+  const running = queued.map(run => settle(run()));
   notify();
+  return Promise.all(running).then(() => undefined);
 }
 
 /**
@@ -40,11 +49,25 @@ export function openWarmupGate() {
  * progress (review pages with their own canvas) it runs at once. Returns a
  * cancel function for effect cleanup.
  */
-export function afterWarmup(work: () => void) {
-  if (gate.open || !warmupHold.active) { work(); return () => {}; }
+export function afterWarmup(work: WarmWork) {
+  if (gate.open || !warmupHold.active) { void settle(work()); return () => {}; }
   gate.queue.add(work);
   return () => { gate.queue.delete(work); };
 }
+
+/**
+ * A load group that streams in after the venue opened has its own warm-up
+ * (see loading/LoadGroupGate.tsx). Work inside it, such as a contact-shadow
+ * bake, waits for that group's warm-up instead of the venue's, which has long
+ * finished. Outside a gate this falls back to `afterWarmup`.
+ */
+export const WarmScope = createContext<((work: WarmWork) => () => void) | null>(null);
+export function useAfterWarmup() {
+  return useContext(WarmScope) ?? afterWarmup;
+}
+
+/** Gated work would run at once: the gate is open, or no venue warm-up is holding it. */
+export const warmupGateOpen = () => gate.open || !warmupHold.active;
 
 /** True once the venue warm-up has opened the gate. */
 export function useWarmupOpen() {
@@ -66,7 +89,7 @@ const wait = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms
  * wait simply drops out. That avoids the r185 compileAsync lifetime race,
  * which polled materials that a startup swap had already disposed.
  */
-async function programsReady(gl: THREE.WebGLRenderer, cancelled: () => boolean,
+export async function programsReady(gl: THREE.WebGLRenderer, cancelled: () => boolean,
   onProgress?: (fraction: number) => void, limitMs = 120_000) {
   const start = performance.now();
   for (;;) {
@@ -177,4 +200,116 @@ export async function warmScene(gl: THREE.WebGLRenderer, scene: THREE.Scene, cam
   if (cancelled()) return;
   gl.compile(scene, camera);
   await programsReady(gl, cancelled, fraction => onProgress?.(0.9 + fraction * 0.1), 30_000);
+}
+
+/** Layer used to draw one subtree on its own while the scene's lights stay in effect. */
+const WARM_LAYER = 31;
+let warmChain: Promise<unknown> = Promise.resolve();
+
+/**
+ * Warm one subtree that mounts after the venue has opened (a streamed load
+ * group), without touching the rest of the scene:
+ *
+ * 1. Submit its materials in both colour-space variants, against the full
+ *    scene's lights, fog and environment (`compile(root, camera, scene)`), and
+ *    wait for the driver without blocking.
+ * 2. Draw only that subtree once into a tiny target, so its geometry and
+ *    textures upload and render-time variants appear. The camera sees a
+ *    reserved layer that only the subtree and the lights in effect are put on,
+ *    so the draw uses the real light set and costs a fraction of a frame.
+ * 3. Submit again for anything the draw added.
+ *
+ * `root` stays hidden (visible = false) throughout; the caller shows it after.
+ * Calls are serialized, so two groups never warm at the same time.
+ */
+export function warmSubtree(gl: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera,
+  root: THREE.Object3D, cancelled = () => false): Promise<void> {
+  const run = warmChain.then(() => warmSubtreeNow(gl, scene, camera, root, cancelled));
+  warmChain = run.catch(() => undefined);
+  return run;
+}
+
+async function warmSubtreeNow(gl: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera,
+  root: THREE.Object3D, cancelled: () => boolean) {
+  if (cancelled()) return;
+  const target = new THREE.WebGLRenderTarget(32, 32);
+  try {
+    submitSubtree(gl, scene, camera, root, target);
+    await programsReady(gl, cancelled);
+    if (cancelled()) return;
+    drawSubtree(gl, scene, camera, root, target);
+    if (cancelled()) return;
+    submitSubtree(gl, scene, camera, root, target);
+    await programsReady(gl, cancelled, undefined, 30_000);
+  } finally {
+    target.dispose();
+  }
+}
+
+function submitSubtree(gl: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera,
+  root: THREE.Object3D, target: THREE.WebGLRenderTarget) {
+  const previousTarget = gl.getRenderTarget();
+  try {
+    gl.setRenderTarget(target);
+    gl.compile(root, camera, scene);
+    gl.setRenderTarget(previousTarget);
+    gl.compile(root, camera, scene);
+  } finally {
+    gl.setRenderTarget(previousTarget);
+  }
+}
+
+function drawSubtree(gl: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera,
+  root: THREE.Object3D, target: THREE.WebGLRenderTarget) {
+  const objects: { object: THREE.Object3D; visible: boolean; culled: boolean; mask: number }[] = [];
+  const ancestors: { object: THREE.Object3D; visible: boolean }[] = [];
+  const lights: THREE.Object3D[] = [];
+  const shadows: THREE.LightShadow[] = [];
+  const counters = { ...gl.info.render };
+  const mask = camera.layers.mask;
+  const previousTarget = gl.getRenderTarget();
+  try {
+    // Pin the light set to what is in effect now (as warmScene does), before
+    // any ancestor is un-hidden: a light inside a hidden zone must not join.
+    scene.traverseVisible(object => {
+      if (!(object instanceof THREE.Light) || !object.layers.test(camera.layers)) return;
+      if (!object.layers.isEnabled(WARM_LAYER)) { object.layers.enable(WARM_LAYER); lights.push(object); }
+      const shadow = (object as THREE.SpotLight).shadow;
+      // Draw the subtree's casters into the shadow map too, so their depth
+      // variants appear now rather than in a frame near the stall.
+      if (object.castShadow && shadow) { shadows.push(shadow); shadow.needsUpdate = true; }
+    });
+    for (let node = root.parent; node; node = node.parent) {
+      ancestors.push({ object: node, visible: node.visible });
+      node.visible = true;
+    }
+    root.traverse(object => {
+      // Emitter sources stay hidden: the light pool owns the light count.
+      if (object instanceof THREE.Light) return;
+      objects.push({ object, visible: object.visible, culled: object.frustumCulled, mask: object.layers.mask });
+      object.visible = true;
+      object.frustumCulled = false;
+      object.layers.enable(WARM_LAYER);
+    });
+    camera.layers.set(WARM_LAYER);
+    gl.setRenderTarget(target);
+    gl.render(scene, camera);
+  } finally {
+    camera.layers.mask = mask;
+    for (const state of objects) {
+      state.object.visible = state.visible;
+      state.object.frustumCulled = state.culled;
+      state.object.layers.mask = state.mask;
+    }
+    for (const state of ancestors) state.object.visible = state.visible;
+    for (const light of lights) light.layers.disable(WARM_LAYER);
+    // The shadow map now holds only this subtree; the next frame redraws it whole.
+    for (const shadow of shadows) shadow.needsUpdate = true;
+    gl.setRenderTarget(previousTarget);
+    // Keep ?perf's per-frame draw statistics about real frames.
+    gl.info.render.calls = counters.calls;
+    gl.info.render.triangles = counters.triangles;
+    gl.info.render.points = counters.points;
+    gl.info.render.lines = counters.lines;
+  }
 }

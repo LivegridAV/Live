@@ -3,7 +3,8 @@ import { useCallback, useEffect, useRef } from "react";
 import { journey } from "./journey";
 import { useVenue } from "./store";
 import { zoneAt } from "../data/zones";
-import { BASE_SCROLL_VH, SCROLL_PLAN_VH, progressToScrollFraction, scrollFractionToProgress } from "../data/path";
+import { BASE_SCROLL_VH, SCROLL_PLAN_VH, createSample, progressToScrollFraction, samplePath, scrollFractionToProgress } from "../data/path";
+import { prioritizeZ } from "../loading/stream";
 
 /**
  * Scroll → journey.
@@ -126,8 +127,15 @@ export function ScrollRig() {
   return null;
 }
 
-/** Scroll the page so the journey lands on `p` (0 → 1). */
+const target = createSample();
+
+/**
+ * Scroll the page so the journey lands on `p` (0 → 1). Every jump (the nav,
+ * the progress rail, the guide, review links) first moves the load group at
+ * the destination to the front of the streaming queue.
+ */
 export function scrollToProgress(p: number, behavior: ScrollBehavior = "smooth") {
+  prioritizeZ(samplePath(p, target).pos.z);
   window.scrollTo({ top: progressToScroll(p), behavior });
 }
 

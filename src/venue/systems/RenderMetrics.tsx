@@ -7,6 +7,7 @@ import { journey } from "./journey";
 import { baselineCameraForSearch } from "../data/baselineCameras";
 import { progressToScroll } from "./ScrollRig";
 import { perfHandle } from "../media/engine";
+import { LOAD_GROUPS } from "../loading/groups";
 
 type PerfSnapshot = Record<string, {position:[number,number,number]; quaternion:[number,number,number,number]; size:[number,number,number]}>;
 declare global { interface Window { __venuePerf?: {
@@ -81,8 +82,12 @@ export function RenderMetrics() {
     if (new URLSearchParams(location.search).has("perf")) {
       window.__venuePerf = {
         loaded: () => useVenue.getState().loaded,
-        groupsReady: () => [],
-        allReady: () => useVenue.getState().loaded,
+        // Warm groups: mounted, shader-warmed and shown when in range.
+        groupsReady: () => [...useVenue.getState().warmGroups],
+        allReady: () => {
+          const state = useVenue.getState();
+          return state.loaded && LOAD_GROUPS.every(group => state.warmGroups.includes(group.id));
+        },
         stats: () => {
           const f = recentStats.current, calls = f.map(x => x.calls), tris = f.map(x => x.triangles), last = f[f.length - 1] ?? {textures:0, geometries:0};
           return { callsMin: Math.min(...calls), callsMax: Math.max(...calls), trianglesMin: Math.min(...tris), trianglesMax: Math.max(...tris), textures: last.textures, geometries: last.geometries };

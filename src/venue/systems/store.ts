@@ -30,6 +30,10 @@ export interface VenueState {
   loadPercent: number;
   /** The visitor has pressed ENTER THE EXPERIENCE. */
   entered: boolean;
+  /** Load groups whose files are parsed and decoded (see loading/streamer.ts). */
+  readyGroups: string[];
+  /** Load groups that are mounted and shader-warmed, so they can be shown. */
+  warmGroups: string[];
 
   /* ── interaction ── */
   /** Slug of the pavilion whose detail panel is open, or null. */
@@ -58,6 +62,8 @@ export interface VenueState {
   setLoadPercent: (p: number) => void;
   setLoaded: (v: boolean) => void;
   enter: () => void;
+  markGroupReady: (id: string) => void;
+  markGroupWarm: (id: string) => void;
   openPavilion: (slug: string) => void;
   closePavilion: () => void;
   setStageMode: (m: StageMode) => void;
@@ -80,6 +86,8 @@ export const useVenue = create<VenueState>((set, get) => ({
   loaded: false,
   loadPercent: 0,
   entered: false,
+  readyGroups: [],
+  warmGroups: [],
   activePavilion: null,
   restoreProgress: null,
   stageMode: "corporate",
@@ -103,6 +111,12 @@ export const useVenue = create<VenueState>((set, get) => ({
   setLoadPercent: (p) => set({ loadPercent: p }),
   setLoaded: (v) => set({ loaded: v }),
   enter: () => set({ entered: true }),
+  markGroupReady: (id) => {
+    if (!get().readyGroups.includes(id)) set({ readyGroups: [...get().readyGroups, id] });
+  },
+  markGroupWarm: (id) => {
+    if (!get().warmGroups.includes(id)) set({ warmGroups: [...get().warmGroups, id] });
+  },
 
   openPavilion: (slug) =>
     set({ activePavilion: slug, restoreProgress: get().progress }),

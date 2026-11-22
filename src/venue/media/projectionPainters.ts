@@ -1,4 +1,5 @@
 import type { PaintCtx } from "./painters";
+import { prefetchedImage } from "../loading/prefetched";
 
 /** Only isolated content artwork is used on the physical pavilion's LED screens. */
 export const PROJECTION_ART = {
@@ -21,6 +22,9 @@ const fract = (value: number) => value - Math.floor(value);
 function artwork(url: string) {
   if (typeof Image === "undefined") return undefined;
   let image = images.get(url);
+  // The streamer may already hold this file decoded (load group prefetch).
+  const ready = image ? undefined : prefetchedImage(url);
+  if (ready) { images.set(url, ready); decodedImages.add(ready); return ready; }
   if (!image) {
     image = new Image(); image.decoding = "async"; image.crossOrigin = "anonymous";
     image.src = url; images.set(url, image);
