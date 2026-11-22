@@ -442,6 +442,35 @@ test("streamer: stop() starts nothing more", async t => {
   });
 });
 
+// Final review, Important 2: /models/* is cached for an hour (and served stale
+// for 30 days), but the manifest is the one unhashed contract between a build
+// and its JS: every read revalidates it.
+test("streamer: the load manifest is fetched with cache: no-cache", async t => {
+  const requests = [];
+  t.mock.timers.enable({ apis: ["setTimeout"] });
+  const realFetch = globalThis.fetch;
+  globalThis.fetch = async (url, init) => { requests.push({ url, init }); return { ok: true, status: 200, json: async () => manifestOf(["start"]) }; };
+  const handle = startStreaming({ manifestUrl: "/models/load-manifest.json", fetchGroup: () => new Promise(() => {}) });
+  try {
+    for (let i = 0; i < 20; i++) await Promise.resolve();
+    assert.deepEqual(requests.map(r => [r.url, r.init?.cache]), [["/models/load-manifest.json", "no-cache"]]);
+  } finally {
+    handle.stop();
+    globalThis.fetch = realFetch;
+    t.mock.timers.reset();
+  }
+});
+
+test("the venue reads the load manifest only through the streamer (one fetch, one cache mode)", () => {
+  const sources = [];
+  const walk = dir => { for (const e of readdirSync(dir, { withFileTypes: true })) { const f = path.join(dir, e.name); if (e.isDirectory()) walk(f); else if (/\.(ts|tsx)$/.test(e.name)) sources.push(f); } };
+  walk("src");
+  const readers = sources.filter(f => /load-manifest\.json|MANIFEST_URL|manifestUrl/.test(readFileSync(f, "utf8").replace(/\/\*[\s\S]*?\*\/|\/\/.*$/gm, "")));
+  assert.deepEqual(readers.map(f => f.split(path.sep).join("/")).sort(), ["src/venue/loading/stream.ts", "src/venue/loading/streamer.ts"]);
+  assert.match(readFileSync("src/venue/loading/manifest.ts", "utf8"), /settleManifest/, "manifest.ts hands out the streamer's copy");
+  assert.match(readFileSync("src/venue/loading/useModelUrl.ts", "utf8"), /use\(venueManifest\(\)\)/, "useModelUrl suspends on the streamer's copy");
+});
+
 // Final review, Important 1c: a hung download frees its slot and is retried.
 
 test("streamer timeout: sized to bytes and bandwidth, never under the floor, never tight on Slow 4G", () => {

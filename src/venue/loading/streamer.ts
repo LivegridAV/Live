@@ -223,7 +223,10 @@ export function startStreaming(opts: {
 
   async function loadManifest(attempt: number): Promise<void> {
     try {
-      const response = await fetch(opts.manifestUrl);
+      // Always revalidated: /models/* may be served from cache for an hour (and
+      // stale for 30 days), and a returning visitor after a deploy must not get
+      // the previous build's manifest with the new code (final review, Important 2).
+      const response = await fetch(opts.manifestUrl, { cache: "no-cache" });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       const manifest = await response.json() as LoadManifest;
       if (!stopped) adoptManifest(manifest);
