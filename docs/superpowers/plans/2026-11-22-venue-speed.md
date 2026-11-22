@@ -158,6 +158,33 @@ Two design items are deliberately not built here. **Per-tier texture caps:** KTX
 - [ ] **Step 4:** Check `longTasksAfterOpen` in `t6/metrics.json` against `t4`. Expected: fewer or equal long tasks (KTX2 removes image decode on upload).
 - [ ] **Step 5:** Commit.
 
+### Task 6b: Open early, fill in (owner decision 3)
+
+**Files:**
+- Modify: `src/venue/loading/plan.ts`, `src/venue/loading/stream.ts`, `src/venue/Scene.tsx` (`Warmup`), `scripts/optimize-export.mjs` (manifest `liteBytes`), `scripts/venue-loading.test.mjs`, `scripts/release.test.mjs`
+- Output: `reports/perf/t6b/`
+
+**Interfaces:**
+- The manifest gains `liteBytes: number` per group: the summed size of that group's `lite` files.
+- `plan.ts`: add `export function liteBeforeOpening(input: { bytesPerSecond: number; groups: readonly { id: string; switchOnZ: number; liteBytes: number }[]; startZ: number; paceMps?: number; marginS?: number }): string[]`. It applies the same sequential-deadline rule as `groupsBeforeOpening`, but to the **lite** sizes of the non-start groups. It returns the ids whose lite pack must arrive before opening. With bandwidth not > 0, it returns every id. `groupsBeforeOpening` stays as is; full-load modes keep using "all groups".
+- Opening rule (normal visits): open when `start` is warm **and** every id from `liteBeforeOpening` has its lite warm. Full groups never block opening.
+- After opening: the remaining lite packs in journey order, then the full groups in journey order, at most 2 in flight. A nav jump or stall visit prioritizes its target's lite (if not warm), then its full group. A jump pre-empts queued work, but not in-flight downloads.
+- Every non-start group has a warm lite or full version before the camera reaches its `switchOnZ` at `WALK_PACE_MPS`, and is never empty.
+
+- [ ] **Step 1: Failing tests:**
+  - `liteBeforeOpening` with bandwidth 1,125,000 B/s, groups `[{a,-8.64,1.3e6},{b,-12.65,1.5e6},{c,-48.27,1.1e6}]`, startZ 8 → `["a","b"]`. Lite a needs 1.16 s against a deadline of (8+8.64)/6−4 = −1.23 s, so it is late. b is also late. c arrives at 0.98 s after opening, against a deadline of 5.4 s.
+  - The same input at 30,000,000 B/s → `["a","b"]`. Their deadlines are negative, so any download is late.
+  - With bandwidth 0 → all ids.
+  - The manifest test: every non-start group has `liteBytes > 0`, equal to the sum of its lite files in `out/`.
+- [ ] **Step 2:** Implement. `npm run build && npm test` → PASS. Replace the start-bytes threshold test with "start ≤ 24 MiB", since 20 MiB isn't reachable without lighter models, which the owner did not choose.
+- [ ] **Step 3:** Run `measure-venue.mjs --label t6b --throttle fast4g` and `--label t6b-slow --throttle slow4g`.
+  - Expected: `bytesBeforeOpen` ≤ start + about 3 MB of lite.
+  - `msToOpen` on Fast 4G ≈ 25 s or less.
+  - Redefine `gapFrames` as frames where a passed group has **neither** lite nor full warm; expect 0.
+  - `compare-shots baseline t6b` exits 0 (shots wait for `allReady`).
+- [ ] **Step 4:** In the browser (Playwright, Fast 4G), walk at the test pace right after opening. Record when each group shows lite and when it swaps to full. Confirm there is no loading text and no empty space. Save one lite/full screenshot pair from the walk to `reports/perf/t6b/fill-in/`.
+- [ ] **Step 5:** Commit.
+
 ### Task 7: Merge static meshes
 
 **Files:**

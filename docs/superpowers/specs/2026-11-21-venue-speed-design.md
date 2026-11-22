@@ -249,8 +249,16 @@ the owner has seen the numbers and the screenshots and says to ship.
 2. **Keep the opening view exactly as today**, and accept a first download
    of about 20 MB (from ~70 MB), possibly less after the texture work. No
    stand-ins in the opening view.
+3. **(2026-11-23) Open early, fill in.** Measurement showed that nearly every
+   stall switches on within ~16 m (about two scrolls) of the start, and 85% of
+   the bytes are geometry. As a result the "full detail before reach" rule
+   preloaded almost everything (~70 s on 4G). The owner chose: open once the
+   entrance is ready. Areas further in may first appear in their light
+   version and sharpen as full detail arrives. Still no stops, no loading
+   text, and never empty space. Lighter models for everyone were not chosen.
 
-How the design meets decision 1 *(my calls)*:
+How the design meets decision 1 *(my calls; decision 3 supersedes the
+"open a little later on slow connections" point below)*:
 
 - **Stay ahead of the visitor.** Background loading starts the moment the
   venue opens and runs continuously in journey order. Nav-menu jumps and
