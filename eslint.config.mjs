@@ -14,6 +14,8 @@ const eslintConfig = defineConfig([
     "graphify-out/**",
     "build/**",
     "next-env.d.ts",
+    // Vendored, minified three.js Basis transcoder (copied verbatim from three/examples).
+    "public/basis/**",
   ]),
   {
     // The WebGL experience mutates Three.js objects inside useFrame render
