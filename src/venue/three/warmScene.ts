@@ -219,9 +219,15 @@ const notifyPrepared = () => preparedListeners.forEach(listener => listener());
 function prepareOne() {
   prepareScheduled = false;
   const next = preparing.entries().next();
-  if (!next.done) { const [root, work] = next.value; preparing.delete(root); work(); }
-  notifyPrepared();
-  if (preparing.size) schedulePrepare();
+  try {
+    if (!next.done) { const [root, work] = next.value; preparing.delete(root); work(); }
+  } catch (error) {
+    // The root stays as it was (unmerged), which draws the same; the queue and its waiters go on.
+    console.warn("[venue] preparation before warm-up failed", error);
+  } finally {
+    notifyPrepared();
+    if (preparing.size) schedulePrepare();
+  }
 }
 function schedulePrepare() { if (!prepareScheduled) { prepareScheduled = true; setTimeout(prepareOne, 0); } }
 

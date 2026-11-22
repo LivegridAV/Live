@@ -566,3 +566,15 @@ test("preparedWithin: cancelling a pending root releases a warm-up waiting on it
   await settled;
   assert.equal(drawObjects(root).length, 3);
 });
+
+test("prepareBeforeWarm: a throwing preparation is reported, later roots still run and waiters resolve", async t => {
+  const warn = t.mock.method(console, "warn", () => {});
+  const zone = new THREE.Group(), bad = new THREE.Group(), good = boxes(3, [new THREE.MeshStandardMaterial()]);
+  zone.add(bad, good);
+  prepareBeforeWarm(bad, () => { throw new Error("unexpected geometry"); });
+  mergeStaticSoon(good);
+  await preparedWithin(zone);
+  assert.equal(drawObjects(good).length, 1);
+  assert.equal(warn.mock.callCount(), 1);
+  assert.match(String(warn.mock.calls[0].arguments[1]), /unexpected geometry/);
+});

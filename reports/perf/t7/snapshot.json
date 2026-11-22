@@ -883,31 +883,31 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor002": {
   "position": [
-   -33.414,
+   -33.416,
    0,
-   -69.661
+   -69.658
   ],
   "quaternion": [
    0,
-   -0.43,
+   -0.429,
    0,
    0.903
   ],
   "size": [
    0.729,
-   1.795,
+   1.796,
    0.758
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor002/Mesh045": {
   "position": [
-   -33.414,
+   -33.416,
    0,
-   -69.661
+   -69.658
   ],
   "quaternion": [
    0,
-   -0.43,
+   -0.429,
    0,
    0.903
   ],
@@ -919,13 +919,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor002/Mesh045_1": {
   "position": [
-   -33.414,
+   -33.416,
    0,
-   -69.661
+   -69.658
   ],
   "quaternion": [
    0,
-   -0.43,
+   -0.429,
    0,
    0.903
   ],
@@ -937,13 +937,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor002/Mesh045_2": {
   "position": [
-   -33.414,
+   -33.416,
    0,
-   -69.661
+   -69.658
   ],
   "quaternion": [
    0,
-   -0.43,
+   -0.429,
    0,
    0.903
   ],
@@ -955,103 +955,103 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor003": {
   "position": [
-   -23.927,
+   -23.934,
    0,
-   -73.196
+   -73.203
   ],
   "quaternion": [
    0,
    -0.579,
    0,
-   0.815
+   0.816
   ],
   "size": [
-   0.587,
-   1.794,
+   0.588,
+   1.793,
    0.725
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor003/Mesh048": {
   "position": [
-   -23.927,
+   -23.934,
    0,
-   -73.196
+   -73.203
   ],
   "quaternion": [
    0,
    -0.579,
    0,
-   0.815
+   0.816
   ],
   "size": [
-   0.587,
+   0.588,
    1.566,
    0.725
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor003/Mesh048_1": {
   "position": [
-   -23.927,
+   -23.934,
    0,
-   -73.196
+   -73.203
   ],
   "quaternion": [
    0,
    -0.579,
    0,
-   0.815
+   0.816
   ],
   "size": [
-   0.283,
+   0.284,
    0.394,
    0.275
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor003/Mesh048_2": {
   "position": [
-   -23.927,
+   -23.934,
    0,
-   -73.196
+   -73.203
   ],
   "quaternion": [
    0,
    -0.579,
    0,
-   0.815
+   0.816
   ],
   "size": [
    0.29,
    0.244,
-   0.284
+   0.285
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor": {
   "position": [
-   -20.403,
+   -20.41,
    0,
-   -67.871
+   -67.88
   ],
   "quaternion": [
    0,
-   -0.846,
+   -0.845,
    0,
    0.534
   ],
   "size": [
    0.568,
-   1.789,
+   1.79,
    0.682
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor/Mesh039": {
   "position": [
-   -20.403,
+   -20.41,
    0,
-   -67.871
+   -67.88
   ],
   "quaternion": [
    0,
-   -0.846,
+   -0.845,
    0,
    0.534
   ],
@@ -1063,13 +1063,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor/Mesh039_1": {
   "position": [
-   -20.403,
+   -20.41,
    0,
-   -67.871
+   -67.88
   ],
   "quaternion": [
    0,
-   -0.846,
+   -0.845,
    0,
    0.534
   ],
@@ -1081,69 +1081,69 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor/Mesh039_2": {
   "position": [
-   -20.403,
+   -20.41,
    0,
-   -67.871
+   -67.88
   ],
   "quaternion": [
    0,
-   -0.846,
+   -0.845,
    0,
    0.534
   ],
   "size": [
    0.276,
    0.175,
-   0.28
+   0.279
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor001": {
   "position": [
-   -23.894,
+   -23.886,
    0,
-   -59.625
+   -59.634
   ],
   "quaternion": [
    0,
    -0.654,
    0,
-   0.756
+   0.757
   ],
   "size": [
    0.552,
    1.797,
-   0.752
+   0.753
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor001/Mesh041": {
   "position": [
-   -23.894,
+   -23.886,
    0,
-   -59.625
+   -59.634
   ],
   "quaternion": [
    0,
    -0.654,
    0,
-   0.756
+   0.757
   ],
   "size": [
    0.552,
    1.569,
-   0.752
+   0.753
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor001/Mesh041_1": {
   "position": [
-   -23.894,
+   -23.886,
    0,
-   -59.625
+   -59.634
   ],
   "quaternion": [
    0,
    -0.654,
    0,
-   0.756
+   0.757
   ],
   "size": [
    0.271,
@@ -1153,15 +1153,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor001/Mesh041_2": {
   "position": [
-   -23.894,
+   -23.886,
    0,
-   -59.625
+   -59.634
   ],
   "quaternion": [
    0,
    -0.654,
    0,
-   0.756
+   0.757
   ],
   "size": [
    0.253,
@@ -1173,13 +1173,13 @@
   "position": [
    -28.784,
    0,
-   -62.425
+   -62.429
   ],
   "quaternion": [
    0,
-   -0.405,
+   -0.404,
    0,
-   0.914
+   0.915
   ],
   "size": [
    0.698,
@@ -1191,13 +1191,13 @@
   "position": [
    -28.784,
    0,
-   -62.425
+   -62.429
   ],
   "quaternion": [
    0,
-   -0.405,
+   -0.404,
    0,
-   0.914
+   0.915
   ],
   "size": [
    0.698,
@@ -1209,13 +1209,13 @@
   "position": [
    -28.784,
    0,
-   -62.425
+   -62.429
   ],
   "quaternion": [
    0,
-   -0.405,
+   -0.404,
    0,
-   0.914
+   0.915
   ],
   "size": [
    0.318,
@@ -1227,13 +1227,13 @@
   "position": [
    -28.784,
    0,
-   -62.425
+   -62.429
   ],
   "quaternion": [
    0,
-   -0.405,
+   -0.404,
    0,
-   0.914
+   0.915
   ],
   "size": [
    0.295,
@@ -1243,9 +1243,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor003": {
   "position": [
-   -27.846,
+   -27.84,
    0,
-   -56.81
+   -56.816
   ],
   "quaternion": [
    0,
@@ -1256,14 +1256,14 @@
   "size": [
    0.666,
    1.793,
-   0.629
+   0.63
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor003/Mesh047": {
   "position": [
-   -27.846,
+   -27.84,
    0,
-   -56.81
+   -56.816
   ],
   "quaternion": [
    0,
@@ -1274,14 +1274,14 @@
   "size": [
    0.666,
    1.565,
-   0.629
+   0.63
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor003/Mesh047_1": {
   "position": [
-   -27.846,
+   -27.84,
    0,
-   -56.81
+   -56.816
   ],
   "quaternion": [
    0,
@@ -1297,9 +1297,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor003/Mesh047_2": {
   "position": [
-   -27.846,
+   -27.84,
    0,
-   -56.81
+   -56.816
   ],
   "quaternion": [
    0,
@@ -1315,15 +1315,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor": {
   "position": [
-   -15.358,
+   -15.347,
    0,
-   -55.38
+   -55.377
   ],
   "quaternion": [
    0,
-   0.839,
+   0.84,
    0,
-   0.544
+   0.543
   ],
   "size": [
    0.728,
@@ -1333,15 +1333,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor/Mesh040": {
   "position": [
-   -15.358,
+   -15.347,
    0,
-   -55.38
+   -55.377
   ],
   "quaternion": [
    0,
-   0.839,
+   0.84,
    0,
-   0.544
+   0.543
   ],
   "size": [
    0.728,
@@ -1351,15 +1351,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor/Mesh040_1": {
   "position": [
-   -15.358,
+   -15.347,
    0,
-   -55.38
+   -55.377
   ],
   "quaternion": [
    0,
-   0.839,
+   0.84,
    0,
-   0.544
+   0.543
   ],
   "size": [
    0.275,
@@ -1369,27 +1369,27 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor/Mesh040_2": {
   "position": [
-   -15.358,
+   -15.347,
    0,
-   -55.38
+   -55.377
   ],
   "quaternion": [
    0,
-   0.839,
+   0.84,
    0,
-   0.544
+   0.543
   ],
   "size": [
-   0.24,
+   0.241,
    0.141,
    0.234
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor001": {
   "position": [
-   -18.118,
+   -18.13,
    0,
-   -78.708
+   -78.703
   ],
   "quaternion": [
    0,
@@ -1405,9 +1405,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor001/Mesh043": {
   "position": [
-   -18.118,
+   -18.13,
    0,
-   -78.708
+   -78.703
   ],
   "quaternion": [
    0,
@@ -1423,9 +1423,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor001/Mesh043_1": {
   "position": [
-   -18.118,
+   -18.13,
    0,
-   -78.708
+   -78.703
   ],
   "quaternion": [
    0,
@@ -1436,14 +1436,14 @@
   "size": [
    0.246,
    0.305,
-   0.23
+   0.229
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor001/Mesh043_2": {
   "position": [
-   -18.118,
+   -18.13,
    0,
-   -78.708
+   -78.703
   ],
   "quaternion": [
    0,
@@ -1459,9 +1459,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor002": {
   "position": [
-   -4.302,
+   -4.297,
    0,
-   -55.993
+   -56.001
   ],
   "quaternion": [
    0,
@@ -1471,15 +1471,15 @@
   ],
   "size": [
    0.693,
-   1.796,
+   1.797,
    0.681
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor002/Mesh046": {
   "position": [
-   -4.302,
+   -4.297,
    0,
-   -55.993
+   -56.001
   ],
   "quaternion": [
    0,
@@ -1489,15 +1489,15 @@
   ],
   "size": [
    0.693,
-   1.569,
+   1.57,
    0.681
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor002/Mesh046_1": {
   "position": [
-   -4.302,
+   -4.297,
    0,
-   -55.993
+   -56.001
   ],
   "quaternion": [
    0,
@@ -1513,9 +1513,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor002/Mesh046_2": {
   "position": [
-   -4.302,
+   -4.297,
    0,
-   -55.993
+   -56.001
   ],
   "quaternion": [
    0,
@@ -1531,9 +1531,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor": {
   "position": [
-   -4.514,
+   -4.508,
    0,
-   -59.374
+   -59.377
   ],
   "quaternion": [
    0,
@@ -1542,16 +1542,16 @@
    0.671
   ],
   "size": [
-   0.356,
-   1.793,
+   0.355,
+   1.792,
    0.561
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor/Mesh038": {
   "position": [
-   -4.514,
+   -4.508,
    0,
-   -59.374
+   -59.377
   ],
   "quaternion": [
    0,
@@ -1560,16 +1560,16 @@
    0.671
   ],
   "size": [
-   0.356,
+   0.355,
    1.565,
    0.561
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor/Mesh038_1": {
   "position": [
-   -4.514,
+   -4.508,
    0,
-   -59.374
+   -59.377
   ],
   "quaternion": [
    0,
@@ -1579,15 +1579,15 @@
   ],
   "size": [
    0.273,
-   0.394,
+   0.393,
    0.233
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor/Mesh038_2": {
   "position": [
-   -4.514,
+   -4.508,
    0,
-   -59.374
+   -59.377
   ],
   "quaternion": [
    0,
@@ -1596,16 +1596,16 @@
    0.671
   ],
   "size": [
-   0.251,
+   0.25,
    0.244,
    0.233
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor001": {
   "position": [
-   -5.874,
+   -5.883,
    0,
-   -71.407
+   -71.41
   ],
   "quaternion": [
    0,
@@ -1615,15 +1615,15 @@
   ],
   "size": [
    0.589,
-   1.79,
+   1.791,
    0.597
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor001/Mesh042": {
   "position": [
-   -5.874,
+   -5.883,
    0,
-   -71.407
+   -71.41
   ],
   "quaternion": [
    0,
@@ -1639,9 +1639,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor001/Mesh042_1": {
   "position": [
-   -5.874,
+   -5.883,
    0,
-   -71.407
+   -71.41
   ],
   "quaternion": [
    0,
@@ -1657,9 +1657,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor001/Mesh042_2": {
   "position": [
-   -5.874,
+   -5.883,
    0,
-   -71.407
+   -71.41
   ],
   "quaternion": [
    0,
@@ -1675,9 +1675,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor002#1": {
   "position": [
-   -3.67,
+   -3.671,
    0,
-   -63.33
+   -63.335
   ],
   "quaternion": [
    0,
@@ -1693,9 +1693,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor002/Mesh045#1": {
   "position": [
-   -3.67,
+   -3.671,
    0,
-   -63.33
+   -63.335
   ],
   "quaternion": [
    0,
@@ -1711,9 +1711,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor002/Mesh045_1#1": {
   "position": [
-   -3.67,
+   -3.671,
    0,
-   -63.33
+   -63.335
   ],
   "quaternion": [
    0,
@@ -1729,9 +1729,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor002/Mesh045_2#1": {
   "position": [
-   -3.67,
+   -3.671,
    0,
-   -63.33
+   -63.335
   ],
   "quaternion": [
    0,
@@ -1747,49 +1747,49 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor003#1": {
   "position": [
-   -14.571,
+   -14.574,
    0,
-   -66.297
+   -66.303
   ],
   "quaternion": [
    0,
-   -0.315,
+   -0.314,
    0,
    0.949
   ],
   "size": [
    0.744,
    1.789,
-   0.698
+   0.697
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor003/Mesh048#1": {
   "position": [
-   -14.571,
+   -14.574,
    0,
-   -66.297
+   -66.303
   ],
   "quaternion": [
    0,
-   -0.315,
+   -0.314,
    0,
    0.949
   ],
   "size": [
    0.744,
    1.562,
-   0.698
+   0.697
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor003/Mesh048_1#1": {
   "position": [
-   -14.571,
+   -14.574,
    0,
-   -66.297
+   -66.303
   ],
   "quaternion": [
    0,
-   -0.315,
+   -0.314,
    0,
    0.949
   ],
@@ -1801,13 +1801,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor003/Mesh048_2#1": {
   "position": [
-   -14.571,
+   -14.574,
    0,
-   -66.297
+   -66.303
   ],
   "quaternion": [
    0,
-   -0.315,
+   -0.314,
    0,
    0.949
   ],
@@ -1819,15 +1819,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor#1": {
   "position": [
-   -24.708,
+   -24.702,
    0,
-   -54.216
+   -54.212
   ],
   "quaternion": [
    0,
    0.965,
    0,
-   -0.262
+   -0.263
   ],
   "size": [
    0.685,
@@ -1837,15 +1837,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor/Mesh039#1": {
   "position": [
-   -24.708,
+   -24.702,
    0,
-   -54.216
+   -54.212
   ],
   "quaternion": [
    0,
    0.965,
    0,
-   -0.262
+   -0.263
   ],
   "size": [
    0.685,
@@ -1855,87 +1855,87 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor/Mesh039_1#1": {
   "position": [
-   -24.708,
+   -24.702,
    0,
-   -54.216
+   -54.212
   ],
   "quaternion": [
    0,
    0.965,
    0,
-   -0.262
+   -0.263
   ],
   "size": [
-   0.309,
+   0.31,
    0.288,
-   0.331
+   0.332
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor/Mesh039_2#1": {
   "position": [
-   -24.708,
+   -24.702,
    0,
-   -54.216
+   -54.212
   ],
   "quaternion": [
    0,
    0.965,
    0,
-   -0.262
+   -0.263
   ],
   "size": [
-   0.286,
+   0.287,
    0.175,
    0.284
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor001#1": {
   "position": [
-   21.618,
+   21.632,
    0,
-   -50.693
+   -50.696
   ],
   "quaternion": [
    0,
-   0.95,
+   0.951,
    0,
-   0.311
+   0.31
   ],
   "size": [
-   0.829,
+   0.83,
    1.795,
    0.778
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor001/Mesh041#1": {
   "position": [
-   21.618,
+   21.632,
    0,
-   -50.693
+   -50.696
   ],
   "quaternion": [
    0,
-   0.95,
+   0.951,
    0,
-   0.311
+   0.31
   ],
   "size": [
-   0.829,
-   1.567,
+   0.83,
+   1.566,
    0.778
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor001/Mesh041_1#1": {
   "position": [
-   21.618,
+   21.632,
    0,
-   -50.693
+   -50.696
   ],
   "quaternion": [
    0,
-   0.95,
+   0.951,
    0,
-   0.311
+   0.31
   ],
   "size": [
    0.311,
@@ -1945,87 +1945,87 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor001/Mesh041_2#1": {
   "position": [
-   21.618,
+   21.632,
    0,
-   -50.693
+   -50.696
   ],
   "quaternion": [
    0,
-   0.95,
+   0.951,
    0,
-   0.311
+   0.31
   ],
   "size": [
-   0.306,
+   0.305,
    0.175,
    0.308
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor002#1": {
   "position": [
-   22.003,
+   22.007,
    0,
-   -58.303
+   -58.305
   ],
   "quaternion": [
    0,
    0.998,
    0,
-   0.068
+   0.067
   ],
   "size": [
-   0.493,
+   0.492,
    1.789,
    0.612
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor002/Mesh044#1": {
   "position": [
-   22.003,
+   22.007,
    0,
-   -58.303
+   -58.305
   ],
   "quaternion": [
    0,
    0.998,
    0,
-   0.068
+   0.067
   ],
   "size": [
-   0.493,
+   0.492,
    1.561,
    0.612
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor002/Mesh044_1#1": {
   "position": [
-   22.003,
+   22.007,
    0,
-   -58.303
+   -58.305
   ],
   "quaternion": [
    0,
    0.998,
    0,
-   0.068
+   0.067
   ],
   "size": [
-   0.279,
+   0.278,
    0.287,
-   0.231
+   0.23
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor002/Mesh044_2#1": {
   "position": [
-   22.003,
+   22.007,
    0,
-   -58.303
+   -58.305
   ],
   "quaternion": [
    0,
    0.998,
    0,
-   0.068
+   0.067
   ],
   "size": [
    0.239,
@@ -2035,13 +2035,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor003#1": {
   "position": [
-   37.706,
+   37.703,
    0,
-   -65.543
+   -65.552
   ],
   "quaternion": [
    0,
-   -0.442,
+   -0.441,
    0,
    0.897
   ],
@@ -2053,13 +2053,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor003/Mesh047#1": {
   "position": [
-   37.706,
+   37.703,
    0,
-   -65.543
+   -65.552
   ],
   "quaternion": [
    0,
-   -0.442,
+   -0.441,
    0,
    0.897
   ],
@@ -2071,13 +2071,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor003/Mesh047_1#1": {
   "position": [
-   37.706,
+   37.703,
    0,
-   -65.543
+   -65.552
   ],
   "quaternion": [
    0,
-   -0.442,
+   -0.441,
    0,
    0.897
   ],
@@ -2089,13 +2089,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor003/Mesh047_2#1": {
   "position": [
-   37.706,
+   37.703,
    0,
-   -65.543
+   -65.552
   ],
   "quaternion": [
    0,
-   -0.442,
+   -0.441,
    0,
    0.897
   ],
@@ -2107,15 +2107,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor#1": {
   "position": [
-   -1.998,
+   -1.989,
    0,
-   -32.05
+   -32.06
   ],
   "quaternion": [
    0,
-   -0.644,
+   -0.643,
    0,
-   0.765
+   0.766
   ],
   "size": [
    0.62,
@@ -2125,15 +2125,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor/Mesh040#1": {
   "position": [
-   -1.998,
+   -1.989,
    0,
-   -32.05
+   -32.06
   ],
   "quaternion": [
    0,
-   -0.644,
+   -0.643,
    0,
-   0.765
+   0.766
   ],
   "size": [
    0.62,
@@ -2143,33 +2143,33 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor/Mesh040_1#1": {
   "position": [
-   -1.998,
+   -1.989,
    0,
-   -32.05
+   -32.06
   ],
   "quaternion": [
    0,
-   -0.644,
+   -0.643,
    0,
-   0.765
+   0.766
   ],
   "size": [
    0.249,
    0.306,
-   0.211
+   0.212
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor/Mesh040_2#1": {
   "position": [
-   -1.998,
+   -1.989,
    0,
-   -32.05
+   -32.06
   ],
   "quaternion": [
    0,
-   -0.644,
+   -0.643,
    0,
-   0.765
+   0.766
   ],
   "size": [
    0.213,
@@ -2179,9 +2179,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor001#1": {
   "position": [
-   -13.153,
+   -13.14,
    0,
-   -28.471
+   -28.468
   ],
   "quaternion": [
    0,
@@ -2191,15 +2191,15 @@
   ],
   "size": [
    0.621,
-   1.791,
+   1.792,
    0.665
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor001/Mesh043#1": {
   "position": [
-   -13.153,
+   -13.14,
    0,
-   -28.471
+   -28.468
   ],
   "quaternion": [
    0,
@@ -2215,9 +2215,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor001/Mesh043_1#1": {
   "position": [
-   -13.153,
+   -13.14,
    0,
-   -28.471
+   -28.468
   ],
   "quaternion": [
    0,
@@ -2233,9 +2233,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor001/Mesh043_2#1": {
   "position": [
-   -13.153,
+   -13.14,
    0,
-   -28.471
+   -28.468
   ],
   "quaternion": [
    0,
@@ -2251,51 +2251,51 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor002#1": {
   "position": [
-   12.859,
+   12.849,
    0,
-   -54.928
+   -54.931
   ],
   "quaternion": [
    0,
    0.647,
    0,
-   0.763
+   0.762
   ],
   "size": [
-   0.515,
+   0.514,
    1.797,
    0.606
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor002/Mesh046#1": {
   "position": [
-   12.859,
+   12.849,
    0,
-   -54.928
+   -54.931
   ],
   "quaternion": [
    0,
    0.647,
    0,
-   0.763
+   0.762
   ],
   "size": [
-   0.515,
+   0.514,
    1.57,
    0.606
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor002/Mesh046_1#1": {
   "position": [
-   12.859,
+   12.849,
    0,
-   -54.928
+   -54.931
   ],
   "quaternion": [
    0,
    0.647,
    0,
-   0.763
+   0.762
   ],
   "size": [
    0.235,
@@ -2305,15 +2305,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor002/Mesh046_2#1": {
   "position": [
-   12.859,
+   12.849,
    0,
-   -54.928
+   -54.931
   ],
   "quaternion": [
    0,
    0.647,
    0,
-   0.763
+   0.762
   ],
   "size": [
    0.2,
@@ -2323,13 +2323,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor#1": {
   "position": [
-   9.495,
+   9.487,
    0,
-   -62.657
+   -62.656
   ],
   "quaternion": [
    0,
-   -0.419,
+   -0.418,
    0,
    0.908
   ],
@@ -2341,13 +2341,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor/Mesh038#1": {
   "position": [
-   9.495,
+   9.487,
    0,
-   -62.657
+   -62.656
   ],
   "quaternion": [
    0,
-   -0.419,
+   -0.418,
    0,
    0.908
   ],
@@ -2359,13 +2359,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor/Mesh038_1#1": {
   "position": [
-   9.495,
+   9.487,
    0,
-   -62.657
+   -62.656
   ],
   "quaternion": [
    0,
-   -0.419,
+   -0.418,
    0,
    0.908
   ],
@@ -2377,13 +2377,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor/Mesh038_2#1": {
   "position": [
-   9.495,
+   9.487,
    0,
-   -62.657
+   -62.656
   ],
   "quaternion": [
    0,
-   -0.419,
+   -0.418,
    0,
    0.908
   ],
@@ -2395,9 +2395,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor001#1": {
   "position": [
-   -4.283,
+   -4.29,
    0,
-   -62.935
+   -62.941
   ],
   "quaternion": [
    0,
@@ -2407,15 +2407,15 @@
   ],
   "size": [
    0.467,
-   1.795,
+   1.796,
    0.441
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor001/Mesh042#1": {
   "position": [
-   -4.283,
+   -4.29,
    0,
-   -62.935
+   -62.941
   ],
   "quaternion": [
    0,
@@ -2425,15 +2425,15 @@
   ],
   "size": [
    0.467,
-   1.567,
+   1.568,
    0.441
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor001/Mesh042_1#1": {
   "position": [
-   -4.283,
+   -4.29,
    0,
-   -62.935
+   -62.941
   ],
   "quaternion": [
    0,
@@ -2449,9 +2449,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor001/Mesh042_2#1": {
   "position": [
-   -4.283,
+   -4.29,
    0,
-   -62.935
+   -62.941
   ],
   "quaternion": [
    0,
@@ -2460,16 +2460,16 @@
    0.999
   ],
   "size": [
-   0.233,
+   0.234,
    0.244,
    0.241
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor002#2": {
   "position": [
-   -11.31,
+   -11.312,
    0,
-   -32.106
+   -32.111
   ],
   "quaternion": [
    0,
@@ -2485,9 +2485,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor002/Mesh045#2": {
   "position": [
-   -11.31,
+   -11.312,
    0,
-   -32.106
+   -32.111
   ],
   "quaternion": [
    0,
@@ -2497,15 +2497,15 @@
   ],
   "size": [
    0.642,
-   1.567,
+   1.566,
    0.455
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor002/Mesh045_1#2": {
   "position": [
-   -11.31,
+   -11.312,
    0,
-   -32.106
+   -32.111
   ],
   "quaternion": [
    0,
@@ -2521,9 +2521,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor002/Mesh045_2#2": {
   "position": [
-   -11.31,
+   -11.312,
    0,
-   -32.106
+   -32.111
   ],
   "quaternion": [
    0,
@@ -2539,9 +2539,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor003#2": {
   "position": [
-   -13.448,
+   -13.441,
    0,
-   -23.427
+   -23.429
   ],
   "quaternion": [
    0,
@@ -2550,16 +2550,16 @@
    0.098
   ],
   "size": [
-   0.694,
+   0.693,
    1.789,
-   0.518
+   0.517
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor003/Mesh048#2": {
   "position": [
-   -13.448,
+   -13.441,
    0,
-   -23.427
+   -23.429
   ],
   "quaternion": [
    0,
@@ -2568,16 +2568,16 @@
    0.098
   ],
   "size": [
-   0.694,
+   0.693,
    1.562,
-   0.518
+   0.517
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor003/Mesh048_1#2": {
   "position": [
-   -13.448,
+   -13.441,
    0,
-   -23.427
+   -23.429
   ],
   "quaternion": [
    0,
@@ -2593,9 +2593,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor003/Mesh048_2#2": {
   "position": [
-   -13.448,
+   -13.441,
    0,
-   -23.427
+   -23.429
   ],
   "quaternion": [
    0,
@@ -2605,21 +2605,21 @@
   ],
   "size": [
    0.262,
-   0.243,
+   0.244,
    0.268
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor#2": {
   "position": [
-   26.35,
+   26.347,
    0,
-   -34.686
+   -34.694
   ],
   "quaternion": [
    0,
    0.909,
    0,
-   -0.416
+   -0.417
   ],
   "size": [
    0.649,
@@ -2629,15 +2629,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor/Mesh039#2": {
   "position": [
-   26.35,
+   26.347,
    0,
-   -34.686
+   -34.694
   ],
   "quaternion": [
    0,
    0.909,
    0,
-   -0.416
+   -0.417
   ],
   "size": [
    0.649,
@@ -2647,15 +2647,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor/Mesh039_1#2": {
   "position": [
-   26.35,
+   26.347,
    0,
-   -34.686
+   -34.694
   ],
   "quaternion": [
    0,
    0.909,
    0,
-   -0.416
+   -0.417
   ],
   "size": [
    0.333,
@@ -2665,15 +2665,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor/Mesh039_2#2": {
   "position": [
-   26.35,
+   26.347,
    0,
-   -34.686
+   -34.694
   ],
   "quaternion": [
    0,
    0.909,
    0,
-   -0.416
+   -0.417
   ],
   "size": [
    0.293,
@@ -2683,72 +2683,72 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor001#2": {
   "position": [
-   6.446,
+   6.45,
    0,
-   -25.236
+   -25.228
   ],
   "quaternion": [
    0,
    0.99,
    0,
-   0.141
+   0.14
   ],
   "size": [
-   0.794,
+   0.793,
    1.79,
-   0.632
+   0.631
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor001/Mesh041#2": {
   "position": [
-   6.446,
+   6.45,
    0,
-   -25.236
+   -25.228
   ],
   "quaternion": [
    0,
    0.99,
    0,
-   0.141
+   0.14
   ],
   "size": [
-   0.794,
+   0.793,
    1.562,
-   0.632
+   0.631
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor001/Mesh041_1#2": {
   "position": [
-   6.446,
+   6.45,
    0,
-   -25.236
+   -25.228
   ],
   "quaternion": [
    0,
    0.99,
    0,
-   0.141
+   0.14
   ],
   "size": [
-   0.267,
+   0.266,
    0.288,
    0.292
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor001/Mesh041_2#2": {
   "position": [
-   6.446,
+   6.45,
    0,
-   -25.236
+   -25.228
   ],
   "quaternion": [
    0,
    0.99,
    0,
-   0.141
+   0.14
   ],
   "size": [
-   0.269,
+   0.268,
    0.175,
    0.275
   ]
@@ -2757,49 +2757,49 @@
   "position": [
    7.312,
    0,
-   -57.912
+   -57.909
   ],
   "quaternion": [
    0,
    0.853,
    0,
-   0.523
+   0.522
   ],
   "size": [
    0.691,
-   1.792,
-   0.629
+   1.793,
+   0.63
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor002/Mesh044#2": {
   "position": [
    7.312,
    0,
-   -57.912
+   -57.909
   ],
   "quaternion": [
    0,
    0.853,
    0,
-   0.523
+   0.522
   ],
   "size": [
    0.691,
-   1.564,
-   0.629
+   1.565,
+   0.63
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor002/Mesh044_1#2": {
   "position": [
    7.312,
    0,
-   -57.912
+   -57.909
   ],
   "quaternion": [
    0,
    0.853,
    0,
-   0.523
+   0.522
   ],
   "size": [
    0.292,
@@ -2811,13 +2811,13 @@
   "position": [
    7.312,
    0,
-   -57.912
+   -57.909
   ],
   "quaternion": [
    0,
    0.853,
    0,
-   0.523
+   0.522
   ],
   "size": [
    0.279,
@@ -2827,15 +2827,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor003#2": {
   "position": [
-   14.774,
+   14.782,
    0,
-   -51.064
+   -51.068
   ],
   "quaternion": [
    0,
    1,
    0,
-   -0.005
+   -0.006
   ],
   "size": [
    0.531,
@@ -2845,15 +2845,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor003/Mesh047#2": {
   "position": [
-   14.774,
+   14.782,
    0,
-   -51.064
+   -51.068
   ],
   "quaternion": [
    0,
    1,
    0,
-   -0.005
+   -0.006
   ],
   "size": [
    0.531,
@@ -2863,49 +2863,49 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor003/Mesh047_1#2": {
   "position": [
-   14.774,
+   14.782,
    0,
-   -51.064
+   -51.068
   ],
   "quaternion": [
    0,
    1,
    0,
-   -0.005
+   -0.006
   ],
   "size": [
    0.209,
    0.289,
-   0.246
+   0.247
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor003/Mesh047_2#2": {
   "position": [
-   14.774,
+   14.782,
    0,
-   -51.064
+   -51.068
   ],
   "quaternion": [
    0,
    1,
    0,
-   -0.005
+   -0.006
   ],
   "size": [
-   0.215,
+   0.216,
    0.175,
    0.214
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor#2": {
   "position": [
-   7.201,
+   7.188,
    0,
-   -86.833
+   -86.835
   ],
   "quaternion": [
    0,
-   -0.494,
+   -0.493,
    0,
    0.87
   ],
@@ -2917,13 +2917,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor/Mesh040#2": {
   "position": [
-   7.201,
+   7.188,
    0,
-   -86.833
+   -86.835
   ],
   "quaternion": [
    0,
-   -0.494,
+   -0.493,
    0,
    0.87
   ],
@@ -2935,13 +2935,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor/Mesh040_1#2": {
   "position": [
-   7.201,
+   7.188,
    0,
-   -86.833
+   -86.835
   ],
   "quaternion": [
    0,
-   -0.494,
+   -0.493,
    0,
    0.87
   ],
@@ -2953,13 +2953,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor/Mesh040_2#2": {
   "position": [
-   7.201,
+   7.188,
    0,
-   -86.833
+   -86.835
   ],
   "quaternion": [
    0,
-   -0.494,
+   -0.493,
    0,
    0.87
   ],
@@ -2971,9 +2971,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor001#2": {
   "position": [
-   -4.249,
+   -4.257,
    0,
-   -83.398
+   -83.387
   ],
   "quaternion": [
    0,
@@ -2989,9 +2989,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor001/Mesh043#2": {
   "position": [
-   -4.249,
+   -4.257,
    0,
-   -83.398
+   -83.387
   ],
   "quaternion": [
    0,
@@ -3007,9 +3007,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor001/Mesh043_1#2": {
   "position": [
-   -4.249,
+   -4.257,
    0,
-   -83.398
+   -83.387
   ],
   "quaternion": [
    0,
@@ -3025,9 +3025,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor001/Mesh043_2#2": {
   "position": [
-   -4.249,
+   -4.257,
    0,
-   -83.398
+   -83.387
   ],
   "quaternion": [
    0,
@@ -3043,33 +3043,33 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor002#2": {
   "position": [
-   -2.248,
+   -2.254,
    0,
-   -92.496
+   -92.488
   ],
   "quaternion": [
    0,
-   -0.384,
+   -0.383,
    0,
-   0.923
+   0.924
   ],
   "size": [
    0.689,
-   1.793,
+   1.792,
    0.689
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor002/Mesh046#2": {
   "position": [
-   -2.248,
+   -2.254,
    0,
-   -92.496
+   -92.488
   ],
   "quaternion": [
    0,
-   -0.384,
+   -0.383,
    0,
-   0.923
+   0.924
   ],
   "size": [
    0.689,
@@ -3079,15 +3079,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor002/Mesh046_1#2": {
   "position": [
-   -2.248,
+   -2.254,
    0,
-   -92.496
+   -92.488
   ],
   "quaternion": [
    0,
-   -0.384,
+   -0.383,
    0,
-   0.923
+   0.924
   ],
   "size": [
    0.273,
@@ -3097,15 +3097,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor002/Mesh046_2#2": {
   "position": [
-   -2.248,
+   -2.254,
    0,
-   -92.496
+   -92.488
   ],
   "quaternion": [
    0,
-   -0.384,
+   -0.383,
    0,
-   0.923
+   0.924
   ],
   "size": [
    0.244,
@@ -3115,15 +3115,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor#2": {
   "position": [
-   1.746,
+   1.739,
    0,
-   -99.009
+   -99.005
   ],
   "quaternion": [
    0,
-   0.677,
+   0.678,
    0,
-   0.736
+   0.735
   ],
   "size": [
    0.347,
@@ -3133,15 +3133,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor/Mesh038#2": {
   "position": [
-   1.746,
+   1.739,
    0,
-   -99.009
+   -99.005
   ],
   "quaternion": [
    0,
-   0.677,
+   0.678,
    0,
-   0.736
+   0.735
   ],
   "size": [
    0.347,
@@ -3151,33 +3151,33 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor/Mesh038_1#2": {
   "position": [
-   1.746,
+   1.739,
    0,
-   -99.009
+   -99.005
   ],
   "quaternion": [
    0,
-   0.677,
+   0.678,
    0,
-   0.736
+   0.735
   ],
   "size": [
    0.27,
    0.393,
-   0.23
+   0.229
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor/Mesh038_2#2": {
   "position": [
-   1.746,
+   1.739,
    0,
-   -99.009
+   -99.005
   ],
   "quaternion": [
    0,
-   0.677,
+   0.678,
    0,
-   0.736
+   0.735
   ],
   "size": [
    0.247,
@@ -3187,15 +3187,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor001#2": {
   "position": [
-   -1.418,
+   -1.411,
    0,
-   -85.264
+   -85.258
   ],
   "quaternion": [
    0,
    0.761,
    0,
-   0.649
+   0.648
   ],
   "size": [
    0.477,
@@ -3205,15 +3205,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor001/Mesh042#2": {
   "position": [
-   -1.418,
+   -1.411,
    0,
-   -85.264
+   -85.258
   ],
   "quaternion": [
    0,
    0.761,
    0,
-   0.649
+   0.648
   ],
   "size": [
    0.477,
@@ -3223,15 +3223,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor001/Mesh042_1#2": {
   "position": [
-   -1.418,
+   -1.411,
    0,
-   -85.264
+   -85.258
   ],
   "quaternion": [
    0,
    0.761,
    0,
-   0.649
+   0.648
   ],
   "size": [
    0.253,
@@ -3241,15 +3241,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor001/Mesh042_2#2": {
   "position": [
-   -1.418,
+   -1.411,
    0,
-   -85.264
+   -85.258
   ],
   "quaternion": [
    0,
    0.761,
    0,
-   0.649
+   0.648
   ],
   "size": [
    0.259,
@@ -3577,7 +3577,7 @@
   ],
   "size": [
    0.634,
-   1.515,
+   1.514,
    0.786
   ]
  },
@@ -3595,7 +3595,7 @@
   ],
   "size": [
    0.634,
-   1.289,
+   1.288,
    0.786
   ]
  },
@@ -3637,9 +3637,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor004": {
   "position": [
-   -23.904,
+   -23.907,
    0,
-   -97.067
+   -97.064
   ],
   "quaternion": [
    0,
@@ -3655,9 +3655,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor004/Mesh050": {
   "position": [
-   -23.904,
+   -23.907,
    0,
-   -97.067
+   -97.064
   ],
   "quaternion": [
    0,
@@ -3667,15 +3667,15 @@
   ],
   "size": [
    0.553,
-   1.237,
-   0.802
+   1.238,
+   0.803
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor004/Mesh050_1": {
   "position": [
-   -23.904,
+   -23.907,
    0,
-   -97.067
+   -97.064
   ],
   "quaternion": [
    0,
@@ -3686,14 +3686,14 @@
   "size": [
    0.215,
    0.394,
-   0.258
+   0.259
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor004/Mesh050_2": {
   "position": [
-   -23.904,
+   -23.907,
    0,
-   -97.067
+   -97.064
   ],
   "quaternion": [
    0,
@@ -3702,38 +3702,38 @@
    1
   ],
   "size": [
-   0.216,
+   0.217,
    0.244,
-   0.235
+   0.236
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor005": {
   "position": [
-   -28.687,
+   -28.682,
    0,
-   -106.866
+   -106.865
   ],
   "quaternion": [
    0,
-   -0.822,
+   -0.823,
    0,
    0.569
   ],
   "size": [
    0.779,
-   1.467,
+   1.466,
    0.928
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor005/Mesh052": {
   "position": [
-   -28.687,
+   -28.682,
    0,
-   -106.866
+   -106.865
   ],
   "quaternion": [
    0,
-   -0.822,
+   -0.823,
    0,
    0.569
   ],
@@ -3745,13 +3745,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor005/Mesh052_1": {
   "position": [
-   -28.687,
+   -28.682,
    0,
-   -106.866
+   -106.865
   ],
   "quaternion": [
    0,
-   -0.822,
+   -0.823,
    0,
    0.569
   ],
@@ -3763,13 +3763,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor005/Mesh052_2": {
   "position": [
-   -28.687,
+   -28.682,
    0,
-   -106.866
+   -106.865
   ],
   "quaternion": [
    0,
-   -0.822,
+   -0.823,
    0,
    0.569
   ],
@@ -3783,7 +3783,7 @@
   "position": [
    -12.892,
    0,
-   -102.51
+   -102.507
   ],
   "quaternion": [
    0,
@@ -3792,7 +3792,7 @@
    0.999
   ],
   "size": [
-   0.62,
+   0.619,
    1.461,
    0.85
   ]
@@ -3801,7 +3801,7 @@
   "position": [
    -12.892,
    0,
-   -102.51
+   -102.507
   ],
   "quaternion": [
    0,
@@ -3810,7 +3810,7 @@
    0.999
   ],
   "size": [
-   0.62,
+   0.619,
    1.234,
    0.85
   ]
@@ -3819,7 +3819,7 @@
   "position": [
    -12.892,
    0,
-   -102.51
+   -102.507
   ],
   "quaternion": [
    0,
@@ -3837,7 +3837,7 @@
   "position": [
    -12.892,
    0,
-   -102.51
+   -102.507
   ],
   "quaternion": [
    0,
@@ -3853,7 +3853,7 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor004": {
   "position": [
-   -18.715,
+   -18.717,
    0,
    -97.185
   ],
@@ -3871,7 +3871,7 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor004/Mesh049": {
   "position": [
-   -18.715,
+   -18.717,
    0,
    -97.185
   ],
@@ -3889,7 +3889,7 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor004/Mesh049_1": {
   "position": [
-   -18.715,
+   -18.717,
    0,
    -97.185
   ],
@@ -3907,7 +3907,7 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor004/Mesh049_2": {
   "position": [
-   -18.715,
+   -18.717,
    0,
    -97.185
   ],
@@ -3925,9 +3925,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor003#3": {
   "position": [
-   19.573,
+   19.574,
    0,
-   -107.177
+   -107.176
   ],
   "quaternion": [
    0,
@@ -3937,15 +3937,15 @@
   ],
   "size": [
    0.651,
-   1.792,
+   1.791,
    0.679
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor003/Mesh047#3": {
   "position": [
-   19.573,
+   19.574,
    0,
-   -107.177
+   -107.176
   ],
   "quaternion": [
    0,
@@ -3955,15 +3955,15 @@
   ],
   "size": [
    0.651,
-   1.564,
+   1.563,
    0.679
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor003/Mesh047_1#3": {
   "position": [
-   19.573,
+   19.574,
    0,
-   -107.177
+   -107.176
   ],
   "quaternion": [
    0,
@@ -3979,9 +3979,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor003/Mesh047_2#3": {
   "position": [
-   19.573,
+   19.574,
    0,
-   -107.177
+   -107.176
   ],
   "quaternion": [
    0,
@@ -3999,7 +3999,7 @@
   "position": [
    13.635,
    0,
-   -99.541
+   -99.542
   ],
   "quaternion": [
    0,
@@ -4017,7 +4017,7 @@
   "position": [
    13.635,
    0,
-   -99.541
+   -99.542
   ],
   "quaternion": [
    0,
@@ -4027,7 +4027,7 @@
   ],
   "size": [
    0.803,
-   1.564,
+   1.565,
    0.805
   ]
  },
@@ -4035,7 +4035,7 @@
   "position": [
    13.635,
    0,
-   -99.541
+   -99.542
   ],
   "quaternion": [
    0,
@@ -4053,7 +4053,7 @@
   "position": [
    13.635,
    0,
-   -99.541
+   -99.542
   ],
   "quaternion": [
    0,
@@ -4141,31 +4141,31 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor006": {
   "position": [
-   -33.149,
+   -33.148,
    0,
    -77.218
   ],
   "quaternion": [
    0,
-   -0.713,
+   -0.712,
    0,
    0.702
   ],
   "size": [
    0.775,
-   1.512,
+   1.511,
    0.615
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor006/Mesh056": {
   "position": [
-   -33.149,
+   -33.148,
    0,
    -77.218
   ],
   "quaternion": [
    0,
-   -0.713,
+   -0.712,
    0,
    0.702
   ],
@@ -4177,13 +4177,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor006/Mesh056_1": {
   "position": [
-   -33.149,
+   -33.148,
    0,
    -77.218
   ],
   "quaternion": [
    0,
-   -0.713,
+   -0.712,
    0,
    0.702
   ],
@@ -4195,13 +4195,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor006/Mesh056_2": {
   "position": [
-   -33.149,
+   -33.148,
    0,
    -77.218
   ],
   "quaternion": [
    0,
-   -0.713,
+   -0.712,
    0,
    0.702
   ],
@@ -4213,9 +4213,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor001#3": {
   "position": [
-   -21.587,
+   -21.586,
    0,
-   -80.565
+   -80.567
   ],
   "quaternion": [
    0,
@@ -4231,9 +4231,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor001/Mesh043#3": {
   "position": [
-   -21.587,
+   -21.586,
    0,
-   -80.565
+   -80.567
   ],
   "quaternion": [
    0,
@@ -4249,9 +4249,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor001/Mesh043_1#3": {
   "position": [
-   -21.587,
+   -21.586,
    0,
-   -80.565
+   -80.567
   ],
   "quaternion": [
    0,
@@ -4261,15 +4261,15 @@
   ],
   "size": [
    0.249,
-   0.306,
+   0.307,
    0.234
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor001/Mesh043_2#3": {
   "position": [
-   -21.587,
+   -21.586,
    0,
-   -80.565
+   -80.567
   ],
   "quaternion": [
    0,
@@ -4285,7 +4285,7 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor002#3": {
   "position": [
-   -33.442,
+   -33.444,
    0,
    -98.68
   ],
@@ -4297,13 +4297,13 @@
   ],
   "size": [
    0.443,
-   1.795,
+   1.794,
    0.552
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor002/Mesh046#3": {
   "position": [
-   -33.442,
+   -33.444,
    0,
    -98.68
   ],
@@ -4315,13 +4315,13 @@
   ],
   "size": [
    0.443,
-   1.568,
+   1.567,
    0.552
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor002/Mesh046_1#3": {
   "position": [
-   -33.442,
+   -33.444,
    0,
    -98.68
   ],
@@ -4339,7 +4339,7 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor002/Mesh046_2#3": {
   "position": [
-   -33.442,
+   -33.444,
    0,
    -98.68
   ],
@@ -4357,9 +4357,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor#3": {
   "position": [
-   -0.244,
+   -0.246,
    0,
-   -116.207
+   -116.205
   ],
   "quaternion": [
    0,
@@ -4375,9 +4375,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor/Mesh038#3": {
   "position": [
-   -0.244,
+   -0.246,
    0,
-   -116.207
+   -116.205
   ],
   "quaternion": [
    0,
@@ -4393,9 +4393,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor/Mesh038_1#3": {
   "position": [
-   -0.244,
+   -0.246,
    0,
-   -116.207
+   -116.205
   ],
   "quaternion": [
    0,
@@ -4411,9 +4411,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor/Mesh038_2#3": {
   "position": [
-   -0.244,
+   -0.246,
    0,
-   -116.207
+   -116.205
   ],
   "quaternion": [
    0,
@@ -4429,13 +4429,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor001#3": {
   "position": [
-   4.632,
+   4.636,
    0,
-   -101.861
+   -101.86
   ],
   "quaternion": [
    0,
-   0.903,
+   0.904,
    0,
    0.429
   ],
@@ -4447,13 +4447,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor001/Mesh042#3": {
   "position": [
-   4.632,
+   4.636,
    0,
-   -101.861
+   -101.86
   ],
   "quaternion": [
    0,
-   0.903,
+   0.904,
    0,
    0.429
   ],
@@ -4465,13 +4465,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor001/Mesh042_1#3": {
   "position": [
-   4.632,
+   4.636,
    0,
-   -101.861
+   -101.86
   ],
   "quaternion": [
    0,
-   0.903,
+   0.904,
    0,
    0.429
   ],
@@ -4483,13 +4483,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor001/Mesh042_2#3": {
   "position": [
-   4.632,
+   4.636,
    0,
-   -101.861
+   -101.86
   ],
   "quaternion": [
    0,
-   0.903,
+   0.904,
    0,
    0.429
   ],
@@ -4501,9 +4501,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor002#3": {
   "position": [
-   11.336,
+   11.335,
    0,
-   -141.933
+   -141.935
   ],
   "quaternion": [
    0,
@@ -4513,15 +4513,15 @@
   ],
   "size": [
    0.759,
-   1.791,
+   1.79,
    0.697
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor002/Mesh045#3": {
   "position": [
-   11.336,
+   11.335,
    0,
-   -141.933
+   -141.935
   ],
   "quaternion": [
    0,
@@ -4531,15 +4531,15 @@
   ],
   "size": [
    0.759,
-   1.564,
+   1.563,
    0.697
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor002/Mesh045_1#3": {
   "position": [
-   11.336,
+   11.335,
    0,
-   -141.933
+   -141.935
   ],
   "quaternion": [
    0,
@@ -4555,9 +4555,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor002/Mesh045_2#3": {
   "position": [
-   11.336,
+   11.335,
    0,
-   -141.933
+   -141.935
   ],
   "quaternion": [
    0,
@@ -4573,7 +4573,7 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor003#3": {
   "position": [
-   -3.107,
+   -3.106,
    0,
    -127.691
   ],
@@ -4591,7 +4591,7 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor003/Mesh048#3": {
   "position": [
-   -3.107,
+   -3.106,
    0,
    -127.691
   ],
@@ -4609,7 +4609,7 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor003/Mesh048_1#3": {
   "position": [
-   -3.107,
+   -3.106,
    0,
    -127.691
   ],
@@ -4621,13 +4621,13 @@
   ],
   "size": [
    0.309,
-   0.393,
+   0.394,
    0.306
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor003/Mesh048_2#3": {
   "position": [
-   -3.107,
+   -3.106,
    0,
    -127.691
   ],
@@ -4645,9 +4645,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor#3": {
   "position": [
-   6.881,
+   6.882,
    0,
-   -128.709
+   -128.71
   ],
   "quaternion": [
    0,
@@ -4657,15 +4657,15 @@
   ],
   "size": [
    0.415,
-   1.797,
+   1.796,
    0.626
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor/Mesh039#3": {
   "position": [
-   6.881,
+   6.882,
    0,
-   -128.709
+   -128.71
   ],
   "quaternion": [
    0,
@@ -4681,9 +4681,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor/Mesh039_1#3": {
   "position": [
-   6.881,
+   6.882,
    0,
-   -128.709
+   -128.71
   ],
   "quaternion": [
    0,
@@ -4699,9 +4699,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor/Mesh039_2#3": {
   "position": [
-   6.881,
+   6.882,
    0,
-   -128.709
+   -128.71
   ],
   "quaternion": [
    0,
@@ -4711,15 +4711,15 @@
   ],
   "size": [
    0.228,
-   0.176,
+   0.175,
    0.235
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor001#3": {
   "position": [
-   9.345,
+   9.344,
    0,
-   -145.714
+   -145.715
   ],
   "quaternion": [
    0,
@@ -4735,9 +4735,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor001/Mesh041#3": {
   "position": [
-   9.345,
+   9.344,
    0,
-   -145.714
+   -145.715
   ],
   "quaternion": [
    0,
@@ -4753,9 +4753,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor001/Mesh041_1#3": {
   "position": [
-   9.345,
+   9.344,
    0,
-   -145.714
+   -145.715
   ],
   "quaternion": [
    0,
@@ -4771,9 +4771,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor001/Mesh041_2#3": {
   "position": [
-   9.345,
+   9.344,
    0,
-   -145.714
+   -145.715
   ],
   "quaternion": [
    0,
@@ -4789,7 +4789,7 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor002#3": {
   "position": [
-   25.277,
+   25.278,
    0,
    -97.103
   ],
@@ -4807,7 +4807,7 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor002/Mesh044#3": {
   "position": [
-   25.277,
+   25.278,
    0,
    -97.103
   ],
@@ -4825,7 +4825,7 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor002/Mesh044_1#3": {
   "position": [
-   25.277,
+   25.278,
    0,
    -97.103
   ],
@@ -4837,13 +4837,13 @@
   ],
   "size": [
    0.322,
-   0.288,
+   0.289,
    0.313
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor002/Mesh044_2#3": {
   "position": [
-   25.277,
+   25.278,
    0,
    -97.103
   ],
@@ -4861,9 +4861,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor003#4": {
   "position": [
-   28.982,
+   28.979,
    0,
-   -108.654
+   -108.653
   ],
   "quaternion": [
    0,
@@ -4874,14 +4874,14 @@
   "size": [
    0.693,
    1.793,
-   0.677
+   0.678
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor003/Mesh047#4": {
   "position": [
-   28.982,
+   28.979,
    0,
-   -108.654
+   -108.653
   ],
   "quaternion": [
    0,
@@ -4892,14 +4892,14 @@
   "size": [
    0.693,
    1.565,
-   0.677
+   0.678
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor003/Mesh047_1#4": {
   "position": [
-   28.982,
+   28.979,
    0,
-   -108.654
+   -108.653
   ],
   "quaternion": [
    0,
@@ -4915,9 +4915,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_01_|_body_|_visitor003/Mesh047_2#4": {
   "position": [
-   28.982,
+   28.979,
    0,
-   -108.654
+   -108.653
   ],
   "quaternion": [
    0,
@@ -4933,9 +4933,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor#4": {
   "position": [
-   33.12,
+   33.115,
    0,
-   -90.35
+   -90.349
   ],
   "quaternion": [
    0,
@@ -4951,9 +4951,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor/Mesh040#4": {
   "position": [
-   33.12,
+   33.115,
    0,
-   -90.35
+   -90.349
   ],
   "quaternion": [
    0,
@@ -4963,15 +4963,15 @@
   ],
   "size": [
    0.766,
-   1.563,
+   1.564,
    0.797
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor/Mesh040_1#4": {
   "position": [
-   33.12,
+   33.115,
    0,
-   -90.35
+   -90.349
   ],
   "quaternion": [
    0,
@@ -4987,9 +4987,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor/Mesh040_2#4": {
   "position": [
-   33.12,
+   33.115,
    0,
-   -90.35
+   -90.349
   ],
   "quaternion": [
    0,
@@ -5005,9 +5005,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor001#4": {
   "position": [
-   41.199,
+   41.194,
    0,
-   -101.117
+   -101.12
   ],
   "quaternion": [
    0,
@@ -5018,14 +5018,14 @@
   "size": [
    0.516,
    1.797,
-   0.589
+   0.59
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor001/Mesh043#4": {
   "position": [
-   41.199,
+   41.194,
    0,
-   -101.117
+   -101.12
   ],
   "quaternion": [
    0,
@@ -5036,14 +5036,14 @@
   "size": [
    0.516,
    1.57,
-   0.589
+   0.59
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor001/Mesh043_1#4": {
   "position": [
-   41.199,
+   41.194,
    0,
-   -101.117
+   -101.12
   ],
   "quaternion": [
    0,
@@ -5059,9 +5059,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor001/Mesh043_2#4": {
   "position": [
-   41.199,
+   41.194,
    0,
-   -101.117
+   -101.12
   ],
   "quaternion": [
    0,
@@ -5072,14 +5072,14 @@
   "size": [
    0.199,
    0.141,
-   0.196
+   0.197
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor002#4": {
   "position": [
-   44.214,
+   44.212,
    0,
-   -122.795
+   -122.8
   ],
   "quaternion": [
    0,
@@ -5089,15 +5089,15 @@
   ],
   "size": [
    0.691,
-   1.79,
+   1.789,
    0.659
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor002/Mesh046#4": {
   "position": [
-   44.214,
+   44.212,
    0,
-   -122.795
+   -122.8
   ],
   "quaternion": [
    0,
@@ -5107,15 +5107,15 @@
   ],
   "size": [
    0.691,
-   1.564,
+   1.563,
    0.659
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor002/Mesh046_1#4": {
   "position": [
-   44.214,
+   44.212,
    0,
-   -122.795
+   -122.8
   ],
   "quaternion": [
    0,
@@ -5131,9 +5131,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor002/Mesh046_2#4": {
   "position": [
-   44.214,
+   44.212,
    0,
-   -122.795
+   -122.8
   ],
   "quaternion": [
    0,
@@ -5149,9 +5149,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor#4": {
   "position": [
-   40.768,
+   40.765,
    0,
-   -135.972
+   -135.976
   ],
   "quaternion": [
    0,
@@ -5161,15 +5161,15 @@
   ],
   "size": [
    0.414,
-   1.793,
+   1.794,
    0.587
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor/Mesh038#4": {
   "position": [
-   40.768,
+   40.765,
    0,
-   -135.972
+   -135.976
   ],
   "quaternion": [
    0,
@@ -5185,9 +5185,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor/Mesh038_1#4": {
   "position": [
-   40.768,
+   40.765,
    0,
-   -135.972
+   -135.976
   ],
   "quaternion": [
    0,
@@ -5196,16 +5196,16 @@
    0.625
   ],
   "size": [
-   0.294,
+   0.293,
    0.394,
    0.26
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor/Mesh038_2#4": {
   "position": [
-   40.768,
+   40.765,
    0,
-   -135.972
+   -135.976
   ],
   "quaternion": [
    0,
@@ -5221,13 +5221,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor001#4": {
   "position": [
-   -14.2,
+   -14.201,
    0,
-   -104.79
+   -104.797
   ],
   "quaternion": [
    0,
-   -0.354,
+   -0.353,
    0,
    0.935
   ],
@@ -5239,13 +5239,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor001/Mesh042#4": {
   "position": [
-   -14.2,
+   -14.201,
    0,
-   -104.79
+   -104.797
   ],
   "quaternion": [
    0,
-   -0.354,
+   -0.353,
    0,
    0.935
   ],
@@ -5257,13 +5257,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor001/Mesh042_1#4": {
   "position": [
-   -14.2,
+   -14.201,
    0,
-   -104.79
+   -104.797
   ],
   "quaternion": [
    0,
-   -0.354,
+   -0.353,
    0,
    0.935
   ],
@@ -5275,13 +5275,13 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor001/Mesh042_2#4": {
   "position": [
-   -14.2,
+   -14.201,
    0,
-   -104.79
+   -104.797
   ],
   "quaternion": [
    0,
-   -0.354,
+   -0.353,
    0,
    0.935
   ],
@@ -5583,7 +5583,7 @@
   "position": [
    -15.017,
    0,
-   -147.034
+   -147.036
   ],
   "quaternion": [
    0,
@@ -5601,7 +5601,7 @@
   "position": [
    -15.017,
    0,
-   -147.034
+   -147.036
   ],
   "quaternion": [
    0,
@@ -5619,7 +5619,7 @@
   "position": [
    -15.017,
    0,
-   -147.034
+   -147.036
   ],
   "quaternion": [
    0,
@@ -5628,7 +5628,7 @@
    0.141
   ],
   "size": [
-   0.231,
+   0.232,
    0.307,
    0.248
   ]
@@ -5637,7 +5637,7 @@
   "position": [
    -15.017,
    0,
-   -147.034
+   -147.036
   ],
   "quaternion": [
    0,
@@ -5653,15 +5653,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor002#5": {
   "position": [
-   6.355,
+   6.357,
    0,
-   -156.92
+   -156.915
   ],
   "quaternion": [
    0,
-   0.979,
+   0.98,
    0,
-   -0.202
+   -0.201
   ],
   "size": [
    0.669,
@@ -5671,15 +5671,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor002/Mesh046#5": {
   "position": [
-   6.355,
+   6.357,
    0,
-   -156.92
+   -156.915
   ],
   "quaternion": [
    0,
-   0.979,
+   0.98,
    0,
-   -0.202
+   -0.201
   ],
   "size": [
    0.669,
@@ -5689,15 +5689,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor002/Mesh046_1#5": {
   "position": [
-   6.355,
+   6.357,
    0,
-   -156.92
+   -156.915
   ],
   "quaternion": [
    0,
-   0.979,
+   0.98,
    0,
-   -0.202
+   -0.201
   ],
   "size": [
    0.246,
@@ -5707,15 +5707,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Male_02_|_body_|_visitor002/Mesh046_2#5": {
   "position": [
-   6.355,
+   6.357,
    0,
-   -156.92
+   -156.915
   ],
   "quaternion": [
    0,
-   0.979,
+   0.98,
    0,
-   -0.202
+   -0.201
   ],
   "size": [
    0.225,
@@ -5725,15 +5725,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor#5": {
   "position": [
-   -21.378,
+   -21.376,
    0,
-   -153.336
+   -153.34
   ],
   "quaternion": [
    0,
    0.87,
    0,
-   0.493
+   0.494
   ],
   "size": [
    0.535,
@@ -5743,15 +5743,15 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor/Mesh038#5": {
   "position": [
-   -21.378,
+   -21.376,
    0,
-   -153.336
+   -153.34
   ],
   "quaternion": [
    0,
    0.87,
    0,
-   0.493
+   0.494
   ],
   "size": [
    0.535,
@@ -5761,33 +5761,33 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor/Mesh038_1#5": {
   "position": [
-   -21.378,
+   -21.376,
    0,
-   -153.336
+   -153.34
   ],
   "quaternion": [
    0,
    0.87,
    0,
-   0.493
+   0.494
   ],
   "size": [
    0.325,
-   0.394,
+   0.395,
    0.31
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor/Mesh038_2#5": {
   "position": [
-   -21.378,
+   -21.376,
    0,
-   -153.336
+   -153.34
   ],
   "quaternion": [
    0,
    0.87,
    0,
-   0.493
+   0.494
   ],
   "size": [
    0.306,
@@ -5797,9 +5797,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor001#5": {
   "position": [
-   19.343,
+   19.347,
    0,
-   -156.49
+   -156.487
   ],
   "quaternion": [
    0,
@@ -5815,9 +5815,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor001/Mesh042#5": {
   "position": [
-   19.343,
+   19.347,
    0,
-   -156.49
+   -156.487
   ],
   "quaternion": [
    0,
@@ -5827,15 +5827,15 @@
   ],
   "size": [
    0.503,
-   1.565,
+   1.564,
    0.524
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor001/Mesh042_1#5": {
   "position": [
-   19.343,
+   19.347,
    0,
-   -156.49
+   -156.487
   ],
   "quaternion": [
    0,
@@ -5851,9 +5851,9 @@
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor001/Mesh042_2#5": {
   "position": [
-   19.343,
+   19.347,
    0,
-   -156.49
+   -156.487
   ],
   "quaternion": [
    0,
@@ -5862,74 +5862,74 @@
    0.784
   ],
   "size": [
-   0.272,
+   0.271,
    0.244,
    0.265
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor002#4": {
   "position": [
-   9.589,
+   9.587,
    0,
-   -145.629
+   -145.631
   ],
   "quaternion": [
    0,
-   0.886,
+   0.887,
    0,
    -0.463
   ],
   "size": [
-   0.711,
+   0.712,
    1.791,
    0.76
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor002/Mesh045#4": {
   "position": [
-   9.589,
+   9.587,
    0,
-   -145.629
+   -145.631
   ],
   "quaternion": [
    0,
-   0.886,
+   0.887,
    0,
    -0.463
   ],
   "size": [
-   0.711,
+   0.712,
    1.564,
    0.76
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor002/Mesh045_1#4": {
   "position": [
-   9.589,
+   9.587,
    0,
-   -145.629
+   -145.631
   ],
   "quaternion": [
    0,
-   0.886,
+   0.887,
    0,
    -0.463
   ],
   "size": [
-   0.303,
+   0.304,
    0.393,
    0.304
   ]
  },
  "Hall dressing/Hall guests/Rocketbox_|_Business_Female_01_|_body_|_visitor002/Mesh045_2#4": {
   "position": [
-   9.589,
+   9.587,
    0,
-   -145.629
+   -145.631
   ],
   "quaternion": [
    0,
-   0.886,
+   0.887,
    0,
    -0.463
   ],
@@ -5943,7 +5943,7 @@
   "position": [
    -2.692,
    0,
-   -156.032
+   -156.029
   ],
   "quaternion": [
    0,
@@ -5961,7 +5961,7 @@
   "position": [
    -2.692,
    0,
-   -156.032
+   -156.029
   ],
   "quaternion": [
    0,
@@ -5979,7 +5979,7 @@
   "position": [
    -2.692,
    0,
-   -156.032
+   -156.029
   ],
   "quaternion": [
    0,
@@ -5997,7 +5997,7 @@
   "position": [
    -2.692,
    0,
-   -156.032
+   -156.029
   ],
   "quaternion": [
    0,
@@ -12000,7 +12000,7 @@
    0.778
   ],
   "size": [
-   0.449,
+   0.448,
    1.635,
    1.761
   ]
@@ -12031,14 +12031,14 @@
   ],
   "quaternion": [
    0,
-   -0.627,
+   -0.628,
    0,
-   0.779
+   0.778
   ],
   "size": [
-   1.634,
+   1.633,
    1.824,
-   1.634
+   1.633
   ]
  },
  "LED Rental Solutions · October 2026 pavilion/corner LED rotating physical model 4": {
@@ -12072,7 +12072,7 @@
    0.778
   ],
   "size": [
-   0.337,
+   0.336,
    1.738,
    1.413
   ]
@@ -12085,14 +12085,14 @@
   ],
   "quaternion": [
    0,
-   -0.625,
+   -0.626,
    0,
-   0.781
+   0.78
   ],
   "size": [
-   0.593,
+   0.591,
    2.3,
-   1.122
+   1.123
   ]
  },
  "LED Rental Solutions · October 2026 pavilion/sphere LED rotating physical model 7": {
@@ -12103,14 +12103,14 @@
   ],
   "quaternion": [
    0,
-   -0.626,
+   -0.627,
    0,
-   0.78
+   0.779
   ],
   "size": [
-   1.759,
+   1.757,
    1.476,
-   1.759
+   1.757
   ]
  },
  "Projection mapping · crystalline architecture pavilion": {
