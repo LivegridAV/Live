@@ -6,3 +6,9 @@ export async function resolve(specifier, context, next) {
     throw error;
   }
 }
+
+// Venue data modules import JSON without an import attribute (the bundler allows it); node needs one.
+export async function load(url, context, next) {
+  if (/\.json$/.test(new URL(url).pathname) && !context.importAttributes?.type) return next(url, { ...context, importAttributes: { ...context.importAttributes, type: "json" } });
+  return next(url, context);
+}
