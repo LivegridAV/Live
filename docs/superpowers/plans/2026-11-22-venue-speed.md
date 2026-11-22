@@ -71,7 +71,8 @@
 
 - [ ] **Step 1: Write failing tests** in `scripts/venue-loading.test.mjs`:
   - `groupsBeforeOpening` with bandwidth 1,125,000 B/s (9 Mbps), groups `[{start,21,20e6},{a,-60,5e6},{b,-140,10e6}]`, startZ 21 → `["start"]`. Group a arrives 4.4 s after opening and is reached at (21+60)/6 = 13.5 s, which clears the 4 s margin. Group b arrives at 13.3 s and is reached at 26.8 s.
-  - The same groups at 250,000 B/s (2 Mbps) → `["start","a"]`.
+  - The same groups at 500,000 B/s → `["start","a"]`. Group a would arrive at 10 s, past its 9.5 s deadline, so it loads before opening; b then arrives at 20 s against its 22.8 s deadline.
+  - The same groups at 250,000 B/s (2 Mbps) → `["start","a","b"]`. b would arrive at 40 s against 22.8 s.
   - When the only failing group is the last one, the list extends to include it.
   - `nextToFetch` with priority `"b"` while `"a"` is not ready → `"b"`; with no priority → `"a"`; with everything ready → `undefined`.
   - `groupForZ(21).id === "start"`; every asset in `groups.json` exists under `public/` (path check); no asset appears in two groups.
