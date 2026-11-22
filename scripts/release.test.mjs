@@ -332,8 +332,9 @@ test("lite mode and lod1 choice live in the venue's model loading", () => {
 test("the KTX2 swap keeps a texture's WebP unless the KTX2 is small enough for its group", async () => {
   const { prefersKtx2, KTX2_LATER_RATIO } = await import("./ktx2-swap.mjs");
   assert.equal(KTX2_LATER_RATIO, 1.25);
-  // start: only when smaller than the WebP.
-  assert.equal(prefersKtx2({ ktx2Bytes: 99, webpBytes: 100, inStart: true }), true);
+  // start: never, however small (the opening must not need the transcoder).
+  assert.equal(prefersKtx2({ ktx2Bytes: 1, webpBytes: 100, inStart: true }), false);
+  assert.equal(prefersKtx2({ ktx2Bytes: 99, webpBytes: 100, inStart: true }), false);
   assert.equal(prefersKtx2({ ktx2Bytes: 100, webpBytes: 100, inStart: true }), false);
   // later groups: up to 1.25 x the WebP.
   assert.equal(prefersKtx2({ ktx2Bytes: 125, webpBytes: 100, inStart: false }), true);
@@ -365,6 +366,24 @@ test("every texture in the exported GLBs is WebP, KTX2 or kept by KEEP_WEBP", as
     }
   }
   assert.ok(ktx2 > 0, "no GLB texture uses KTX2");
+});
+
+// Final review, Important 1a: the opening never waits for the Basis transcoder.
+test("the start group uses no KTX2: its GLBs (every variant, lod1 and lite) and media stay WebP", () => {
+  const manifest = JSON.parse(read("out/models/load-manifest.json"));
+  const start = loadGroups.find(g => g.id === "start");
+  const files = [...new Set([...start.assets, ...Object.values(start.variants ?? {}).flat()])];
+  for (const p of files.filter(f => f.endsWith(".glb"))) {
+    for (const variant of [outFile(p), outFile(sibling(p, "lod1")), outFile(sibling(p, "lite"))].filter(existsSync)) {
+      const json = glbJson(variant);
+      assert.ok(!json.extensionsUsed?.includes("KHR_texture_basisu"), `${variant} uses KTX2`);
+      for (const image of json.images ?? []) assert.ok(image.mimeType !== "image/ktx2" && !image.uri?.endsWith(".ktx2"), `${variant}: ${image.name ?? image.uri} is KTX2`);
+    }
+  }
+  for (const p of files.filter(f => f.endsWith(".webp"))) {
+    assert.ok(!manifest.ktx2Media.includes(p.replace(/\.webp$/, ".ktx2")), `${p} is listed in ktx2Media`);
+  }
+  assert.ok(!usesKtx2(transferFiles(start.assets, manifest.ktx2Media)), "start transfers a KTX2 file");
 });
 
 test("only the venue's load-group GLBs (and their lod1) use KTX2: other pages have no KTX2 loader", () => {

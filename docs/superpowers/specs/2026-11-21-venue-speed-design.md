@@ -167,8 +167,10 @@ Four workstreams, in this order. Each ships separately behind measurement.
   WebP, resized to the size they're drawn at, and loaded with their zone's
   group. *(Builder-check call: moving the painters onto the GPU is a large,
   look-sensitive job; it is out of scope.)*
-- **Bytes rule** *(my call)*: group 0 uses whichever encoding is smaller per
-  texture, so KTX2 never makes the first download bigger. Later groups may
+- **Bytes rule** *(my call; group 0 changed by the final review)*: group 0
+  never uses KTX2, so the opening never needs the Basis transcoder (0.58 MB,
+  WebAssembly in a worker) and opens where WebAssembly is off or a
+  transcoder fetch fails. Later groups may
   use KTX2 even when it's up to ~25% larger than the WebP, because those
   bytes arrive in the background and KTX2 removes the decode-and-upload
   hitches.

@@ -5,7 +5,10 @@
 // of each texture's original bytes, and swaps a cached KTX2 in only when it
 // pays for itself in bytes against the WebP the build would ship otherwise:
 //
-// - in the start group, only when the KTX2 is smaller than that WebP;
+// - in the start group, never: the opening must not depend on the Basis
+//   transcoder (0.58 MB of /basis/ files, WebAssembly in a worker), so the
+//   venue opens where WebAssembly is off (iOS Lockdown Mode, locked-down
+//   Edge) or a transcoder fetch fails (final review, Important 1a);
 // - in a later group, when it is at most 1.25 x that WebP (KTX2 needs no
 //   decode on the main thread and is 4-8 x smaller in video memory).
 // A texture used by start and by a later group follows the start rule.
@@ -28,9 +31,9 @@ import { PLAIN_LOADER_MEDIA, keepsWebP, ktx2File, mediaKey, readIndex, sha256 } 
 
 export const KTX2_LATER_RATIO = 1.25;
 
-/** The bytes rule: does a KTX2 of `ktx2Bytes` replace a WebP of `webpBytes`? */
+/** The bytes rule: does a KTX2 of `ktx2Bytes` replace a WebP of `webpBytes`? Never in the start group. */
 export function prefersKtx2({ ktx2Bytes, webpBytes, inStart }) {
-  return inStart ? ktx2Bytes < webpBytes : ktx2Bytes <= KTX2_LATER_RATIO * webpBytes;
+  return !inStart && ktx2Bytes <= KTX2_LATER_RATIO * webpBytes;
 }
 
 /** The rule for a texture used by these groups: start's whenever start uses it. */
