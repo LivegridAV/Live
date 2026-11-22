@@ -20,6 +20,8 @@ export function groupsBeforeOpening(input: {
 }): string[] {
   const { bytesPerSecond, groups, startZ, paceMps = WALK_PACE_MPS, marginS = SAFETY_MARGIN_S } = input;
   if (groups.length === 0) return [];
+  // No usable bandwidth estimate: load everything before opening.
+  if (!(bytesPerSecond > 0)) return groups.map(g => g.id);
   // The first group is always loaded before opening.
   let loadedThrough = 0;
   // Downloads after opening run sequentially, starting with the group after

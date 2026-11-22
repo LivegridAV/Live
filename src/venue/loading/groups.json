@@ -20,7 +20,19 @@
       "/media/reception/ribbon-reference-art-v1.webp",
       "/media/reception/counter-reference-art-v2.webp",
       "/media/reception/panorama-reference-art-v1.webp"
-    ]
+    ],
+    "variants": {
+      "mobile": [
+        "/media/pillars/ribbon-wrap-mobile.webp",
+        "/media/pillars/forest-wrap-mobile.webp",
+        "/media/pillars/alpine-wrap-mobile.webp"
+      ]
+    },
+    "replaces": {
+      "/media/pillars/ribbon-wrap-mobile.webp": "/media/pillars/ribbon-wrap.webp",
+      "/media/pillars/forest-wrap-mobile.webp": "/media/pillars/forest-wrap.webp",
+      "/media/pillars/alpine-wrap-mobile.webp": "/media/pillars/alpine-wrap.webp"
+    }
   },
   {
     "id": "rental",
@@ -53,7 +65,15 @@
       "/media/anamorphic-stall/content-portrait-v1.webp",
       "/media/anamorphic-stall/blue-silver-fluid-v1.webp",
       "/media/anamorphic-stall/forest-wrap.webp"
-    ]
+    ],
+    "variants": {
+      "mobile": [
+        "/media/anamorphic-stall/forest-wrap-mobile.webp"
+      ]
+    },
+    "replaces": {
+      "/media/anamorphic-stall/forest-wrap-mobile.webp": "/media/anamorphic-stall/forest-wrap.webp"
+    }
   },
   {
     "id": "technical",
@@ -100,6 +120,11 @@
       "/models/expo/flagship-stage.glb",
       "/media/final/creative-world.webp",
       "/media/final/stage-conference.webp"
-    ]
+    ],
+    "variants": {
+      "festival": [
+        "/media/final/stage-social.webp"
+      ]
+    }
   }
 ]

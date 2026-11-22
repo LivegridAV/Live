@@ -1,8 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
-import { LOAD_GROUPS, START_GROUP, groupForZ } from "../src/venue/loading/groups.ts";
+import { LOAD_GROUPS, START_GROUP, assetsFor, groupForZ } from "../src/venue/loading/groups.ts";
 import { groupsBeforeOpening, nextToFetch, WALK_PACE_MPS, SAFETY_MARGIN_S } from "../src/venue/loading/plan.ts";
 
 const GROUPS = [
@@ -108,4 +108,66 @@ test("stall switch-on z follows the zone gates (from + ahead)", async () => {
     // Rounded toward +z (switching on marginally early) to two decimals.
     assert.ok(group.switchOnZ >= z && group.switchOnZ - z < 0.01, `${id}: ${group.switchOnZ} vs ${z}`);
   }
+});
+
+test("no usable bandwidth estimate loads every group before opening", () => {
+  for (const bytesPerSecond of [0, -1, NaN]) {
+    assert.deepEqual(groupsBeforeOpening({ bytesPerSecond, groups: GROUPS, startZ: 21 }), ["start", "a", "b"], `bytesPerSecond ${bytesPerSecond}`);
+  }
+});
+
+const variantPaths = group => Object.values(group.variants ?? {}).flat();
+
+test("every variant exists under public/ and every replacement names a base asset", () => {
+  for (const group of LOAD_GROUPS) {
+    const variants = variantPaths(group);
+    for (const asset of variants) {
+      assert.match(asset, /^\/(models|media)\/[^?#]+\.(glb|webp|jpg|png)$/, `${asset} is a public path without a query`);
+      assert.ok(existsSync(path.join("public", asset)), `${asset} exists under public/`);
+    }
+    for (const [variant, base] of Object.entries(group.replaces ?? {})) {
+      assert.ok(variants.includes(variant), `${group.id}: replacing ${variant} is a variant`);
+      assert.ok(group.assets.includes(base), `${group.id}: replaced ${base} is a base asset`);
+    }
+  }
+});
+
+test("assetsFor swaps the mobile pillar wraps in for the desktop ones", () => {
+  const group = LOAD_GROUPS.find(g => g.assets.includes("/media/pillars/ribbon-wrap.webp"));
+  assert.ok(group, "a group holds the pillar wraps");
+  const desktop = assetsFor(group, new Set());
+  assert.deepEqual(desktop, [...group.assets]);
+  const mobile = assetsFor(group, new Set(["mobile"]));
+  for (const wrap of ["ribbon", "forest", "alpine"]) {
+    assert.ok(mobile.includes(`/media/pillars/${wrap}-wrap-mobile.webp`), `${wrap} mobile wrap`);
+    assert.ok(!mobile.includes(`/media/pillars/${wrap}-wrap.webp`), `${wrap} desktop wrap dropped`);
+  }
+  assert.ok(mobile.includes("/models/entrance/entrance-refined.glb"), "unreplaced base assets stay");
+  const arena = LOAD_GROUPS.find(g => g.id === "arena");
+  const festival = assetsFor(arena, new Set(["festival"]));
+  assert.ok(festival.includes("/media/final/stage-social.webp") && festival.includes("/media/final/stage-conference.webp"),
+    "festival adds its stage package beside the default one");
+});
+
+/** Files under src/venue that are never mounted by Scene, with the reason. */
+const UNMOUNTED = {
+  "src/venue/zones/Tunnel.tsx": "Tunnel (and the ImmersiveVolume it renders) is not mounted by Scene.tsx or any zone",
+  "src/venue/three/TechnicalContactShadow.tsx": "TechnicalContactShadow is never rendered; ReferenceTechnical uses ProjectionContactShadow",
+};
+
+test("every /media and .glb literal the mounted venue references is in exactly one group", () => {
+  const sources = dir => readdirSync(dir, { withFileTypes: true }).flatMap(e =>
+    e.isDirectory() ? sources(path.join(dir, e.name)) : /\.(ts|tsx)$/.test(e.name) ? [path.join(dir, e.name).replaceAll("\\", "/")] : []);
+  const referenced = new Set();
+  for (const file of sources("src/venue")) {
+    if (file.startsWith("src/venue/loading/") || UNMOUNTED[file]) continue;
+    const code = readFileSync(file, "utf8");
+    for (const [, url] of code.matchAll(/["'`](\/(?:media|models)\/[^"'`?#$]+\.(?:webp|jpg|jpeg|png|glb))/g)) referenced.add(url);
+    for (const [, name] of code.matchAll(/(?:<ExpoAsset\s+name=|expoAssetUrl\()["']([^"']+)["']/g)) referenced.add(`/models/expo/${name}.glb`);
+  }
+  const listed = LOAD_GROUPS.flatMap(g => [...g.assets, ...variantPaths(g)]);
+  assert.equal(new Set(listed).size, listed.length, "no asset is listed twice across assets and variants");
+  const missing = [...referenced].filter(url => !listed.includes(url));
+  assert.deepEqual(missing, [], "referenced but not in any group");
+  assert.ok(referenced.size >= 40, `scan found ${referenced.size} literals`);
 });
