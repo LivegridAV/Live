@@ -482,3 +482,14 @@ test("cloned venue textures never re-upload their shared image, and the deck is 
   assert.match(floor, /\}, \[resolution, polygonXZ,\s*tint\]\);/, "the deck's target and material do not depend on the stone maps");
   assert.match(floor, /material\.map = stone\.colour/, "the stone maps are swapped on the existing material");
 });
+
+// Final review, Important 3: Cloudflare Pages builds with the .nvmrc version,
+// and optimize-export needs Node's built-in type stripping (>= 22.18).
+test("the build's Node version is pinned exactly and meets the engines floor", () => {
+  const pin = read(".nvmrc").trim();
+  assert.match(pin, /^\d+\.\d+\.\d+$/, `.nvmrc "${pin}" is not an exact version`);
+  assert.equal(JSON.parse(read("package.json")).engines?.node, ">=22.18");
+  const [major, minor] = pin.split(".").map(Number);
+  assert.ok(major > 22 || (major === 22 && minor >= 18), `.nvmrc ${pin} is older than 22.18`);
+  assert.match(read("scripts/optimize-export.mjs"), /needs Node >= 22\.18[^\n]*process\.version/, "the guard names the requirement and the running version");
+});

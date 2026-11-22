@@ -66,7 +66,7 @@ const dryRun = args.has("--dry-run");
 const compress = !args.has("--no-compress");
 
 // groups.ts is imported as TypeScript, which needs Node's built-in type stripping.
-if (!process.features.typescript) throw new Error("optimize-export needs Node >= 22.18 (built-in TypeScript support) to read src/venue/loading/groups.ts.");
+if (!process.features.typescript) throw new Error(`optimize-export needs Node >= 22.18 (built-in TypeScript type stripping) to read src/venue/loading/groups.ts; this is Node ${process.version}. Use the version in .nvmrc (package.json engines: node >= 22.18).`);
 if (!existsSync(OUT)) throw new Error("out/ not found — run `next build` first.");
 
 function walk(directory, files = []) {

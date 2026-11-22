@@ -2,6 +2,9 @@
   "name": "livegridav-site",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=22.18"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build && node scripts/prepare-export.mjs && node scripts/optimize-export.mjs",
