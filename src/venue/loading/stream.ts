@@ -1,4 +1,5 @@
 import { useGLTF, useProgress } from "@react-three/drei";
+import type * as THREE from "three";
 import { LOAD_GROUPS, START_GROUP, assetsFor, groupForZ } from "./groups";
 import { startStreaming, type FetchSample, type LoadManifest, type StreamHandle } from "./streamer";
 import { mediaRequests, modelRequest, pathOf } from "./assetUrls";
@@ -7,6 +8,7 @@ import { settleManifest } from "./manifest";
 import { variantPath, type ModelVariant } from "./modelVariants";
 import { streamedVariant } from "./useModelUrl";
 import { useVenue } from "../systems/store";
+import { gltfExtender, ktx2Sibling, loadVenueTexture } from "../three/textureLoading";
 
 /**
  * Browser glue for the streamer: what "fetching a group" means in the venue,
@@ -16,6 +18,8 @@ import { useVenue } from "../systems/store";
 export const MANIFEST_URL = "/models/load-manifest.json";
 
 let handle: StreamHandle | null = null;
+/** The venue's renderer: KTX2 transcoding needs it (one shared KTX2Loader). */
+let renderer: THREE.WebGLRenderer | null = null;
 let manifest: LoadManifest | null = null;
 const failed = new Set<string>();
 const perf = () => typeof location !== "undefined" && new URLSearchParams(location.search).has("perf");
@@ -49,15 +53,17 @@ const isThenable = (value: unknown): value is PromiseLike<unknown> =>
 // over a [GLTFLoader, url] key (R3F 9.6): it holds no React hook state. Called
 // outside a component it returns the parsed model, throws the in-flight
 // promise, or throws the cached load error. That is how completion is detected:
-// the same loader, the same cache entry the component will read.
+// the same loader, the same cache entry the component will read, configured
+// by the same extender (KTX2) the components pass.
 const readGLTF = useGLTF;
 
 /** Load `path` (a groups.json GLB) as the variant the mounted component will ask for. */
 async function loadModel(path: string, owned: boolean, variant: ModelVariant = streamedVariant(path)) {
   const { url, useDraco } = modelRequest(path, variant);
+  if (!renderer) throw new Error("venue streaming has no renderer");
   for (;;) {
     try {
-      readGLTF(url, useDraco);
+      readGLTF(url, useDraco, true, gltfExtender(renderer));
       return;
     } catch (thrown) {
       if (isThenable(thrown)) { await thrown; continue; }
@@ -105,9 +111,16 @@ async function fetchGroup(id: string) {
     await loadersIdle();
     return;
   }
-  const images = paths.filter(path => !path.endsWith(".glb")).flatMap(mediaRequests);
-  await Promise.all([...models.map(path => loadModel(path, true)), ...images.map(loadImage)]);
+  // A plain-loader texture with a KTX2 sibling is fetched (and transcoded)
+  // through the loader its component uses; everything else is an image.
+  const media = paths.filter(path => !path.endsWith(".glb"));
+  const ktx2 = media.filter(hasKtx2);
+  const images = media.filter(path => !hasKtx2(path)).flatMap(mediaRequests);
+  await Promise.all([...models.map(path => loadModel(path, true)), ...images.map(loadImage),
+    ...ktx2.map(path => loadVenueTexture(path, renderer!))]);
 }
+
+const hasKtx2 = (path: string) => !!manifest?.ktx2Media?.includes(ktx2Sibling(path));
 
 const sourceOfLite = (path: string) => path.replace(/\.lite\.glb$/i, ".glb");
 
@@ -119,12 +132,13 @@ function ownFiles(ids: readonly string[]) {
     for (const path of [...group.assets, ...Object.values(group.variants ?? {}).flat()]) {
       files.add(path);
       if (path.endsWith(".glb")) files.add(variantPath(path, "lod1"));
+      if (path.endsWith(".webp")) files.add(ktx2Sibling(path));
     }
   }
   return files;
 }
 
-const STREAMED = /^\/(models|media|textures)\//;
+const STREAMED = /^\/(models|media|textures|basis)\//;
 const entryPath = (entry: PerformanceEntry) => { try { return new URL(entry.name).pathname; } catch { return entry.name; } };
 
 /**
@@ -146,9 +160,10 @@ function measure(id: string): FetchSample | undefined {
   return { bytes, startMs, endMs };
 }
 
-/** Start streaming for a mounted venue. Returns the stop function for effect cleanup. */
-export function startVenueStreaming() {
+/** Start streaming for a mounted venue (on its renderer). Returns the stop function for effect cleanup. */
+export function startVenueStreaming(gl: THREE.WebGLRenderer) {
   handle?.stop();
+  renderer = gl;
   manifest = null;
   failed.clear();
   liteFor = null;
@@ -249,7 +264,7 @@ export function downloadedBytes(ids: readonly string[]) {
   if (typeof performance === "undefined") return 0;
   const own = ownFiles(ids);
   return (performance.getEntriesByType("resource") as PerformanceResourceTiming[])
-    .filter(entry => { const p = pathOf(entryPath(entry)); return own.has(p) || p.startsWith("/textures/"); })
+    .filter(entry => { const p = pathOf(entryPath(entry)); return own.has(p) || p.startsWith("/textures/") || p.startsWith("/basis/"); })
     .reduce((sum, entry) => sum + (entry.transferSize || entry.encodedBodySize || 0), 0);
 }
 

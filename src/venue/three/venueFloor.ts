@@ -1,4 +1,7 @@
+import { useEffect, useState } from "react";
+import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import { isCompressed, loadVenueTexture, placeholderTexture } from "./textureLoading";
 
 /** One public floor in world metres. Selection never changes its finish. */
 export const VENUE_FLOOR = Object.freeze({
@@ -6,34 +9,50 @@ export const VENUE_FLOOR = Object.freeze({
   textureMetres: 4, colour: "#858b90",
 });
 
-let maps: ReturnType<typeof createMaps> | undefined;
-function createMaps() {
-  const texture = (file:string, placeholderColour:string, colour=false) => {
-    // Texture.copy marks an image-less pending loader result for upload. Own
-    // the load instead: a valid temporary image is present on the first draw,
-    // then TextureLoader replaces it and updates this same texture identity.
-    const placeholder=document.createElement("canvas");placeholder.width=placeholder.height=1;
-    const context=placeholder.getContext("2d");
-    if(context){context.fillStyle=placeholderColour;context.fillRect(0,0,1,1);}
-    const result:THREE.Texture=new THREE.TextureLoader().load(`/media/technical-showcase/materials/${file}`,loaded=>{
-      // r185 allocates immutable texture storage. Release any uploaded 1px
-      // allocation before the decoded image is uploaded at its real size.
-      loaded.dispose();loaded.needsUpdate=true;
-    });
-    result.image=placeholder;
-    result.name=`Continuous venue stone / ${file}`;
-    result.colorSpace=colour?THREE.SRGBColorSpace:THREE.NoColorSpace;
+export type VenueFloorMaps = { map: THREE.Texture; roughnessMap: THREE.Texture; normalMap: THREE.Texture };
+
+/** Shown until the stone files have loaded: plain stone, ORM roughness, a flat normal. */
+const PLACEHOLDERS: VenueFloorMaps = {
+  map: placeholderTexture("#858b90"), roughnessMap: placeholderTexture("#ffb400"), normalMap: placeholderTexture("#8080ff"),
+};
+
+function stoneTexture(gl: THREE.WebGLRenderer, file: string, colour: boolean) {
+  // The KTX2 sibling when the build made one, else the WebP (textureLoading).
+  return loadVenueTexture(`/media/technical-showcase/materials/${file}`, gl).then(result => {
+    result.name = `Continuous venue stone / ${file}`;
+    result.colorSpace = colour ? THREE.SRGBColorSpace : THREE.NoColorSpace;
     result.repeat.set(1, 1); result.offset.set(0, 0); result.rotation = 0;
     result.wrapS = result.wrapT = THREE.RepeatWrapping;
-    result.magFilter=THREE.LinearFilter;result.minFilter=THREE.LinearMipmapLinearFilter;
-    result.generateMipmaps=true;
+    result.magFilter = THREE.LinearFilter; result.minFilter = THREE.LinearMipmapLinearFilter;
+    // A KTX2 file carries its own mip chain; three cannot generate one for it.
+    result.generateMipmaps = !isCompressed(result);
     result.anisotropy = 8; result.needsUpdate = true;
     return result;
-  };
-  return {
-    map:texture("floor-color.webp","#858b90",true),
-    roughnessMap:texture("floor-orm.webp","#ffb400"),
-    normalMap:texture("floor-normal.webp","#8080ff"),
-  };
+  });
 }
-export function venueFloorMaps() { return maps ??= createMaps(); }
+
+let loaded: VenueFloorMaps | null = null;
+let loading: Promise<VenueFloorMaps> | null = null;
+function loadMaps(gl: THREE.WebGLRenderer) {
+  return loading ??= Promise.all([
+    stoneTexture(gl, "floor-color.webp", true),
+    stoneTexture(gl, "floor-orm.webp", false),
+    stoneTexture(gl, "floor-normal.webp", false),
+  ]).then(([map, roughnessMap, normalMap]) => loaded = { map, roughnessMap, normalMap });
+}
+
+/**
+ * The venue stone's maps: placeholders on the first frames, then the loaded
+ * files (one set shared by every floor mesh). Changing a map that was already
+ * set keeps the material's shader program.
+ */
+export function useVenueFloorMaps(): VenueFloorMaps {
+  const gl = useThree(state => state.gl);
+  const [maps, setMaps] = useState(() => loaded ?? PLACEHOLDERS);
+  useEffect(() => {
+    let live = true;
+    loadMaps(gl).then(result => { if (live) setMaps(result); }, error => console.warn("[venue] floor stone failed to load", error));
+    return () => { live = false; };
+  }, [gl]);
+  return maps;
+}

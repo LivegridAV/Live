@@ -2,13 +2,14 @@
 //
 // - `<name>.lite.glb` for every GLB of a non-start load group: the light pack
 //   a zone shows until its full group is warm. Triangles simplified to 15 %
-//   (error 0.02), every texture shrunk to at most 128 px and embedded, morph
+//   (error 0.02), every texture shrunk to at most 128 px and embedded (a KTX2
+//   texture from the WebP it replaced, so lite files stay WebP), morph
 //   targets and skins dropped. Fetched right after opening, only for the
 //   groups the opening plan leaves to stream in later.
 // - `<name>.lod1.glb` for every `*-visitors.glb` and the projection interior:
 //   simplified to 40 % (error 0.01) for the medium and low quality tiers.
-//   Textures are unchanged, and shared `/textures/` files stay shared, so a
-//   lod1 costs only its geometry.
+//   Textures are unchanged (KTX2 included), and shared `/textures/` files
+//   stay shared, so a lod1 costs only its geometry.
 //
 // Node names and the node hierarchy are kept (simplify only rewrites
 // primitives), so the venue places a derived model exactly like its source.
@@ -16,7 +17,7 @@
 import { readFileSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { Logger, PropertyType } from "@gltf-transform/core";
-import { EXTMeshoptCompression } from "@gltf-transform/extensions";
+import { EXTMeshoptCompression, EXTTextureWebP } from "@gltf-transform/extensions";
 import { prune, reorder, simplify, weld } from "@gltf-transform/functions";
 import { MeshoptEncoder, MeshoptSimplifier } from "meshoptimizer";
 import sharp from "sharp";
@@ -60,11 +61,21 @@ function dropMorphAndSkin(document) {
   }
 }
 
-/** Shrink every embedded texture to fit `max` px, in its own format. */
-async function shrinkTextures(document, max) {
+/**
+ * Shrink every embedded texture to fit `max` px, in its own format. A KTX2
+ * texture is shrunk from the WebP it replaced (`liteSource`), so the light
+ * pack never needs the Basis transcoder.
+ */
+async function shrinkTextures(document, max, liteSource) {
   for (const texture of document.getRoot().listTextures()) {
-    const image = texture.getImage();
+    let image = texture.getImage();
     if (!image) continue;
+    if (texture.getMimeType() === "image/ktx2") {
+      const source = liteSource?.(image);
+      if (!source) throw new Error(`lite: no WebP source for KTX2 texture "${texture.getName()}"`);
+      texture.setImage(source.image).setMimeType(source.mimeType);
+      image = source.image;
+    }
     const resized = sharp(Buffer.from(image)).resize(max, max, { fit: "inside", withoutEnlargement: true });
     const mime = texture.getMimeType();
     const encoded = mime === "image/webp" ? resized.webp({ quality: 80, alphaQuality: 90, effort: 4 })
@@ -158,11 +169,14 @@ function snapAttributes(document) {
 }
 
 /** Make a lite document from a source document (in place). */
-export async function makeLite(document) {
+export async function makeLite(document, liteSource) {
   dropMorphAndSkin(document);
   await simplifyDocument(document, LITE);
   snapAttributes(document);
-  await shrinkTextures(document, LITE.maxTexture);
+  await shrinkTextures(document, LITE.maxTexture, liteSource);
+  const root = document.getRoot();
+  for (const extension of root.listExtensionsUsed()) if (extension.extensionName === "KHR_texture_basisu") extension.dispose();
+  if (root.listTextures().some(texture => texture.getMimeType() === "image/webp")) document.createExtension(EXTTextureWebP).setRequired(true);
 }
 
 /** Make a lod1 document from a source document (in place). */
@@ -173,9 +187,10 @@ export async function makeLod1(document) {
 /**
  * Write every derived model for the load groups into `outDir`.
  * Returns the public paths of the lite files per group, the lod1 paths, and
- * a per-file report.
+ * a per-file report. `liteSource(ktx2Bytes)` returns the WebP image a KTX2
+ * texture replaced ({ image, mimeType }), for the light pack.
  */
-export async function writeDerivedModels({ io, outDir, groups, startId, compress = true, dryRun = false }) {
+export async function writeDerivedModels({ io, outDir, groups, startId, compress = true, dryRun = false, liteSource }) {
   const lite = Object.fromEntries(groups.map(group => [group.id, []]));
   const lod1 = [], files = [];
   const glbsOf = group => [...new Set([...group.assets, ...Object.values(group.variants ?? {}).flat()])].filter(p => p.toLowerCase().endsWith(".glb"));
@@ -188,7 +203,7 @@ export async function writeDerivedModels({ io, outDir, groups, startId, compress
     const source = path.join(outDir, job.asset);
     const document = (await io.read(source)).setLogger(new Logger(Logger.Verbosity.WARN));
     const before = triangleCount(document);
-    if (job.kind === "lite") await makeLite(document); else await makeLod1(document);
+    if (job.kind === "lite") await makeLite(document, liteSource); else await makeLod1(document);
     const output = await writeCompressed(io, document, source, { compress, keepExternal: job.kind === "lod1" });
     const target = job.kind === "lite" ? litePath(job.asset) : lod1Path(job.asset);
     if (!dryRun) writeFileSync(path.join(outDir, target), output);

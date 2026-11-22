@@ -1,0 +1,3 @@
+# Byte-exact copies: the Basis transcoder (checked against three's copy) and the KTX2 cache.
+public/basis/** -text
+assets-cache/** -text

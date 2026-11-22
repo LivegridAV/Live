@@ -4,14 +4,15 @@ import { useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { afterWarmup } from "./warmScene";
+import { gltfExtender } from "./textureLoading";
 import { HorizontalBlurShader } from "three/examples/jsm/shaders/HorizontalBlurShader.js";
 import { VerticalBlurShader } from "three/examples/jsm/shaders/VerticalBlurShader.js";
 
 /** Static, geometry-derived contact occlusion. A separate capture scene keeps
  * the result independent of the camera's distance-gated venue visibility. */
 export function TechnicalContactShadow() {
-  const { scene: source } = useGLTF("/models/expo/technical-showcase.glb", false);
   const { gl } = useThree();
+  const { scene: source } = useGLTF("/models/expo/technical-showcase.glb", false, true, gltfExtender(gl));
   const target = useMemo(() => new THREE.WebGLRenderTarget(1024, 1024, {
     minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, depthBuffer: true,
   }), []);

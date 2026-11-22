@@ -7,11 +7,14 @@ import { entranceUniforms, finishEntranceMaterial } from "../three/entranceF01";
 import { createEntranceWater, captureEntranceWater } from "../three/entranceReflection";
 import { createEntranceClock, advanceEntranceClock, useEntranceFinishes } from "../systems/entranceFinishes";
 import { LocalPointLight } from "../three/LocalLights";
+import { gltfExtender } from "../three/textureLoading";
 
 /** P01 local +Y maps to world -Z. Landing Y14 meets the existing -28.4 m ramp. */
 export function EntranceP01() {
   const worldScene=useThree(s=>s.scene);
-  const { scene } = useGLTF("/models/entrance/entrance-refined.glb");
+  const gl=useThree(s=>s.gl);
+  // drei's default flags (Draco on), as the streamer's modelRequest expects.
+  const { scene } = useGLTF("/models/entrance/entrance-refined.glb", true, true, gltfExtender(gl));
   const finish = useMemo(() => {
     const copy = scene.clone(true);
     const uniforms=entranceUniforms(),water=createEntranceWater(uniforms),waterMeshes:THREE.Mesh[]=[];

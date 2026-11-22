@@ -1,0 +1,401 @@
+{
+ "label": "t6",
+ "throttle": "fast4g",
+ "bytesBeforeOpen": 71849747,
+ "msToOpen": 70521,
+ "requestsBeforeOpen": 138,
+ "walk": [
+  {
+   "progress": 0,
+   "callsMin": 1239,
+   "callsMax": 1849,
+   "trianglesMin": 5137541,
+   "trianglesMax": 7683899
+  },
+  {
+   "progress": 0.02,
+   "callsMin": 1239,
+   "callsMax": 1849,
+   "trianglesMin": 5137541,
+   "trianglesMax": 7683899
+  },
+  {
+   "progress": 0.04,
+   "callsMin": 1239,
+   "callsMax": 1849,
+   "trianglesMin": 5137541,
+   "trianglesMax": 7683899
+  },
+  {
+   "progress": 0.06,
+   "callsMin": 1239,
+   "callsMax": 1849,
+   "trianglesMin": 5137541,
+   "trianglesMax": 7683899
+  },
+  {
+   "progress": 0.08,
+   "callsMin": 1239,
+   "callsMax": 1849,
+   "trianglesMin": 5137541,
+   "trianglesMax": 7683899
+  },
+  {
+   "progress": 0.1,
+   "callsMin": 1719,
+   "callsMax": 2569,
+   "trianglesMin": 6077605,
+   "trianglesMax": 9093995
+  },
+  {
+   "progress": 0.12,
+   "callsMin": 1719,
+   "callsMax": 2569,
+   "trianglesMin": 6077605,
+   "trianglesMax": 9093995
+  },
+  {
+   "progress": 0.14,
+   "callsMin": 1715,
+   "callsMax": 2567,
+   "trianglesMin": 6068205,
+   "trianglesMax": 9091363
+  },
+  {
+   "progress": 0.16,
+   "callsMin": 1705,
+   "callsMax": 1707,
+   "trianglesMin": 6062197,
+   "trianglesMax": 6067365
+  },
+  {
+   "progress": 0.18,
+   "callsMin": 2675,
+   "callsMax": 2675,
+   "trianglesMin": 8926305,
+   "trianglesMax": 8926305
+  },
+  {
+   "progress": 0.2,
+   "callsMin": 3087,
+   "callsMax": 3093,
+   "trianglesMin": 10483269,
+   "trianglesMax": 10503901
+  },
+  {
+   "progress": 0.22,
+   "callsMin": 3051,
+   "callsMax": 3059,
+   "trianglesMin": 10408413,
+   "trianglesMax": 10441389
+  },
+  {
+   "progress": 0.24,
+   "callsMin": 3041,
+   "callsMax": 3045,
+   "trianglesMin": 10384517,
+   "trianglesMax": 10395065
+  },
+  {
+   "progress": 0.26,
+   "callsMin": 3011,
+   "callsMax": 3013,
+   "trianglesMin": 10367529,
+   "trianglesMax": 10367549
+  },
+  {
+   "progress": 0.28,
+   "callsMin": 2989,
+   "callsMax": 2993,
+   "trianglesMin": 9613037,
+   "trianglesMax": 9636885
+  },
+  {
+   "progress": 0.3,
+   "callsMin": 2950,
+   "callsMax": 3194,
+   "trianglesMin": 9142307,
+   "trianglesMax": 10333217
+  },
+  {
+   "progress": 0.32,
+   "callsMin": 2833,
+   "callsMax": 2871,
+   "trianglesMin": 8107805,
+   "trianglesMax": 8177501
+  },
+  {
+   "progress": 0.34,
+   "callsMin": 2768,
+   "callsMax": 2794,
+   "trianglesMin": 7648823,
+   "trianglesMax": 7821035
+  },
+  {
+   "progress": 0.36,
+   "callsMin": 2708,
+   "callsMax": 2720,
+   "trianglesMin": 7517593,
+   "trianglesMax": 7545543
+  },
+  {
+   "progress": 0.38,
+   "callsMin": 2636,
+   "callsMax": 2664,
+   "trianglesMin": 7325591,
+   "trianglesMax": 7401133
+  },
+  {
+   "progress": 0.4,
+   "callsMin": 2454,
+   "callsMax": 2468,
+   "trianglesMin": 6742691,
+   "trianglesMax": 6816523
+  },
+  {
+   "progress": 0.42,
+   "callsMin": 2286,
+   "callsMax": 2456,
+   "trianglesMin": 6685486,
+   "trianglesMax": 6919554
+  },
+  {
+   "progress": 0.44,
+   "callsMin": 1725,
+   "callsMax": 1903,
+   "trianglesMin": 4974474,
+   "trianglesMax": 5336512
+  },
+  {
+   "progress": 0.46,
+   "callsMin": 668,
+   "callsMax": 797,
+   "trianglesMin": 3322974,
+   "trianglesMax": 3597404
+  },
+  {
+   "progress": 0.48,
+   "callsMin": 578,
+   "callsMax": 580,
+   "trianglesMin": 1885460,
+   "trianglesMax": 2423890
+  },
+  {
+   "progress": 0.5,
+   "callsMin": 799,
+   "callsMax": 999,
+   "trianglesMin": 3597324,
+   "trianglesMax": 3953260
+  },
+  {
+   "progress": 0.52,
+   "callsMin": 1095,
+   "callsMax": 2070,
+   "trianglesMin": 4134576,
+   "trianglesMax": 7979513
+  },
+  {
+   "progress": 0.54,
+   "callsMin": 817,
+   "callsMax": 882,
+   "trianglesMin": 3215772,
+   "trianglesMax": 3302973
+  },
+  {
+   "progress": 0.56,
+   "callsMin": 644,
+   "callsMax": 650,
+   "trianglesMin": 2138265,
+   "trianglesMax": 2181227
+  },
+  {
+   "progress": 0.58,
+   "callsMin": 639,
+   "callsMax": 655,
+   "trianglesMin": 2151297,
+   "trianglesMax": 3025422
+  },
+  {
+   "progress": 0.6,
+   "callsMin": 619,
+   "callsMax": 700,
+   "trianglesMin": 3048980,
+   "trianglesMax": 3286886
+  },
+  {
+   "progress": 0.62,
+   "callsMin": 957,
+   "callsMax": 1402,
+   "trianglesMin": 4608454,
+   "trianglesMax": 6928342
+  },
+  {
+   "progress": 0.64,
+   "callsMin": 931,
+   "callsMax": 1350,
+   "trianglesMin": 4773894,
+   "trianglesMax": 6997072
+  },
+  {
+   "progress": 0.66,
+   "callsMin": 866,
+   "callsMax": 945,
+   "trianglesMin": 4476052,
+   "trianglesMax": 4780528
+  },
+  {
+   "progress": 0.68,
+   "callsMin": 968,
+   "callsMax": 1039,
+   "trianglesMin": 5730765,
+   "trianglesMax": 5872695
+  },
+  {
+   "progress": 0.7,
+   "callsMin": 1025,
+   "callsMax": 1084,
+   "trianglesMin": 5106119,
+   "trianglesMax": 6220123
+  },
+  {
+   "progress": 0.72,
+   "callsMin": 911,
+   "callsMax": 1184,
+   "trianglesMin": 5852563,
+   "trianglesMax": 6936625
+  },
+  {
+   "progress": 0.74,
+   "callsMin": 669,
+   "callsMax": 1101,
+   "trianglesMin": 2265212,
+   "trianglesMax": 5935131
+  },
+  {
+   "progress": 0.76,
+   "callsMin": 1244,
+   "callsMax": 1617,
+   "trianglesMin": 5119292,
+   "trianglesMax": 6757341
+  },
+  {
+   "progress": 0.78,
+   "callsMin": 381,
+   "callsMax": 623,
+   "trianglesMin": 2533695,
+   "trianglesMax": 3027791
+  },
+  {
+   "progress": 0.8,
+   "callsMin": 1508,
+   "callsMax": 1512,
+   "trianglesMin": 1285967,
+   "trianglesMax": 1289167
+  },
+  {
+   "progress": 0.82,
+   "callsMin": 1488,
+   "callsMax": 1501,
+   "trianglesMin": 1202557,
+   "trianglesMax": 1207045
+  },
+  {
+   "progress": 0.84,
+   "callsMin": 1455,
+   "callsMax": 1467,
+   "trianglesMin": 1192335,
+   "trianglesMax": 1193319
+  },
+  {
+   "progress": 0.86,
+   "callsMin": 1402,
+   "callsMax": 1412,
+   "trianglesMin": 1174127,
+   "trianglesMax": 1179017
+  },
+  {
+   "progress": 0.88,
+   "callsMin": 1346,
+   "callsMax": 1373,
+   "trianglesMin": 1168281,
+   "trianglesMax": 1169143
+  },
+  {
+   "progress": 0.9,
+   "callsMin": 1280,
+   "callsMax": 1331,
+   "trianglesMin": 1148523,
+   "trianglesMax": 1164041
+  },
+  {
+   "progress": 0.92,
+   "callsMin": 1118,
+   "callsMax": 1186,
+   "trianglesMin": 1138065,
+   "trianglesMax": 1139761
+  },
+  {
+   "progress": 0.94,
+   "callsMin": 1060,
+   "callsMax": 1061,
+   "trianglesMin": 1119581,
+   "trianglesMax": 1119593
+  },
+  {
+   "progress": 0.96,
+   "callsMin": 1060,
+   "callsMax": 1061,
+   "trianglesMin": 1119591,
+   "trianglesMax": 1119593
+  },
+  {
+   "progress": 0.98,
+   "callsMin": 795,
+   "callsMax": 1039,
+   "trianglesMin": 1095119,
+   "trianglesMax": 1101135
+  },
+  {
+   "progress": 1,
+   "callsMin": 748,
+   "callsMax": 764,
+   "trianglesMin": 1094237,
+   "trianglesMax": 1094573
+  }
+ ],
+ "longTasksAfterOpen": [
+  {
+   "ms": 88,
+   "progress": 0
+  },
+  {
+   "ms": 80,
+   "progress": 0.156
+  },
+  {
+   "ms": 51,
+   "progress": 0.503
+  },
+  {
+   "ms": 70,
+   "progress": 0.503
+  },
+  {
+   "ms": 75,
+   "progress": 0.511
+  },
+  {
+   "ms": 63,
+   "progress": 0.72
+  },
+  {
+   "ms": 74,
+   "progress": 0.72
+  },
+  {
+   "ms": 55,
+   "progress": 0.728
+  }
+ ],
+ "gapFrames": 0
+}

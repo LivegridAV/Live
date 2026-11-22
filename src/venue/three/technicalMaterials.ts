@@ -1,10 +1,18 @@
 import * as THREE from "three";
 import { installationFinishFrame } from "./architecturalFinish";
+import { isCompressed, loadVenueTexture, placeholderTexture } from "./textureLoading";
 
 /** CC0 surface data only. Source/licence records live beside the texture files. */
 const BASE = "/media/technical-showcase/materials/";
 type PackId = "floor" | "steel" | "cast" | "wool";
-type Pack = { map: THREE.Texture; orm: THREE.Texture; normal: THREE.Texture };
+/**
+ * A pack's maps as shader uniforms, shared by every material that uses the
+ * pack: each holds a neutral placeholder until its file (KTX2 or WebP, see
+ * textureLoading) has loaded, then the loaded texture. `ready` resolves with
+ * the loaded textures.
+ */
+type Slot = { value: THREE.Texture };
+type Pack = { map: Slot; orm: Slot; normal: Slot; ready: Promise<{ map: THREE.Texture; orm: THREE.Texture; normal: THREE.Texture }> };
 const packs = new Map<PackId, Pack>();
 const prepared = new WeakSet<THREE.Material>();
 const acrylicMaterials = new WeakMap<THREE.Material,THREE.MeshPhysicalMaterial>();
@@ -28,37 +36,43 @@ function acrylicMaterial(source: THREE.Material) {
   return material;
 }
 
-function texture(file: string, colour = false, repeat: [number, number] = [1,1]) {
-  const t = new THREE.TextureLoader().load(BASE + file);
+async function texture(gl: THREE.WebGLRenderer, file: string, colour = false, repeat: [number, number] = [1,1]) {
+  const t = await loadVenueTexture(BASE + file, gl);
   t.colorSpace = colour ? THREE.SRGBColorSpace : THREE.NoColorSpace;
   t.wrapS = t.wrapT = THREE.RepeatWrapping;
   t.repeat.set(...repeat);
   t.magFilter = THREE.LinearFilter;
   t.minFilter = THREE.LinearMipmapLinearFilter;
-  t.generateMipmaps = true;
+  // A KTX2 file carries its own mip chain; three cannot generate one for it.
+  t.generateMipmaps = !isCompressed(t);
   t.anisotropy = 8;
+  t.needsUpdate = true;
   return t;
 }
-function pack(id: PackId) {
+function pack(id: PackId, gl: THREE.WebGLRenderer) {
   let p = packs.get(id);
   if (!p) {
     const repeat: [number,number] = id === "floor" ? [22,90] : [1,1];
-    p = { map: texture(`${id}-color.webp`,true,repeat), orm: texture(`${id}-orm.webp`,false,repeat), normal: texture(`${id}-normal.webp`,false,repeat) };
+    const slot = (colour: string): Slot => ({ value: placeholderTexture(colour) });
+    const map = slot("#808080"), orm = slot("#ff8000"), normal = slot("#8080ff");
+    const ready = Promise.all([texture(gl,`${id}-color.webp`,true,repeat), texture(gl,`${id}-orm.webp`,false,repeat), texture(gl,`${id}-normal.webp`,false,repeat)])
+      .then(([colour, data, bump]) => { map.value = colour; orm.value = data; normal.value = bump; return { map: colour, orm: data, normal: bump }; });
+    ready.catch(error => console.warn(`[venue] technical ${id} surface failed to load`, error));
+    p = { map, orm, normal, ready };
     packs.set(id,p);
   }
   return p;
 }
 
-let floorSurface: ReturnType<typeof createFloorSurface> | undefined;
-function createFloorSurface() {
-  const p = pack("floor");
-  return { map:p.map, roughnessMap:p.orm, normalMap:p.normal, aoMap:p.orm,
-    colour:p.map, roughness:p.orm, normal:p.normal,
-    /** 4 m clouded slabs across the existing 88 x 360 m reflector. */
+/**
+ * The technical stone floor's maps (loaded once, shared). `ready` resolves
+ * with the colour, roughness (ORM) and normal maps for 4 m clouded slabs
+ * across the existing 88 x 360 m reflector.
+ */
+export function technicalFloorSurface(gl: THREE.WebGLRenderer) {
+  const p = pack("floor", gl);
+  return { ready: p.ready.then(({ map, orm, normal }) => ({ map, roughnessMap: orm, normalMap: normal })),
     repeat:[22,90] as const, recommendedTint:"#5d6470", normalScale:new THREE.Vector2(.08,.08) };
-}
-export function technicalFloorSurface() {
-  return floorSurface ??= createFloorSurface();
 }
 
 type Finish = { id:PackId; scale:number; normal:number; rough:number; colour:number; ao:number };
@@ -93,7 +107,7 @@ const common = /* glsl */ `
  * Call after prepareArchitecture: this deliberately replaces its old noise and
  * glitter shader for these finishes. Shared lights, shadows and IBL stay physical.
  */
-export function applyTechnicalMaterials(model: THREE.Object3D) {
+export function applyTechnicalMaterials(model: THREE.Object3D, gl: THREE.WebGLRenderer) {
   const frame=installationFinishFrame("S3");
   let count=0;
   model.traverse(object => {
@@ -166,12 +180,13 @@ export function applyTechnicalMaterials(model: THREE.Object3D) {
       }
       if(!finish) continue;
       prepared.add(material);count++;
-      const spec=finish, maps=pack(spec.id);
+      const spec=finish, maps=pack(spec.id, gl);
       // Never attach ordinary map slots to UV-less merged geometry. The same
       // texture samples are projected in metres inside the material shader.
       material.onBeforeCompile=shader=>{
         Object.assign(shader.uniforms,{
-          uTechColour:{value:maps.map},uTechOrm:{value:maps.orm},uTechNormal:{value:maps.normal},
+          // The pack's shared slots: they switch to the loaded maps in place.
+          uTechColour:maps.map,uTechOrm:maps.orm,uTechNormal:maps.normal,
           uTechScale:{value:spec.scale},uTechNormalStrength:{value:spec.normal},uTechRoughStrength:{value:spec.rough},
           uTechColourStrength:{value:spec.colour},uTechAoStrength:{value:spec.ao},
           uTechWorldToBaseline:{value:frame.worldToBaseline},

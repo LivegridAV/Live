@@ -9,10 +9,11 @@ import { LiteGroup } from "./LiteGroup";
 
 /** Starts the background streamer for this venue's lifetime. Rendered once in Scene. */
 export function VenueStreaming() {
+  const gl = useThree(state => state.gl);
   useEffect(() => {
     warmedSome.clear();
-    return startVenueStreaming();
-  }, []);
+    return startVenueStreaming(gl);
+  }, [gl]);
   return null;
 }
 

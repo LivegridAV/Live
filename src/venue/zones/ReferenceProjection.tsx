@@ -1,6 +1,6 @@
 "use client";
 import { Suspense, useEffect, useMemo, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { ExpoAsset, expoAssetUrl } from "../three/ExpoAsset";
@@ -17,6 +17,7 @@ import { journey } from "../systems/journey";
 import { preloadProjectionArtwork } from "../media/projectionPainters";
 import { useLiteMode } from "../loading/liteMode";
 import { useModelUrl } from "../loading/useModelUrl";
+import { gltfExtender } from "../three/textureLoading";
 import layout from "../../../public/models/expo/projection-finish-v2-blender-layout.json";
 import sculptureLayout from "../../../public/models/expo/projection-finish-v2-crystals-layout.json";
 
@@ -90,7 +91,8 @@ function MappedSculpture(){
   return url?<MappedSculptureModel url={url}/>:null;
 }
 function MappedSculptureModel({url}:{url:string}){
-  const {scene}=useGLTF(url,false);
+  const gl=useThree(state=>state.gl);
+  const {scene}=useGLTF(url,false,true,gltfExtender(gl));
   const media=useMedia(),entered=useVenue(s=>s.entered);
   const texture=useMemo(()=>media.acquire("projection-crystal-pattern"),[media]);
   const projection=useMemo(()=>{

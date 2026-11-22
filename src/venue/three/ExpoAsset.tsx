@@ -1,7 +1,7 @@
 "use client";
 import { Suspense, useEffect, useMemo } from "react";
 import { useGLTF } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { prepareArchitecture } from "./architecturalFinish";
 import { applyTechnicalMaterials } from "./technicalMaterials";
@@ -16,6 +16,7 @@ import type { InstallationId } from "../data/placements";
 import { refineAvatarSkin } from "./surfaceDetail";
 import { releaseLiteModel, useModelUrl } from "../loading/useModelUrl";
 import { useLiteMode } from "../loading/liteMode";
+import { gltfExtender } from "./textureLoading";
 
 function installationFinishId(name:string):InstallationId|undefined {
   if(name.startsWith("grand-anamorphic"))return "S1";
@@ -53,7 +54,8 @@ function shareAvatarTextures(model:THREE.Object3D){
   });
 }
 function Model({ name, url, lite, darkHall=false, hideHallColumns=false }: AssetProps&{url:string;lite:boolean}) {
-  const { scene } = useGLTF(url, false);
+  const gl = useThree(state => state.gl);
+  const { scene } = useGLTF(url, false, true, gltfExtender(gl));
   const {clone,owned,overhead,sectionWalls} = useMemo(() => {
     const model = scene.clone(true);
     shareAvatarTextures(model);
@@ -130,7 +132,7 @@ function Model({ name, url, lite, darkHall=false, hideHallColumns=false }: Asset
     });
     // The light pack keeps the authored materials: the CC0 surface sets are
     // the technical group's own files, which lite mode never fetches.
-    if (!lite&&(name === "technical-showcase"||name.startsWith("grand-technical"))) applyTechnicalMaterials(model);
+    if (!lite&&(name === "technical-showcase"||name.startsWith("grand-technical"))) applyTechnicalMaterials(model, gl);
     if(name.startsWith("led-rental-2026-")||name.startsWith("grand-rental")||name.startsWith("grand-reception")||name.startsWith("grand-pillar"))applyRental2026Materials(model,name.startsWith("grand-rental-finish-v2-"));
     if (name.startsWith("projection-mapping-stall")||name.startsWith("projection-interior-details")||name.startsWith("projection-projectors")||name==="projection-grand-v1") applyProjectionBoothMaterials(model);
     if(name.startsWith("projection-finish-v2-"))applyProjectionFinishV2Materials(model);
@@ -149,7 +151,7 @@ function Model({ name, url, lite, darkHall=false, hideHallColumns=false }: Asset
       if(object.userData.ledRentalOverhead)overhead.push(object);
     });
     return {clone:model,owned,overhead,sectionWalls};
-  }, [scene,darkHall,hideHallColumns,name,lite]);
+  }, [scene,darkHall,hideHallColumns,name,lite,gl]);
   useEffect(()=>()=>owned.forEach(material=>material.dispose()),[owned]);
   // Only a light-pack file is released; start files drawn in lite mode stay shared.
   useEffect(()=>/\.lite\.glb(?:$|\?)/.test(url)?()=>releaseLiteModel(url,scene):undefined,[url,scene]);

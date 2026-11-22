@@ -1,19 +1,35 @@
 "use client";
 
-import { useEffect, useMemo, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { PROJECTION_SCALE, PROJECTION_DECK_POLYGON, inProjectionShowcase } from "../data/projection";
 import { useVenue } from "../systems/store";
 import { technicalFloorSurface } from "./technicalMaterials";
+import { placeholderTexture } from "./textureLoading";
 
 /** Raised island, in physical local X/Z metres. The deck is kept
  * separate from the existing hall reflector at Y=.009. */
 export { PROJECTION_DECK_POLYGON } from "../data/projection";
 
-function stoneTextures() {
+type StoneMaps = { map: THREE.Texture; roughnessMap: THREE.Texture; normalMap: THREE.Texture };
+const STONE_PLACEHOLDERS: StoneMaps = { map: placeholderTexture("#808080"), roughnessMap: placeholderTexture("#ff8000"), normalMap: placeholderTexture("#8080ff") };
+let loadedStone: StoneMaps | null = null;
+
+/** The licensed stone photography (the technical floor's shared maps), once loaded. */
+function useStoneMaps() {
+  const gl = useThree(state => state.gl);
+  const [maps, setMaps] = useState(() => loadedStone ?? STONE_PLACEHOLDERS);
+  useEffect(() => {
+    let live = true;
+    technicalFloorSurface(gl).ready.then(result => { loadedStone = result; if (live) setMaps(result); }, () => {});
+    return () => { live = false; };
+  }, [gl]);
+  return maps;
+}
+
+function stoneTextures(source: StoneMaps) {
   // Reuse the licensed stone photography, with independent native-metre UVs.
-  const source=technicalFloorSurface();
   function texture(original:THREE.Texture) {
     const result=original.clone(); result.repeat.set(.4,.4);
     result.anisotropy=8; result.needsUpdate=true; return result;
@@ -51,7 +67,8 @@ export function ProjectionFloor({polygonXZ=PROJECTION_DECK_POLYGON,active=inProj
     result.computeBoundingBox();
     return result;
   }, [polygonXZ]);
-  const stone = useMemo(() => stoneTextures(), []);
+  const source = useStoneMaps();
+  const stone = useMemo(() => stoneTextures(source), [source]);
   const reflection = useMemo(() => {
     const target = new THREE.WebGLRenderTarget(resolution, resolution, {
       type: THREE.HalfFloatType, minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter,

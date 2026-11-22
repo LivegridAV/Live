@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useMemo } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import { useModelUrl } from "../loading/useModelUrl";
 import * as THREE from "three";
@@ -14,6 +14,7 @@ import rentalLayout from "../../../public/models/expo/grand-rental-finish-v2-lay
 import { FLOOR, type Guest, type Layout, type Part, type Sign } from "./hallKit";
 import { hallZones, servicePosterTexture, type Zone } from "./hallFeatures";
 import { applySurface, refineAvatarSkin } from "../three/surfaceDetail";
+import { gltfExtender } from "../three/textureLoading";
 
 /**
  * Hall dressing — renders the furniture, planting, LED sculptures, lightboxes,
@@ -361,7 +362,8 @@ export function HallDressing() {
   const diagnostic = useVenue(s => s.stallVisit?.view === "plan" || s.stallVisit?.view === "section");
   // The same file the rental booth draws (its lod1 below high quality), so it loads once.
   const visitorsUrl = useModelUrl(expoAssetUrl("grand-rental-finish-v2-visitors", rentalLayout.stats.visitors.sha256))!;
-  const { scene: visitors } = useGLTF(visitorsUrl, false);
+  const gl = useThree(state => state.gl);
+  const { scene: visitors } = useGLTF(visitorsUrl, false, true, gltfExtender(gl));
   useMemo(() => refineAvatarSkin(visitors), [visitors]);
   const zones = useMemo(() => hallZones(), []);
   return <group visible={!diagnostic} name="Hall dressing">

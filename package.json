@@ -10,7 +10,8 @@
     "start": "next start",
     "lint": "eslint",
     "measure": "node scripts/measure-venue.mjs",
-    "compare-shots": "node scripts/compare-shots.mjs"
+    "compare-shots": "node scripts/compare-shots.mjs",
+    "encode:ktx2": "node scripts/encode-ktx2.mjs"
   },
   "dependencies": {
     "@react-three/drei": "^10.7.7",
@@ -35,6 +36,7 @@
     "@types/three": "^0.185.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
+    "ktx2-encoder": "0.6.0",
     "meshoptimizer": "1.1.1",
     "playwright-core": "^1.65.1",
     "sharp": "0.35.5",

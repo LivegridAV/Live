@@ -6,6 +6,7 @@ import * as THREE from "three";
 import { programsReady, useAfterWarmup } from "./warmScene";
 import { useLiteMode } from "../loading/liteMode";
 import { useModelUrl } from "../loading/useModelUrl";
+import { gltfExtender } from "./textureLoading";
 import { HorizontalBlurShader } from "three/examples/jsm/shaders/HorizontalBlurShader.js";
 import { VerticalBlurShader } from "three/examples/jsm/shaders/VerticalBlurShader.js";
 
@@ -24,9 +25,9 @@ function ContactShadowFiles({boothUrl,visitorsUrl,detailsUrl,...rest}:ContactSha
   return <ContactShadowBake {...rest} boothUrl={booth} visitorsUrl={visitors} detailsUrl={detailsUrl?details:undefined}/>;
 }
 function ContactShadowBake({boothUrl,visitorsUrl,detailsUrl,width,depth:depthSize,centerZ=0,floorHeight=.10}:ContactShadowProps) {
-  const {scene:booth}=useGLTF(boothUrl,false),{scene:visitors}=useGLTF(visitorsUrl,false);
-  const {scene:details}=useGLTF(detailsUrl??boothUrl,false);
   const {gl}=useThree();
+  const {scene:booth}=useGLTF(boothUrl,false,true,gltfExtender(gl)),{scene:visitors}=useGLTF(visitorsUrl,false,true,gltfExtender(gl));
+  const {scene:details}=useGLTF(detailsUrl??boothUrl,false,true,gltfExtender(gl));
   const target=useMemo(()=>new THREE.WebGLRenderTarget(1024,512,{minFilter:THREE.LinearFilter,magFilter:THREE.LinearFilter}),[]);
   // Baked once every shader is ready (the venue's, or the streamed group's), so
   // the bake never compiles inside a frame.

@@ -11,7 +11,7 @@ import { LightPool } from "../three/environment";
 import { useVenue } from "../systems/store";
 import { preparePolishedFloor } from "../three/polishedFloor";
 import { GRAND, ARENA_SHIFT, HALL_BAYS } from "../data/grand";
-import { VENUE_FLOOR, venueFloorMaps } from "../three/venueFloor";
+import { VENUE_FLOOR, useVenueFloorMaps } from "../three/venueFloor";
 
 /**
  * The building.
@@ -50,7 +50,7 @@ function segments(from: number, to: number, size: number) {
 export function Ground() {
   const quality = useVenue((s) => s.quality);
   const reflect = useWarmupOpen();
-  const stone = useMemo(() => venueFloorMaps(), []);
+  const stone = useVenueFloorMaps();
   const geometry = useMemo(() => {
     const width = GRAND.hall.halfWidth * 2 + 16, depth = HALL_FLOOR.depth, centerZ = HALL_FLOOR.centerZ;
     const plane = new THREE.PlaneGeometry(width, depth);
@@ -94,7 +94,7 @@ export function Ground() {
 }
 
 function FloorTransition({from,to,fromY,toY}:{from:number;to:number;fromY:number;toY:number}) {
-  const stone=useMemo(()=>venueFloorMaps(),[]);
+  const stone=useVenueFloorMaps();
   const geometry=useMemo(()=>{
     const width=GRAND.hall.halfWidth*2+16;
     const vertices=[[-width/2,fromY,from],[width/2,fromY,from],[-width/2,toY,to],[width/2,toY,to]];

@@ -201,6 +201,7 @@ const groupGlbs = group => [...new Set([...group.assets, ...Object.values(group.
 const nonStartGlbs = loadGroups.filter(g => g.id !== "start").flatMap(groupGlbs);
 const lod1Sources = loadGroups.flatMap(groupGlbs).filter(p => /-visitors\.glb$/.test(p) || p.endsWith("/projection-finish-v2-blender-interior.glb"));
 const outFile = p => path.join("out", p);
+const glbJson = file => { const glb = readFileSync(file); return JSON.parse(glb.subarray(20, 20 + glb.readUInt32LE(12)).toString("utf8")); };
 const sibling = (p, kind) => p.replace(/\.glb$/, `.${kind}.glb`);
 let gltfIO;
 async function readModel(p) {
@@ -264,18 +265,24 @@ test("lite models drop morphs and skins and shrink every texture to 128 px", asy
   }
 });
 
-/** Transfer size of a set of out/ files plus the external textures their GLBs reference, each counted once. */
-function transferSize(paths) {
+/**
+ * Transfer size of a set of out/ files plus the external textures their GLBs
+ * reference, each counted once. A media file the manifest lists in
+ * ktx2Media is fetched as its .ktx2 instead.
+ */
+function transferFiles(paths, ktx2Media = []) {
   const files = new Set();
   for (const p of paths) {
-    files.add(outFile(p));
+    const ktx2 = p.replace(/\.webp$/, ".ktx2");
+    files.add(outFile(ktx2Media.includes(ktx2) ? ktx2 : p));
     if (!p.endsWith(".glb")) continue;
-    const glb = readFileSync(outFile(p));
-    const json = JSON.parse(glb.subarray(20, 20 + glb.readUInt32LE(12)).toString("utf8"));
-    for (const image of json.images ?? []) if (image.uri) files.add(path.resolve(path.dirname(outFile(p)), decodeURIComponent(image.uri)));
+    for (const image of glbJson(outFile(p)).images ?? []) if (image.uri) files.add(path.resolve(path.dirname(outFile(p)), decodeURIComponent(image.uri)));
   }
-  return [...files].reduce((sum, f) => sum + readFileSync(f).byteLength, 0);
+  return [...files];
 }
+const sizeOf = list => list.reduce((sum, f) => sum + readFileSync(f).byteLength, 0);
+const usesKtx2 = list => list.some(f => f.endsWith(".ktx2") || (f.endsWith(".glb") && (glbJson(f).images ?? []).some(image => image.mimeType === "image/ktx2")));
+const BASIS_FILES = ["basis_transcoder.js", "basis_transcoder.wasm"].map(f => path.join("out", "basis", f));
 
 test("the manifest lists each group's light pack (not counted in start) and the lod1 models", () => {
   const manifest = JSON.parse(read("out/models/load-manifest.json"));
@@ -285,8 +292,19 @@ test("the manifest lists each group's light pack (not counted in start) and the 
     assert.deepEqual([...entry.lite].sort(), expected.sort(), `${group.id} lite`);
   }
   assert.deepEqual([...manifest.lod1].sort(), lod1Sources.map(p => sibling(p, "lod1")).sort());
-  const start = manifest.groups.find(g => g.id === "start");
-  assert.equal(start.bytes, transferSize(loadGroups[0].assets), "start's bytes are its own files only; the light pack is fetched after opening");
+});
+
+test("each group's bytes are its own files, KTX2 media in place of their WebP, and the transcoder in the first group using KTX2", () => {
+  const manifest = JSON.parse(read("out/models/load-manifest.json"));
+  let transcoderCounted = false;
+  for (const group of loadGroups) {
+    const own = transferFiles(group.assets, manifest.ktx2Media);
+    const withTranscoder = !transcoderCounted && usesKtx2(own);
+    transcoderCounted ||= withTranscoder;
+    const expected = sizeOf(own) + (withTranscoder ? sizeOf(BASIS_FILES) : 0);
+    assert.equal(manifest.groups.find(g => g.id === group.id).bytes, expected, `${group.id} bytes (light pack excluded${withTranscoder ? ", transcoder included" : ""})`);
+  }
+  assert.ok(transcoderCounted, "no group uses KTX2");
 });
 
 test("lite mode and lod1 choice live in the venue's model loading", () => {
@@ -301,4 +319,110 @@ test("lite mode and lod1 choice live in the venue's model loading", () => {
   assert.match(scene, /planOpening\(/, "the opening plan tells the streamer which groups stream later");
   assert.match(scene, /venueOpened\(/, "the light pack is fetched once the venue opens");
   assert.doesNotMatch(read("src/venue/loading/stream.ts"), /loadModel\(path, false, "lite"\)/, "start no longer joins the light pack");
+});
+
+// ------------------------------------------------------------------- KTX2
+// KTX2 textures come from the committed local cache (npm run encode:ktx2);
+// the build only swaps them in. See scripts/ktx2-swap.mjs.
+
+test("the KTX2 swap keeps a texture's WebP unless the KTX2 is small enough for its group", async () => {
+  const { prefersKtx2, KTX2_LATER_RATIO } = await import("./ktx2-swap.mjs");
+  assert.equal(KTX2_LATER_RATIO, 1.25);
+  // start: only when smaller than the WebP.
+  assert.equal(prefersKtx2({ ktx2Bytes: 99, webpBytes: 100, inStart: true }), true);
+  assert.equal(prefersKtx2({ ktx2Bytes: 100, webpBytes: 100, inStart: true }), false);
+  // later groups: up to 1.25 x the WebP.
+  assert.equal(prefersKtx2({ ktx2Bytes: 125, webpBytes: 100, inStart: false }), true);
+  assert.equal(prefersKtx2({ ktx2Bytes: 126, webpBytes: 100, inStart: false }), false);
+});
+
+test("a texture shared by start and a later group follows the start rule", async () => {
+  const { groupRule } = await import("./ktx2-swap.mjs");
+  assert.equal(groupRule(["technical", "start"], "start"), "start");
+  assert.equal(groupRule(["technical", "projection"], "start"), "later");
+});
+
+test("every texture in the exported GLBs is WebP, KTX2 or kept by KEEP_WEBP", async () => {
+  const { keepsWebP } = await import("./encode-ktx2.mjs");
+  let ktx2 = 0;
+  for (const file of files("out").filter(f => f.endsWith(".glb"))) {
+    const json = glbJson(file);
+    for (const [index, texture] of (json.textures ?? []).entries()) {
+      const source = texture.extensions?.KHR_texture_basisu?.source ?? texture.extensions?.EXT_texture_webp?.source ?? texture.source;
+      const image = json.images[source];
+      const mime = image.mimeType ?? (image.uri?.endsWith(".ktx2") ? "image/ktx2" : image.uri?.endsWith(".webp") ? "image/webp" : "other");
+      if (mime === "image/ktx2") {
+        ktx2++;
+        assert.ok(texture.extensions?.KHR_texture_basisu, `${file} texture ${index}: KTX2 image without KHR_texture_basisu`);
+        assert.ok(json.extensionsRequired?.includes("KHR_texture_basisu"), `${file}: KHR_texture_basisu not required`);
+        continue;
+      }
+      assert.ok(mime === "image/webp" || keepsWebP(image.name, texture.name, image.uri), `${file} texture ${index} (${image.name ?? image.uri}) is ${mime}`);
+    }
+  }
+  assert.ok(ktx2 > 0, "no GLB texture uses KTX2");
+});
+
+test("only the venue's load-group GLBs (and their lod1) use KTX2: other pages have no KTX2 loader", () => {
+  const venue = new Set(loadGroups.flatMap(groupGlbs).flatMap(p => [outFile(p), outFile(sibling(p, "lod1"))]).map(f => path.resolve(f)));
+  for (const file of files("out").filter(f => f.endsWith(".glb"))) {
+    if (venue.has(path.resolve(file))) continue;
+    assert.ok(!glbJson(file).extensionsUsed?.includes("KHR_texture_basisu"), `${file} uses KTX2 outside the venue`);
+  }
+});
+
+test("lite models keep embedded WebP textures, never KTX2", () => {
+  for (const p of nonStartGlbs) {
+    const json = glbJson(outFile(sibling(p, "lite")));
+    assert.ok(!json.extensionsUsed?.includes("KHR_texture_basisu"), `${sibling(p, "lite")} uses KTX2`);
+  }
+});
+
+test("KTX2 media sit next to their WebP and follow the group rule", async () => {
+  const { prefersKtx2 } = await import("./ktx2-swap.mjs");
+  const manifest = JSON.parse(read("out/models/load-manifest.json"));
+  const start = new Set(loadGroups[0].assets);
+  for (const ktx2 of manifest.ktx2Media) {
+    const webp = ktx2.replace(/\.ktx2$/, ".webp");
+    assert.match(ktx2, /^\/media\/.+\.ktx2$/);
+    assert.ok(existsSync(outFile(webp)) && existsSync(outFile(ktx2)), `${ktx2} or its WebP missing`);
+    const ktx2Bytes = readFileSync(outFile(ktx2)).byteLength, webpBytes = readFileSync(outFile(webp)).byteLength;
+    assert.ok(prefersKtx2({ ktx2Bytes, webpBytes, inStart: start.has(webp) }), `${ktx2}: ${ktx2Bytes} B against ${webpBytes} B WebP`);
+  }
+});
+
+test("start fits 20 MiB", () => {
+  const start = JSON.parse(read("out/models/load-manifest.json")).groups.find(g => g.id === "start");
+  assert.ok(start.bytes <= 20 * 2 ** 20, `start is ${(start.bytes / 2 ** 20).toFixed(1)} MiB, over 20 MiB`);
+});
+
+test("the Basis transcoder is served from /basis/ with a cache rule", () => {
+  for (const file of ["basis_transcoder.js", "basis_transcoder.wasm"]) {
+    assert.ok(existsSync(path.join("out", "basis", file)), `out/basis/${file} missing`);
+    assert.deepEqual(readFileSync(path.join("public", "basis", file)), readFileSync(path.join("node_modules/three/examples/jsm/libs/basis", file)), `public/basis/${file} differs from three's copy`);
+  }
+  assert.match(read("public/_headers"), /^\/basis\/\*\r?\n\s+Cache-Control: /m);
+});
+
+test("the Cloudflare build never imports ktx2-encoder", () => {
+  for (const file of ["scripts/optimize-export.mjs", "scripts/ktx2-swap.mjs", "scripts/derived-models.mjs", "scripts/prepare-export.mjs"]) {
+    assert.doesNotMatch(read(file), /ktx2-encoder/, `${file} mentions ktx2-encoder`);
+  }
+  // encode-ktx2.mjs exports the policy the build reads; the encoder itself is only loaded when it runs as a script.
+  assert.doesNotMatch(read("scripts/encode-ktx2.mjs"), /^import[^;]*["']ktx2-encoder["']/m);
+});
+
+test("every useGLTF call and plain venue texture load goes through textureLoading", () => {
+  const sites = ["src/venue/three/ExpoAsset.tsx", "src/venue/zones/EntranceP01.tsx", "src/venue/zones/HallDressing.tsx",
+    "src/venue/zones/ReferenceProjection.tsx", "src/venue/three/ProjectionContactShadow.tsx", "src/venue/three/TechnicalContactShadow.tsx", "src/venue/loading/stream.ts"];
+  for (const file of sites) {
+    const source = read(file);
+    const calls = [...source.matchAll(/useGLTF\(([^;]*?)\)\s*[;,]/g)].map(m => m[1]).concat([...source.matchAll(/readGLTF\(([^;]*?)\);/g)].map(m => m[1]));
+    assert.ok(calls.length > 0, `${file}: no useGLTF call found`);
+    for (const call of calls) assert.match(call, /gltfExtender\(|configureGltfLoader/, `${file}: useGLTF(${call}) does not pass configureGltfLoader`);
+  }
+  for (const file of ["src/venue/three/venueFloor.ts", "src/venue/three/technicalMaterials.ts"]) {
+    assert.doesNotMatch(read(file), /new THREE\.TextureLoader\(\)/, `${file} still loads with a plain TextureLoader`);
+    assert.match(read(file), /loadVenueTexture\(/);
+  }
 });
