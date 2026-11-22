@@ -18,6 +18,8 @@ import groups from "./groups.json" with { type: "json" };
 export type LoadGroup = {
   id: string;
   switchOnZ: number;
+  /** z of the zone's near end (its `ZoneGroup` `from`): where the group's own content begins. */
+  zoneZ: number;
   assets: readonly string[];
   variants?: Readonly<Record<string, readonly string[]>>;
   replaces?: Readonly<Record<string, string>>;
@@ -39,6 +41,42 @@ export function groupForZ(z: number): LoadGroup {
     else break;
   }
   return found;
+}
+
+/**
+ * The group whose own content is at `z`: the last group whose zone start
+ * (`zoneZ`) the point has reached. Unlike `groupForZ`, which includes the
+ * switch-on look-ahead and so names the group *ahead* of a stall, this names
+ * the stall's own group. Side-by-side stalls share a z range, so it cannot
+ * tell them apart; `jumpOrder` takes the stall when it is known.
+ */
+export function groupContainingZ(z: number): LoadGroup {
+  let found = LOAD_GROUPS[0];
+  for (const group of LOAD_GROUPS) {
+    if (z <= group.zoneZ) found = group;
+  }
+  return found;
+}
+
+/** The load group of each stall (the stall-visit ids in src/venue/data/stallVisits.ts). */
+export const STALL_GROUP: Readonly<Record<string, string>> = {
+  reception: START_GROUP,
+  anamorphic: "anamorphic",
+  "led-rental": "rental",
+  technical: "technical",
+  projection: "projection",
+};
+
+/**
+ * Priority after a nav jump or stall visit to camera z `z`: the destination's
+ * own group first (the stall's group when `stall` is known, else the group
+ * whose content is at `z`), then the next group ahead in journey order.
+ */
+export function jumpOrder(z: number, stall?: string | null): string[] {
+  const id = (stall && STALL_GROUP[stall]) || groupContainingZ(z).id;
+  const index = LOAD_GROUPS.findIndex(group => group.id === id);
+  const next = LOAD_GROUPS[index + 1];
+  return next ? [id, next.id] : [id];
 }
 
 /** The files `group` loads under `conditions` (e.g. `new Set(["mobile"])`). */

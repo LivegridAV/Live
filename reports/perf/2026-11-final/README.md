@@ -26,10 +26,12 @@ place. **The stall's LED screens and artwork are dark** until full detail arrive
 after opening, and every stall visit: not one frame showed an area without at least its light version.
 
 **Jumping ahead.** If a visitor uses the menu to jump straight to a far stall right after opening, they land in
-the light version of that stall and it sharpens when its full version arrives: on Fast 4G that is 15 to 43 seconds
-after opening, depending on the stall (Projection Mapping is the slowest, being the largest). One weakness found in
-this final check: the jump asks for the *next* area's full version first instead of the one the visitor is standing
-in, so the stall you jumped to does not arrive sooner than it would have anyway. Details under "Open points".
+the light version of that stall, and the loader now fetches *that stall's* full version first, then the next area
+along. On Fast 4G the stall sharpens 15 to 24 seconds after opening (Content Studio, LED Rental, Technical
+Showcase), 17 seconds for the Arena, and about 42 seconds for Projection Mapping. Projection Mapping cannot come
+sooner on this connection: when the venue opens, two other stalls are already downloading (about 22 MB), we never
+cancel a download that has started, and Projection Mapping is itself the biggest stall (about 24 MB).
+(This final check first found the loader fetching the *next* area first; that is fixed, see the table further down.)
 
 **Smoothness.** No stops, but there are still a handful of short hitches (frames that take longer than they should).
 The longest ones happen when someone jumps from the very end of the venue straight back to the entrance: the
@@ -48,19 +50,19 @@ Measured on this computer with Chrome, cold cache (as a first-time visitor), scr
 | | Before (baseline) | After (final) | Target in the plan | Met? |
 |---|---|---|---|---|
 | Download before the door opens | 77.1 MB (141 files) | 34.7 MB (106 files) | about 20 MB | No (see note 1) |
-| Time to open, Fast 4G | 74.1 s | 36.3 s | 12 s | No (see note 1) |
+| Time to open, Fast 4G | 74.1 s | 36.2 s | 12 s | No (see note 1) |
 | Time to open, Slow 4G | about 310 s (estimated, not measured) | 145.1 s | opens later, then no gaps | Yes |
 | Everything in full detail, Fast 4G | 74.1 s (all before opening) | 78.7 s (after opening, in the background) | | |
-| Frames with empty space, walk after opening | not applicable (all loaded first) | 0 of 2,304 (Fast), 0 of 10,548 (Slow) | 0 | Yes |
-| Frames with empty space, 11 menu jumps right after opening | | 0 of 26,053 | 0 | Yes |
+| Frames with empty space, walk after opening | not applicable (all loaded first) | 0 of 2,427 (Fast), 0 of 10,548 (Slow) | 0 | Yes |
+| Frames with empty space, 11 menu jumps right after opening | | 0 of 27,003 | 0 | Yes |
 | Loading text or spinner after opening | none | none | none | Yes |
 | Draw calls at the entrance (desktop, "high") | 1,239 to 1,849 | 1,203 to 1,801 | 500 or fewer | No (note 2) |
 | Draw calls, worst point on the walk | 3,194 | 2,419 | 700 or fewer | No (note 2) |
 | Triangles at the entrance (desktop) | 5.1 to 7.7 million | 5.2 to 7.8 million | | |
 | Triangles, worst point on the walk, phone tier ("medium") | 8.67 million (measured in Task 5) | 7.5 million (phone emulation, 375×812) | 2 million | No (note 3) |
-| Hitches over 50 ms after opening (Fast 4G run) | 12 (longest 151 ms) | 10 (longest 214 ms) | none | No (note 4) |
-| ...of which over 100 ms | 5 | 2 (both in the end-to-entrance jump) | | |
-| Looks: largest screenshot difference (0 to 255 scale, limit 1.5) | | 1.10 (LED Rental) | 1.5 or less | Yes |
+| Hitches over 50 ms after opening (Fast 4G run) | 12 (longest 151 ms) | 10 (longest 229 ms) | none | No (note 4) |
+| ...of which over 100 ms | 5 | 1 (in the end-to-entrance jump) | | |
+| Looks: largest screenshot difference (0 to 255 scale, limit 1.5) | | 1.13 (LED Rental) | 1.5 or less | Yes |
 | Objects moved | | 0 | 0 | Yes |
 
 Notes:
@@ -79,9 +81,9 @@ Notes:
    WebGPU stage.
 3. **Phone triangle count** was not worked on in this stage (the triangle target for phones needs lighter models
    on phones, which you did not choose for everyone; it remains open).
-4. **Hitches.** The plan's "no hitch over 50 ms" target is not met. What is left: about six 50 to 65 ms hitches
-   while the Projection Mapping stall's full version is being set up during a walk; one of about 60 ms at the
-   middle of the walk; and the end-to-entrance jump (100 to 230 ms, see "Open points").
+4. **Hitches.** The plan's "no hitch over 50 ms" target is not met. What is left: about five 50 to 65 ms hitches
+   while the Projection Mapping stall's full version is being set up during a walk; one or two of 50 to 60 ms
+   mid-walk; and the end-to-entrance jump (one frame of 100 to 230 ms, see "Open points").
 
 ## Pictures
 
@@ -124,6 +126,15 @@ On the emulated slow phone the walk worked end to end with no errors and no empt
 (the frame counter shows roughly 8 to 30 frames per second, and many frames take longer than 50 ms). That is
 expected with the processor slowed 4×; a real phone may be better or worse.
 
+## Things to know
+
+- **An old safety check now reports one difference.** A check written in October compares the source code of the
+  Content Studio's water basin with a frozen copy. The light version of the stall now leaves out the basin's
+  reflection (it is not needed at a distance), so the check sees a small wrapper around the basin code and reports
+  a difference. The full basin code itself is unchanged, and so is what you see once full detail has arrived.
+  This check, and several others from October, already reported differences on the live version for unrelated
+  reasons; the final review will sort them out.
+
 ## What was not tested
 
 - **Real phones.** Only Chrome's phone emulation on this computer (screen size, touch, a 4× slower processor).
@@ -136,10 +147,9 @@ expected with the processor slowed 4×; a real phone may be better or worse.
 
 1. **Opening time** about 36 s on Fast 4G, against the plan's 12 s (note 1 above). The plan's 20 MB first
    download is also not met: 34.7 MB (entrance about 24 MB + light versions about 8 MB + page code about 3 MB).
-2. **Jump priority picks the next area.** After a menu jump to Content Studio, Technical Showcase or Projection
-   Mapping, the loader puts the *Arena* first (after LED Rental, Projection Mapping) instead of the stall the
-   visitor is standing in. The stall still shows its light version (never empty), but it sharpens no sooner than
-   without the jump. Small fix, not made in this final check.
+2. **Projection Mapping after a jump** still takes about 42 seconds to sharpen on Fast 4G (the jump priority
+   itself is fixed). Making it sooner would mean pausing a download that has already started when someone jumps,
+   which we chose not to do, or making that stall's full version smaller.
 3. **Draw calls** about 3× the target (note 2). Planned for the WebGPU stage.
 4. **Phone triangles** about 4× the target (note 3).
 5. **Hitches**: the end-to-entrance jump still causes one heavy frame (100 to 230 ms). We checked that this
@@ -156,16 +166,18 @@ expected with the processor slowed 4×; a real phone may be better or worse.
 
 ### Runs and commands
 
-All runs against `npm run build` output at HEAD `2881565` (+ the Task 9 scripts), served by `scripts/serve-export.mjs`,
+Fast 4G, nav-jump and phone runs against `npm run build` output with fix round 1 (jump priority); Slow 4G and fly-back
+against HEAD `2881565` (the fix does not touch normal scrolling or the fly-back). Served by `scripts/serve-export.mjs`,
 Chrome via playwright-core, `--ignore-gpu-blocklist`.
 
 | Run | Command | Output |
 |---|---|---|
 | Fast 4G | `node scripts/measure-venue.mjs --label final --throttle fast4g` | `reports/perf/final/` |
 | Slow 4G | `node scripts/measure-venue.mjs --label final-slow --throttle slow4g` | `reports/perf/final-slow/` |
-| Look | `node scripts/compare-shots.mjs reports/perf/baseline reports/perf/final` | exit 0, worst mean 1.10 |
-| Nav jumps | `node scripts/check-nav-jumps.mjs --label final --only jumps --throttle fast4g` | `final/nav-jumps-jumps.json`, `final/nav-jumps/*.jpg` |
-| Stall visits | `node scripts/check-nav-jumps.mjs --label final --only visits --throttle none` | `final/nav-jumps-visits.json` |
+| Look | `node scripts/compare-shots.mjs reports/perf/baseline reports/perf/final` | exit 0, worst mean 1.13 |
+| Nav jumps + stall visits (after fix round 1) | `node scripts/check-nav-jumps.mjs` | `final/nav-jumps.json`, `final/nav-jumps/*.jpg` |
+| Nav jumps, before the fix | `node scripts/check-nav-jumps.mjs --label final --only jumps --throttle fast4g` | `final/nav-jumps-jumps.json` |
+| Stall visits, before the fix | `node scripts/check-nav-jumps.mjs --label final --only visits --throttle none` | `final/nav-jumps-visits.json` |
 | Fly-back | `node scripts/measure-flyback.mjs --label final --runs 3` | `final/flyback.json` |
 | Phone walk | `node scripts/walk-mobile.mjs --label final` | `final/mobile/walk.json`, `final/mobile/*.jpg` |
 
@@ -181,13 +193,14 @@ Chrome via playwright-core, `--ignore-gpu-blocklist`.
 | t6b-slow (Slow 4G) | 34.7 | 145.1 | 332.5 | 1239–1849 | 3194 | 10.51 M | 8 (99) | 0 |
 | t7 | 34.7 | 36.4 | 79.0 | 1203–1801 | 2419 | 10.50 M | 11 (234) | 0 |
 | t8 | 34.7 | 36.3 | 78.7 | 1203–1801 | 2419 | 10.50 M | 11 (206) | 0 |
-| **final** | **34.7** | **36.3** | **78.7** | **1203–1801** | **2419** | **10.50 M** | **10 (214)** | **0** |
+| **final** (fix round 1) | **34.7** | **36.2** | **78.7** | **1203–1801** | **2419** | **10.50 M** | **10 (229)** | **0** |
 | **final-slow (Slow 4G)** | **34.7** | **145.1** | **332.4** | **1203–1801** | **2419** | **10.50 M** | **6 (133)** | **0** |
 
 From t6b on, the long-task count includes the fly-back (an instant p = 1 → 0 jump the harness makes before the
 stats walk) and the fill-in walk, which earlier runs did not have. Final long tasks after opening:
-65, 54, 50, 54, 51, 59 ms at p 0.73–0.76 (fill-in walk, while projection streams and warms), 114, 73, 214 ms at
-p 0.22–0.15 (fly-back), 60 ms at p 0.51 (stats walk).
+63, 50, 54, 60, 58 ms at p 0.73–0.76 (fill-in walk, while projection streams and warms), 87, 229, 55 ms at
+p 0.23–0.13 (fly-back), 51 ms at p 0.30 and 58 ms at p 0.51 (stats walk). The pre-fix final run had 10 (214 ms):
+no regression.
 
 ### Group sizes (build output)
 
@@ -204,11 +217,11 @@ because their KTX2 would be larger; no cache misses.
 
 | group | reached | light shown | full |
 |---|---|---|---|
-| rental | 3,337 | 16 | 25,326 |
-| anamorphic | 3,974 | 16 | 15,696 |
-| technical | 9,931 | 16 | 24,994 |
-| projection | 10,357 | 16 | 42,304 |
-| arena | 16,739 | 16 | 35,126 |
+| rental | 3,332 | 21 | 25,196 |
+| anamorphic | 4,000 | 21 | 15,695 |
+| technical | 9,943 | 21 | 24,866 |
+| projection | 10,377 | 21 | 42,377 |
+| arena | 16,760 | 21 | 35,044 |
 
 The lite/full picture pair comes from `measure-venue`'s `--pair` camera (projection `switchOnZ` − 46 m), which
 stands in front of the LED Rental stall (the pair target is picked by index, a known Task 6b minor); the rental
@@ -222,38 +235,47 @@ after opening 6: 50 (p 0), 64 (p 1), 51 (p 0.24), 133 (p 0.085, fly-back), 63 an
 
 ### Nav jumps right after opening (ruling: committed check, every jump)
 
-`scripts/check-nav-jumps.mjs`: per rail stop, a fresh cold Fast 4G page; the moment the page can scroll the stop
-is clicked; a per-frame monitor runs until every group is warm. "full" = seconds from the monitor start (just
-before the click) until that group's full version was warm.
+`scripts/check-nav-jumps.mjs` (`node scripts/check-nav-jumps.mjs`, Fast 4G, writes `final/nav-jumps.json` and
+`final/nav-jumps/*.jpg`): per rail stop, a fresh cold page; the moment the page can scroll the stop is clicked; a
+per-frame monitor runs until every group is warm. Group columns = seconds from the monitor start (just before the
+click) until that group's full version was warm. Then every stall visit (`?shot=<stall>&view=front`).
 
-| Stop | p | Target | rental | anamorphic | technical | projection | arena | gap frames | long tasks (max ms) |
+**Fix round 1** (after the first run of this check): `prioritizeZ` used `groupForZ`, the last group whose
+`switchOnZ` (zone start + 58 m look-ahead) the destination had passed, i.e. the group *ahead* of the stall
+(LED Rental → projection; Content Studio onward → arena). Now `jumpOrder(z, stall)` in `groups.ts` puts the
+destination's own group first (the stall at the destination progress, `stallAtProgress`, or the visit's stall;
+otherwise the group whose zone start `zoneZ` the destination has reached), then the next group in journey order.
+Side-by-side stalls (rental/anamorphic, technical/projection) share a z range, so z alone cannot name them.
+Only the destination is released early; the next group still waits for the light packs; running downloads are
+never cancelled; normal scrolling never calls it.
+
+| Stop | Priority now | rental | anamorphic | technical | projection | arena | Destination stall full: before → after (s) | gap frames | long tasks (max ms) |
 |---|---|---|---|---|---|---|---|---|---|
-| Entrance | 0 | start | 25.0 | 15.8 | 25.3 | 42.5 | 34.9 | 0/2392 | 11 (91) |
-| LED Tunnel | 0.185 | anamorphic | 24.8 | 16.6 | 25.2 | 43.4 | 36.1 | 0/2239 | 8 (74) |
-| LED Pillars | 0.34 | anamorphic | 24.2 | 15.6 | 23.8 | 42.7 | 35.3 | 0/2373 | 3 (64) |
-| Reception | 0.446 | technical | 24.0 | 15.2 | 23.7 | 42.3 | 34.8 | 0/2417 | 1 (59) |
-| LED Rental Solutions | 0.541 | projection | 27.6 | 15.2 | 36.0 | 42.4 | 37.7 | 0/2370 | 3 (67) |
-| Content Studio | 0.605 | arena | 23.6 | 15.2 | 27.5 | 42.4 | 17.1 | 0/2427 | 2 (64) |
-| Technical Showcase | 0.681 | arena | 23.6 | 15.2 | 27.4 | 42.8 | 17.1 | 0/2186 | 4 (130) |
-| Projection Mapping | 0.728 | arena | 23.6 | 15.3 | 27.5 | 42.5 | 17.1 | 0/2400 | 4 (67) |
-| Arena | 0.865 | arena | 23.5 | 15.4 | 27.6 | 42.7 | 17.4 | 0/2416 | 3 (63) |
-| Main Stage | 0.941 | arena | 23.4 | 15.2 | 27.5 | 42.4 | 17.1 | 0/2415 | 2 (55) |
-| Finale | 1 | arena | 25.5 | 15.2 | 25.2 | 42.4 | 17.0 | 0/2418 | 2 (64) |
+| Entrance | start → rental | 25.4 | 15.8 | 25.0 | 42.5 | 34.8 | – | 0/2519 | 10 (77) |
+| LED Tunnel | start → rental | 25.0 | 16.6 | 24.6 | 43.4 | 36.1 | – | 0/2145 | 7 (108) |
+| LED Pillars | start → rental | 24.8 | 16.0 | 24.0 | 43.1 | 35.8 | – | 0/2306 | 9 (78) |
+| Reception | start → rental | 24.0 | 15.1 | 23.6 | 42.2 | 34.7 | – (entrance group) | 0/2557 | 4 (75) |
+| LED Rental Solutions | rental → anamorphic | 24.1 | 15.1 | 23.7 | 42.5 | 34.8 | 27.6 → **24.1** | 0/2439 | 4 (81) |
+| Content Studio | anamorphic → technical | 24.1 | 15.2 | 23.7 | 42.4 | 34.8 | 15.2 → **15.2** | 0/2570 | 3 (67) |
+| Technical Showcase | technical → projection | 24.4 | 15.2 | 23.7 | 42.7 | 34.9 | 27.4 → **23.7** | 0/2217 | 4 (168) |
+| Projection Mapping | projection → arena | 27.6 | 15.3 | 37.9 | 42.5 | 29.4 | 42.5 → **42.5** | 0/2550 | 4 (67) |
+| Arena | arena | 23.4 | 15.7 | 27.6 | 42.5 | 17.5 | 17.4 → **17.5** | 0/2562 | 3 (58) |
+| Main Stage | arena | 23.3 | 15.3 | 27.6 | 42.5 | 17.1 | 17.1 → **17.1** | 0/2569 | 2 (55) |
+| Finale | arena | 23.4 | 15.2 | 27.4 | 42.3 | 17.1 | 17.0 → **17.1** | 0/2569 | 2 (56) |
 
-Opening in these runs: 33.7–33.8 s (the probe page's opening was not counted).
+All 11 jumps and 5 visits: 0 gap frames (27,003 jump frames), 0 loading-cue frames, 0 console errors. Without a
+jump the fill-in walk has rental 25.3, anamorphic 15.7, technical 25.0, projection 42.3, arena 35.1 s (pre-fix run;
+the re-run with the fix: 25.2, 15.7, 24.9, 42.4, 35.0 s, unchanged since normal scrolling never calls the jump priority).
+Destination arrival after the fix vs before the fix: rental 27.6 → 24.1 s, technical 27.4 → 23.7 s (both now also
+ahead of the no-jump times), anamorphic 15.2 s (already first), arena 17.4 s (was already the target), projection
+42.5 → 42.5 s. Projection's floor: at opening rental and anamorphic (22.1 MiB) are already in flight on two slots
+and are not cancelled; projection (23.0 MiB) takes the first free slot (anamorphic done at +14.7 s) and shares the
+link until rental finishes; its download ends at +41.6 s, after the same bytes as without the jump. Beating it
+would need pausing an in-flight group on a jump, which the streamer rule forbids.
 
-All 11: 0 gap frames, 0 loading-cue frames, 0 console errors. "Target" is `groupForZ(camera z)`, the group
-`prioritizeZ` moves to the front. For LED Rental (camera z −87.65) it is `projection`; for every stop past z = −88.5
-(Content Studio onward) it is `arena`, which arrives at about 17 s instead of 35 s, while the stall the camera
-stands in keeps its normal place in the queue or loses a little (rental 27.6 s vs 25.3 s without a jump;
-technical 27.4 s vs 25.0 s; projection 42.5 s vs 42.3 s). The prioritized `projection` after the LED Rental jump
-did not arrive sooner either (42.4 s). Cause: `groupForZ` picks the last group whose
-`switchOnZ` (zone start + 58 m look-ahead) the point has passed, so it returns the group *ahead* of the stall. The
-plan's interface said "the group whose zone contains z"; `groups.json` carries only `switchOnZ`. This is the Task 4
-deferred minor, now measured.
-
-Stall visits (`?shot=<stall>&view=front`) open in full-load mode by design (`?view` is in `fullLoadRequested`), so
-they cannot show light versions: all 5 open with every group warm, 0 gap frames, 0 errors.
+The first run of this check (before the fix) is kept as `final/nav-jumps-jumps.json` and
+`final/nav-jumps-visits.json`. Stall visits open in full-load mode by design (`?view` is in `fullLoadRequested`),
+so they cannot show light versions: all 5 open with every group warm.
 
 ### Fly-back (ruling: full-load measurement)
 
@@ -278,11 +300,11 @@ unthrottled network, cold cache.
 
 | Pass | Opened | Gap frames | Loading cue | Console errors | Long tasks (max ms) | Checks |
 |---|---|---|---|---|---|---|
-| walk `?perf` (menu jump to Arena right after opening and back; walk p 0→1 at 0.02/250 ms; all 11 menu stops) | 18.2 s | 0/2825 | 0 | 0 | 603 (324) | all 11 menu stops arrived at their p; Arena jump landed with every group shown (rental, anamorphic, technical full; projection, arena light) |
-| reduced motion | 8.7 s | 0/232 | 0 | 0 | 88 (392) | `prefers-reduced-motion: reduce` matched; Arena and Entrance menu jumps arrived |
-| 5 stall visits + "Back to Venue" | 11.5–11.9 s | 0/505 | 0 | 0 | 211 (333) | visit bar shown and returned to the venue for all 5 |
-| `?inspect=placement` | 21.0 s | 0/51 | 0 | 0 | 56 (917) | inspection status reached "ready" |
-| `?capture=1` | 21.1 s | 0/97 | 0 | 0 | 3 (195) | UI hidden (`data-capture=true`) |
+| walk `?perf` (menu jump to Arena right after opening and back; walk p 0→1 at 0.02/250 ms; all 11 menu stops) | 18.0 s | 0/2852 | 0 | 0 | 641 (337) | all 11 menu stops arrived at their p; Arena jump landed with every group shown (rental, anamorphic, technical full; projection, arena light) |
+| reduced motion | 8.9 s | 0/240 | 0 | 0 | 88 (367) | `prefers-reduced-motion: reduce` matched; Arena and Entrance menu jumps arrived |
+| 5 stall visits + "Back to Venue" | 11.7–12.0 s | 0/500 | 0 | 0 | 218 (379) | visit bar shown and returned to the venue for all 5 |
+| `?inspect=placement` | 22.0 s | 0/51 | 0 | 0 | 57 (907) | inspection status reached "ready" |
+| `?capture=1` | 20.1 s | 0/103 | 0 | 0 | 2 (197) | UI hidden (`data-capture=true`) |
 
 Walk on the phone tier (the site picks "medium" for a touch screen on this 20-core machine): draw calls up to
 1,615, triangles up to 7.50 M. Long tasks are dominated by the 4× CPU throttle; they are not comparable with the
@@ -292,10 +314,10 @@ never see that panel.
 
 ### Other checks
 
-- `npm test` 78/78, `npm run typecheck` clean, `npm run build` clean.
+- `npm test` 81/81 (78 + 3 jump-priority tests from fix round 1), `npm run typecheck` clean, `npm run build` clean.
 - ESLint: full repo 184 errors (baseline 184). The branch had added the vendored three.js Basis transcoder
   (`public/basis/basis_transcoder.js`, byte-identical to `three/examples/jsm/libs/basis/`), which brought 2 errors
-  (`require()` in Emscripten glue); it is now in `globalIgnores` as vendored code. Changed files: 0 errors.
+  (`require()` in Emscripten glue); it is now in `globalIgnores` as vendored code (accepted by the controller). Changed files: 0 errors.
 - Snapshots: 1,263 named nodes before; 650 still exist by name after Task 7's merging (613 merged into combined
   meshes, by design). Of the shared nodes, 0 static nodes moved by more than 1 mm. The only differences are
   walking hall guests and the rotating LED models in the rental pavilion, which also differ between two runs of

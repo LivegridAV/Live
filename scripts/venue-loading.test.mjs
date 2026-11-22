@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
-import { LOAD_GROUPS, START_GROUP, assetsFor, groupForZ } from "../src/venue/loading/groups.ts";
+import { LOAD_GROUPS, START_GROUP, STALL_GROUP, assetsFor, groupContainingZ, groupForZ, jumpOrder } from "../src/venue/loading/groups.ts";
 import { groupsBeforeOpening, liteBeforeOpening, nextToFetch, WALK_PACE_MPS, SAFETY_MARGIN_S } from "../src/venue/loading/plan.ts";
 
 const GROUPS = [
@@ -145,6 +145,60 @@ test("stall switch-on z follows the zone gates (from + ahead)", async () => {
     // Rounded toward +z (switching on marginally early) to two decimals.
     assert.ok(group.switchOnZ >= z && group.switchOnZ - z < 0.01, `${id}: ${group.switchOnZ} vs ${z}`);
   }
+});
+
+test("zone start z follows the zone gates (ZoneGroup from) and sits behind switch-on", async () => {
+  const { EXHIBITION_RANGES } = await import("../src/venue/data/placements.ts");
+  const expected = {
+    rental: EXHIBITION_RANGES.rental.from,
+    anamorphic: EXHIBITION_RANGES.anamorphic.from,
+    technical: EXHIBITION_RANGES.technical.from,
+    projection: EXHIBITION_RANGES.projection.from,
+    arena: -214 + 79.5,
+  };
+  for (const [id, z] of Object.entries(expected)) {
+    const group = LOAD_GROUPS.find(g => g.id === id);
+    assert.ok(group.zoneZ >= z && group.zoneZ - z < 0.01, `${id}: ${group.zoneZ} vs ${z}`);
+  }
+  for (let i = 0; i < LOAD_GROUPS.length; i++) {
+    assert.equal(typeof LOAD_GROUPS[i].zoneZ, "number");
+    assert.ok(LOAD_GROUPS[i].zoneZ <= LOAD_GROUPS[i].switchOnZ, `${LOAD_GROUPS[i].id} switches on before its zone starts`);
+    if (i > 0) assert.ok(LOAD_GROUPS[i].zoneZ < LOAD_GROUPS[i - 1].zoneZ, `${LOAD_GROUPS[i].id} zone starts after ${LOAD_GROUPS[i - 1].id}`);
+  }
+});
+
+test("jump priority: the destination stall's own group first, then the next group ahead", async () => {
+  const { EXHIBITION_RANGES } = await import("../src/venue/data/placements.ts");
+  const ids = LOAD_GROUPS.map(g => g.id);
+  const rangeOf = { reception: "reception", anamorphic: "anamorphic", "led-rental": "rental", technical: "technical", projection: "projection" };
+  assert.deepEqual(Object.keys(STALL_GROUP).sort(), Object.keys(rangeOf).sort());
+  for (const [stall, range] of Object.entries(rangeOf)) {
+    const { from, to } = EXHIBITION_RANGES[range];
+    for (const z of [from, (from + to) / 2, to]) {
+      const order = jumpOrder(z, stall);
+      const own = STALL_GROUP[stall], next = ids[ids.indexOf(own) + 1];
+      assert.deepEqual(order, next ? [own, next] : [own], `${stall} at z ${z.toFixed(2)}`);
+    }
+  }
+  // The old rule (switch-on look-ahead) named the group ahead of these stalls.
+  const tech = EXHIBITION_RANGES.technical, mid = (tech.from + tech.to) / 2;
+  assert.notEqual(groupForZ(mid).id, "technical");
+  assert.equal(jumpOrder(mid, "technical")[0], "technical");
+});
+
+test("jump priority without a stall: the group whose content is at z", async () => {
+  const { EXHIBITION_RANGES } = await import("../src/venue/data/placements.ts");
+  // Entrance, tunnel, pillars, reception: the start group, then rental.
+  for (const z of [21, 8, -16.69, -34.49, -48.63]) assert.deepEqual(jumpOrder(z), ["start", "rental"], `z ${z}`);
+  // Arena, main stage, finale cameras: the arena group, the last one.
+  for (const z of [-134.5, -199.02, -218.81, -229.49]) assert.deepEqual(jumpOrder(z), ["arena"], `z ${z}`);
+  // Just inside a zone's near end, its own group (later zones overlap earlier ones further in).
+  for (const id of ["rental", "anamorphic", "technical", "projection", "arena"]) {
+    assert.equal(groupContainingZ(LOAD_GROUPS.find(g => g.id === id).zoneZ - 0.5).id, id);
+  }
+  assert.equal(groupContainingZ(EXHIBITION_RANGES.anamorphic.to - 1).id, "anamorphic");
+  // An unknown stall falls back to z.
+  assert.deepEqual(jumpOrder(-199.02, "nowhere"), ["arena"]);
 });
 
 test("no usable bandwidth estimate loads every group before opening", () => {

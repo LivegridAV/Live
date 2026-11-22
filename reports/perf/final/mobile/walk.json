@@ -5,7 +5,7 @@
  "viewport": "375x812@3",
  "passes": {
   "walk": {
-   "msToOpen": 18167,
+   "msToOpen": 18019,
    "quality": {
     "dpr": 3,
     "canvas": [
@@ -13,26 +13,26 @@
      1624
     ]
    },
-   "frames": 2825,
+   "frames": 2852,
    "gapFrames": 0,
    "gaps": [],
    "loadingCueFrames": 0,
-   "longTasks": 603,
-   "longestTaskMs": 324,
+   "longTasks": 641,
+   "longestTaskMs": 337,
    "consoleErrors": [],
    "venueLog": [
-    "[venue] load group start ready at 3766 ms",
-    "[venue] opening with start and the light packs of rental, anamorphic, technical, projection, arena (11642 kB/s, start z 62.0; walk-pace minimum would be none)",
-    "[venue] light pack rental ready at 3954 ms",
-    "[venue] light pack anamorphic ready at 4023 ms",
-    "[venue] light pack technical ready at 10627 ms",
-    "[venue] light pack projection ready at 10779 ms",
-    "[venue] light pack arena ready at 10808 ms",
-    "[venue] load group rental ready at 18659 ms",
-    "[venue] load group anamorphic ready at 18895 ms",
-    "[venue] load group technical ready at 19776 ms",
-    "[venue] load group projection ready at 20294 ms",
-    "[venue] load group arena ready at 20590 ms",
+    "[venue] load group start ready at 3717 ms",
+    "[venue] opening with start and the light packs of rental, anamorphic, technical, projection, arena (11686 kB/s, start z 62.0; walk-pace minimum would be none)",
+    "[venue] light pack rental ready at 3912 ms",
+    "[venue] light pack anamorphic ready at 3987 ms",
+    "[venue] light pack technical ready at 8259 ms",
+    "[venue] light pack arena ready at 8817 ms",
+    "[venue] light pack projection ready at 8968 ms",
+    "[venue] load group rental ready at 18714 ms",
+    "[venue] load group anamorphic ready at 18957 ms",
+    "[venue] load group technical ready at 19971 ms",
+    "[venue] load group projection ready at 20397 ms",
+    "[venue] load group arena ready at 20685 ms",
     "[venue] every venue file was requested once"
    ],
    "jumpEarly": {
@@ -42,8 +42,8 @@
      "rental",
      "anamorphic",
      "technical",
-     "projection",
-     "arena"
+     "arena",
+     "projection"
     ],
     "readyOnArrival": [
      "start",
@@ -122,13 +122,13 @@
     },
     {
      "progress": 0.08,
-     "callsMax": 637,
-     "trianglesMax": 4792033
+     "callsMax": 427,
+     "trianglesMax": 3194705
     },
     {
      "progress": 0.1,
-     "callsMax": 1543,
-     "trianglesMax": 6110965
+     "callsMax": 1525,
+     "trianglesMax": 6086149
     },
     {
      "progress": 0.12,
@@ -137,13 +137,13 @@
     },
     {
      "progress": 0.14,
-     "callsMax": 1095,
-     "trianglesMax": 4190181
+     "callsMax": 1093,
+     "trianglesMax": 4181269
     },
     {
      "progress": 0.16,
-     "callsMax": 995,
-     "trianglesMax": 3796225
+     "callsMax": 999,
+     "trianglesMax": 3802997
     },
     {
      "progress": 0.18,
@@ -153,7 +153,7 @@
     {
      "progress": 0.2,
      "callsMax": 1597,
-     "trianglesMax": 7210643
+     "trianglesMax": 7211613
     },
     {
      "progress": 0.22,
@@ -162,23 +162,23 @@
     },
     {
      "progress": 0.24,
-     "callsMax": 1490,
-     "trianglesMax": 6920907
+     "callsMax": 1493,
+     "trianglesMax": 6913737
     },
     {
      "progress": 0.26,
-     "callsMax": 1447,
-     "trianglesMax": 6845449
+     "callsMax": 1453,
+     "trianglesMax": 6845785
     },
     {
      "progress": 0.28,
-     "callsMax": 1419,
-     "trianglesMax": 5989669
+     "callsMax": 1421,
+     "trianglesMax": 5990309
     },
     {
      "progress": 0.3,
-     "callsMax": 1408,
-     "trianglesMax": 5805720
+     "callsMax": 1416,
+     "trianglesMax": 5809576
     },
     {
      "progress": 0.32,
@@ -187,8 +187,8 @@
     },
     {
      "progress": 0.34,
-     "callsMax": 610,
-     "trianglesMax": 2330973
+     "callsMax": 612,
+     "trianglesMax": 2374185
     },
     {
      "progress": 0.36,
@@ -197,22 +197,22 @@
     },
     {
      "progress": 0.38,
-     "callsMax": 991,
-     "trianglesMax": 4183081
+     "callsMax": 990,
+     "trianglesMax": 4065217
     },
     {
      "progress": 0.4,
      "callsMax": 762,
-     "trianglesMax": 3574531
+     "trianglesMax": 3664967
     },
     {
      "progress": 0.42,
-     "callsMax": 713,
-     "trianglesMax": 3643463
+     "callsMax": 717,
+     "trianglesMax": 3676707
     },
     {
      "progress": 0.44,
-     "callsMax": 447,
+     "callsMax": 431,
      "trianglesMax": 1411871
     },
     {
@@ -223,22 +223,22 @@
     {
      "progress": 0.48,
      "callsMax": 423,
-     "trianglesMax": 1434771
+     "trianglesMax": 1435579
     },
     {
      "progress": 0.5,
-     "callsMax": 470,
-     "trianglesMax": 2669265
+     "callsMax": 456,
+     "trianglesMax": 2533649
     },
     {
      "progress": 0.52,
-     "callsMax": 294,
-     "trianglesMax": 1974126
+     "callsMax": 291,
+     "trianglesMax": 1971534
     },
     {
      "progress": 0.54,
-     "callsMax": 256,
-     "trianglesMax": 1607351
+     "callsMax": 247,
+     "trianglesMax": 1450217
     },
     {
      "progress": 0.56,
@@ -247,13 +247,13 @@
     },
     {
      "progress": 0.58,
-     "callsMax": 324,
-     "trianglesMax": 2692761
+     "callsMax": 314,
+     "trianglesMax": 2677445
     },
     {
      "progress": 0.6,
-     "callsMax": 340,
-     "trianglesMax": 2697366
+     "callsMax": 341,
+     "trianglesMax": 2777321
     },
     {
      "progress": 0.62,
@@ -262,18 +262,18 @@
     },
     {
      "progress": 0.64,
-     "callsMax": 867,
-     "trianglesMax": 7502344
+     "callsMax": 865,
+     "trianglesMax": 7502320
     },
     {
      "progress": 0.66,
-     "callsMax": 260,
-     "trianglesMax": 2183538
+     "callsMax": 284,
+     "trianglesMax": 2222684
     },
     {
      "progress": 0.68,
-     "callsMax": 585,
-     "trianglesMax": 4644899
+     "callsMax": 582,
+     "trianglesMax": 4640447
     },
     {
      "progress": 0.7,
@@ -282,8 +282,8 @@
     },
     {
      "progress": 0.72,
-     "callsMax": 655,
-     "trianglesMax": 4990416
+     "callsMax": 646,
+     "trianglesMax": 4934814
     },
     {
      "progress": 0.74,
@@ -292,18 +292,18 @@
     },
     {
      "progress": 0.76,
-     "callsMax": 826,
-     "trianglesMax": 5063095
+     "callsMax": 825,
+     "trianglesMax": 5069977
     },
     {
      "progress": 0.78,
-     "callsMax": 270,
-     "trianglesMax": 1205851
+     "callsMax": 367,
+     "trianglesMax": 1258825
     },
     {
      "progress": 0.8,
-     "callsMax": 943,
-     "trianglesMax": 1277479
+     "callsMax": 961,
+     "trianglesMax": 1277995
     },
     {
      "progress": 0.82,
@@ -317,28 +317,28 @@
     },
     {
      "progress": 0.86,
-     "callsMax": 843,
-     "trianglesMax": 1172509
+     "callsMax": 842,
+     "trianglesMax": 1172497
     },
     {
      "progress": 0.88,
-     "callsMax": 726,
-     "trianglesMax": 1155725
+     "callsMax": 724,
+     "trianglesMax": 1155689
     },
     {
      "progress": 0.9,
-     "callsMax": 456,
-     "trianglesMax": 1115035
+     "callsMax": 455,
+     "trianglesMax": 1115023
     },
     {
      "progress": 0.92,
      "callsMax": 426,
-     "trianglesMax": 1108189
+     "trianglesMax": 1105023
     },
     {
      "progress": 0.94,
-     "callsMax": 407,
-     "trianglesMax": 1096377
+     "callsMax": 405,
+     "trianglesMax": 1096449
     },
     {
      "progress": 0.96,
@@ -347,21 +347,21 @@
     },
     {
      "progress": 0.98,
-     "callsMax": 352,
-     "trianglesMax": 1080949
+     "callsMax": 401,
+     "trianglesMax": 1081883
     },
     {
      "progress": 1,
-     "callsMax": 256,
-     "trianglesMax": 1078805
+     "callsMax": 254,
+     "trianglesMax": 1078769
     }
    ],
    "callsMax": 1615,
-   "trianglesMax": 7502344,
-   "msToAllReady": 32049
+   "trianglesMax": 7502320,
+   "msToAllReady": 31988
   },
   "reduced": {
-   "msToOpen": 8736,
+   "msToOpen": 8852,
    "quality": {
     "dpr": 3,
     "canvas": [
@@ -369,26 +369,26 @@
      1624
     ]
    },
-   "frames": 232,
+   "frames": 240,
    "gapFrames": 0,
    "gaps": [],
    "loadingCueFrames": 0,
    "longTasks": 88,
-   "longestTaskMs": 392,
+   "longestTaskMs": 367,
    "consoleErrors": [],
    "venueLog": [
-    "[venue] load group start ready at 2771 ms",
-    "[venue] opening with start and the light packs of rental, anamorphic, technical, projection, arena (26219 kB/s, start z 62.0; walk-pace minimum would be none)",
-    "[venue] light pack rental ready at 2975 ms",
-    "[venue] light pack anamorphic ready at 3052 ms",
-    "[venue] light pack technical ready at 4174 ms",
-    "[venue] light pack projection ready at 4202 ms",
-    "[venue] light pack arena ready at 4330 ms",
-    "[venue] load group rental ready at 9246 ms",
-    "[venue] load group anamorphic ready at 9426 ms",
-    "[venue] load group technical ready at 10519 ms",
-    "[venue] load group projection ready at 10834 ms",
-    "[venue] load group arena ready at 11167 ms",
+    "[venue] load group start ready at 2867 ms",
+    "[venue] opening with start and the light packs of rental, anamorphic, technical, projection, arena (24455 kB/s, start z 62.0; walk-pace minimum would be none)",
+    "[venue] light pack rental ready at 3577 ms",
+    "[venue] light pack anamorphic ready at 3649 ms",
+    "[venue] light pack technical ready at 4222 ms",
+    "[venue] light pack projection ready at 4252 ms",
+    "[venue] light pack arena ready at 4377 ms",
+    "[venue] load group rental ready at 9357 ms",
+    "[venue] load group anamorphic ready at 9561 ms",
+    "[venue] load group technical ready at 10526 ms",
+    "[venue] load group projection ready at 11008 ms",
+    "[venue] load group arena ready at 11327 ms",
     "[venue] every venue file was requested once"
    ],
    "reducedMotion": true,
@@ -396,17 +396,17 @@
    "entrance": 0
   },
   "visits": {
-   "frames": 505,
+   "frames": 500,
    "gapFrames": 0,
    "gaps": [],
    "loadingCueFrames": 0,
-   "longTasks": 211,
-   "longestTaskMs": 333,
+   "longTasks": 218,
+   "longestTaskMs": 379,
    "consoleErrors": [],
    "visits": [
     {
      "stall": "reception",
-     "msToOpen": 11484,
+     "msToOpen": 11878,
      "visitBarShown": true,
      "returnedToVenue": true,
      "gapFrames": 0,
@@ -414,7 +414,7 @@
     },
     {
      "stall": "anamorphic",
-     "msToOpen": 11704,
+     "msToOpen": 11714,
      "visitBarShown": true,
      "returnedToVenue": true,
      "gapFrames": 0,
@@ -422,7 +422,7 @@
     },
     {
      "stall": "technical",
-     "msToOpen": 11900,
+     "msToOpen": 11960,
      "visitBarShown": true,
      "returnedToVenue": true,
      "gapFrames": 0,
@@ -430,7 +430,7 @@
     },
     {
      "stall": "led-rental",
-     "msToOpen": 11947,
+     "msToOpen": 11837,
      "visitBarShown": true,
      "returnedToVenue": true,
      "gapFrames": 0,
@@ -438,17 +438,17 @@
     },
     {
      "stall": "projection",
-     "msToOpen": 11899,
+     "msToOpen": 11745,
      "visitBarShown": true,
      "returnedToVenue": true,
      "gapFrames": 0,
      "errors": 0
     }
    ],
-   "msToOpen": 11947
+   "msToOpen": 11960
   },
   "inspect": {
-   "msToOpen": 21037,
+   "msToOpen": 21980,
    "quality": {
     "dpr": 3,
     "canvas": [
@@ -460,23 +460,23 @@
    "gapFrames": 0,
    "gaps": [],
    "loadingCueFrames": 0,
-   "longTasks": 56,
-   "longestTaskMs": 917,
+   "longTasks": 57,
+   "longestTaskMs": 907,
    "consoleErrors": [],
    "venueLog": [
-    "[venue] load group start ready at 3277 ms",
-    "[venue] opening with start, rental, anamorphic, technical, projection, arena (24716 kB/s, start z 62.0; walk-pace minimum would be none)",
-    "[venue] load group rental ready at 3706 ms",
-    "[venue] load group anamorphic ready at 4146 ms",
-    "[venue] load group technical ready at 5312 ms",
-    "[venue] load group projection ready at 5942 ms",
-    "[venue] load group arena ready at 7487 ms",
+    "[venue] load group start ready at 3325 ms",
+    "[venue] opening with start, rental, anamorphic, technical, projection, arena (25243 kB/s, start z 62.0; walk-pace minimum would be none)",
+    "[venue] load group rental ready at 3755 ms",
+    "[venue] load group anamorphic ready at 6372 ms",
+    "[venue] load group technical ready at 7608 ms",
+    "[venue] load group projection ready at 10666 ms",
+    "[venue] load group arena ready at 10741 ms",
     "[venue] every venue file was requested once"
    ],
    "inspection": "ready"
   },
   "capture": {
-   "msToOpen": 21079,
+   "msToOpen": 20103,
    "quality": {
     "dpr": 3,
     "canvas": [
@@ -484,21 +484,21 @@
      1624
     ]
    },
-   "frames": 97,
+   "frames": 103,
    "gapFrames": 0,
    "gaps": [],
    "loadingCueFrames": 0,
-   "longTasks": 3,
-   "longestTaskMs": 195,
+   "longTasks": 2,
+   "longestTaskMs": 197,
    "consoleErrors": [],
    "venueLog": [
-    "[venue] load group start ready at 3223 ms",
-    "[venue] opening with start, rental, anamorphic, technical, projection, arena (25082 kB/s, start z 62.0; walk-pace minimum would be none)",
-    "[venue] load group rental ready at 3652 ms",
-    "[venue] load group anamorphic ready at 4068 ms",
-    "[venue] load group technical ready at 8699 ms",
-    "[venue] load group projection ready at 9457 ms",
-    "[venue] load group arena ready at 9656 ms",
+    "[venue] load group start ready at 3232 ms",
+    "[venue] opening with start, rental, anamorphic, technical, projection, arena (25493 kB/s, start z 62.0; walk-pace minimum would be none)",
+    "[venue] load group rental ready at 3666 ms",
+    "[venue] load group anamorphic ready at 4047 ms",
+    "[venue] load group technical ready at 6570 ms",
+    "[venue] load group projection ready at 9545 ms",
+    "[venue] load group arena ready at 10171 ms",
     "[venue] every venue file was requested once"
    ],
    "uiHidden": true

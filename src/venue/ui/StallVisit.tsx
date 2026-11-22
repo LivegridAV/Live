@@ -26,7 +26,7 @@ export function StallVisitControls() {
       scrollToProgress(progress,"instant");
       // The visit camera stands at the stall itself (after the scroll's own
       // request, so this one wins): stream that group first.
-      prioritizeZ(GRAND.placements[stall].root[2]);
+      prioritizeZ(GRAND.placements[stall].root[2],stall);
       journey.progress=journey.target=progress;journey.velocity=0;
       state.setProgress(progress,0);state.setZone(zoneAt(progress).id);
       state.setStallVisit({stall,view:view as StallView});

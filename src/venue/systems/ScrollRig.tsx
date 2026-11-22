@@ -5,6 +5,7 @@ import { useVenue } from "./store";
 import { zoneAt } from "../data/zones";
 import { BASE_SCROLL_VH, SCROLL_PLAN_VH, createSample, progressToScrollFraction, samplePath, scrollFractionToProgress } from "../data/path";
 import { prioritizeZ } from "../loading/stream";
+import { stallAtProgress } from "../data/stallVisits";
 
 /**
  * Scroll → journey.
@@ -135,7 +136,8 @@ const target = createSample();
  * the destination to the front of the streaming queue.
  */
 export function scrollToProgress(p: number, behavior: ScrollBehavior = "smooth") {
-  prioritizeZ(samplePath(p, target).pos.z);
+  // The stall at the destination names its own group (side-by-side stalls share a z range).
+  prioritizeZ(samplePath(p, target).pos.z, stallAtProgress(p));
   window.scrollTo({ top: progressToScroll(p), behavior });
 }
 

@@ -1,6 +1,6 @@
 import { useGLTF, useProgress } from "@react-three/drei";
 import type * as THREE from "three";
-import { LOAD_GROUPS, START_GROUP, assetsFor, groupForZ } from "./groups";
+import { LOAD_GROUPS, START_GROUP, assetsFor, jumpOrder } from "./groups";
 import { startStreaming, type FetchSample, type LoadManifest, type QueueItem, type StreamHandle } from "./streamer";
 import { mediaRequests, modelRequest, pathOf } from "./assetUrls";
 import { rememberBlob, rememberImage } from "./prefetched";
@@ -321,17 +321,22 @@ export function venueOpened() {
 }
 
 /**
- * Move the group needed at camera z `z` to the front of the queue (nav jumps,
- * stall visits): its light pack first unless it is already in memory (or the
- * full group is), then its full group. Running downloads are not cancelled.
+ * Move the destination of a nav jump or stall visit to the front of the queue
+ * (`jumpOrder`): the destination's own group (the stall's, when `stall` is
+ * known), then the next group ahead. Each comes with its light pack first
+ * unless that or the full group is already in memory. Running downloads are
+ * not cancelled.
  */
-export function prioritizeZ(z: number) {
+export function prioritizeZ(z: number, stall?: string | null) {
   if (!Number.isFinite(z)) return;
-  const id = groupForZ(z).id;
+  const ids = jumpOrder(z, stall);
   const { readyGroups, liteGroups } = useVenue.getState();
-  const order = !fullMode && !readyGroups.includes(id) && !liteGroups.includes(id) ? [liteItem(id), id] : [id];
-  // A jump's target need not wait for the other light packs.
-  if (opened) handle?.release(order);
+  const needsLite = (id: string) => !fullMode && !readyGroups.includes(id) && !liteGroups.includes(id);
+  const order = ids.flatMap(id => needsLite(id) ? [liteItem(id), id] : [id]);
+  // The destination need not wait for the other light packs; the group after it
+  // still does (releaseFullWhenLiteDone releases it with the rest).
+  const [target] = ids;
+  if (opened) handle?.release(order.filter(item => item === target || item.endsWith(LITE)));
   handle?.prioritize(order);
 }
 

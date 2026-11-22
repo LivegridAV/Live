@@ -2,6 +2,7 @@
   {
     "id": "start",
     "switchOnZ": 80,
+    "zoneZ": 80,
     "assets": [
       "/models/entrance/entrance-refined.glb",
       "/models/expo/hall-bay.glb",
@@ -37,6 +38,7 @@
   {
     "id": "rental",
     "switchOnZ": -8.64,
+    "zoneZ": -66.64,
     "assets": [
       "/models/expo/grand-rental-finish-v2-shell.glb",
       "/models/expo/grand-rental-finish-v2-interior.glb",
@@ -56,6 +58,7 @@
   {
     "id": "anamorphic",
     "switchOnZ": -12.65,
+    "zoneZ": -70.65,
     "assets": [
       "/models/expo/grand-anamorphic-shape-v3-shell.glb",
       "/models/expo/grand-anamorphic-shape-v3-interior.glb",
@@ -78,6 +81,7 @@
   {
     "id": "technical",
     "switchOnZ": -48.27,
+    "zoneZ": -106.27,
     "assets": [
       "/models/expo/technical-reference-hall-rig-v3.glb",
       "/models/expo/grand-technical-shape-v3-shell.glb",
@@ -98,6 +102,7 @@
   {
     "id": "projection",
     "switchOnZ": -50.08,
+    "zoneZ": -108.08,
     "assets": [
       "/models/expo/projection-finish-v2-blender-shell.glb",
       "/models/expo/projection-finish-v2-blender-interior.glb",
@@ -116,6 +121,7 @@
   {
     "id": "arena",
     "switchOnZ": -88.5,
+    "zoneZ": -134.5,
     "assets": [
       "/models/expo/flagship-stage.glb",
       "/media/final/creative-world.webp",

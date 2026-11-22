@@ -14,6 +14,7 @@ import { spawn } from "node:child_process";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { chromium } from "playwright-core";
+import { jumpOrder } from "../src/venue/loading/groups.ts";
 
 const arg = (name, fallback) => { const i = process.argv.indexOf(`--${name}`); return i > 0 ? process.argv[i + 1] : fallback; };
 const label = arg("label", "final");
@@ -29,8 +30,8 @@ const ORIGIN = "http://127.0.0.1:4310";
 /** The stall visits (src/venue/data/stallVisits.ts STALL_VISITS keys). */
 const VISITS = ["reception", "anamorphic", "technical", "led-rental", "projection"];
 const groups = JSON.parse(readFileSync(path.resolve("src/venue/loading/groups.json"), "utf8"));
-/** groups.ts groupForZ: the last group whose switch-on z the point has passed. */
-const groupForZ = z => { let found = groups[0]; for (const g of groups) { if (z <= g.switchOnZ) found = g; else break; } return found; };
+/** Rail stops that land at a stall (stallAtProgress at the stop's progress), for the expected jump target. */
+const STOP_STALL = { "Reception": "reception", "LED Rental Solutions": "led-rental", "Content Studio": "anamorphic", "Technical Showcase": "technical", "Projection Mapping": "projection" };
 const outDir = path.resolve("reports/perf", label);
 mkdirSync(path.join(outDir, "nav-jumps"), { recursive: true });
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -102,8 +103,9 @@ try {
   async function finish(run, s, shotName) {
     run.arrivedProgress = await settle(s.page);
     run.arrivedZ = await s.page.evaluate(() => +JSON.parse(document.querySelector("[data-render-metrics]").dataset.cameraPose).position[2].toFixed(2));
-    // The group groupForZ picks where the camera came to rest (the one a jump there prioritizes).
-    run.targetGroup = groupForZ(run.arrivedZ).id;
+    // The destination's own group, the one the jump moves to the front (groups.ts jumpOrder).
+    run.jumpOrder = jumpOrder(run.arrivedZ, run.kind === "visit" ? run.name : STOP_STALL[run.name]);
+    run.targetGroup = run.jumpOrder[0];
     run.arrivedShown = await s.page.evaluate(() => window.__venuePerf.groupsShown());
     run.arrivedReady = await s.page.evaluate(() => window.__venuePerf.groupsReady());
     await s.page.screenshot({ path: path.join(outDir, "nav-jumps", `${shotName}-arrival.jpg`), type: "jpeg", quality: 70 });
