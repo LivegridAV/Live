@@ -17,6 +17,8 @@ import { refineAvatarSkin } from "./surfaceDetail";
 import { releaseLiteModel, useModelUrl } from "../loading/useModelUrl";
 import { useLiteMode } from "../loading/liteMode";
 import { gltfExtender } from "./textureLoading";
+import { disposeMergedStatic, mergeStaticMeshes, readByVenueCode } from "./mergeStatic";
+import { prepareBeforeWarm } from "./warmScene";
 
 function installationFinishId(name:string):InstallationId|undefined {
   if(name.startsWith("grand-anamorphic"))return "S1";
@@ -55,9 +57,10 @@ function shareAvatarTextures(model:THREE.Object3D){
 }
 function Model({ name, url, lite, darkHall=false, hideHallColumns=false }: AssetProps&{url:string;lite:boolean}) {
   const gl = useThree(state => state.gl);
-  const { scene } = useGLTF(url, false, true, gltfExtender(gl));
+  const { scene, animations } = useGLTF(url, false, true, gltfExtender(gl));
   const {clone,owned,overhead,sectionWalls} = useMemo(() => {
     const model = scene.clone(true);
+    model.animations = animations;
     shareAvatarTextures(model);
     refineAvatarSkin(model);
     const owned:THREE.Material[]=[];
@@ -151,8 +154,14 @@ function Model({ name, url, lite, darkHall=false, hideHallColumns=false }: Asset
       if(object.userData.ledRentalOverhead)overhead.push(object);
     });
     return {clone:model,owned,overhead,sectionWalls};
-  }, [scene,darkHall,hideHallColumns,name,lite,gl]);
+  }, [scene,animations,darkHall,hideHallColumns,name,lite,gl]);
   useEffect(()=>()=>owned.forEach(material=>material.dispose()),[owned]);
+  // Once materials and visibility are final (the same for full, lite and lod1
+  // files), in a task of its own before the warm-up: see prepareBeforeWarm.
+  useEffect(()=>{
+    const cancel=prepareBeforeWarm(clone,()=>mergeStaticMeshes(clone,{keep:readByVenueCode}));
+    return ()=>{cancel();disposeMergedStatic(clone);};
+  },[clone]);
   // Only a light-pack file is released; start files drawn in lite mode stay shared.
   useEffect(()=>/\.lite\.glb(?:$|\?)/.test(url)?()=>releaseLiteModel(url,scene):undefined,[url,scene]);
   useFrame(()=>{

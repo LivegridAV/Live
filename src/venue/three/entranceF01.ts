@@ -32,12 +32,15 @@ const emeraldCurrent = `
   }
 `;
 
+/** Planting materials sway in object space (see begin_vertex below), so their meshes keep their own transforms. */
+export const entrancePlant = (materialName: string) => ["M19","M20","M21"].includes(materialName.match(/M\d\d/)?.[0] ?? "M24");
+
 export function finishEntranceMaterial(source: THREE.MeshStandardMaterial, uniforms: EntranceUniforms) {
   const code = source.name.match(/M\d\d/)?.[0] ?? "M24";
   const led = code === "M09" || code === "M10";
   const material = led ? new THREE.MeshPhysicalMaterial({name:source.name,color:source.color,roughness:.36,
     metalness:0,emissive:source.emissive,side:source.side,specularIntensity:code==="M10"?.08:.02,ior:1.45}) : source.clone();
-  const plant = ["M19","M20","M21"].includes(code);
+  const plant = entrancePlant(source.name);
   if(code==="M01")material.color.set("#20272a");
   if(code==="M02")material.color.set("#1c2325");
   if(code==="M18")material.color.set(source.map?"#c0b7a6":"#493f32");

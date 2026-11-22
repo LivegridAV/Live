@@ -425,3 +425,144 @@ test("lod1 replaces the full file below high quality when the manifest lists it"
   assert.equal(choose("/models/expo/y-shell.glb", "medium"), "full");
   assert.equal(choose("/models/expo/x-visitors.glb", "medium", null), "full");
 });
+
+// ---- static mesh merging (Task 7) ----
+
+const THREE = await import("three");
+const { mergeStaticMeshes } = await import("../src/venue/three/mergeStatic.ts");
+
+/** A root (itself moved, so "root local space" is not world space) holding boxes under rotated, scaled groups. */
+function boxes(n, materials, { shareGeometry = false } = {}) {
+  const root = new THREE.Group();
+  root.position.set(3, -1, 7); root.rotation.y = .4;
+  const shared = new THREE.BoxGeometry(1, 2, 3);
+  for (let i = 0; i < n; i++) {
+    const holder = new THREE.Group();
+    holder.position.set(i * 2.5, i % 3, -i); holder.rotation.set(i * .3, i * .7, 0); holder.scale.setScalar(1 + i * .1);
+    const mesh = new THREE.Mesh(shareGeometry ? shared : new THREE.BoxGeometry(1 + i * .1, 2, 3), materials[i % materials.length]);
+    mesh.position.set(0, .5, 0); mesh.name = `box ${i}`;
+    holder.add(mesh); root.add(holder);
+  }
+  root.updateMatrixWorld(true);
+  return root;
+}
+const drawObjects = root => { const out = []; root.traverse(o => { if (o.isMesh) out.push(o); }); return out; };
+const worldBox = root => { root.updateMatrixWorld(true); return new THREE.Box3().setFromObject(root, true); };
+const near = (a, b, eps = 1e-6) => a.distanceTo(b) <= eps;
+
+test("mergeStaticMeshes: 10 boxes sharing one material become one draw object with the same world bounds", () => {
+  const root = boxes(10, [new THREE.MeshStandardMaterial()]);
+  const before = worldBox(root);
+  assert.deepEqual(mergeStaticMeshes(root), { before: 10, after: 1 });
+  const meshes = drawObjects(root);
+  assert.equal(meshes.length, 1);
+  assert.equal(meshes[0].parent, root);
+  const after = worldBox(root);
+  assert.ok(near(before.min, after.min) && near(before.max, after.max), `${JSON.stringify(before)} vs ${JSON.stringify(after)}`);
+});
+
+test("mergeStaticMeshes: two materials give two draw objects", () => {
+  const root = boxes(10, [new THREE.MeshStandardMaterial(), new THREE.MeshStandardMaterial()]);
+  assert.deepEqual(mergeStaticMeshes(root), { before: 10, after: 2 });
+  assert.equal(new Set(drawObjects(root).map(m => m.material)).size, 2);
+});
+
+test("mergeStaticMeshes: a SkinnedMesh is left untouched", () => {
+  const material = new THREE.MeshStandardMaterial();
+  const root = boxes(4, [material]);
+  const skinned = new THREE.SkinnedMesh(new THREE.BoxGeometry(), material);
+  const bone = new THREE.Bone();
+  skinned.add(bone); skinned.bind(new THREE.Skeleton([bone]));
+  root.add(skinned);
+  const geometry = skinned.geometry;
+  assert.deepEqual(mergeStaticMeshes(root), { before: 5, after: 2 });
+  assert.equal(skinned.parent, root);
+  assert.equal(skinned.geometry, geometry);
+});
+
+test("mergeStaticMeshes: a kept name survives as its own mesh", () => {
+  const root = boxes(10, [new THREE.MeshStandardMaterial()]);
+  const kept = root.getObjectByName("box 3");
+  const world = kept.matrixWorld.clone();
+  assert.deepEqual(mergeStaticMeshes(root, { keep: o => o.name === "box 3" }), { before: 10, after: 2 });
+  assert.equal(root.getObjectByName("box 3"), kept);
+  root.updateMatrixWorld(true);
+  assert.ok(kept.matrixWorld.equals(world));
+});
+
+test("mergeStaticMeshes: 6 meshes sharing geometry and material become one InstancedMesh", () => {
+  const root = boxes(6, [new THREE.MeshStandardMaterial()], { shareGeometry: true });
+  const worlds = drawObjects(root).map(m => m.matrixWorld.clone());
+  assert.deepEqual(mergeStaticMeshes(root), { before: 6, after: 1 });
+  const [instanced] = drawObjects(root);
+  assert.ok(instanced.isInstancedMesh);
+  assert.equal(instanced.count, 6);
+  root.updateMatrixWorld(true);
+  const m = new THREE.Matrix4();
+  worlds.forEach((world, i) => {
+    instanced.getMatrixAt(i, m);
+    m.premultiply(instanced.matrixWorld);
+    // Instance matrices are stored as float32.
+    m.elements.forEach((e, k) => assert.ok(Math.abs(e - world.elements[k]) < 1e-6, `instance ${i} element ${k}: ${e} vs ${world.elements[k]}`));
+  });
+});
+
+test("mergeStaticMeshes: meshes under a clip-animated node, hidden meshes and morph targets stay as they are", () => {
+  const root = boxes(8, [new THREE.MeshStandardMaterial()]);
+  const [a, b, c] = ["box 0", "box 1", "box 2"].map(name => root.getObjectByName(name));
+  a.parent.name = "spinner";
+  root.animations = [new THREE.AnimationClip("spin", 1, [new THREE.NumberKeyframeTrack("spinner.rotation[y]", [0, 1], [0, 1])])];
+  b.visible = false;
+  c.geometry.morphAttributes.position = [c.geometry.attributes.position.clone()];
+  assert.deepEqual(mergeStaticMeshes(root), { before: 8, after: 4 });
+  for (const mesh of [a, b, c]) assert.ok(drawObjects(root).includes(mesh), mesh.name);
+});
+
+test("mergeStaticMeshes: quantized (normalized int16) and interleaved attributes are baked as world floats", () => {
+  const material = new THREE.MeshStandardMaterial(), root = new THREE.Group();
+  const expected = [];
+  for (let i = 0; i < 2; i++) {
+    const geometry = new THREE.BufferGeometry();
+    // KHR_mesh_quantization: int16 normalized positions, the node scale restores metres.
+    geometry.setAttribute("position", new THREE.BufferAttribute(new Int16Array([0, 0, 0, 32767, 0, 0, 0, -32767, 0]), 3, true));
+    const normals = new THREE.InterleavedBuffer(new Float32Array([0, 0, 1, 9, 0, 0, 1, 9, 0, 0, 1, 9]), 4);
+    geometry.setAttribute("normal", new THREE.InterleavedBufferAttribute(normals, 3, 0));
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.scale.setScalar(2 + i); mesh.position.x = i * 10;
+    root.add(mesh);
+    mesh.updateMatrixWorld(true);
+    for (let v = 0; v < 3; v++) expected.push(new THREE.Vector3().fromBufferAttribute(geometry.attributes.position, v).applyMatrix4(mesh.matrixWorld));
+  }
+  assert.deepEqual(mergeStaticMeshes(root), { before: 2, after: 1 });
+  const { position, normal } = drawObjects(root)[0].geometry.attributes;
+  assert.ok(position.array instanceof Float32Array && !position.normalized);
+  expected.forEach((point, v) => assert.ok(near(point, new THREE.Vector3().fromBufferAttribute(position, v)), `vertex ${v}`));
+  for (let v = 0; v < 6; v++) assert.deepEqual([normal.getX(v), normal.getY(v), normal.getZ(v)], [0, 0, 1]);
+});
+
+const { prepareBeforeWarm, preparedWithin } = await import("../src/venue/three/warmScene.ts");
+const mergeStaticSoon = root => prepareBeforeWarm(root, () => mergeStaticMeshes(root));
+
+test("prepareBeforeWarm merges in a later task; preparedWithin waits for roots inside a subtree; cancel skips", async () => {
+  const material = new THREE.MeshStandardMaterial();
+  const zone = new THREE.Group(), a = boxes(4, [material]), b = boxes(4, [material]);
+  zone.add(a, b);
+  mergeStaticSoon(a);
+  const cancel = mergeStaticSoon(b);
+  cancel();
+  assert.equal(drawObjects(a).length, 4, "not inside the calling task");
+  await preparedWithin(zone);
+  assert.equal(drawObjects(a).length, 1);
+  assert.equal(drawObjects(b).length, 4);
+  await preparedWithin(zone); // nothing left: resolves at once
+});
+
+test("preparedWithin: cancelling a pending root releases a warm-up waiting on it", async () => {
+  const zone = new THREE.Group(), root = boxes(3, [new THREE.MeshStandardMaterial()]);
+  zone.add(root);
+  const cancel = mergeStaticSoon(root);
+  const settled = preparedWithin(zone);
+  cancel();
+  await settled;
+  assert.equal(drawObjects(root).length, 3);
+});

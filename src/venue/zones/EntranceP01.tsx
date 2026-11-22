@@ -3,20 +3,22 @@ import { useMemo, useEffect } from "react";
 import { useGLTF } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { entranceUniforms, finishEntranceMaterial } from "../three/entranceF01";
+import { entrancePlant, entranceUniforms, finishEntranceMaterial } from "../three/entranceF01";
 import { createEntranceWater, captureEntranceWater } from "../three/entranceReflection";
 import { createEntranceClock, advanceEntranceClock, useEntranceFinishes } from "../systems/entranceFinishes";
 import { LocalPointLight } from "../three/LocalLights";
 import { gltfExtender } from "../three/textureLoading";
+import { disposeMergedStatic, mergeStaticMeshes } from "../three/mergeStatic";
 
 /** P01 local +Y maps to world -Z. Landing Y14 meets the existing -28.4 m ramp. */
 export function EntranceP01() {
   const worldScene=useThree(s=>s.scene);
   const gl=useThree(s=>s.gl);
   // drei's default flags (Draco on), as the streamer's modelRequest expects.
-  const { scene } = useGLTF("/models/entrance/entrance-refined.glb", true, true, gltfExtender(gl));
+  const { scene, animations } = useGLTF("/models/entrance/entrance-refined.glb", true, true, gltfExtender(gl));
   const finish = useMemo(() => {
     const copy = scene.clone(true);
+    copy.animations = animations;
     const uniforms=entranceUniforms(),water=createEntranceWater(uniforms),waterMeshes:THREE.Mesh[]=[];
     const materials=new Map<string,THREE.Material>();
     copy.traverse(object => {
@@ -33,8 +35,11 @@ export function EntranceP01() {
         object.material=Array.isArray(object.material)?object.material.map(update):update(object.material);
       }
     });
+    // The water surfaces are hidden for their own reflection capture; the planting sways in object space.
+    mergeStaticMeshes(copy,{keep:object=>waterMeshes.includes(object as THREE.Mesh)
+      ||object instanceof THREE.Mesh&&!Array.isArray(object.material)&&entrancePlant(object.material.name)});
     return {model:copy,uniforms,water,waterMeshes,materials,clock:createEntranceClock(),ready:0};
-  }, [scene]);
+  }, [scene, animations]);
   useEffect(()=>{
     // The isolated GLB loads after the fixed light rig. Refresh its cached
     // depth map once so the newly mounted fascia and plants cast shadows.
@@ -42,7 +47,7 @@ export function EntranceP01() {
       if((o instanceof THREE.SpotLight || o instanceof THREE.DirectionalLight) && o.castShadow)o.shadow.needsUpdate=true;
     });
   },[finish,worldScene]);
-  useEffect(()=>()=>{finish.materials.forEach(m=>m.dispose());finish.water.material.dispose();finish.water.target.dispose();},[finish]);
+  useEffect(()=>()=>{finish.materials.forEach(m=>m.dispose());finish.water.material.dispose();finish.water.target.dispose();disposeMergedStatic(finish.model);},[finish]);
   useFrame(({gl,scene,camera,clock},dt)=>{
     const state=useEntranceFinishes.getState();
     advanceEntranceClock(finish.clock,dt,{...state,reducedMotion:state.reducedMotion&&!state.allowMotion},!document.hidden);

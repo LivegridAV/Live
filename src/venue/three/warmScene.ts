@@ -139,6 +139,8 @@ export function submitPrograms(gl: THREE.WebGLRenderer, scene: THREE.Scene, came
  */
 export async function warmScene(gl: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera,
   cancelled = () => false, onProgress?: (fraction: number) => void) {
+  // Warm the merged meshes, not the parts they replace.
+  await preparedWithin(scene);
   if (cancelled()) return;
   const target = new THREE.WebGLRenderTarget(32, 32);
   const previousTarget = gl.getRenderTarget();
@@ -202,6 +204,49 @@ export async function warmScene(gl: THREE.WebGLRenderer, scene: THREE.Scene, cam
   await programsReady(gl, cancelled, fraction => onProgress?.(0.9 + fraction * 0.1), 30_000);
 }
 
+/**
+ * Preparation a mounted root needs before it is warmed, such as merging its
+ * static meshes (mergeStatic.ts, 5-30 ms for a large model). Run inside the
+ * render that mounts the model it lengthens a task that is already long during
+ * the walk (Task 7 measurement), so each root's work runs in a task of its own
+ * soon after mount, one root per task. warmScene and warmSubtree first wait
+ * for the roots inside what they warm, so what they warm is what is drawn.
+ */
+const preparing = new Map<THREE.Object3D, () => void>();
+const preparedListeners = new Set<() => void>();
+let prepareScheduled = false;
+const notifyPrepared = () => preparedListeners.forEach(listener => listener());
+function prepareOne() {
+  prepareScheduled = false;
+  const next = preparing.entries().next();
+  if (!next.done) { const [root, work] = next.value; preparing.delete(root); work(); }
+  notifyPrepared();
+  if (preparing.size) schedulePrepare();
+}
+function schedulePrepare() { if (!prepareScheduled) { prepareScheduled = true; setTimeout(prepareOne, 0); } }
+
+/** Run `work` for `root` in a later task, before any warm-up of it. Returns a cancel function for effect cleanup. */
+export function prepareBeforeWarm(root: THREE.Object3D, work: () => void) {
+  preparing.set(root, work);
+  schedulePrepare();
+  // A cancelled root no longer holds back a warm-up waiting on it.
+  return () => { if (preparing.delete(root)) notifyPrepared(); };
+}
+
+const inside = (object: THREE.Object3D, subtree: THREE.Object3D) => {
+  for (let node: THREE.Object3D | null = object; node; node = node.parent) if (node === subtree) return true;
+  return false;
+};
+/** Resolves once no root inside `subtree` is waiting for its preparation. */
+export function preparedWithin(subtree: THREE.Object3D): Promise<void> {
+  const waiting = () => [...preparing.keys()].some(root => inside(root, subtree));
+  if (!waiting()) return Promise.resolve();
+  return new Promise(resolve => {
+    const check = () => { if (!waiting()) { preparedListeners.delete(check); resolve(); } };
+    preparedListeners.add(check);
+  });
+}
+
 /** Layer used to draw one subtree on its own while the scene's lights stay in effect. */
 const WARM_LAYER = 31;
 let warmChain: Promise<unknown> = Promise.resolve();
@@ -232,6 +277,7 @@ export function warmSubtree(gl: THREE.WebGLRenderer, scene: THREE.Scene, camera:
 
 async function warmSubtreeNow(gl: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera,
   root: THREE.Object3D, cancelled: () => boolean) {
+  await preparedWithin(root);
   if (cancelled()) return;
   const target = new THREE.WebGLRenderTarget(32, 32);
   try {

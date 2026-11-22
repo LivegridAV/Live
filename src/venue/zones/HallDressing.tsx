@@ -15,6 +15,7 @@ import { FLOOR, type Guest, type Layout, type Part, type Sign } from "./hallKit"
 import { hallZones, servicePosterTexture, type Zone } from "./hallFeatures";
 import { applySurface, refineAvatarSkin } from "../three/surfaceDetail";
 import { gltfExtender } from "../three/textureLoading";
+import { disposeMergedStatic, mergeStaticMeshes } from "../three/mergeStatic";
 
 /**
  * Hall dressing — renders the furniture, planting, LED sculptures, lightboxes,
@@ -333,9 +334,11 @@ function DressedZone({ zone, visitors }: { zone: Zone; visitors: THREE.Object3D 
   const guests = useMemo(() => placeGuests(visitors, zone.layout.guests, zone.cast), [visitors, zone]);
   // Only while the zone is shown: ZoneGroup hides its group when out of range.
   useFrame(({ clock }) => { if (guests.parent?.visible !== false) idleGuests(guests, clock.elapsedTime); });
-  const fixtures = useMemo(() => buildFixtures(zone), [zone]);
+  // Totems, lightboxes and wall panels are static; the guests sway (idleGuests), so they stay as they are.
+  const fixtures = useMemo(() => { const group = buildFixtures(zone); mergeStaticMeshes(group); return group; }, [zone]);
   useEffect(() => () => {
     meshes.forEach(mesh => mesh.dispose());
+    disposeMergedStatic(fixtures);
     const geometries = new Set<THREE.BufferGeometry>(), materials = new Set<THREE.Material>();
     fixtures.traverse(object => {
       if (!(object instanceof THREE.Mesh)) return;
