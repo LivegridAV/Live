@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build && node scripts/prepare-export.mjs && node scripts/optimize-export.mjs",
     "typecheck": "tsc --noEmit",
-    "test": "node --test scripts/release.test.mjs",
+    "test": "node --test scripts/release.test.mjs scripts/venue-loading.test.mjs",
     "start": "next start",
     "lint": "eslint",
     "measure": "node scripts/measure-venue.mjs",
