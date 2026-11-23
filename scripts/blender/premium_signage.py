@@ -202,10 +202,11 @@ def _assign(bm, me, face_mat):
     me.update()
 
 
-def _deepen(me, face_mat, depth, bevel, front):
+def _deepen(me, face_mat, depth, bevel, back):
     """Rebuild a flat glyph mesh (lettering faces local +Z) as a built-up
-    letter: the front face stays on the plane z=`front` and the letter runs
-    `depth` back from it. The back cap is dropped (it faces the wall)."""
+    letter: the back stays on the plane z=`back` (today's stand-off) and the
+    lit face grows forward to z=back+depth. The glyph footprint in local X/Y
+    is unchanged. The back cap is dropped (it faces the wall)."""
     bm = bmesh.new()
     bm.from_mesh(me)
     bm.normal_update()
@@ -213,7 +214,6 @@ def _deepen(me, face_mat, depth, bevel, front):
     if not caps:
         bm.free()
         raise ValueError('%s has no +Z glyph faces; local +Z must face the visitor' % me.name)
-    back = front - depth
     bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.normal.z <= .9], context='FACES')
     for v in bm.verts:
         v.co.z = back
@@ -309,7 +309,7 @@ def premium_wordmark(p, height, width=None, *, centered=False, yaw=0, place=tran
             v.co.x = (v.co.x + shift) * scale + start
             v.co.y = (v.co.y - ink_low) * scale
             v.co.z *= scale
-        _deepen(ob.data, face, depth, bevel, front=depth)
+        _deepen(ob.data, face, depth, bevel, back=0)
         ob['signage_body'] = text
         ob['signage_font'] = 'Space Grotesk 600'
         ob['signage_size'] = ink
@@ -367,10 +367,12 @@ def premiumize_lettering(obs, body, *, accent=False, slogan=False, position=None
     Each object's local +Z must be the letter's facing direction (true for a
     text_add/convert label before its transform is baked, e.g. inside rental's
     label() before `transform`); a helper that bakes its transform into the
-    vertices calls this before the bake. The front face stays where it is and
-    the letter is extruded backwards, away from the viewer, by
-    sign_depth(ink height); ink height is the extent of all `obs` together
-    along the first object's local Y in world metres.
+    vertices calls this before the bake. The back plane stays where today's
+    thin letter's back is (so the stand-off gap to the panel is unchanged) and
+    the lit face grows forward, toward the facing direction, to back +
+    sign_depth(ink height); the glyph footprint in local X/Y stays put. Ink
+    height is the extent of all `obs` together along the first object's local
+    Y in world metres.
 
     Faces get ivory (aqua when `accent`; for a wordmark split into parts the
     last part is aqua), sides brushed champagne, the bevel polished champagne.
@@ -399,8 +401,8 @@ def premiumize_lettering(obs, body, *, accent=False, slogan=False, position=None
         m = ob.matrix_world.to_3x3()
         sx = (m @ Vector((1, 0, 0))).length
         sz = (m @ Vector((0, 0, 1))).length
-        front = max(v.co.z for v in ob.data.vertices)
-        _deepen(ob.data, face, depth / sz, bevel / sx, front=front)
+        back = min(v.co.z for v in ob.data.vertices)
+        _deepen(ob.data, face, depth / sz, bevel / sx, back=back)
     if position is None:
         position = _website(first.matrix_world.translation)
     _log(body, sign_kind(body), position)

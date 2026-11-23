@@ -165,11 +165,13 @@ def run():
     out = ps.premiumize_lettering([label], 'CONTENT STUDIO')
     check(out == [label], 'premiumize_lettering returns the same objects')
     (r0b, r1b), (u0b, u1b), (f0b, f1b) = extents(world_points([label]), axes)
-    check(close(r0, r0b) and close(r1, r1b), 'front face width bounds unchanged')
-    check(close(u0, u0b) and close(u1, u1b), 'front face height bounds unchanged')
-    check(close(f1, f1b), 'front face stays where it was (%.5f -> %.5f)' % (f1, f1b))
+    check(close(r0, r0b) and close(r1, r1b), 'front face X bounds unchanged')
+    check(close(u0, u0b) and close(u1, u1b), 'front face Y bounds unchanged')
+    check(close(f0, f0b), "back plane stays at today's stand-off (%.5f -> %.5f)" % (f0, f0b))
+    check(close(f1b, f0 + ps.sign_depth(.4)), 'front grows forward to back + depth (%.5f, want %.5f)'
+          % (f1b, f0 + ps.sign_depth(.4)))
     check(close(f1b - f0b, ps.sign_depth(.4)), 'label depth %.5f, want %.5f' % (f1b - f0b, ps.sign_depth(.4)))
-    check(f0b < f0 - .02, 'label extrudes away from its facing direction')
+    check(f1b > f1 + .02, 'label grows toward its facing direction')
     m = label.matrix_world.to_3x3()
     sides, fronts, edges = set(), set(), 0
     for poly in label.data.polygons:
@@ -232,7 +234,7 @@ def run():
     ps.premiumize_lettering([caption], 'TECHNOLOGY')
     (f0b, f1b), = extents(world_points([caption]), (facing,))
     check(close(f1b - f0b, .012, .0002), 'step 1: .2 m caption depth %.5f, want .012' % (f1b - f0b))
-    check(close(f1, f1b), 'step 1: caption front stays put')
+    check(close(f0, f0b), 'step 1: caption back stays put')
     check(EDGE not in materials_used([caption]), 'step 1: caption has no bevel')
     ps.set_budget_step(2)
     check(ps.text_resolution(6) == 2, 'step 2: curve resolution 2')
