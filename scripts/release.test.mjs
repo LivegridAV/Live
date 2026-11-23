@@ -588,3 +588,16 @@ test("no screen or source file spells the brand wrong", () => {
   }
   assert.deepEqual(bad, []);
 });
+
+test("drawWordmark shrinks to fit maxWidth", async () => {
+  const { register } = await import("node:module");
+  register(new URL("./ts-extensionless-hook.mjs", import.meta.url));
+  const { drawWordmark } = await import("../src/venue/media/brandMarks.ts");
+  const ctx = {
+    font: "", save() {}, restore() {}, fillText() {},
+    measureText(text) { return { width: text.length * parseFloat(/(\d+(?:\.\d+)?)px/.exec(this.font)[1]) * .6 }; },
+  };
+  assert.ok(drawWordmark(ctx, 0, 0, 200) > 880);
+  assert.ok(drawWordmark(ctx, 0, 0, 200, { maxWidth: 880 }) <= 880 + 1e-6);
+  assert.equal(drawWordmark(ctx, 0, 0, 20, { maxWidth: 880 }), 10 * 20 * .6);
+});

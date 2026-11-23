@@ -35,19 +35,25 @@ function family() {
 }
 
 /** Draws `livegrid` then aqua `AV`, vertically centred on y. x is the left, centre or
- * right edge depending on `align` (default left). Honours the context's letterSpacing.
+ * right edge depending on `align` (default left). `maxWidth` shrinks the font to fit. Honours the context's letterSpacing.
  * Returns the total width. */
 export function drawWordmark(
   ctx: CanvasRenderingContext2D, x: number, y: number, fontPx: number,
-  opts: { align?: CanvasTextAlign; ink?: string } = {},
+  opts: { align?: CanvasTextAlign; ink?: string; maxWidth?: number } = {},
 ): number {
-  const { align = "left", ink = "#f8fcff" } = opts;
+  const { align = "left", ink = "#f8fcff", maxWidth } = opts;
   ctx.save();
-  ctx.font = `600 ${fontPx}px ${family()}`;
+  const face = family();
+  ctx.font = `600 ${fontPx}px ${face}`;
   ctx.textBaseline = "middle";
   ctx.textAlign = "left";
+  let total = ctx.measureText("livegridAV").width;
+  if (maxWidth !== undefined && total > maxWidth) {
+    // Scale the font down uniformly so the whole wordmark fits.
+    ctx.font = `600 ${fontPx * maxWidth / total}px ${face}`;
+    total = ctx.measureText("livegridAV").width;
+  }
   const first = ctx.measureText("livegrid").width;
-  const total = ctx.measureText("livegridAV").width;
   const start = align === "center" ? x - total / 2 : align === "right" || align === "end" ? x - total : x;
   ctx.fillStyle = ink;
   ctx.fillText("livegrid", start, y);

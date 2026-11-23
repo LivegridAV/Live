@@ -39,7 +39,7 @@ function lettering(id: Identity) {
   c.textBaseline = "top";
   if (id === "hero") {
     c.textAlign = "center";
-    drawWordmark(c, 384, 380 + 64, 128, { align: "center", ink: c.fillStyle as string });
+    drawWordmark(c, 384, 380 + 64, 128, { align: "center", ink: c.fillStyle as string, maxWidth: 668 });
     c.font = "300 72px 'Arial Narrow', Arial, sans-serif";
     c.letterSpacing = "9px";
     ["BIGGER", "BRIGHTER", "BOLDER"].forEach((line, i) => c.fillText(line, 384, 680 + i * 132));

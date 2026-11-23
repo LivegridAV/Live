@@ -28,7 +28,7 @@ function identity(id: Brand){
   c.fillStyle=id==="panorama"?"#182738":"#f5f5fa";
   c.textBaseline="top";
   if(id==="cylinder"){
-    drawWordmark(c,72,235+72,144,{ink:c.fillStyle as string});
+    drawWordmark(c,72,235+72,144,{ink:c.fillStyle as string,maxWidth:880});
     c.font="400 48px Arial, sans-serif";c.letterSpacing="11px";
     ["IDEAS","IN HIGHER","DEFINITION"].forEach((s,i)=>c.fillText(s,92,530+i*82));
   }else if(id==="ring"){
