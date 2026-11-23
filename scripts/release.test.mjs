@@ -622,3 +622,30 @@ test("drawWordmark shrinks to fit maxWidth", async () => {
   assert.ok(drawWordmark(ctx, 0, 0, 200, { maxWidth: 880 }) <= 880 + 1e-6);
   assert.equal(drawWordmark(ctx, 0, 0, 20, { maxWidth: 880 }), 10 * 20 * .6);
 });
+
+test("lite models keep sign faces and drop the deep sign sides", async () => {
+  const { Document } = await import("@gltf-transform/core");
+  const { dropSignReturns, LITE_DROPPED_MATERIALS } = await import("./derived-models.mjs");
+  assert.deepEqual(LITE_DROPPED_MATERIALS, ["Premium Sign | brushed champagne return", "Premium Sign | polished champagne edge"]);
+  const document = new Document();
+  const buffer = document.createBuffer();
+  const material = name => document.createMaterial(name);
+  const face = material("Premium Sign | ivory lit face"), side = material("Premium Sign | brushed champagne return"), edge = material("Premium Sign | polished champagne edge");
+  const primitive = mat => document.createPrimitive().setMaterial(mat).setAttribute("POSITION",
+    document.createAccessor().setType("VEC3").setArray(new Float32Array(9)).setBuffer(buffer));
+  const first = document.createMesh("letters").addPrimitive(primitive(face)).addPrimitive(primitive(side)).addPrimitive(primitive(edge));
+  const second = document.createMesh("sides").addPrimitive(primitive(side));
+  const other = document.createMesh("other").addPrimitive(primitive(material("Steel")));
+  const firstNode = document.createNode("letters-node").setMesh(first);
+  const secondNode = document.createNode("sides-node").setMesh(second);
+  const otherNode = document.createNode("other-node").setMesh(other);
+  document.createScene().addChild(firstNode).addChild(secondNode).addChild(otherNode);
+  assert.equal(dropSignReturns(document), 3);
+  assert.deepEqual(first.listPrimitives().map(p => p.getMaterial().getName()), ["Premium Sign | ivory lit face"]);
+  assert.equal(secondNode.getName(), "sides-node");
+  assert.equal(secondNode.getMesh(), null);
+  assert.equal(secondNode.getParentNode(), null);
+  assert.ok(document.getRoot().listScenes()[0].listChildren().includes(secondNode));
+  assert.deepEqual(other.listPrimitives().map(p => p.getMaterial().getName()), ["Steel"]);
+  assert.equal(otherNode.getMesh(), other);
+});
