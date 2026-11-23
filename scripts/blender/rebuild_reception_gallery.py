@@ -469,16 +469,18 @@ remember("panorama", before)
 before = set(bpy.context.scene.objects)
 box("Reception left brand feature wall", (-5.3, LEFT_BRAND_TOP / 2, -7.7),
     (3.9, LEFT_BRAND_TOP, .22), WALL, 0)
-lettering("LivegridAV", (-6.64, 4.90, -7.575), .72)
+lettering("LivegridAV", (-6.64, 4.90, -7.575), .72, premium=True)
 for i, line in enumerate(("EXPERIENCE", "CONNECT", "CREATE", "TOGETHER")):
-    lettering(line, (-6.60, 3.90 - i * .55, -7.572), .52, tracking=1.14, semibold=True)
+    lettering(line, (-6.60, 3.90 - i * .55, -7.572), .52, tracking=1.14, semibold=True,
+        premium=True, slogan=True)
 box("Left brand small underline", (-6.42, 2.00, -7.57), (.35, .014, .009), BRAND, 0)
 remember("left_brand", before)
 # Far-right flat feature panel does not form an aisle-blocking side return.
 before = set(bpy.context.scene.objects)
 box("Reception far-right brand feature wall", (15.1, 4.7, -4.85), (2.0, 9.4, .24), WALL, .025)
 for i, line in enumerate(("LED", "DESIGN", "TECHNOLOGY", "PEOPLE", "IMPACT")):
-    lettering(line, (14.24, (8.40 - i * .52) / (11 / 9.4), -4.723), .42, tracking=1.08, semibold=True)
+    lettering(line, (14.24, (8.40 - i * .52) / (11 / 9.4), -4.723), .42, tracking=1.08, semibold=True,
+        premium=True, slogan=True)
 box("Right brand small underline", (14.60, 5.80 / (11 / 9.4), -4.72), (.39, .017, .009), BRAND, 0)
 remember("right", before)
 # The left edge of the reference is framed by a quiet black pavilion blade.
@@ -486,7 +488,7 @@ remember("right", before)
 before = set(bpy.context.scene.objects)
 box("Left pavilion tall charcoal sign blade", (-12.5, 3.25, -5.75), (2.05, 6.5, .20), WALL, .025)
 for i, line in enumerate(("A", "BRIGHTER", "TOMORROW", "TOGETHER")):
-    lettering(line, (-13.23, 4.70 - i * .38, -5.642), .34, tracking=1.10)
+    lettering(line, (-13.23, 4.70 - i * .38, -5.642), .34, tracking=1.10, premium=True, slogan=True)
 box("Left pavilion small porcelain underline", (-12.97, 3.16, -5.64), (.33, .014, .008), BRAND, 0)
 box("Left pavilion pale interior reveal", (-12.5, 1.30, -5.71), (1.86, 2.60, .055), STONE, .015)
 box("Left pavilion warm concealed threshold", (-12.5, 2.70, -5.67), (1.88, .02, .032), WARM, .004)
@@ -672,6 +674,17 @@ for name, objects in ASSEMBLIES.items():
                 ob.rotation_euler[2] += fit.get("rotation_y", 0)
             else:
                 ob.matrix_world = matrix @ ob.matrix_world
+
+# The premium sign log keeps each anchor on its fitted wall (website metres).
+fitted_signs = {}
+for name, objects in ASSEMBLIES.items():
+    for ob in objects:
+        if "signage_log" in ob:
+            fitted_signs[ob["signage_log"]] = assembly_matrix(LAYOUT[name])
+for index, matrix in fitted_signs.items():
+    sign = premium_signage().SIGN_LOG[index]
+    anchor = matrix @ Vector(xyz(sign["position"]))
+    sign["position"] = [round(anchor.x, 4), round(anchor.z, 4), round(-anchor.y, 4)]
 
 # Suspensions terminate at the new authored ceiling rather than penetrating it.
 # Their lower attachment follows the fitted halo; rods are six tiny mesh strips.

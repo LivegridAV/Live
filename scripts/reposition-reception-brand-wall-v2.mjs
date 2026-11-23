@@ -40,7 +40,17 @@ const newPivot = originalPivot.map((v, i) => Math.fround(v + delta[i]));
 const yaw = layout.assemblies.right.rotation_y;
 const axis = [Math.cos(yaw), 0, -Math.sin(yaw)];
 const normal = [Math.sin(yaw), 0, Math.cos(yaw)];
-const allowedMaterials = new Set(["Reception | matte charcoal panel", "Reception | porcelain brand lettering"]);
+// Vertices each wall material must move (summed over its primitives): the panel, its underline and the premium letters
+// (LED / DESIGN / TECHNOLOGY / PEOPLE / IMPACT: lit face, champagne return, polished edge).
+const expectedSelected = {
+  "Reception | matte charcoal panel": 96,
+  "Reception | porcelain brand lettering": 24,
+  "Premium Sign | ivory lit face": 2339,
+  "Premium Sign | brushed champagne return": 5408,
+  "Premium Sign | polished champagne edge": 0, // these letters are under 0.3 m: no bevel
+};
+const selectedByMaterial = Object.fromEntries(Object.keys(expectedSelected).map(m => [m, 0]));
+const allowedMaterials = new Set(Object.keys(expectedSelected));
 const allowedBytes = new Set();
 const changedAccessors = new Set();
 const movedBefore = [], movedAfter = [], allAfter = [], changes = [], meshProof = [];
@@ -68,7 +78,8 @@ function inside(p) {
   const d = p.map((v, i) => v - originalPivot[i]);
   const x = d[0] * axis[0] + d[2] * axis[2];
   const z = d[0] * normal[0] + d[2] * normal[2];
-  return Math.abs(x) <= 1.01 && Math.abs(z) <= .14 && p[1] >= .1199 && p[1] <= 11.13;
+  // Premium letters stand up to 6.5 cm proud of the 0.24 m panel, so the slab reaches .2 m.
+  return Math.abs(x) <= 1.01 && Math.abs(z) <= .2 && p[1] >= .1199 && p[1] <= 11.13;
 }
 
 for (const node of gltf.nodes) {
@@ -92,6 +103,7 @@ for (const node of gltf.nodes) {
       positions.forEach((_, i) => { const component = find(i); if (!components.has(component)) components.set(component, []); components.get(component).push(i); });
       for (const component of components.values()) if (component.every(i => inside(positions[i]))) for (const i of component) selected.add(i);
     }
+    if (selected.size) selectedByMaterial[material] += selected.size;
     let selectedTriangles = 0;
     for (let i = 0; i < indices.length; i += 3) {
       const count = indices.slice(i, i + 3).filter(v => selected.has(v)).length;
@@ -116,8 +128,6 @@ for (const node of gltf.nodes) {
       allAfter.push(after[i]);
     }
     if (selected.size) {
-      const expected = material === "Reception | matte charcoal panel" ? 96 : 7514;
-      assert.equal(selected.size, expected, "The existing panel or complete glyph assembly changed");
       info.accessor.min = bounds(after).min;
       info.accessor.max = bounds(after).max;
       changedAccessors.add(primitive.attributes.POSITION);
@@ -131,9 +141,10 @@ for (const node of gltf.nodes) {
     meshProof.push({ material, role, vertices: positions.length, translatedVertices: selected.size, triangles: indices.length / 3, otherPositionsNormalsUVsAndIndicesPreserved: true });
   }
 }
-assert.equal(moved, 7610);
-assert.equal(unchanged, 130043);
-assert.equal(triangles, 183596);
+assert.deepEqual(selectedByMaterial, expectedSelected, "The existing panel or complete glyph assembly changed");
+assert.equal(moved, 7867);
+assert.equal(unchanged, 135123);
+assert.equal(triangles, 181357);
 let changedByteCount = 0;
 for (let i = 0; i < binary.length; i++) if (binary[i] !== originalBinary[i]) { assert.ok(allowedBytes.has(i), "A non-POSITION binary byte changed"); changedByteCount++; }
 const encodedJson = Buffer.from(JSON.stringify(gltf), "utf8");
@@ -158,10 +169,14 @@ const endpoint = [fit.position[0] + Math.sin(theta) * 9 * fit.scale[0], fit.posi
 layout.version = "reception-brand-wall-v2-20261019";
 layout.geometry = { file: targetName, bytes: target.length, sha256: sha(target), bounds: bounds(allAfter), triangles };
 layout.assemblies.right.position = newPivot;
+// Premium sign anchors on the relocated wall move with it.
+const movedSigns = (layout.signage ?? []).filter(sign => inside(sign.position));
+assert.equal(movedSigns.length, 5, "Expected the five far-right wall signs");
+for (const sign of movedSigns) sign.position = sign.position.map((v, i) => Math.round((v + delta[i]) * 1e4) / 1e4);
 const audit = { sourceFile: sourceName, sourceSha256: sourceSha, targetFile: targetName, targetSha256: layout.geometry.sha256,
   ledRightEndpointXZ: endpoint, jointMetres: .03, originalPivot, newPivot, translation: delta, yawUnchanged: yaw,
   scaleUnchanged: layout.assemblies.right.scale, movedBoundsBefore: bounds(movedBefore), movedBoundsAfter: bounds(movedAfter),
-  changedMeshes: changes, translatedVertices: moved, unchangedVertices: unchanged, trianglesUnchanged: triangles,
+  changedMeshes: changes, movedSigns: movedSigns.map(sign => sign.body), translatedVertices: moved, unchangedVertices: unchanged, trianglesUnchanged: triangles,
   allOtherVerticesPreserved: true, sourceFilePreserved: sha(fs.readFileSync(path.join(assetRoot, sourceName))) === sourceSha,
   exportMethod: "Direct original GLB POSITION byte patch; no mesh/material/image roundtrip" };
 layout.brandingWallRelocation = audit;

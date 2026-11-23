@@ -43,7 +43,10 @@ export const OLD_EMBLEM_MATERIALS = [
 export const REQUIRED_SIGN_MATERIAL = "Premium Sign | brushed champagne return";
 
 /** @type {{layout: string, glbs: string[], halo: 0|1}[]} */
-export const SIGNED_ASSETS = [];
+export const SIGNED_ASSETS = [
+  { layout: "public/models/expo/grand-reception-brand-wall-v2-layout.json", glbs: ["public/models/expo/grand-reception-brand-wall-v2.glb"], halo: 0 },
+  { layout: "public/models/expo/grand-pillar-layout.json", glbs: ["public/models/expo/grand-pillar-gallery.glb"], halo: 0 },
+];
 
 export function checkSignedAsset(entry) {
   const problems = [];

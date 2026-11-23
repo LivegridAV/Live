@@ -11,8 +11,8 @@
     "tolerance": 0.02
   },
   "geometry": {
-    "bytes": 5797336,
-    "sha256": "6f2d98da1961e0a24f00c2b651da146262e071856a0df759ca34650aecd0a0e2",
+    "bytes": 5939944,
+    "sha256": "42c6838c655ab9b95209c3b9852f94076d2d9f7af5dddfae86e06ff5de872310",
     "bounds": {
       "min": [
         -11.824999809265137,
@@ -25,7 +25,7 @@
         5.9757466316223145
       ]
     },
-    "triangles": 183596
+    "triangles": 181357
   },
   "people": {
     "bytes": 17314244,
@@ -268,6 +268,143 @@
       "rotation_y": 0.2400000000000002
     }
   },
+  "signage": [
+    {
+      "body": "signal grid logo",
+      "kind": "emblem",
+      "position": [
+        -5.2123,
+        4.9361,
+        -6.4819
+      ]
+    },
+    {
+      "body": "livegridAV",
+      "kind": "wordmark",
+      "position": [
+        -4.8427,
+        4.9741,
+        -6.5723
+      ]
+    },
+    {
+      "body": "EXPERIENCE",
+      "kind": "name",
+      "position": [
+        -5.2099,
+        4.02,
+        -6.4775
+      ]
+    },
+    {
+      "body": "CONNECT",
+      "kind": "name",
+      "position": [
+        -5.2099,
+        3.47,
+        -6.4775
+      ]
+    },
+    {
+      "body": "CREATE",
+      "kind": "name",
+      "position": [
+        -5.2099,
+        2.92,
+        -6.4775
+      ]
+    },
+    {
+      "body": "TOGETHER",
+      "kind": "name",
+      "position": [
+        -5.2099,
+        2.37,
+        -6.4775
+      ]
+    },
+    {
+      "body": "LED",
+      "kind": "name",
+      "position": [
+        9.7819,
+        8.52,
+        -0.5464
+      ]
+    },
+    {
+      "body": "DESIGN",
+      "kind": "name",
+      "position": [
+        9.7819,
+        8.0,
+        -0.5464
+      ]
+    },
+    {
+      "body": "TECHNOLOGY",
+      "kind": "name",
+      "position": [
+        9.7819,
+        7.4801,
+        -0.5464
+      ]
+    },
+    {
+      "body": "PEOPLE",
+      "kind": "name",
+      "position": [
+        9.7819,
+        6.96,
+        -0.5464
+      ]
+    },
+    {
+      "body": "IMPACT",
+      "kind": "name",
+      "position": [
+        9.7819,
+        6.44,
+        -0.5464
+      ]
+    },
+    {
+      "body": "A",
+      "kind": "name",
+      "position": [
+        -11.53,
+        4.82,
+        -5.642
+      ]
+    },
+    {
+      "body": "BRIGHTER",
+      "kind": "name",
+      "position": [
+        -11.53,
+        4.44,
+        -5.642
+      ]
+    },
+    {
+      "body": "TOMORROW",
+      "kind": "name",
+      "position": [
+        -11.53,
+        4.06,
+        -5.642
+      ]
+    },
+    {
+      "body": "TOGETHER",
+      "kind": "name",
+      "position": [
+        -11.53,
+        3.68,
+        -5.642
+      ]
+    }
+  ],
   "route": {
     "width": 2,
     "xMin": -3.4,

@@ -1,0 +1,285 @@
+{
+  "status": "pass",
+  "method": "Decoded original accessors and native triangle components; exact binary comparison outside permitted POSITION floats",
+  "sourceSha256": "42c6838c655ab9b95209c3b9852f94076d2d9f7af5dddfae86e06ff5de872310",
+  "targetSha256": "2e5b85e82fe443572452aacb1852fd964c2c4a2c979ebf127aaf1ac60e194a17",
+  "nativeVertices": 142990,
+  "translatedVertices": 7867,
+  "otherVerticesPreserved": 135123,
+  "translation": [
+    2.054403305053711,
+    0,
+    0.8193845748901367
+  ],
+  "triangles": 181357,
+  "normalsUVsIndicesMaterialsTexturesByteExact": true,
+  "jsonChangesLimitedToPositionAccessorExtrema": true,
+  "binaryBytesChanged": 54944,
+  "earlierBlenderRoundtripRejected": "Preserved triangle positions and UVs but altered foliage normals; final artifact uses original binary normals unchanged.",
+  "meshes": [
+    {
+      "material": "Counter | concealed warm amber toe light",
+      "role": "interior",
+      "vertices": 388,
+      "translatedVertices": 0,
+      "triangles": 772,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Counter | optically clear glassware",
+      "role": "interior",
+      "vertices": 2452,
+      "translatedVertices": 0,
+      "triangles": 4456,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Guests | ivory cotton",
+      "role": "interior",
+      "vertices": 1080,
+      "translatedVertices": 0,
+      "triangles": 896,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "LED Rental 2026 | brushed stainless reception metal returns",
+      "role": "interior",
+      "vertices": 1260,
+      "translatedVertices": 0,
+      "triangles": 2160,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "LED Rental 2026 | natural dark granular potting soil",
+      "role": "interior",
+      "vertices": 640,
+      "translatedVertices": 0,
+      "triangles": 960,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "LED Rental 2026 | natural woody olive stems",
+      "role": "interior",
+      "vertices": 3948,
+      "translatedVertices": 0,
+      "triangles": 7240,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "LED Rental 2026 | varied textured living foliage",
+      "role": "interior",
+      "vertices": 51174,
+      "translatedVertices": 0,
+      "triangles": 56860,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Premium Sign | aqua lit face",
+      "role": "interior",
+      "vertices": 32,
+      "translatedVertices": 0,
+      "triangles": 18,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Premium Sign | brushed champagne return",
+      "role": "interior",
+      "vertices": 80,
+      "translatedVertices": 0,
+      "triangles": 40,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Premium Sign | polished champagne edge",
+      "role": "interior",
+      "vertices": 80,
+      "translatedVertices": 0,
+      "triangles": 40,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Premium Sign | dim signal cell",
+      "role": "interior",
+      "vertices": 758,
+      "translatedVertices": 0,
+      "triangles": 420,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Premium Sign | frosted aqua cell",
+      "role": "interior",
+      "vertices": 2016,
+      "translatedVertices": 0,
+      "triangles": 1080,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Premium Sign | ivory lit face",
+      "role": "interior",
+      "vertices": 8064,
+      "translatedVertices": 2339,
+      "triangles": 4471,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Premium Sign | brushed champagne return",
+      "role": "interior",
+      "vertices": 18412,
+      "translatedVertices": 5408,
+      "triangles": 9206,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Premium Sign | polished champagne edge",
+      "role": "interior",
+      "vertices": 1196,
+      "translatedVertices": 0,
+      "triangles": 598,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Reception | black architectural steel",
+      "role": "interior",
+      "vertices": 4064,
+      "translatedVertices": 0,
+      "triangles": 7976,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Reception | black architectural steel",
+      "role": "overhead",
+      "vertices": 776,
+      "translatedVertices": 0,
+      "triangles": 1544,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Reception | brushed champagne bar tools",
+      "role": "interior",
+      "vertices": 1534,
+      "translatedVertices": 0,
+      "triangles": 2832,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Reception | champagne counter detail",
+      "role": "interior",
+      "vertices": 4704,
+      "translatedVertices": 0,
+      "triangles": 8988,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Reception | champagne counter detail",
+      "role": "overhead",
+      "vertices": 388,
+      "translatedVertices": 0,
+      "triangles": 772,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Reception | concealed 2900K cove",
+      "role": "interior",
+      "vertices": 484,
+      "translatedVertices": 0,
+      "triangles": 832,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Reception | concealed 2900K cove",
+      "role": "overhead",
+      "vertices": 388,
+      "translatedVertices": 0,
+      "triangles": 772,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Reception | deep olive bottle glass",
+      "role": "interior",
+      "vertices": 224,
+      "translatedVertices": 0,
+      "triangles": 392,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Reception | fine clear bronze glass",
+      "role": "interior",
+      "vertices": 1088,
+      "translatedVertices": 0,
+      "triangles": 1888,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Reception | honed ivory stone counter",
+      "role": "interior",
+      "vertices": 904,
+      "translatedVertices": 0,
+      "triangles": 1804,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Reception | ivory white blossom",
+      "role": "interior",
+      "vertices": 26520,
+      "translatedVertices": 0,
+      "triangles": 51000,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Reception | matte charcoal panel",
+      "role": "interior",
+      "vertices": 604,
+      "translatedVertices": 96,
+      "triangles": 904,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Reception | matte charcoal panel",
+      "role": "overhead",
+      "vertices": 388,
+      "translatedVertices": 0,
+      "triangles": 772,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Reception | pale ivory lounge upholstery",
+      "role": "interior",
+      "vertices": 5944,
+      "translatedVertices": 0,
+      "triangles": 6288,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Reception | porcelain brand lettering",
+      "role": "interior",
+      "vertices": 72,
+      "translatedVertices": 24,
+      "triangles": 36,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Reception | upholstery fine piping",
+      "role": "interior",
+      "vertices": 1600,
+      "translatedVertices": 0,
+      "triangles": 2560,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Reception | walnut stem",
+      "role": "interior",
+      "vertices": 1632,
+      "translatedVertices": 0,
+      "triangles": 2720,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    },
+    {
+      "material": "Reception | warm silver travertine",
+      "role": "interior",
+      "vertices": 96,
+      "translatedVertices": 0,
+      "triangles": 60,
+      "otherPositionsNormalsUVsAndIndicesPreserved": true
+    }
+  ]
+}

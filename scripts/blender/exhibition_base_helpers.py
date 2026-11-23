@@ -133,7 +133,75 @@ def ellipsoid(name, p, radii, mat, segments=14, rings=8):
     return patch_mesh(name, points, faces, mat)
 
 
-def lettering(body, p, size, centered=False, tracking=1.0, semibold=False):
+_PREMIUM_SIGNAGE = None
+LOCKUP_GAP = .25  # logo-to-wordmark gap, in wordmark ink heights
+
+
+def premium_signage():
+    """The shared premium sign module, loaded on first use so builders that
+    never ask for premium lettering (they pass premium=False) are untouched."""
+    global _PREMIUM_SIGNAGE
+    if _PREMIUM_SIGNAGE is None:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location(
+            "premium_signage", ROOT / "scripts/blender/premium_signage.py")
+        _PREMIUM_SIGNAGE = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(_PREMIUM_SIGNAGE)
+    return _PREMIUM_SIGNAGE
+
+
+def _wordmark_aspect(signs):
+    """Ink width / ink height of the premium livegridAV wordmark (a probe that
+    is built unplaced, measured and removed; it leaves no SIGN_LOG entry)."""
+    probe = signs.premium_wordmark((0, 0, 0), 1.0, place=lambda obs, p, yaw: None)
+    signs.SIGN_LOG.pop()
+    xs = [v.co.x for ob in probe for v in ob.data.vertices]
+    ys = [v.co.y for ob in probe for v in ob.data.vertices]
+    for ob in probe:
+        mesh = ob.data
+        bpy.data.objects.remove(ob, do_unlink=True)
+        bpy.data.meshes.remove(mesh)
+    return (max(xs) - min(xs)) / (max(ys) - min(ys))
+
+
+def premium_lockup(p, size, centered=False, tracking=1.0):
+    """Grid logo + livegridAV wordmark in the ink footprint of the flat
+    single-object wordmark lettering(body, p, size, centered) used to make.
+    Logo left, logo square = wordmark ink height, gap LOCKUP_GAP x that height;
+    the pair is as wide as the old ink (never taller), centred on it vertically,
+    left-aligned or centred like the old one, backs on the old back plane."""
+    signs = premium_signage()
+    old = lettering("LivegridAV", p, size, centered, tracking)
+    bpy.context.view_layer.update()
+    ink = [old.matrix_world @ v.co for v in old.data.vertices]
+    x0, x1 = min(q.x for q in ink), max(q.x for q in ink)
+    y0, y1 = min(q.z for q in ink), max(q.z for q in ink)
+    back = min(-q.y for q in ink)
+    mesh = old.data
+    bpy.data.objects.remove(old, do_unlink=True)
+    bpy.data.meshes.remove(mesh)
+    aspect = _wordmark_aspect(signs)
+    height = min(y1 - y0, (x1 - x0) / (1 + LOCKUP_GAP + aspect))
+    width = height * (1 + LOCKUP_GAP + aspect)
+    left = (x0 + x1 - width) / 2 if centered else x0
+    bottom = (y0 + y1 - height) / 2
+    emblem_height = height / .80  # premium_emblem: square .80 x height, lifted .10 x height
+    cells = signs.premium_emblem((left, bottom - .10 * emblem_height, back), emblem_height)
+    for ob in cells:
+        ob["signage_log"] = len(signs.SIGN_LOG) - 1
+    words = signs.premium_wordmark((left + height * (1 + LOCKUP_GAP), bottom, back), height,
+        width=width - height * (1 + LOCKUP_GAP))
+    for ob in words:
+        ob["signage_log"] = len(signs.SIGN_LOG) - 1
+    return words + cells
+
+
+def lettering(body, p, size, centered=False, tracking=1.0, semibold=False, *, premium=False, slogan=False):
+    """Flat glyph mesh, or with premium=True a premium sign: the wordmark becomes
+    premium_lockup(), anything else is built as today and then deepened in
+    place by premiumize_lettering (ivory face: this lettering is porcelain)."""
+    if premium and premium_signage().is_wordmark(body):
+        return premium_lockup(p, size, centered, tracking)
     bpy.ops.object.text_add(location=xyz(p), rotation=(math.pi / 2, 0, 0))
     ob = bpy.context.object
     ob.name = "Gallery lettering | " + body
@@ -153,7 +221,12 @@ def lettering(body, p, size, centered=False, tracking=1.0, semibold=False):
     ob["signage_size"] = size
     ob["signage_font"] = "Segoe UI Semibold" if caption else "Segoe UI"
     bpy.ops.object.convert(target="MESH")
-    return bpy.context.object
+    ob = bpy.context.object
+    if premium:
+        signs = premium_signage()
+        signs.premiumize_lettering([ob], body, slogan=slogan, position=p)
+        ob["signage_log"] = len(signs.SIGN_LOG) - 1
+    return ob
 
 
 def write_lettering_audit(path):
