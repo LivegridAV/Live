@@ -7,13 +7,18 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
-// Only the correct wordmark is exactly "livegridAV". A lone lowercase "livegrid"
-// is allowed (the AV may be a separate run); every other spelling is wrong.
+// Only the correct wordmark is exactly "livegridAV" (not followed by another
+// letter). Wrong: any case other than that, and "livegrid" + separators (space,
+// ".", "-", "_") + "AV". A lowercase "livegrid" followed by a non-AV word is a
+// material name ("livegrid teal reveal"), not a brand mark, and is allowed.
 export function wordmarkProblems(text) {
   const problems = [];
-  for (const m of String(text).matchAll(/livegrid(\s*)(av)?/gi)) {
-    if (m[0] === "livegridAV" || m[0] === "livegrid") continue;
-    problems.push(`wrong brand spelling "${m[0]}" (use "livegridAV")`);
+  const str = String(text);
+  for (const m of str.matchAll(/livegrid(?:av|[\s._-]+av(?![a-z]))?/gi)) {
+    const word = m[0];
+    const next = str[m.index + word.length] ?? "";
+    if (word === "livegrid" || (word === "livegridAV" && !/[a-z]/i.test(next))) continue;
+    problems.push(`wrong brand spelling "${word}${/[a-z]/i.test(next) ? next : ""}" (use "livegridAV")`);
   }
   return problems;
 }
@@ -52,8 +57,32 @@ export const SIGNED_ASSETS = [
   { layout: "public/models/expo/projection-finish-v2-blender-layout.json", glbs: ["public/models/expo/projection-finish-v2-blender-shell.glb", "public/models/expo/projection-finish-v2-blender-interior.glb"], halo: 1 },
 ];
 
-export function checkSignedAsset(entry) {
+/** Layout part of the check, on a parsed layout (the JSON file's content). */
+export function layoutProblems(layout, entry) {
   const problems = [];
+  const where = entry.layout;
+  const signage = Array.isArray(layout.signage) ? layout.signage : [];
+  if (!signage.length) problems.push(`${where}: signage array is missing or empty`);
+  for (const sign of signage) {
+    for (const p of wordmarkProblems(sign.body ?? "")) problems.push(`${where}: sign "${sign.body}": ${p}`);
+  }
+  // The built 3D lettering (typography) is what actually ships: its text must be
+  // spelled right and, where records carry a "premium" flag, every one must be premium.
+  const typography = Array.isArray(layout.typography) ? layout.typography : [];
+  const flagged = typography.some(t => t && "premium" in t);
+  for (const t of typography) {
+    const text = t?.body ?? t?.text ?? "";
+    for (const p of wordmarkProblems(text)) problems.push(`${where}: typography "${text}": ${p}`);
+    if (flagged && t?.premium !== true) problems.push(`${where}: typography "${text}" is not premium lettering (premium !== true)`);
+  }
+  const count = kind => signage.filter(s => s.kind === kind).length;
+  if (!count("wordmark")) problems.push(`${where}: no signage of kind "wordmark"`);
+  if (!count("emblem")) problems.push(`${where}: no signage of kind "emblem"`);
+  if (count("halo") !== entry.halo) problems.push(`${where}: expected ${entry.halo} halo sign(s), found ${count("halo")}`);
+  return problems;
+}
+
+export function checkSignedAsset(entry) {
   const where = entry.layout;
   let layout;
   try {
@@ -61,15 +90,7 @@ export function checkSignedAsset(entry) {
   } catch (error) {
     return [`${where}: cannot read layout (${error.message})`];
   }
-  const signage = Array.isArray(layout.signage) ? layout.signage : [];
-  if (!signage.length) problems.push(`${where}: signage array is missing or empty`);
-  for (const sign of signage) {
-    for (const p of wordmarkProblems(sign.body ?? "")) problems.push(`${where}: sign "${sign.body}": ${p}`);
-  }
-  const count = kind => signage.filter(s => s.kind === kind).length;
-  if (!count("wordmark")) problems.push(`${where}: no signage of kind "wordmark"`);
-  if (!count("emblem")) problems.push(`${where}: no signage of kind "emblem"`);
-  if (count("halo") !== entry.halo) problems.push(`${where}: expected ${entry.halo} halo sign(s), found ${count("halo")}`);
+  const problems = layoutProblems(layout, entry);
   for (const glb of entry.glbs) {
     let names;
     try {

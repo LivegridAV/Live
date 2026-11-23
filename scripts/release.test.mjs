@@ -5,7 +5,8 @@ import path from "node:path";
 import sharp from "sharp";
 import * as THREE from "three";
 import { warmScene } from "../src/venue/three/warmScene.ts";
-import { wordmarkProblems, checkSignedAsset, SIGNED_ASSETS } from "./brand-check.mjs";
+import { execFileSync } from "node:child_process";
+import { wordmarkProblems, checkSignedAsset, layoutProblems, SIGNED_ASSETS } from "./brand-check.mjs";
 
 const read = file => readFileSync(file, "utf8");
 const files = dir => readdirSync(dir, { withFileTypes: true }).flatMap(e =>
@@ -497,10 +498,50 @@ test("the build's Node version is pinned exactly and meets the engines floor", (
 
 test("brand check flags every wrong spelling and passes the real wordmark", () => {
   assert.deepEqual(wordmarkProblems("livegridAV"), []);
-  for (const wrong of ["LivegridAV", "livegrid AV", "LIVEGRID AV"]) {
+  for (const wrong of ["LivegridAV", "livegrid AV", "LIVEGRID AV", "livegrid-AV", "livegrid.AV", "livegrid_AV", "livegrid  AV",
+    "livegridAVs", "Livegrid", "LIVEGRID", "LIVEGRID teal", "livegridav"]) {
     assert.notDeepEqual(wordmarkProblems(wrong), [], wrong);
   }
-  assert.deepEqual(wordmarkProblems("PEOPLE TECHNOLOGY"), []);
+  for (const fine of ["PEOPLE TECHNOLOGY", "livegrid teal reveal", "LED Rental 2026 | livegrid teal perimeter reveal", "livegridAV.", "livegridAV LED"]) {
+    assert.deepEqual(wordmarkProblems(fine), [], fine);
+  }
+});
+
+test("the layout brand check reads the built 3D lettering, not only the signage log", () => {
+  const entry = { layout: "mem.json", halo: 0 };
+  const signage = [{ kind: "wordmark", body: "livegridAV" }, { kind: "emblem", body: "" }];
+  const clean = { signage, typography: [{ body: "livegridAV", premium: true }, { text: "TECHNICAL", premium: true }] };
+  assert.deepEqual(layoutProblems(clean, entry), []);
+  assert.deepEqual(layoutProblems({ signage }, entry), [], "layouts without typography still pass");
+  const misspelt = layoutProblems({ signage, typography: [{ body: "LivegridAV", premium: true }] }, entry);
+  assert.ok(misspelt.some(p => /wrong brand spelling/.test(p)), misspelt.join(", "));
+  const misspeltText = layoutProblems({ signage, typography: [{ text: "livegrid AV", premium: true }] }, entry);
+  assert.ok(misspeltText.some(p => /wrong brand spelling/.test(p)), "text field is read too");
+  const flat = layoutProblems({ signage, typography: [{ body: "livegridAV", premium: true }, { body: "SPACES", premium: false }] }, entry);
+  assert.ok(flat.some(p => /not premium/.test(p) && /SPACES/.test(p)), flat.join(", "));
+});
+
+test("the projection rebuild input is tracked in git", () => {
+  const file = "reports/projection-gallery-edit/blender-saved-transforms.json";
+  // /reports/ is git-ignored; the file was added with `git add -f` so the live projection GLBs can be rebuilt anywhere.
+  const tracked = execFileSync("git", ["ls-files", file], { encoding: "utf8" }).trim();
+  assert.equal(tracked, file, `${file} must stay tracked (git add -f)`);
+  assert.ok(JSON.parse(read(file)).length > 0);
+  assert.match(read("scripts/sync-blender-gallery-positions.mjs"), /blender-saved-transforms\.json/);
+});
+
+test("the aqua halo plane casts no shadow; lit sign faces still do, and a repeat pass changes nothing", async () => {
+  const { register } = await import("node:module");
+  register(new URL("./ts-extensionless-hook.mjs", import.meta.url));
+  const { prepareArchitecture } = await import("../src/venue/three/architecturalFinish.ts");
+  const mesh = name => new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshStandardMaterial({ name }));
+  const halo = mesh("Premium Sign | aqua halo"), face = mesh("Premium Sign | ivory lit face");
+  const model = new THREE.Group();
+  model.add(halo, face);
+  prepareArchitecture(model); prepareArchitecture(model);
+  assert.equal(halo.castShadow, false);
+  assert.equal(face.castShadow, true);
+  assert.equal(halo.receiveShadow, true);
 });
 
 test("every signed asset passes the brand check", () => {
