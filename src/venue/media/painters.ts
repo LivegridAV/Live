@@ -8,6 +8,7 @@
  * need to tick, not animate.
  */
 
+import { drawWordmark } from "./brandMarks";
 import { TECHNICAL_PAINTERS } from "./technicalPainters";
 import { PROJECTION_PAINTERS } from "./projectionPainters";
 import { LED_RENTAL_2026_PAINTERS } from "./ledRental2026Painters";
@@ -130,7 +131,7 @@ const wordmark = (p: PaintCtx) => {
  * The entrance fascia.
  *
  * The one surface on the whole site whose job is to say the name, so it does
- * exactly that: LIVEGRID AV, set large, tracked wide, lit from behind, with a
+ * exactly that: livegridAV, set large, tracked wide, lit from behind, with a
  * hairline rule under it. Everything else on this sign is restraint — a
  * flagship entrance says its name once and does not decorate it.
  */
@@ -163,7 +164,7 @@ const brandFascia = (p: PaintCtx) => {
   ctx.shadowColor = accent;
   ctx.shadowBlur = 0;
   ctx.fillStyle = "#f2f7f6";
-  ctx.fillText("LIVEGRID AV", w / 2, cy);
+  drawWordmark(ctx, w / 2, cy, size, { align: "center", ink: "#f2f7f6" });
   ctx.shadowBlur = 0;
   ctx.letterSpacing = "0px";
 

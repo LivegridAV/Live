@@ -565,3 +565,26 @@ test("every stall material pass hands sign materials to stylePremiumSign", () =>
   }
   assert.equal((read("src/venue/three/projectionMaterials.ts").match(/isPremiumSignMaterial\(/g) ?? []).length, 2, "both projection passes");
 });
+
+test("the canvas signal grid lights 18 cells in the brand pattern", async () => {
+  const { register } = await import("node:module");
+  register(new URL("./ts-extensionless-hook.mjs", import.meta.url));
+  const { signalGridCells } = await import("../src/venue/media/brandMarks.ts");
+  const cells = signalGridCells();
+  assert.equal(cells.length, 25);
+  assert.equal(cells.filter(c => c.lit).length, 18);
+  for (let row = 0; row < 5; row++) assert.equal(cells.find(c => c.col === 3 && c.row === row).lit, true);
+  for (let row = 0; row < 5; row++) assert.equal(cells.find(c => c.col === 0 && c.row === row).lit, row >= 3);
+});
+
+test("no screen or source file spells the brand wrong", () => {
+  const strip = s => s.replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|[^:"'`\\])\/\/.*$/gm, "$1");
+  const bad = [];
+  for (const file of files("src/venue").filter(f => /\.tsx?$/.test(f))) {
+    for (const m of strip(read(file)).matchAll(/(["'`])((?:\.|(?!\1).)*)\1/g)) {
+      const problems = wordmarkProblems(m[2]);
+      if (problems.length) bad.push(`${file}: ${problems.join("; ")}`);
+    }
+  }
+  assert.deepEqual(bad, []);
+});

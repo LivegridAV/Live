@@ -8,6 +8,7 @@ import { useVenue } from "../systems/store";
 import { ExpoAsset } from "../three/ExpoAsset";
 import { PLACEMENTS, PILLAR_INSTALLATION_IDS } from "../data/placements";
 import layout from "../../../public/models/expo/grand-pillar-layout.json";
+import { drawWordmark } from "../media/brandMarks";
 
 /** The redesigned four-sided columns and their authored reception gallery. */
 export const REFERENCE_PILLARS = [
@@ -38,8 +39,7 @@ function lettering(id: Identity) {
   c.textBaseline = "top";
   if (id === "hero") {
     c.textAlign = "center";
-    c.font = "400 128px 'Arial Narrow', Arial, sans-serif";
-    c.fillText("LivegridAV", 384, 380, 668);
+    drawWordmark(c, 384, 380 + 64, 128, { align: "center", ink: c.fillStyle as string });
     c.font = "300 72px 'Arial Narrow', Arial, sans-serif";
     c.letterSpacing = "9px";
     ["BIGGER", "BRIGHTER", "BOLDER"].forEach((line, i) => c.fillText(line, 384, 680 + i * 132));

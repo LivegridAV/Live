@@ -1,3 +1,4 @@
+import { drawWordmark } from "./brandMarks";
 import type { PaintCtx } from "./painters";
 import { prefetchedBlob, prefetchedImage, releaseBlob } from "../loading/prefetched";
 
@@ -270,7 +271,7 @@ export function projectionKiosk(p: PaintCtx) {
   start(p, c => {
     const bg = c.createLinearGradient(0, 0, W, H);
     bg.addColorStop(0, "#0b1824"); bg.addColorStop(1, "#02070e"); c.fillStyle = bg; c.fillRect(0, 0, W, H);
-    text(c, "LIVEGRID AV", 62, 48, 35, "#f0f9ff", 600);
+    drawWordmark(c, 62, 48 + 17, 35, { ink: "#f0f9ff" });
     text(c, "PROJECTION DESIGN  /  SHOW CONTROL", 62, 105, 23, "#8eb5c9");
     text(c, "3 PROJECTORS ONLINE", 1440, 61, 21, "#58e2c2", 600);
     line(c, 60, 157, 1860, 157, "#31495b", 2);

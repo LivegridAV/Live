@@ -15,6 +15,7 @@ import { useVenue } from "../systems/store";
 import { ZoneGroup } from "../three/ZoneGroup";
 import { LoadGroupGate } from "../loading/LoadGroupGate";
 import { ARENA_SHIFT } from "../data/grand";
+import { drawWordmark } from "../media/brandMarks";
 
 /**
  * The arena and the main stage.
@@ -248,8 +249,7 @@ function StageBrand() {
     const canvas = document.createElement("canvas"); canvas.width = 1536; canvas.height = 288;
     const ctx = canvas.getContext("2d")!;
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.font = "600 166px Arial"; ctx.fillStyle = "#ffffff";
-    ctx.fillText("LivegridAV", 768, 118);
+    drawWordmark(ctx, 768, 118, 166, { align: "center", ink: "#ffffff" });
     ctx.font = "400 24px Arial"; ctx.fillStyle = "#e3c49d";
     ctx.fillText("P E O P L E   /   P L A T F O R M S   /   P O S S I B I L I T I E S", 768, 230);
     const t = new THREE.CanvasTexture(canvas); t.colorSpace = THREE.SRGBColorSpace; return t;
