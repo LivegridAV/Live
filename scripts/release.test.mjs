@@ -715,6 +715,39 @@ test("drawWordmark shrinks to fit maxWidth", async () => {
   assert.equal(drawWordmark(ctx, 0, 0, 20, { maxWidth: 880 }), 10 * 20 * .6);
 });
 
+test("the finale stage screen shows the grid logo, the wordmark and the invitation, all inside the screen", async () => {
+  const { register } = await import("node:module");
+  register(new URL("./ts-extensionless-hook.mjs", import.meta.url));
+  const { PAINTERS, FINALE_CTA_TITLE } = await import("../src/venue/media/painters.ts");
+  const { wordmarkProblems } = await import("./brand-check.mjs");
+  const W = 1280, H = 300, rects = [], texts = [];
+  const gradient = { addColorStop() {} };
+  const ctx = {
+    font: "", fillStyle: "", globalAlpha: 1, letterSpacing: "0px", textAlign: "left", textBaseline: "alphabetic",
+    save() {}, restore() {}, createLinearGradient: () => gradient, createRadialGradient: () => gradient,
+    fillRect(x, y, w, h) { rects.push({ x, y, w, h, fill: this.fillStyle }); },
+    fillText(text, x, y) { texts.push({ text, x, y, fill: this.fillStyle }); },
+    measureText(text) { return { width: text.length * parseFloat(/(\d+(?:\.\d+)?)px/.exec(this.font)[1]) * .6 }; },
+  };
+  PAINTERS.signFinaleCta({ ctx, w: W, h: H, t: 0, accent: "#123456", variant: 0 });
+  assert.equal(rects.filter(r => r.fill === "#1FA093").length, 18, "18 lit grid cells");
+  assert.equal(rects.filter(r => r.fill === "#0e1a18").length, 7, "7 unlit grid cells");
+  const words = texts.map(t => t.text);
+  assert.equal(words.filter(t => t === "livegrid").length, 2, "wordmark in the lockup and in the call to action");
+  assert.equal(words.filter(t => t === "AV").length, 2);
+  assert.ok(texts.filter(t => t.text === "AV").every(t => t.fill === "#1FA093"), "AV is aqua");
+  assert.ok(words.includes(FINALE_CTA_TITLE));
+  assert.ok(words.includes("Talk to "));
+  for (const text of words) assert.deepEqual(wordmarkProblems(text), [], text);
+  for (const r of rects) assert.ok(r.x >= 0 && r.y >= 0 && r.x + r.w <= W + 1e-6 && r.y + r.h <= H + 1e-6, "drawn inside the screen");
+});
+
+test("the zone card becomes a bottom caption at the finale and contact stops", () => {
+  const hud = readFileSync("src/venue/ui/Hud.tsx", "utf8");
+  assert.match(hud, /finaleFrame\s*=\s*zone\.id\s*===\s*"finale"\s*\|\|\s*zone\.id\s*===\s*"contact"/);
+  assert.match(hud, /data-reception=\{[^}]*finaleFrame/);
+});
+
 test("lite models keep sign faces and drop the deep sign sides", async () => {
   const { Document } = await import("@gltf-transform/core");
   const { dropSignReturns, LITE_DROPPED_MATERIALS } = await import("./derived-models.mjs");

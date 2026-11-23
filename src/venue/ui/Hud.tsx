@@ -30,6 +30,10 @@ export function ZoneHud() {
   const technicalFrame=zone.id==="technical";
   const projectionFrame=inProjectionShowcase(progress);
   const rentalFrame=inRental2026(progress);
+  // The finale stage screen carries the brand and the invitation itself, so the
+  // card shrinks to a bottom caption instead of covering it. The caption is the
+  // zone label: the quiet style is uppercase, which would misspell livegridAV.
+  const finaleFrame=zone.id==="finale"||zone.id==="contact";
   // Present the moment a zone begins — the arrival headline in particular has
   // to be readable on the very first frame — and fade out as the camera leaves.
   const pastVenue = useVenue((s) => s.pastVenue);
@@ -39,7 +43,7 @@ export function ZoneHud() {
       : 0;
 
   return (
-    <div className="v-hud" data-zone={rentalFrame ? "led-rental" : projectionFrame ? "projection" : zone.id} data-reception={pillarFrame || receptionFrame || studioFrame || technicalFrame || rentalFrame || projectionFrame || undefined} aria-live="polite">
+    <div className="v-hud" data-zone={rentalFrame ? "led-rental" : projectionFrame ? "projection" : zone.id} data-reception={pillarFrame || receptionFrame || studioFrame || technicalFrame || rentalFrame || projectionFrame || finaleFrame || undefined} aria-live="polite">
       <div
         className="v-hud-fade"
         style={{ opacity, transform: `translateY(${(1 - opacity) * 10}px)` }}
@@ -48,7 +52,7 @@ export function ZoneHud() {
           <span className="v-hud-dot" />
           <span className="v-mono">{projectionFrame ? "Projection Mapping" : zone.label}</span>
         </div>
-        <h2 className="v-hud-title">{rentalFrame ? "LED Rental Solutions · For every vision" : projectionFrame ? "Projection Mapping · Transform spaces into stories" : pillarFrame ? "Four-sided LED pillars" : receptionFrame ? "Reception · Curved LED" : studioFrame ? "Anamorphic · Content Studio" : zone.title}</h2>
+        <h2 className="v-hud-title">{rentalFrame ? "LED Rental Solutions · For every vision" : projectionFrame ? "Projection Mapping · Transform spaces into stories" : pillarFrame ? "Four-sided LED pillars" : receptionFrame ? "Reception · Curved LED" : studioFrame ? "Anamorphic · Content Studio" : finaleFrame ? zone.label : zone.title}</h2>
         <p className="v-hud-line">{zone.line}</p>
       </div>
     </div>

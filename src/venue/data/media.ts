@@ -189,7 +189,7 @@ export const MEDIA: Record<string, MediaDesc> = {
   /* Finale */
   "finale": { kind: "shader", program: "finaleBrand", accent: ACCENT.brand, res: [1024, 448], fps: 30, syncGroup: "finale" },
   "finale-word": { kind: "canvas", painter: "wordmark", accent: ACCENT.brand, res: [768, 192], fps: 12 },
-  "finale-cta": { kind: "canvas", painter: "signFinaleCta", accent: ACCENT.brand, res: [768, 176], fps: 8 },
+  "finale-cta": { kind: "canvas", painter: "signFinaleCta", accent: ACCENT.brand, res: [1280, 300], fps: 6 },
 };
 
 export type MediaId = keyof typeof MEDIA;
