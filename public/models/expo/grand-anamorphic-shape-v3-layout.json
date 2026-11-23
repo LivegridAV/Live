@@ -7,8 +7,8 @@
   ],
   "assets": {
     "grand-anamorphic-shape-v3-shell": {
-      "sha256": "6e3f013a7fef174b7b050a9073e74e89c9dbf0ee061b5585c30940d36f480639",
-      "bytes": 2688916,
+      "sha256": "fa6a8ef0f398f7e5ed4011e9f57335c141231e6c3f7e4041953e1a4be899ec97",
+      "bytes": 2760404,
       "bounds": {
         "min": [
           -12.0,
@@ -23,8 +23,8 @@
       }
     },
     "grand-anamorphic-shape-v3-interior": {
-      "sha256": "71172b2597e9bdcab47741fb6a69e2f92c2a888986d97f6bace510bb5f09efb8",
-      "bytes": 10836640,
+      "sha256": "55bfe72442903b4a2e8d5af9cc4171cebb3ad9d4ef0083b91219640f90095129",
+      "bytes": 11000836,
       "bounds": {
         "min": [
           -11.92886734008789,
@@ -727,17 +727,30 @@
   "waterJets": [],
   "typography": [
     {
-      "body": "LivegridAV",
+      "body": "livegridAV",
       "position": [
-        -7.178281385247414,
-        10.41,
-        7.324589380915142
+        -7.00412131714736,
+        10.290626024147027,
+        6.421154006007663
       ],
       "yaw": 1.3784007252789743,
       "availableWidth": 6.984743462982075,
-      "measuredWidth": 4.32758816331625,
+      "measuredWidth": 3.486458659172058,
+      "inkHeight": 0.6729040145874023,
       "uniformFit": 1,
-      "horizontalAspectRatio": 1
+      "horizontalAspectRatio": 1,
+      "premium": true,
+      "logo": true,
+      "replaces": {
+        "position": [
+          -7.178281385247414,
+          10.41,
+          7.324589380915142
+        ],
+        "inkWidth": 4.32758816331625,
+        "inkHeight": 0.8389203101396561,
+        "uniformFit": 1
+      }
     },
     {
       "body": "CONTENT STUDIO",
@@ -750,7 +763,8 @@
       "availableWidth": 6.944743462982075,
       "measuredWidth": 3.062692948617041,
       "uniformFit": 1,
-      "horizontalAspectRatio": 1
+      "horizontalAspectRatio": 1,
+      "premium": true
     },
     {
       "body": "IDEAS",
@@ -763,7 +777,8 @@
       "availableWidth": 1.84,
       "measuredWidth": 0.6838238313794136,
       "uniformFit": 1,
-      "horizontalAspectRatio": 1
+      "horizontalAspectRatio": 1,
+      "premium": true
     },
     {
       "body": "CONTENT",
@@ -776,7 +791,8 @@
       "availableWidth": 1.84,
       "measuredWidth": 1.1717340387403965,
       "uniformFit": 1,
-      "horizontalAspectRatio": 1
+      "horizontalAspectRatio": 1,
+      "premium": true
     },
     {
       "body": "EXPERIENCES",
@@ -789,7 +805,8 @@
       "availableWidth": 1.84,
       "measuredWidth": 1.5921132639050484,
       "uniformFit": 1,
-      "horizontalAspectRatio": 1
+      "horizontalAspectRatio": 1,
+      "premium": true
     },
     {
       "body": "REALITY",
@@ -802,20 +819,34 @@
       "availableWidth": 1.84,
       "measuredWidth": 0.9520768001675606,
       "uniformFit": 1,
-      "horizontalAspectRatio": 1
+      "horizontalAspectRatio": 1,
+      "premium": true
     },
     {
-      "body": "LivegridAV",
+      "body": "livegridAV",
       "position": [
-        7.356132596468041,
-        9.46,
-        -6.825279796922097
+        7.90131043905187,
+        9.38853803850923,
+        -6.903717235579387
       ],
       "yaw": 0.13962634015954636,
       "availableWidth": 3.6599999999999997,
-      "measuredWidth": 2.5906648337841034,
+      "measuredWidth": 2.0871313214302063,
+      "inkHeight": 0.40282726287841797,
       "uniformFit": 1,
-      "horizontalAspectRatio": 1
+      "horizontalAspectRatio": 1,
+      "premium": true,
+      "logo": true,
+      "replaces": {
+        "position": [
+          7.356132596468041,
+          9.46,
+          -6.825279796922097
+        ],
+        "inkWidth": 2.5906648337841034,
+        "inkHeight": 0.502210795879364,
+        "uniformFit": 1
+      }
     },
     {
       "body": "VISUALS FOR A BRIGHTER TOMORROW",
@@ -828,7 +859,8 @@
       "availableWidth": 3.6999999999999997,
       "measuredWidth": 2.775459974538535,
       "uniformFit": 1,
-      "horizontalAspectRatio": 1
+      "horizontalAspectRatio": 1,
+      "premium": true
     },
     {
       "body": "CONTENT",
@@ -841,7 +873,8 @@
       "availableWidth": 2.22,
       "measuredWidth": 0.7133220848627388,
       "uniformFit": 1,
-      "horizontalAspectRatio": 1
+      "horizontalAspectRatio": 1,
+      "premium": true
     },
     {
       "body": "PRODUCTION",
@@ -854,7 +887,8 @@
       "availableWidth": 2.22,
       "measuredWidth": 0.9925277270376682,
       "uniformFit": 1,
-      "horizontalAspectRatio": 1
+      "horizontalAspectRatio": 1,
+      "premium": true
     },
     {
       "body": "VIRTUAL PRODUCTION",
@@ -867,7 +901,8 @@
       "availableWidth": 2.22,
       "measuredWidth": 1.6964042587205768,
       "uniformFit": 1,
-      "horizontalAspectRatio": 1
+      "horizontalAspectRatio": 1,
+      "premium": true
     },
     {
       "body": "LIVE EXPERIENCES",
@@ -880,7 +915,8 @@
       "availableWidth": 2.22,
       "measuredWidth": 1.3343582190573215,
       "uniformFit": 1,
-      "horizontalAspectRatio": 1
+      "horizontalAspectRatio": 1,
+      "premium": true
     },
     {
       "body": "LED SOLUTIONS",
@@ -893,7 +929,8 @@
       "availableWidth": 2.22,
       "measuredWidth": 1.1741505898535252,
       "uniformFit": 1,
-      "horizontalAspectRatio": 1
+      "horizontalAspectRatio": 1,
+      "premium": true
     },
     {
       "body": "STORIES",
@@ -906,7 +943,8 @@
       "availableWidth": 0.94,
       "measuredWidth": 0.5528281009756029,
       "uniformFit": 1,
-      "horizontalAspectRatio": 1
+      "horizontalAspectRatio": 1,
+      "premium": true
     },
     {
       "body": "THAT MOVE",
@@ -919,7 +957,8 @@
       "availableWidth": 0.94,
       "measuredWidth": 0.8160711301025003,
       "uniformFit": 1,
-      "horizontalAspectRatio": 1
+      "horizontalAspectRatio": 1,
+      "premium": true
     },
     {
       "body": "PEOPLE",
@@ -932,7 +971,8 @@
       "availableWidth": 0.94,
       "measuredWidth": 0.4892041524872184,
       "uniformFit": 1,
-      "horizontalAspectRatio": 1
+      "horizontalAspectRatio": 1,
+      "premium": true
     },
     {
       "body": "CREATIVE",
@@ -945,7 +985,8 @@
       "availableWidth": 1.48,
       "measuredWidth": 0.6772312149405479,
       "uniformFit": 1,
-      "horizontalAspectRatio": 1
+      "horizontalAspectRatio": 1,
+      "premium": true
     },
     {
       "body": "TECHNOLOGY",
@@ -958,7 +999,8 @@
       "availableWidth": 1.48,
       "measuredWidth": 0.9837868583854288,
       "uniformFit": 1,
-      "horizontalAspectRatio": 1
+      "horizontalAspectRatio": 1,
+      "premium": true
     },
     {
       "body": "HUMAN IMPACT",
@@ -971,46 +1013,86 @@
       "availableWidth": 1.48,
       "measuredWidth": 1.167497738264501,
       "uniformFit": 1,
-      "horizontalAspectRatio": 1
+      "horizontalAspectRatio": 1,
+      "premium": true
     },
     {
-      "body": "LivegridAV",
+      "body": "livegridAV",
       "position": [
-        -9.55,
-        0.72,
-        -6.11
+        -9.52046558186412,
+        0.6442787808179855,
+        -6.11179999996908
       ],
       "yaw": 0,
       "availableWidth": 4.7,
-      "measuredWidth": 1.6191655807197094,
+      "measuredWidth": 1.6191654205322266,
+      "inkHeight": 0.31250709295272827,
       "uniformFit": 1,
-      "horizontalAspectRatio": 1
+      "horizontalAspectRatio": 1,
+      "premium": true,
+      "logo": false,
+      "replaces": {
+        "position": [
+          -9.55,
+          0.72,
+          -6.11
+        ],
+        "inkWidth": 1.6191655807197094,
+        "inkHeight": 0.3138817399740219,
+        "uniformFit": 1
+      }
     },
     {
-      "body": "LivegridAV",
+      "body": "livegridAV",
       "position": [
-        -9.866,
-        0.72,
-        5.75
+        -9.86779999996908,
+        0.64703228443861,
+        5.7215395625680685
       ],
       "yaw": 1.5707963267948966,
       "availableWidth": 3.12,
-      "measuredWidth": 1.5602867063134909,
+      "measuredWidth": 1.560286521911621,
+      "inkHeight": 0.30114316940307617,
       "uniformFit": 1,
-      "horizontalAspectRatio": 1
+      "horizontalAspectRatio": 1,
+      "premium": true,
+      "logo": false,
+      "replaces": {
+        "position": [
+          -9.866,
+          0.72,
+          5.75
+        ],
+        "inkWidth": 1.5602867063134909,
+        "inkHeight": 0.30246784538030624,
+        "uniformFit": 1
+      }
     },
     {
-      "body": "LivegridAV",
+      "body": "livegridAV",
       "position": [
-        -5.1276726722717285,
-        0.7099999785423279,
-        7.754621982574463
+        -5.122663497924805,
+        0.6191345453262329,
+        7.719491958618164
       ],
       "yaw": 1.3784007252789743,
       "availableWidth": 2.9,
-      "measuredWidth": 1.942998744547367,
+      "measuredWidth": 1.9429988861083984,
+      "inkHeight": 0.3750084638595581,
       "uniformFit": 1,
-      "horizontalAspectRatio": 1
+      "horizontalAspectRatio": 1,
+      "premium": true,
+      "logo": false,
+      "replaces": {
+        "position": [
+          -10.65,
+          0.71,
+          7.269
+        ],
+        "inkWidth": 1.942998744547367,
+        "inkHeight": 0.3766581118106842,
+        "uniformFit": 1
+      }
     },
     {
       "body": "LIVE IDEAS   LIVING WORLDS",
@@ -1023,7 +1105,244 @@
       "availableWidth": 5.6,
       "measuredWidth": 2.476982120424509,
       "uniformFit": 1,
-      "horizontalAspectRatio": 1
+      "horizontalAspectRatio": 1,
+      "premium": true
+    }
+  ],
+  "signage": [
+    {
+      "body": "signal grid logo",
+      "kind": "emblem",
+      "position": [
+        -7.165,
+        10.2065,
+        7.2468
+      ]
+    },
+    {
+      "body": "livegridAV",
+      "kind": "wordmark",
+      "position": [
+        -7.0041,
+        10.2906,
+        6.4212
+      ]
+    },
+    {
+      "body": "aqua halo",
+      "kind": "halo",
+      "position": [
+        -7.1485,
+        10.0888,
+        7.25
+      ]
+    },
+    {
+      "body": "CONTENT STUDIO",
+      "kind": "name",
+      "position": [
+        -7.1705,
+        9.65,
+        7.3057
+      ]
+    },
+    {
+      "body": "IDEAS",
+      "kind": "name",
+      "position": [
+        -7.2856,
+        8.25,
+        7.4361
+      ]
+    },
+    {
+      "body": "CONTENT",
+      "kind": "name",
+      "position": [
+        -7.2856,
+        7.78,
+        7.4361
+      ]
+    },
+    {
+      "body": "EXPERIENCES",
+      "kind": "name",
+      "position": [
+        -7.2856,
+        7.31,
+        7.4361
+      ]
+    },
+    {
+      "body": "REALITY",
+      "kind": "name",
+      "position": [
+        -7.2856,
+        6.84,
+        7.4361
+      ]
+    },
+    {
+      "body": "signal grid logo",
+      "kind": "emblem",
+      "position": [
+        7.4027,
+        9.3382,
+        -6.8336
+      ]
+    },
+    {
+      "body": "livegridAV",
+      "kind": "wordmark",
+      "position": [
+        7.9013,
+        9.3885,
+        -6.9037
+      ]
+    },
+    {
+      "body": "VISUALS FOR A BRIGHTER TOMORROW",
+      "kind": "name",
+      "position": [
+        7.3367,
+        8.89,
+        -6.8195
+      ]
+    },
+    {
+      "body": "CONTENT",
+      "kind": "name",
+      "position": [
+        8.9021,
+        8.02,
+        -7.0345
+      ]
+    },
+    {
+      "body": "PRODUCTION",
+      "kind": "name",
+      "position": [
+        8.9021,
+        7.62,
+        -7.0345
+      ]
+    },
+    {
+      "body": "VIRTUAL PRODUCTION",
+      "kind": "name",
+      "position": [
+        8.9021,
+        7.22,
+        -7.0345
+      ]
+    },
+    {
+      "body": "LIVE EXPERIENCES",
+      "kind": "name",
+      "position": [
+        8.9021,
+        6.82,
+        -7.0345
+      ]
+    },
+    {
+      "body": "LED SOLUTIONS",
+      "kind": "name",
+      "position": [
+        8.9021,
+        6.42,
+        -7.0345
+      ]
+    },
+    {
+      "body": "STORIES",
+      "kind": "name",
+      "position": [
+        10.2488,
+        3.62,
+        -7.2237
+      ]
+    },
+    {
+      "body": "THAT MOVE",
+      "kind": "name",
+      "position": [
+        10.2488,
+        3.28,
+        -7.2237
+      ]
+    },
+    {
+      "body": "PEOPLE",
+      "kind": "name",
+      "position": [
+        10.2488,
+        2.94,
+        -7.2237
+      ]
+    },
+    {
+      "body": "CREATIVE",
+      "kind": "name",
+      "position": [
+        9.7339,
+        1.65,
+        -7.1514
+      ]
+    },
+    {
+      "body": "TECHNOLOGY",
+      "kind": "name",
+      "position": [
+        9.7339,
+        1.34,
+        -7.1514
+      ]
+    },
+    {
+      "body": "HUMAN IMPACT",
+      "kind": "name",
+      "position": [
+        9.7339,
+        1.03,
+        -7.1514
+      ]
+    },
+    {
+      "body": "livegridAV",
+      "kind": "wordmark",
+      "position": [
+        -9.5205,
+        0.6443,
+        -6.1118
+      ]
+    },
+    {
+      "body": "livegridAV",
+      "kind": "wordmark",
+      "position": [
+        -9.8678,
+        0.647,
+        5.7215
+      ]
+    },
+    {
+      "body": "livegridAV",
+      "kind": "wordmark",
+      "position": [
+        -5.1227,
+        0.6191,
+        7.7195
+      ]
+    },
+    {
+      "body": "LIVE IDEAS   LIVING WORLDS",
+      "kind": "name",
+      "position": [
+        0.55,
+        0.28,
+        7.545
+      ]
     }
   ],
   "roles": [
@@ -1278,7 +1597,7 @@
         "max": [
           -4.2699995040893555,
           1.5898196697235107,
-          -6.099999904632568
+          -6.088362216949463
         ]
       },
       "overhead": false
@@ -1324,7 +1643,7 @@
           2.369999885559082
         ],
         "max": [
-          -9.850000381469727,
+          -9.845213890075684,
           1.5672773122787476,
           6.029999732971191
         ]
@@ -1358,7 +1677,7 @@
         "max": [
           9.237500190734863,
           0.6499999761581421,
-          7.546800136566162
+          7.561200141906738
         ]
       },
       "overhead": false

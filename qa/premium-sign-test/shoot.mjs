@@ -56,6 +56,22 @@ STALLS.rental = {
   return: "camera=qa&pos=14.0,4.2,-63.5&look=14.2,4.2,-70.74&fov=40",
 };
 
+// Content Studio (venue id "anamorphic"). Placement S1: root [-20, 0, -82.65],
+// yaw +pi/2, so venue = (-20 + z, y, -82.65 - x) for a layout point (x, y, z).
+// sign / angle: the portal fascia logo + wordmark (the stall's halo), 8 m out,
+// angle 35 degrees toward the hall; gallery: the gallery fascia lockup; desk:
+// the front reception desk wordmark; counter / left-counter: the two room
+// counter wordmarks.
+STALLS.anamorphic = {
+  front: "shot=anamorphic&view=front",
+  sign: "camera=qa&pos=-13.35,10.63,-83.75&look=-14.88,10.63,-75.9&fov=34",
+  angle: "camera=qa&pos=-9.12,10.63,-81.45&look=-14.88,10.63,-75.9&fov=34",
+  gallery: "camera=qa&pos=-19.09,9.59,-92.45&look=-27.01,9.59,-91.34&fov=30",
+  desk: "camera=qa&pos=-12.37,1.4,-82.13&look=-13.23,0.81,-77.71&fov=40",
+  counter: "camera=qa&pos=-22.11,1.4,-73.94&look=-26.11,0.8,-73.94&fov=45",
+  "left-counter": "camera=qa&pos=-15.06,1.4,-76.78&look=-15.06,0.8,-72.78&fov=45",
+};
+
 if (stall && !STALLS[stall]) {
   console.error(`unknown --stall ${stall}; known: ${Object.keys(STALLS).join(", ")}`);
   process.exit(2);
