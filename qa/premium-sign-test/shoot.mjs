@@ -87,6 +87,27 @@ STALLS.technical = {
   plaque: "camera=qa&pos=-10.64,1.2,-118.51&look=-13.64,0.35,-118.51&fov=40",
 };
 
+// Projection Mapping (venue id "projection"). Placement S4: root [20, 0,
+// -126.28], yaw -pi/2, so venue = (20 - z, y, -126.28 + x) for a layout point
+// (x, y, z). sign / angle: the main fascia logo + wordmark (the stall's halo),
+// 8 m out, angle 35 degrees toward the approach; header: the whole fascia
+// header including the aqua TRANSFORM SPACES INTO STORIES; gallery-left /
+// gallery-right: each side gallery (screens, walls, captions) from inside, to
+// check the galleries stand where they stood; caption: a left gallery caption
+// close up at 30 degrees; desk: the reception desk logo + wordmark; kiosk:
+// the main kiosk screen, whose header draws the 2D wordmark.
+STALLS.projection = {
+  front: "shot=projection&view=front",
+  sign: "camera=qa&pos=4.54,11.79,-128.88&look=12.54,11.79,-128.88&fov=34",
+  angle: "camera=qa&pos=5.99,11.79,-124.29&look=12.54,11.79,-128.88&fov=34",
+  header: "camera=qa&pos=-0.46,11.8,-123.68&look=12.54,11.8,-123.68&fov=40",
+  "gallery-left": "camera=qa&pos=16.92,3,-129.79&look=24.01,5.5,-135.33&fov=60",
+  "gallery-right": "camera=qa&pos=16.92,3,-122.77&look=24.01,5.5,-117.23&fov=60",
+  caption: "camera=qa&pos=22.66,5.73,-132.06&look=23.97,5.73,-135.3&fov=30",
+  desk: "camera=qa&pos=9.47,1.4,-134.25&look=13.47,0.65,-134.25&fov=40",
+  kiosk: "camera=qa&pos=12.79,2.29,-121.78&look=14.14,1.43,-121.78&fov=45",
+};
+
 if (stall && !STALLS[stall]) {
   console.error(`unknown --stall ${stall}; known: ${Object.keys(STALLS).join(", ")}`);
   process.exit(2);

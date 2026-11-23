@@ -131,12 +131,13 @@ def build_projection_finish_v2_interior(ctx):
             if ob.parent is None:
                 ob.location += delta
 
-    def lettering(text, p, height, width, finish=None, centered=True, tracking=1.06):
-        ob = ns['label26'](text, p, height, width, finish or ns['WHITE26'], centered, tracking)
-        # Uniform fit preserves the original glyph shape even on narrow copy.
-        factor = min(ob.scale.x, ob.scale.y)
-        ob.scale = (factor, factor, factor)
-        return ob
+    def lettering(text, p, height, width, finish=None, centered=True, tracking=1.06, slogan=True):
+        # Every sign here is a premium sign: livegridAV goes to premium_wordmark
+        # in today's ink box, other copy is deepened in place (aqua face for a
+        # teal/mint finish). Uniform fit preserves the original glyph shape even
+        # on narrow copy, and is applied before the letters are deepened.
+        return ns['label26'](text, p, height, width, finish or ns['WHITE26'], centered, tracking,
+                             premium=True, slogan=slogan, uniform=True)
 
     def armchair(name, x, z, yaw=0, width=.97, purpose='lounge'):
         start = set(bpy.context.scene.objects)
@@ -245,8 +246,11 @@ def build_projection_finish_v2_interior(ctx):
             ns['rod'](prefix + 'individual brushed champagne reception end flute',
                       (xx + side * .054, floor + .055, zz),
                       (xx + side * .054, top_y - .07, zz), .009, champagne, 7)
-    ns['emblem26'](cx - 2.66, floor + .30, front + .017, .51)
-    lettering('livegrid AV', (cx - .25, floor + .39, front + .024), .37, 3.42)
+    # Desk sign, no halo: the signal-grid logo in place of emblem26's folded
+    # triangle (.80 x its .51 m height, same left edge, cell backs on the
+    # triangle's back plane front + .007), then the livegridAV wordmark.
+    ns['premium_signage']().premium_emblem((cx - 2.66, floor + .30, front + .007), .51)
+    lettering('livegridAV', (cx - .25, floor + .39, front + .024), .37, 3.42)
     lettering('RENTAL  |  SOLUTIONS  |  EXPERIENCES', (cx - .56, floor + .145, front + .026),
               .09, 4.32, tracking=1.09)
     points = [(cx + 3.03, floor + .04, front + .006),

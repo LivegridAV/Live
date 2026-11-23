@@ -49,6 +49,7 @@ export const SIGNED_ASSETS = [
   { layout: "public/models/expo/grand-rental-finish-v2-layout.json", glbs: ["public/models/expo/grand-rental-finish-v2-shell.glb", "public/models/expo/grand-rental-finish-v2-interior.glb"], halo: 1 },
   { layout: "public/models/expo/grand-anamorphic-shape-v3-layout.json", glbs: ["public/models/expo/grand-anamorphic-shape-v3-shell.glb", "public/models/expo/grand-anamorphic-shape-v3-interior.glb"], halo: 1 },
   { layout: "public/models/expo/grand-technical-shape-v3-layout.json", glbs: ["public/models/expo/grand-technical-shape-v3-shell.glb", "public/models/expo/grand-technical-shape-v3-interior.glb"], halo: 1 },
+  { layout: "public/models/expo/projection-finish-v2-blender-layout.json", glbs: ["public/models/expo/projection-finish-v2-blender-shell.glb", "public/models/expo/projection-finish-v2-blender-interior.glb"], halo: 1 },
 ];
 
 export function checkSignedAsset(entry) {

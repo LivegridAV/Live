@@ -58,6 +58,8 @@ for(const v of layout.architecture.vineAnchors)v.position=move(v.position,v.side
 function box(b,side){const corners=[];for(const x of [b.min[0],b.max[0]])for(const y of [b.min[1],b.max[1]])for(const z of [b.min[2],b.max[2]])corners.push(move([x,y,z],side));return {min:[0,1,2].map(i=>Math.min(...corners.map(p=>p[i]))),max:[0,1,2].map(i=>Math.max(...corners.map(p=>p[i])))};}
 for(const p of layout.plants)if(p.id.startsWith('gallery integrated climbing leaf column')){const side=Math.sign(p.position[0]);p.position=move(p.position,side);p.bounds=box(p.bounds,side);}
 for(const t of layout.typography)if(t.position&&galleryRegion(t.position)){const side=Math.sign(t.position[0]);t.position=move(t.position,side);if(t.bounds)t.bounds=box(t.bounds,side);if(typeof t.yaw==='number')t.yaw+=controllers.get(side).rotation[2];}
+// Premium sign anchors in the galleries (the captions) move like their letters.
+for(const s of layout.signage??[])if(galleryRegion(s.position))s.position=move(s.position,Math.sign(s.position[0]));
 // Update gallery origins last: all delta transforms above reference the editor's original pivots.
 for(const g of layout.architecture.galleries){g.center=move(g.center,g.side);g.yaw+=controllers.get(g.side).rotation[2];}
 layout.version='projection-galleries-saved-blender-20261021';

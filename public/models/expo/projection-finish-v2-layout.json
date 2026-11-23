@@ -101,7 +101,7 @@
           7.04
         ],
         [
-          -9,
+          -9.0,
           10.65,
           7.25
         ],
@@ -318,9 +318,9 @@
         ]
       },
       "center": [
-        -7,
+        -7.0,
         0.12,
-        6
+        6.0
       ],
       "width": 6.2,
       "depth": 1.05,
@@ -558,7 +558,7 @@
       {
         "id": "right lounge front chair",
         "position": [
-          9,
+          9.0,
           0.12,
           4.8
         ],
@@ -596,7 +596,7 @@
             3.0849997997283936
           ],
           "max": [
-            8,
+            8.0,
             1.1800000667572021,
             4.055000305175781
           ]
@@ -616,14 +616,14 @@
   },
   "shellBounds": {
     "min": [
-      -12,
+      -12.0,
       0.02500000037252903,
-      -8
+      -8.0
     ],
     "max": [
-      12,
+      12.0,
       12.821000099182129,
-      8
+      8.0
     ]
   },
   "deckPolygonXZ": [
@@ -810,7 +810,7 @@
       "z": 9.329999923706055,
       "w": 19.442407910063313,
       "h": 7.9,
-      "radius": 17,
+      "radius": 17.0,
       "arc": 1.143671053533136,
       "rotation": [
         0,
@@ -905,10 +905,10 @@
       ],
       "target": [
         0,
-        7,
+        7.0,
         -2.8
       ],
-      "width": 2,
+      "width": 2.0,
       "height": 2.7,
       "radius": 1.55,
       "color": "#c7e9ff",
@@ -919,19 +919,19 @@
       "position": [
         -4.6,
         9.82,
-        1
+        1.0
       ],
       "lens": [
         -4.6,
         9.82,
-        1
+        1.0
       ],
       "target": [
         -2.7,
         4.6,
         -2.6
       ],
-      "width": 2,
+      "width": 2.0,
       "height": 2.7,
       "radius": 1.25,
       "color": "#c7e9ff",
@@ -942,19 +942,19 @@
       "position": [
         4.6,
         9.82,
-        1
+        1.0
       ],
       "lens": [
         4.6,
         9.82,
-        1
+        1.0
       ],
       "target": [
         2.7,
         4.6,
         -2.6
       ],
-      "width": 2,
+      "width": 2.0,
       "height": 2.7,
       "radius": 1.25,
       "color": "#c7e9ff",
@@ -1894,7 +1894,7 @@
           7.406717300415039
         ],
         [
-          0,
+          0.0,
           11.246999740600586,
           7.4070000648498535
         ],
@@ -4857,7 +4857,7 @@
           -7.669698715209961
         ],
         [
-          0,
+          0.0,
           2.434999942779541,
           -7.670000076293945
         ],
@@ -5833,7 +5833,7 @@
           -7.669698715209961
         ],
         [
-          0,
+          0.0,
           10.364999771118164,
           -7.670000076293945
         ],
@@ -6373,12 +6373,12 @@
         [
           -11.25,
           10.949999809265137,
-          -7
+          -7.0
         ],
         [
           -11.25,
           10.949999809265137,
-          6
+          6.0
         ]
       ],
       "radius": 0.011,
@@ -6394,12 +6394,12 @@
         [
           11.25,
           10.949999809265137,
-          -7
+          -7.0
         ],
         [
           11.25,
           10.949999809265137,
-          6
+          6.0
         ]
       ],
       "radius": 0.011,
@@ -10332,7 +10332,7 @@
     {
       "id": "reception warm toe rope",
       "position": [
-        -7,
+        -7.0,
         0.143,
         6.531000000000001
       ],
@@ -10354,6 +10354,7 @@
       "width": 1.146412996067364,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           -11.660405158996582,
@@ -10363,7 +10364,7 @@
         "max": [
           -10.513992309570312,
           8.34000015258789,
-          7.193020343780518
+          7.208979606628418
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10380,6 +10381,7 @@
       "width": 1.1251984121607832,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           -11.649555206298828,
@@ -10389,7 +10391,7 @@
         "max": [
           -10.524356842041016,
           7.87999963760376,
-          7.193020343780518
+          7.208979606628418
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10406,6 +10408,7 @@
       "width": 1.2696517188660015,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           -11.649555206298828,
@@ -10415,7 +10418,7 @@
         "max": [
           -10.379903793334961,
           7.419999599456787,
-          7.193020343780518
+          7.208979606628418
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10432,6 +10435,7 @@
       "width": 1.4,
       "uniformFit": 0.8308393943364843,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           -11.654705047607422,
@@ -10441,7 +10445,7 @@
         "max": [
           -10.254705429077148,
           6.919401168823242,
-          7.192847728729248
+          7.2091522216796875
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10458,6 +10462,7 @@
       "width": 1.2185941809555914,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           -11.64853572845459,
@@ -10467,7 +10472,7 @@
         "max": [
           -10.429941177368164,
           5.139999866485596,
-          7.193054676055908
+          7.208945274353027
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10484,6 +10489,7 @@
       "width": 1.4,
       "uniformFit": 0.7769976962349698,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           -11.664774894714355,
@@ -10493,7 +10499,7 @@
         "max": [
           -10.264775276184082,
           4.626479625701904,
-          7.192792892456055
+          7.209207057952881
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10510,6 +10516,7 @@
       "width": 1.4,
       "uniformFit": 0.6876830375484894,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           -11.659063339233398,
@@ -10519,7 +10526,7 @@
         "max": [
           -10.259063720703125,
           4.145043849945068,
-          7.192701816558838
+          7.209298133850098
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10536,6 +10543,7 @@
       "width": 0.8777457406136047,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           10.350444793701172,
@@ -10545,7 +10553,7 @@
         "max": [
           11.228190422058105,
           8.34000015258789,
-          7.193020343780518
+          7.208979606628418
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10562,6 +10570,7 @@
       "width": 1.3379246457476144,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           10.35146427154541,
@@ -10571,7 +10580,7 @@
         "max": [
           11.689388275146484,
           7.87999963760376,
-          7.193054676055908
+          7.208945274353027
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10588,6 +10597,7 @@
       "width": 1.1243885808417156,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           10.350444793701172,
@@ -10597,7 +10607,7 @@
         "max": [
           11.474833488464355,
           7.419999599456787,
-          7.193020343780518
+          7.208979606628418
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10614,6 +10624,7 @@
       "width": 1.4,
       "uniformFit": 0.8336419923624966,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           10.345379829406738,
@@ -10623,7 +10634,7 @@
         "max": [
           11.745380401611328,
           5.100074291229248,
-          7.192850589752197
+          7.209149360656738
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10640,6 +10651,7 @@
       "width": 1.1566154378363407,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           10.339594841003418,
@@ -10649,7 +10661,7 @@
         "max": [
           11.496210098266602,
           4.679999828338623,
-          7.193020343780518
+          7.208979606628418
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10666,6 +10678,7 @@
       "width": 1.4,
       "uniformFit": 0.8318787028144267,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           10.34532642364502,
@@ -10675,7 +10688,7 @@
         "max": [
           11.74532699584961,
           4.179650783538818,
-          7.1928486824035645
+          7.209150791168213
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10692,6 +10705,7 @@
       "width": 1.4,
       "uniformFit": 0.857030171343011,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           10.346092224121094,
@@ -10701,7 +10715,7 @@
         "max": [
           11.746091842651367,
           3.725687265396118,
-          7.192874431610107
+          7.209125518798828
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10718,6 +10732,7 @@
       "width": 1.4,
       "uniformFit": 0.6876830375484894,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           10.340936660766602,
@@ -10727,33 +10742,35 @@
         "max": [
           11.740936279296875,
           3.225043773651123,
-          7.192701816558838
+          7.209298133850098
         ]
       },
       "fontAspectRatioPreserved": true
     },
     {
-      "body": "livegrid AV",
+      "body": "livegridAV",
       "position": [
         -3.95,
         11.31,
         7.46
       ],
       "yaw": 0,
-      "capHeight": 0.76,
-      "width": 3.8213012703711327,
-      "uniformFit": 1,
+      "capHeight": 0.7599999904632568,
+      "width": 3.9377214908599854,
+      "uniformFit": 0.9999999874516537,
       "horizontalAspectRatio": 1,
+      "premium": true,
+      "font": "Space Grotesk 600",
       "bounds": {
         "min": [
-          -3.8925626277923584,
+          -3.950000047683716,
           11.3100004196167,
-          7.457581043243408
+          7.460000038146973
         ],
         "max": [
-          -0.07126140594482422,
+          -0.012278556823730469,
           12.070000648498535,
-          7.462419033050537
+          7.517000198364258
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10770,6 +10787,7 @@
       "width": 5.7,
       "uniformFit": 0.966254771539924,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           2.5367724895477295,
@@ -10779,7 +10797,7 @@
         "max": [
           8.236772537231445,
           12.20987606048584,
-          7.461232662200928
+          7.480508327484131
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10796,6 +10814,7 @@
       "width": 4.915900032785572,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           2.524979829788208,
@@ -10805,7 +10824,7 @@
         "max": [
           7.440879821777344,
           11.619999885559082,
-          7.460765361785889
+          7.477234840393066
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10822,6 +10841,7 @@
       "width": 0.5606034041419431,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           9.302915573120117,
@@ -10831,7 +10851,7 @@
         "max": [
           9.863518714904785,
           12.429999351501465,
-          7.26083517074585
+          7.277165412902832
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10848,6 +10868,7 @@
       "width": 1.1508001246616515,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           9.315512657165527,
@@ -10857,7 +10878,7 @@
         "max": [
           10.466313362121582,
           12.119999885559082,
-          7.260807991027832
+          7.277192115783691
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10874,6 +10895,7 @@
       "width": 1.3518307456511265,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           9.302821159362793,
@@ -10883,7 +10905,7 @@
         "max": [
           10.654651641845703,
           11.809999465942383,
-          7.260807991027832
+          7.277192115783691
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10900,6 +10922,7 @@
       "width": 3.4116150476471496,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           -10.368247985839844,
@@ -10907,9 +10930,9 @@
           0.4275899827480316
         ],
         "max": [
-          -7.062291622161865,
+          -7.0582380294799805,
           8.25,
-          1.273202657699585
+          1.2890775203704834
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10926,6 +10949,7 @@
       "width": 2.577240873069998,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           -9.954961776733398,
@@ -10933,9 +10957,9 @@
           0.528488278388977
         ],
         "max": [
-          -7.457441329956055,
+          -7.45338773727417,
           5.920000076293945,
-          1.1676734685897827
+          1.1835483312606812
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10952,6 +10976,7 @@
       "width": 2.5300538026342503,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           -9.930859565734863,
@@ -10959,9 +10984,9 @@
           0.5340082049369812
         ],
         "max": [
-          -7.479059219360352,
+          -7.475005626678467,
           3.5900001525878906,
-          1.161519169807434
+          1.1773940324783325
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10978,6 +11003,7 @@
       "width": 2.6839114799837964,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           -10.002477645874023,
@@ -10985,9 +11011,9 @@
           0.5142303109169006
         ],
         "max": [
-          -7.401602745056152,
+          -7.397549152374268,
           1.2600001096725464,
-          1.1798062324523926
+          1.195681095123291
         ]
       },
       "fontAspectRatioPreserved": true
@@ -11004,16 +11030,17 @@
       "width": 1.598492269011156,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
-          7.938620567321777,
+          7.934566974639893,
           8.0600004196167,
           0.6513534784317017
         ],
         "max": [
           9.48781967163086,
           8.25,
-          1.048392415046692
+          1.0642672777175903
         ]
       },
       "fontAspectRatioPreserved": true
@@ -11030,16 +11057,17 @@
       "width": 2.6667281462558368,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
-          7.421107292175293,
+          7.417053699493408,
           5.730000019073486,
           0.5192106366157532
         ],
         "max": [
           10.005332946777344,
           5.920000076293945,
-          1.1805353164672852
+          1.1964101791381836
         ]
       },
       "fontAspectRatioPreserved": true
@@ -11056,16 +11084,17 @@
       "width": 1.3291332502534339,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
-          8.069112777709961,
+          8.065059661865234,
           3.4000000953674316,
           0.6846737265586853
         ],
         "max": [
           9.35732650756836,
           3.5900001525878906,
-          1.015072226524353
+          1.030946969985962
         ]
       },
       "fontAspectRatioPreserved": true
@@ -11082,19 +11111,364 @@
       "width": 2.9809706679417207,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
-          7.2688703536987305,
+          7.264816761016846,
           1.0700000524520874,
           0.4803381562232971
         ],
         "max": [
           10.157569885253906,
           1.2600001096725464,
-          1.2194077968597412
+          1.23528254032135
         ]
       },
       "fontAspectRatioPreserved": true
+    }
+  ],
+  "signage": [
+    {
+      "body": "SPACES",
+      "kind": "name",
+      "position": [
+        -11.68,
+        8.1,
+        7.192
+      ]
+    },
+    {
+      "body": "PEOPLE",
+      "kind": "name",
+      "position": [
+        -11.68,
+        7.64,
+        7.192
+      ]
+    },
+    {
+      "body": "BRANDS",
+      "kind": "name",
+      "position": [
+        -11.68,
+        7.18,
+        7.192
+      ]
+    },
+    {
+      "body": "EMOTIONS",
+      "kind": "name",
+      "position": [
+        -11.68,
+        6.72,
+        7.192
+      ]
+    },
+    {
+      "body": "RENTAL",
+      "kind": "name",
+      "position": [
+        -11.68,
+        4.9,
+        7.192
+      ]
+    },
+    {
+      "body": "SOLUTIONS",
+      "kind": "name",
+      "position": [
+        -11.68,
+        4.44,
+        7.192
+      ]
+    },
+    {
+      "body": "EXPERIENCES",
+      "kind": "name",
+      "position": [
+        -11.68,
+        3.98,
+        7.192
+      ]
+    },
+    {
+      "body": "IDEAS",
+      "kind": "name",
+      "position": [
+        10.32,
+        8.1,
+        7.192
+      ]
+    },
+    {
+      "body": "MAPPED",
+      "kind": "name",
+      "position": [
+        10.32,
+        7.64,
+        7.192
+      ]
+    },
+    {
+      "body": "BIGGER",
+      "kind": "name",
+      "position": [
+        10.32,
+        7.18,
+        7.192
+      ]
+    },
+    {
+      "body": "BUILDINGS",
+      "kind": "name",
+      "position": [
+        10.32,
+        4.9,
+        7.192
+      ]
+    },
+    {
+      "body": "STAGES",
+      "kind": "name",
+      "position": [
+        10.32,
+        4.44,
+        7.192
+      ]
+    },
+    {
+      "body": "PRODUCTS",
+      "kind": "name",
+      "position": [
+        10.32,
+        3.98,
+        7.192
+      ]
+    },
+    {
+      "body": "INTERIORS",
+      "kind": "name",
+      "position": [
+        10.32,
+        3.52,
+        7.192
+      ]
+    },
+    {
+      "body": "EXPERIENCES",
+      "kind": "name",
+      "position": [
+        10.32,
+        3.06,
+        7.192
+      ]
+    },
+    {
+      "body": "signal grid logo",
+      "kind": "emblem",
+      "position": [
+        -5.2,
+        11.32,
+        7.46
+      ]
+    },
+    {
+      "body": "livegridAV",
+      "kind": "wordmark",
+      "position": [
+        -3.95,
+        11.31,
+        7.46
+      ]
+    },
+    {
+      "body": "aqua halo",
+      "kind": "halo",
+      "position": [
+        -5.2,
+        11.28,
+        7.434
+      ]
+    },
+    {
+      "body": "PROJECTION MAPPING",
+      "kind": "name",
+      "position": [
+        2.5,
+        11.92,
+        7.46
+      ]
+    },
+    {
+      "body": "TRANSFORM SPACES INTO STORIES",
+      "kind": "name",
+      "position": [
+        2.52,
+        11.44,
+        7.46
+      ]
+    },
+    {
+      "body": "ANY",
+      "kind": "name",
+      "position": [
+        9.3,
+        12.24,
+        7.26
+      ]
+    },
+    {
+      "body": "SURFACE",
+      "kind": "name",
+      "position": [
+        9.3,
+        11.93,
+        7.26
+      ]
+    },
+    {
+      "body": "A CANVAS",
+      "kind": "name",
+      "position": [
+        9.3,
+        11.62,
+        7.26
+      ]
+    },
+    {
+      "body": "ARCHITECTURAL MAPPING",
+      "kind": "name",
+      "position": [
+        -8.7076,
+        8.06,
+        0.8484
+      ]
+    },
+    {
+      "body": "STAGE EXPERIENCES",
+      "kind": "name",
+      "position": [
+        -8.7076,
+        5.73,
+        0.8484
+      ]
+    },
+    {
+      "body": "PRODUCT MAPPING",
+      "kind": "name",
+      "position": [
+        -8.7076,
+        3.4,
+        0.8484
+      ]
+    },
+    {
+      "body": "INTERACTIVE SPACES",
+      "kind": "name",
+      "position": [
+        -8.7076,
+        1.07,
+        0.8484
+      ]
+    },
+    {
+      "body": "LANDMARKS",
+      "kind": "name",
+      "position": [
+        8.7076,
+        8.06,
+        0.8484
+      ]
+    },
+    {
+      "body": "BRAND EXPERIENCES",
+      "kind": "name",
+      "position": [
+        8.7076,
+        5.73,
+        0.8484
+      ]
+    },
+    {
+      "body": "INTERIORS",
+      "kind": "name",
+      "position": [
+        8.7076,
+        3.4,
+        0.8484
+      ]
+    },
+    {
+      "body": "EVENTS & EXHIBITIONS",
+      "kind": "name",
+      "position": [
+        8.7076,
+        1.07,
+        0.8484
+      ]
+    },
+    {
+      "body": "signal grid logo",
+      "kind": "emblem",
+      "position": [
+        -9.66,
+        0.42,
+        6.538
+      ]
+    },
+    {
+      "body": "livegridAV",
+      "kind": "wordmark",
+      "position": [
+        -7.2372,
+        0.4206,
+        6.5539
+      ]
+    },
+    {
+      "body": "RENTAL  |  SOLUTIONS  |  EXPERIENCES",
+      "kind": "name",
+      "position": [
+        -7.56,
+        0.265,
+        6.557
+      ]
+    },
+    {
+      "body": "EXPLORE",
+      "kind": "name",
+      "position": [
+        4.5,
+        0.86,
+        6.199
+      ]
+    },
+    {
+      "body": "POSSIBILITIES",
+      "kind": "name",
+      "position": [
+        4.5,
+        0.61,
+        6.199
+      ]
+    },
+    {
+      "body": "EXPLORE",
+      "kind": "name",
+      "position": [
+        -3.8,
+        0.86,
+        4.939
+      ]
+    },
+    {
+      "body": "POSSIBILITIES",
+      "kind": "name",
+      "position": [
+        -3.8,
+        0.61,
+        4.939
+      ]
     }
   ],
   "furniture": [
@@ -11454,7 +11828,7 @@
       },
       "kind": "tailored ivory upholstered armchair",
       "position": [
-        9,
+        9.0,
         0.12,
         4.8
       ],
@@ -11472,7 +11846,7 @@
           3.0849997997283936
         ],
         "max": [
-          8,
+          8.0,
           1.1800000667572021,
           4.055000305175781
         ]
@@ -11526,9 +11900,9 @@
         ]
       },
       "center": [
-        -7,
+        -7.0,
         0.12,
-        6
+        6.0
       ],
       "width": 6.2,
       "depth": 1.05,
@@ -11573,7 +11947,7 @@
         "max": [
           5.199999809265137,
           1.7387369871139526,
-          6.199490547180176
+          6.216595649719238
         ]
       },
       "position": [
@@ -11598,7 +11972,7 @@
         "max": [
           -3.509999990463257,
           1.6419183015823364,
-          4.9392852783203125
+          4.956811428070068
         ]
       },
       "position": [
@@ -11881,7 +12255,7 @@
     {
       "id": "right lounge front chair",
       "position": [
-        9,
+        9.0,
         0.12,
         4.8
       ],
@@ -11919,7 +12293,7 @@
           3.0849997997283936
         ],
         "max": [
-          8,
+          8.0,
           1.1800000667572021,
           4.055000305175781
         ]
@@ -12158,7 +12532,7 @@
       "position": [
         -6.2,
         0.12,
-        2
+        2.0
       ],
       "totalHeight": 1.3,
       "potHeight": 0.44,
@@ -12186,7 +12560,7 @@
       "position": [
         7.65,
         0.12,
-        1
+        1.0
       ],
       "totalHeight": 1.3,
       "potHeight": 0.44,
@@ -12726,7 +13100,7 @@
       "id": "consultation native floral pot 1",
       "kind": "ivory flower arrangement",
       "position": [
-        0,
+        0.0,
         0.83,
         1.9900000000000002
       ],
@@ -12759,9 +13133,9 @@
       ]
     },
     "center": [
-      -7,
+      -7.0,
       0.12,
-      6
+      6.0
     ],
     "width": 6.2,
     "depth": 1.05,
@@ -12864,7 +13238,7 @@
   "routes": {
     "mainEntry": {
       "centerX": 0,
-      "width": 2,
+      "width": 2.0,
       "zRange": [
         2.5,
         8.5
@@ -12881,7 +13255,7 @@
     "rightInterior": {
       "centerX": 6.4,
       "zRange": [
-        1,
+        1.0,
         4.6
       ],
       "width": 1.2
@@ -12892,12 +13266,12 @@
     "boxes": {
       "mainEntry": {
         "min": [
-          -1,
+          -1.0,
           0.14,
           2.5
         ],
         "max": [
-          1,
+          1.0,
           2.2,
           8.5
         ]
@@ -12906,7 +13280,7 @@
         "min": [
           0,
           0.14,
-          4
+          4.0
         ],
         "max": [
           6.4,
@@ -12918,10 +13292,10 @@
         "min": [
           5.8,
           0.14,
-          1
+          1.0
         ],
         "max": [
-          7,
+          7.0,
           2.2,
           4.6
         ]
@@ -13058,7 +13432,7 @@
       "position": [
         4.5,
         0.12,
-        7
+        7.0
       ],
       "yaw": 3.141592653589793,
       "nativeScale": 1,
@@ -13080,7 +13454,7 @@
       "asset": "Business_Female_01",
       "pose": "idle",
       "position": [
-        -10,
+        -10.0,
         0.12,
         2.25
       ],
@@ -13108,7 +13482,7 @@
         0.12,
         3.2
       ],
-      "yaw": 1,
+      "yaw": 1.0,
       "nativeScale": 1,
       "bounds": {
         "min": [
@@ -13152,7 +13526,7 @@
       "asset": "Business_Female_01",
       "pose": "idle",
       "position": [
-        4,
+        4.0,
         0.12,
         3.3
       ],
@@ -13325,7 +13699,7 @@
       "asset": "Business_Male_02",
       "pose": "lounge-v2",
       "position": [
-        9,
+        9.0,
         0.07585484057664871,
         4.8
       ],
@@ -13408,7 +13782,7 @@
       0
     ],
     "w": 5.8,
-    "h": 1
+    "h": 1.0
   },
   "navigation": {
     "entrance": [
@@ -13423,8 +13797,8 @@
     ],
     "interiorLook": [
       0,
-      4,
-      -2
+      4.0,
+      -2.0
     ],
     "exitLook": [
       0,
@@ -13466,29 +13840,29 @@
   "assets": {
     "projection-finish-v2-shell": {
       "file": "projection-finish-v2-shell.glb",
-      "bytes": 5618924,
-      "sha256": "1eb9f6f97d293abf21cc32cc51679696d476d317ad6723843806463b11f7ec38",
-      "meshes": 40,
-      "triangles": 150800,
+      "bytes": 6052764,
+      "sha256": "1180199809df032cb6420aef5b71027a2c441395037ff663b52b595d1f3934c6",
+      "meshes": 43,
+      "triangles": 142367,
       "bounds": {
         "min": [
-          -12,
+          -12.0,
           0.02500000037252903,
-          -8
+          -8.0
         ],
         "max": [
-          12,
+          12.0,
           12.821000099182129,
-          8
+          8.0
         ]
       }
     },
     "projection-finish-v2-interior": {
       "file": "projection-finish-v2-interior.glb",
-      "bytes": 40667168,
-      "sha256": "0b0f17e0090ddb74e0836f5a68af1a55f9b40f150dda0b11119cacad2b31c72c",
-      "meshes": 171,
-      "triangles": 774170,
+      "bytes": 41108092,
+      "sha256": "6d431e682c108dc7615964ad86c0e9277601b336e28c9a74bb14af3fe5e85f77",
+      "meshes": 173,
+      "triangles": 746771,
       "bounds": {
         "min": [
           -11.813202857971191,
@@ -13512,12 +13886,12 @@
         "min": [
           -18.003828048706055,
           15.692999839782715,
-          -11
+          -11.0
         ],
         "max": [
           18.19300079345703,
           16.523000717163086,
-          12
+          12.0
         ]
       }
     },
@@ -13544,29 +13918,29 @@
   "stats": {
     "shell": {
       "file": "projection-finish-v2-shell.glb",
-      "bytes": 5618924,
-      "sha256": "1eb9f6f97d293abf21cc32cc51679696d476d317ad6723843806463b11f7ec38",
-      "meshes": 40,
-      "triangles": 150800,
+      "bytes": 6052764,
+      "sha256": "1180199809df032cb6420aef5b71027a2c441395037ff663b52b595d1f3934c6",
+      "meshes": 43,
+      "triangles": 142367,
       "bounds": {
         "min": [
-          -12,
+          -12.0,
           0.02500000037252903,
-          -8
+          -8.0
         ],
         "max": [
-          12,
+          12.0,
           12.821000099182129,
-          8
+          8.0
         ]
       }
     },
     "interior": {
       "file": "projection-finish-v2-interior.glb",
-      "bytes": 40667168,
-      "sha256": "0b0f17e0090ddb74e0836f5a68af1a55f9b40f150dda0b11119cacad2b31c72c",
-      "meshes": 171,
-      "triangles": 774170,
+      "bytes": 41108092,
+      "sha256": "6d431e682c108dc7615964ad86c0e9277601b336e28c9a74bb14af3fe5e85f77",
+      "meshes": 173,
+      "triangles": 746771,
       "bounds": {
         "min": [
           -11.813202857971191,
@@ -13590,12 +13964,12 @@
         "min": [
           -18.003828048706055,
           15.692999839782715,
-          -11
+          -11.0
         ],
         "max": [
           18.19300079345703,
           16.523000717163086,
-          12
+          12.0
         ]
       }
     },
