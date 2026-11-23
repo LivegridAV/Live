@@ -1,5 +1,5 @@
 import type { MeshStandardMaterial } from "three";
-import { applyFinishGrain, PLAIN_GRAIN } from "./finishGrain.ts";
+import { applyFinishGrain, PLAIN_GRAIN } from "./finishGrain";
 
 const PREFIX = "Premium Sign | ";
 const styled = new WeakSet<MeshStandardMaterial>();

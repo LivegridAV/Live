@@ -514,6 +514,8 @@ const SIGN_MATERIALS = [
 ];
 
 test("premium sign materials are styled the same in every stall", async () => {
+  const { register } = await import("node:module");
+  register(new URL("./ts-extensionless-hook.mjs", import.meta.url));
   const { isPremiumSignMaterial, stylePremiumSign } = await import("../src/venue/three/premiumSignMaterials.ts");
   const authored = {
     "brushed champagne return": [.9, .30], "polished champagne edge": [1.0, .10],
