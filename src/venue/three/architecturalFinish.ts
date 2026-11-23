@@ -21,13 +21,15 @@ export function installationFinishFrame(id:InstallationId):FinishFrame {
 // subtle honed-stone / powder-coat roughness without stretching an image map
 // over differently sized pieces. Baked GLB vertex colours supply contact AO.
 const prepared = new WeakSet<THREE.Material>();
+const PREMIUM_HALO_MATERIAL = "Premium Sign | aqua halo";
 export function prepareArchitecture(model: THREE.Object3D,installation?:InstallationId) {
   const frame=installation?installationFinishFrame(installation):null;
   model.traverse(object => {
     if (!(object instanceof THREE.Mesh)) return;
-    object.castShadow = true;
-    object.receiveShadow = true;
     const materials = Array.isArray(object.material) ? object.material : [object.material];
+    // The halo plane's soft alpha is ignored by the shadow map, so it would cast an opaque rectangle.
+    object.castShadow = !materials.some(material => material?.name === PREMIUM_HALO_MATERIAL);
+    object.receiveShadow = true;
     for (const material of materials) {
       if (!(material instanceof THREE.MeshStandardMaterial) || prepared.has(material)) continue;
       prepared.add(material);

@@ -13,6 +13,9 @@ from pathlib import Path
 HELPERS = Path(__file__).with_name("exhibition_base_helpers.py")
 source = HELPERS.read_text(encoding="utf-8").split("# Reception: a continuous")[0]
 exec(compile(source.replace('Gallery |', 'Reception |'), str(HELPERS), "exec"))
+# Fresh sign log and full-spec budget before any lettering is built (shared Blender state).
+premium_signage().SIGN_LOG.clear()
+premium_signage().set_budget_step(0)
 OUT = ROOT / "public/models/expo/reception-gallery.glb"
 
 # Keep exhibition architecture physically dark under the runtime's bright LED

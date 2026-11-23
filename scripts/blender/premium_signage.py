@@ -160,7 +160,13 @@ def set_budget_step(step: int) -> None:
     """0 = full spec. Start-group step-down ladder:
     1: lettering under 0.3 m gets 1.2 cm depth and no bevel;
     2: also curve resolution_u 2 (see text_resolution);
-    3: also slogans (premiumize_lettering(..., slogan=True)) keep today's depth."""
+    3: also slogans (premiumize_lettering(..., slogan=True)) keep today's depth.
+
+    NOT USED in this rollout: the start group came to 22.8 of 24 MiB without it.
+    The ladder has not been verified against the spec's ladder. Known gaps:
+    step 1 also thins wordmarks and names (the spec says captions only), so it
+    must exempt wordmarks and names before first use; step 2 only changes
+    premium_wordmark's resolution."""
     if step not in (0, 1, 2, 3):
         raise ValueError('budget step must be 0-3, got %r' % (step,))
     _STATE['step'] = int(step)

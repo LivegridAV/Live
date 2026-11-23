@@ -150,6 +150,11 @@ def premium_signage():
     return _PREMIUM_SIGNAGE
 
 
+# Fresh sign log and full-spec budget before any lettering is built (shared Blender state).
+premium_signage().SIGN_LOG.clear()
+premium_signage().set_budget_step(0)
+
+
 def _wordmark_aspect(signs):
     """Ink width / ink height of the premium livegridAV wordmark (a probe that
     is built unplaced, measured and removed; it leaves no SIGN_LOG entry)."""
