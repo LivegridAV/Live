@@ -13,6 +13,7 @@ import { ReflectionStreak } from "../three/Reflection";
 import { journey, show } from "../systems/journey";
 import { useVenue } from "../systems/store";
 import { ZoneGroup } from "../three/ZoneGroup";
+import { LoadGroupGate } from "../loading/LoadGroupGate";
 import { ARENA_SHIFT } from "../data/grand";
 
 /**
@@ -569,13 +570,17 @@ export function Arena() {
   return (
     // Authored in the original coordinates; the whole arena moves with the
     // removed hall bay. Zone gates are world-space, so they shift explicitly.
+    // The whole arena is one load group; its zone gates mount inside the
+    // group gate and start visible, as the warm-up expects.
     <group position={[0, 0, ARENA_SHIFT]}>
-      <ZoneGroup from={-214 + ARENA_SHIFT} to={-250 + ARENA_SHIFT} ahead={46} behind={30}>
-        <Approach />
-      </ZoneGroup>
-      <ZoneGroup from={-244 + ARENA_SHIFT} to={-380 + ARENA_SHIFT} ahead={74} behind={52}>
-        <Stage />
-      </ZoneGroup>
+      <LoadGroupGate id="arena">
+        <ZoneGroup from={-214 + ARENA_SHIFT} to={-250 + ARENA_SHIFT} ahead={46} behind={30}>
+          <Approach />
+        </ZoneGroup>
+        <ZoneGroup from={-244 + ARENA_SHIFT} to={-380 + ARENA_SHIFT} ahead={74} behind={52}>
+          <Stage />
+        </ZoneGroup>
+      </LoadGroupGate>
     </group>
   );
 }

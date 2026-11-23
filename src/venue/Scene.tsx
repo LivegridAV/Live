@@ -26,6 +26,10 @@ shareTextureDownloads();
 import { StallDimensions } from "./three/StallDimensions";
 import { EXHIBITION_RANGES } from "./data/placements";
 import { PlacementInspection, placementInspectionEnabled } from "./systems/PlacementInspection";
+import { START_GROUP } from "./loading/groups";
+import { VenueStreaming } from "./loading/LoadGroupGate";
+import { fullLoadRequested, venueOpened } from "./loading/stream";
+import { useOpeningPlan } from "./loading/useOpeningPlan";
 
 /**
  * While mounted, R3F skips its own on-screen draw (a priority subscriber takes
@@ -46,18 +50,27 @@ function RenderHold() {
 /**
  * Warm-up.
  *
- * Wait for authored GLBs and textures, then prepare every shader behind the
- * loader. Compiling several hundred programs inside the first animated frame
- * is what would otherwise freeze the page the moment the visitor scrolls. The
- * compile runs on the driver's threads while the loader reports honest
- * progress, and the screen is not drawn until it has finished.
+ * Wait for what the venue must open with (useOpeningPlan), then prepare
+ * every shader behind the loader. Compiling several hundred programs inside the first
+ * animated frame is what would otherwise freeze the page the moment the
+ * visitor scrolls. The compile runs on the driver's threads while the loader
+ * reports honest progress, and the screen is not drawn until it has finished.
+ *
+ * What: the entrance group always. Its download measures the connection,
+ * and the planner adds the light pack of every later group whose pack could
+ * not stream in ahead of a visitor walking from the start (loading/plan.ts).
+ * Those packs arrive and warm in their own gates first. Review, capture and
+ * inspection modes wait for every full group. Everything else streams in
+ * after the venue opens: the remaining light packs, then the full groups.
  */
-function Warmup() {
+function Warmup({ full }: { full: boolean }) {
   const { gl, scene, camera } = useThree();
+  const opening = useOpeningPlan(full);
 
   const frame = useRef(0);
   const setLoadPercent = useVenue((s) => s.setLoadPercent);
   const setLoaded = useVenue((s) => s.setLoaded);
+  const markGroupWarm = useVenue((s) => s.markGroupWarm);
   const done = useRef(false);
   const compiling = useRef(false);
   const compiled = useRef(false);
@@ -72,16 +85,16 @@ function Warmup() {
   }, []);
   useFrame(() => {
     if (done.current) return;
-    // Read the loader in the frame loop. Subscribing the component to its
-    // store triggers a cross-component render update when a GLB suspends.
-    const { active, progress: assetProgress, loaded } = useProgress.getState();
-    if (active) {
-      setLoadPercent(Math.min(0.85, assetProgress / 100 * 0.85));
+    const now = performance.now();
+    if (opening.waiting(now)) {
+      if (useVenue.getState().loadPercent !== opening.bar()) setLoadPercent(opening.bar());
       frame.current = 0;
-      // Hand the driver the shaders of every zone that has already arrived,
+      // Hand the driver the shaders of everything that has already arrived,
       // so it compiles them while the network is still busy. Throttled, and
-      // only when something new has loaded since the last submission.
-      const now = performance.now();
+      // only when something new has loaded since the last submission. Read
+      // the loader in the frame loop: subscribing the component to its store
+      // triggers a cross-component render update when a GLB suspends.
+      const { loaded } = useProgress.getState();
       if (loaded !== early.current.loaded && now - early.current.at > 900) {
         early.current.loaded = loaded; early.current.at = now;
         early.current.target ??= new THREE.WebGLRenderTarget(32, 32);
@@ -104,9 +117,9 @@ function Warmup() {
         await warmScene(gl, scene, camera, cancelled, f => { compileFraction.current = f * 0.85; });
         if (cancelled()) return;
         // Every shader is ready: let the gated work in (contact-shadow bakes,
-        // the floor reflection), give it a few frames to mount, then prepare
-        // the handful of programs it added.
-        openWarmupGate();
+        // the floor reflection), let the bakes finish and the reflection
+        // mount, then prepare the handful of programs they added.
+        await Promise.race([openWarmupGate(), new Promise(resolve => setTimeout(resolve, 30_000))]);
         await new Promise(resolve => setTimeout(resolve, 120));
         await warmScene(gl, scene, camera, cancelled, f => { compileFraction.current = 0.85 + f * 0.15; });
       })().then(() => {
@@ -118,11 +131,13 @@ function Warmup() {
     }
 
     const p = compiled.current ? 1 : 0.85 + compileFraction.current * 0.14;
-    setLoadPercent(p);
+    setLoadPercent(Math.max(opening.bar(), p));
     if (frame.current >= 26 && compiled.current) {
       done.current = true;
       setHolding(false);
+      markGroupWarm(START_GROUP);
       setLoaded(true);
+      venueOpened();
     }
   });
 
@@ -130,6 +145,7 @@ function Warmup() {
 }
 
 export function Scene({inspection=false}:{inspection?:boolean}) {
+  const [full] = useState(() => fullLoadRequested(inspection));
   return (
     <MediaProvider>
       <LocalLightPool>
@@ -138,7 +154,8 @@ export function Scene({inspection=false}:{inspection?:boolean}) {
       <VenueEnvironment />
       <LightRig />
       {!inspection && (placementInspectionEnabled()?<PlacementInspection />:<CameraRig />)}
-      <Warmup />
+      <VenueStreaming full={full} />
+      <Warmup full={full} />
       <RenderMetrics />
       <StallDimensions />
 

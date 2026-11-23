@@ -1,0 +1,11 @@
+final-fix [fast4g] bytesBeforeOpen=34.7MB msToOpen=36377 requests=104
+calls@0=1203-1801 maxCalls=2419 tris@0=5182317-7773451 maxTris=10503901 longTasks=7 gapFrames=0
+[venue] opening with start and the light packs of rental, anamorphic, technical, projection, arena (1102 kB/s, start z 8.0; walk-pace minimum would be rental, anamorphic)
+fill-in walk 40102 ms: gapFrames=0/2475 loadingCue=0 text=0 allReady at 79371 ms
+  start       reached 12 ms, lite - ms, full 12 ms (after opening)
+  rental      reached 3341 ms, lite 12 ms, full 25641 ms (after opening)
+  anamorphic  reached 3993 ms, lite 12 ms, full 15693 ms (after opening)
+  technical   reached 9957 ms, lite 12 ms, full 25344 ms (after opening)
+  projection  reached 10391 ms, lite 12 ms, full 42912 ms (after opening)
+  arena       reached 16789 ms, lite 12 ms, full 35499 ms (after opening)
+exit 0

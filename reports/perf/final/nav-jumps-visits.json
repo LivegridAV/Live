@@ -1,0 +1,301 @@
+{
+ "label": "final",
+ "throttle": "none",
+ "runs": [
+  {
+   "kind": "visit",
+   "name": "reception",
+   "missed": false,
+   "consoleErrors": [],
+   "arrivedProgress": 0.446,
+   "arrivedZ": -47.91,
+   "targetGroup": "anamorphic",
+   "arrivedShown": [
+    "rental",
+    "anamorphic",
+    "technical",
+    "projection",
+    "arena",
+    "start"
+   ],
+   "arrivedReady": [
+    "rental",
+    "anamorphic",
+    "technical",
+    "projection",
+    "arena",
+    "start"
+   ],
+   "msToOpen": 14927,
+   "frames": 122,
+   "gapFrames": 0,
+   "gaps": [],
+   "loadingCueFrames": 0,
+   "liteAt": {},
+   "fullAt": {
+    "start": 16,
+    "rental": 16,
+    "anamorphic": 16,
+    "technical": 16,
+    "projection": 16,
+    "arena": 16
+   },
+   "fullOrderAfterJump": [
+    "start",
+    "rental",
+    "anamorphic",
+    "technical",
+    "projection",
+    "arena"
+   ],
+   "longTasks": 0,
+   "longestTaskMs": 0,
+   "venueLog": [
+    "[venue] load group start ready at 1750 ms",
+    "[venue] opening with start, rental, anamorphic, technical, projection, arena (31613 kB/s, start z 8.0; walk-pace minimum would be rental, anamorphic)",
+    "[venue] load group rental ready at 1955 ms",
+    "[venue] load group anamorphic ready at 2448 ms",
+    "[venue] load group technical ready at 8076 ms",
+    "[venue] load group projection ready at 8610 ms",
+    "[venue] load group arena ready at 8686 ms",
+    "[venue] every venue file was requested once"
+   ]
+  },
+  {
+   "kind": "visit",
+   "name": "anamorphic",
+   "missed": false,
+   "consoleErrors": [],
+   "arrivedProgress": 0.605,
+   "arrivedZ": -105.45,
+   "targetGroup": "arena",
+   "arrivedShown": [
+    "rental",
+    "anamorphic",
+    "technical",
+    "projection",
+    "arena",
+    "start"
+   ],
+   "arrivedReady": [
+    "rental",
+    "anamorphic",
+    "technical",
+    "projection",
+    "arena",
+    "start"
+   ],
+   "msToOpen": 4739,
+   "frames": 123,
+   "gapFrames": 0,
+   "gaps": [],
+   "loadingCueFrames": 0,
+   "liteAt": {},
+   "fullAt": {
+    "start": 26,
+    "rental": 26,
+    "anamorphic": 26,
+    "technical": 26,
+    "projection": 26,
+    "arena": 26
+   },
+   "fullOrderAfterJump": [
+    "start",
+    "rental",
+    "anamorphic",
+    "technical",
+    "projection",
+    "arena"
+   ],
+   "longTasks": 0,
+   "longestTaskMs": 0,
+   "venueLog": [
+    "[venue] load group start ready at 1078 ms",
+    "[venue] opening with start, rental, anamorphic, technical, projection, arena (122397 kB/s, start z 8.0; walk-pace minimum would be rental, anamorphic)",
+    "[venue] load group rental ready at 1278 ms",
+    "[venue] load group anamorphic ready at 1508 ms",
+    "[venue] load group technical ready at 1551 ms",
+    "[venue] load group projection ready at 2013 ms",
+    "[venue] load group arena ready at 2014 ms",
+    "[venue] every venue file was requested once"
+   ]
+  },
+  {
+   "kind": "visit",
+   "name": "technical",
+   "missed": false,
+   "consoleErrors": [],
+   "arrivedProgress": 0.681,
+   "arrivedZ": -126.19,
+   "targetGroup": "arena",
+   "arrivedShown": [
+    "rental",
+    "anamorphic",
+    "technical",
+    "projection",
+    "arena",
+    "start"
+   ],
+   "arrivedReady": [
+    "rental",
+    "anamorphic",
+    "technical",
+    "projection",
+    "arena",
+    "start"
+   ],
+   "msToOpen": 4804,
+   "frames": 80,
+   "gapFrames": 0,
+   "gaps": [],
+   "loadingCueFrames": 0,
+   "liteAt": {},
+   "fullAt": {
+    "start": 25,
+    "rental": 25,
+    "anamorphic": 25,
+    "technical": 25,
+    "projection": 25,
+    "arena": 25
+   },
+   "fullOrderAfterJump": [
+    "start",
+    "rental",
+    "anamorphic",
+    "technical",
+    "projection",
+    "arena"
+   ],
+   "longTasks": 0,
+   "longestTaskMs": 0,
+   "venueLog": [
+    "[venue] load group start ready at 1153 ms",
+    "[venue] opening with start, rental, anamorphic, technical, projection, arena (123109 kB/s, start z 8.0; walk-pace minimum would be rental, anamorphic)",
+    "[venue] load group rental ready at 1356 ms",
+    "[venue] load group anamorphic ready at 1581 ms",
+    "[venue] load group technical ready at 1630 ms",
+    "[venue] load group projection ready at 2015 ms",
+    "[venue] load group arena ready at 2088 ms",
+    "[venue] every venue file was requested once"
+   ]
+  },
+  {
+   "kind": "visit",
+   "name": "led-rental",
+   "missed": false,
+   "consoleErrors": [],
+   "arrivedProgress": 0.541,
+   "arrivedZ": -87.55,
+   "targetGroup": "projection",
+   "arrivedShown": [
+    "rental",
+    "anamorphic",
+    "technical",
+    "projection",
+    "arena",
+    "start"
+   ],
+   "arrivedReady": [
+    "rental",
+    "anamorphic",
+    "technical",
+    "projection",
+    "arena",
+    "start"
+   ],
+   "msToOpen": 4590,
+   "frames": 96,
+   "gapFrames": 0,
+   "gaps": [],
+   "loadingCueFrames": 0,
+   "liteAt": {},
+   "fullAt": {
+    "start": 16,
+    "rental": 16,
+    "anamorphic": 16,
+    "technical": 16,
+    "projection": 16,
+    "arena": 16
+   },
+   "fullOrderAfterJump": [
+    "start",
+    "rental",
+    "anamorphic",
+    "technical",
+    "projection",
+    "arena"
+   ],
+   "longTasks": 0,
+   "longestTaskMs": 0,
+   "venueLog": [
+    "[venue] load group start ready at 1165 ms",
+    "[venue] opening with start, rental, anamorphic, technical, projection, arena (122785 kB/s, start z 8.0; walk-pace minimum would be rental, anamorphic)",
+    "[venue] load group rental ready at 1353 ms",
+    "[venue] load group anamorphic ready at 1578 ms",
+    "[venue] load group technical ready at 1628 ms",
+    "[venue] load group projection ready at 2261 ms",
+    "[venue] load group arena ready at 2262 ms",
+    "[venue] every venue file was requested once"
+   ]
+  },
+  {
+   "kind": "visit",
+   "name": "projection",
+   "missed": false,
+   "consoleErrors": [],
+   "arrivedProgress": 0.728,
+   "arrivedZ": -128.2,
+   "targetGroup": "arena",
+   "arrivedShown": [
+    "rental",
+    "anamorphic",
+    "technical",
+    "projection",
+    "arena",
+    "start"
+   ],
+   "arrivedReady": [
+    "rental",
+    "anamorphic",
+    "technical",
+    "projection",
+    "arena",
+    "start"
+   ],
+   "msToOpen": 4804,
+   "frames": 63,
+   "gapFrames": 0,
+   "gaps": [],
+   "loadingCueFrames": 0,
+   "liteAt": {},
+   "fullAt": {
+    "start": 13,
+    "rental": 13,
+    "anamorphic": 13,
+    "technical": 13,
+    "projection": 13,
+    "arena": 13
+   },
+   "fullOrderAfterJump": [
+    "start",
+    "rental",
+    "anamorphic",
+    "technical",
+    "projection",
+    "arena"
+   ],
+   "longTasks": 0,
+   "longestTaskMs": 0,
+   "venueLog": [
+    "[venue] load group start ready at 1157 ms",
+    "[venue] opening with start, rental, anamorphic, technical, projection, arena (125296 kB/s, start z 8.0; walk-pace minimum would be rental, anamorphic)",
+    "[venue] load group rental ready at 1366 ms",
+    "[venue] load group anamorphic ready at 1591 ms",
+    "[venue] load group technical ready at 1631 ms",
+    "[venue] load group projection ready at 2778 ms",
+    "[venue] load group arena ready at 2779 ms",
+    "[venue] every venue file was requested once"
+   ]
+  }
+ ]
+}

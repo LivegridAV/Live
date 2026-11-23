@@ -33,6 +33,11 @@ export function detectQuality(): { tier: QualityTier; mobile: boolean; dpr: numb
   // A very wide, very dense display is a lot of pixels to fill either way.
   if (!mobile && window.innerWidth * dpr > 4200 && cores < 8) tier = "medium";
 
+  // Review override: ?quality=low|medium|high picks the tier outright (read
+  // only here, once, so the tier still never changes while exploring).
+  const forced = new URLSearchParams(window.location.search).get("quality");
+  if (forced === "low" || forced === "medium" || forced === "high") tier = forced;
+
   return { tier, mobile, dpr };
 }
 

@@ -1,14 +1,68 @@
 "use client";
 import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { Vector3, Quaternion, PerspectiveCamera, OrthographicCamera } from "three";
+import { Vector3, Quaternion, PerspectiveCamera, OrthographicCamera, Box3, Mesh, Group, type Object3D } from "three";
 import { useVenue } from "./store";
 import { journey } from "./journey";
 import { baselineCameraForSearch } from "../data/baselineCameras";
+import { progressToScroll } from "./ScrollRig";
+import { perfHandle } from "../media/engine";
+import { LOAD_GROUPS } from "../loading/groups";
+import { createSample, samplePath } from "../data/path";
+
+type PerfSnapshot = Record<string, {position:[number,number,number]; quaternion:[number,number,number,number]; size:[number,number,number]}>;
+declare global { interface Window { __venuePerf?: {
+  loaded(): boolean;
+  /** Groups whose full version is warm. */
+  groupsReady(): string[];
+  /** Groups with something to show: a warm full version or a warm light pack. */
+  groupsShown(): string[];
+  allReady(): boolean;
+  /** Min and max over the last 6 frames; some frames add an extra pass, targets are judged on the max. */
+  stats(): {callsMin:number; callsMax:number; trianglesMin:number; trianglesMax:number; textures:number; geometries:number};
+  longTasks(): {ms:number; progress:number}[];
+  snapshot(): PerfSnapshot;
+  /** Harness extra: page scroll offset (px) at which the journey sits at progress p. */
+  scrollTop(p: number): number;
+  /** Harness extra: camera path z at journey progress p (no portrait push-back). */
+  pathZ(p: number): number;
+  /** Harness extra: pin media time (LED screens, videos) to t seconds so screenshots repeat. */
+  freeze(t: number): void;
+}; } }
+
+const mm = (v: number) => Math.round(v * 1000) / 1000;
+/** Every named Mesh/Group, keyed by its named-ancestor path (repeats get #n). */
+function snapshotScene(root: Object3D): PerfSnapshot {
+  const out: PerfSnapshot = {}, seen = new Map<string, number>();
+  const box = new Box3(), size = new Vector3(), pos = new Vector3(), quat = new Quaternion();
+  root.updateWorldMatrix(true, true);
+  const walk = (o: Object3D, path: string[]) => {
+    const named = !!o.name && (o instanceof Mesh || o instanceof Group);
+    const next = o.name ? [...path, o.name] : path;
+    if (named) {
+      const base = next.join("/"), n = seen.get(base) ?? 0;
+      seen.set(base, n + 1);
+      o.getWorldPosition(pos); o.getWorldQuaternion(quat);
+      box.setFromObject(o); if (box.isEmpty()) size.set(0, 0, 0); else box.getSize(size);
+      out[n ? `${base}#${n}` : base] = {
+        position: [mm(pos.x), mm(pos.y), mm(pos.z)],
+        quaternion: [mm(quat.x), mm(quat.y), mm(quat.z), mm(quat.w)],
+        size: [mm(size.x), mm(size.y), mm(size.z)],
+      };
+    }
+    for (const c of o.children) walk(c, next);
+  };
+  walk(root, []);
+  return out;
+}
 
 /** Opt-in, local-only diagnostics. No telemetry is sent to a server. */
 export function RenderMetrics() {
   const gl = useThree(s => s.gl);
+  const scene = useThree(s => s.scene);
+  // Last 6 frames of render stats (see stats()).
+  const recentStats = useRef<{calls:number; triangles:number; textures:number; geometries:number}[]>([]);
+  const allTasks = useRef<{ms:number; progress:number}[]>([]);
   const hardware=useMemo(()=>{
     const context=gl.getContext(),debug=context.getExtension("WEBGL_debug_renderer_info");
     return {userAgent:navigator.userAgent,logicalCores:navigator.hardwareConcurrency,
@@ -26,13 +80,43 @@ export function RenderMetrics() {
     const observer = typeof PerformanceObserver !== "undefined" && PerformanceObserver.supportedEntryTypes.includes("longtask")
       ? new PerformanceObserver(list => {
         if (!useVenue.getState().entered || document.hidden) return;
-        for (const e of list.getEntries()) sample.current.tasks.push({ ms: Math.round(e.duration), progress: +journey.progress.toFixed(3) });
+        for (const e of list.getEntries()) {
+          const task = { ms: Math.round(e.duration), progress: +journey.progress.toFixed(3) };
+          sample.current.tasks.push(task); allTasks.current.push(task);
+        }
       }) : null;
     observer?.observe({ type: "longtask" });
-    return () => { observer?.disconnect(); gl.info.autoReset = autoReset; };
-  }, [gl]);
+    // Measurement hook for scripts/measure-venue.mjs; exists only with ?perf.
+    if (new URLSearchParams(location.search).has("perf")) {
+      window.__venuePerf = {
+        loaded: () => useVenue.getState().loaded,
+        // Warm groups: mounted, shader-warmed and shown when in range.
+        groupsReady: () => [...useVenue.getState().warmGroups],
+        groupsShown: () => {
+          const { warmGroups, liteWarmGroups } = useVenue.getState();
+          return [...new Set([...warmGroups, ...liteWarmGroups])];
+        },
+        allReady: () => {
+          const state = useVenue.getState();
+          return state.loaded && LOAD_GROUPS.every(group => state.warmGroups.includes(group.id));
+        },
+        stats: () => {
+          const f = recentStats.current, calls = f.map(x => x.calls), tris = f.map(x => x.triangles), last = f[f.length - 1] ?? {textures:0, geometries:0};
+          return { callsMin: Math.min(...calls), callsMax: Math.max(...calls), trianglesMin: Math.min(...tris), trianglesMax: Math.max(...tris), textures: last.textures, geometries: last.geometries };
+        },
+        longTasks: () => [...allTasks.current],
+        snapshot: () => snapshotScene(scene),
+        scrollTop: progressToScroll,
+        pathZ: (() => { const sample = createSample(); return (p: number) => samplePath(p, sample).pos.z; })(),
+        freeze: (t: number) => perfHandle.engine?.freeze(t),
+      };
+    }
+    return () => { observer?.disconnect(); gl.info.autoReset = autoReset; delete window.__venuePerf; };
+  }, [gl, scene]);
   useFrame(({camera}, dt) => {
     if (!enabled.current) return;
+    // info still holds the previous frame here (reset happens at the end of this callback).
+    if (gl.info.render.calls > 0) { recentStats.current.push({calls: gl.info.render.calls, triangles: gl.info.render.triangles, textures: gl.info.memory.textures, geometries: gl.info.memory.geometries}); if (recentStats.current.length > 6) recentStats.current.shift(); }
     const output = document.querySelector<HTMLOutputElement>("[data-render-metrics]");
     if (!output) return;
     const perspective=camera instanceof PerspectiveCamera;

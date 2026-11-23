@@ -1,7 +1,8 @@
 "use client";
 import { useEffect, useMemo } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
+import { useModelUrl } from "../loading/useModelUrl";
 import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import { useVenue } from "../systems/store";
@@ -13,6 +14,8 @@ import rentalLayout from "../../../public/models/expo/grand-rental-finish-v2-lay
 import { FLOOR, type Guest, type Layout, type Part, type Sign } from "./hallKit";
 import { hallZones, servicePosterTexture, type Zone } from "./hallFeatures";
 import { applySurface, refineAvatarSkin } from "../three/surfaceDetail";
+import { gltfExtender } from "../three/textureLoading";
+import { disposeMergedStatic, mergeStaticMeshes } from "../three/mergeStatic";
 
 /**
  * Hall dressing — renders the furniture, planting, LED sculptures, lightboxes,
@@ -331,9 +334,11 @@ function DressedZone({ zone, visitors }: { zone: Zone; visitors: THREE.Object3D 
   const guests = useMemo(() => placeGuests(visitors, zone.layout.guests, zone.cast), [visitors, zone]);
   // Only while the zone is shown: ZoneGroup hides its group when out of range.
   useFrame(({ clock }) => { if (guests.parent?.visible !== false) idleGuests(guests, clock.elapsedTime); });
-  const fixtures = useMemo(() => buildFixtures(zone), [zone]);
+  // Totems, lightboxes and wall panels are static; the guests sway (idleGuests), so they stay as they are.
+  const fixtures = useMemo(() => { const group = buildFixtures(zone); mergeStaticMeshes(group); return group; }, [zone]);
   useEffect(() => () => {
     meshes.forEach(mesh => mesh.dispose());
+    disposeMergedStatic(fixtures);
     const geometries = new Set<THREE.BufferGeometry>(), materials = new Set<THREE.Material>();
     fixtures.traverse(object => {
       if (!(object instanceof THREE.Mesh)) return;
@@ -358,7 +363,10 @@ function DressedZone({ zone, visitors }: { zone: Zone; visitors: THREE.Object3D 
 
 export function HallDressing() {
   const diagnostic = useVenue(s => s.stallVisit?.view === "plan" || s.stallVisit?.view === "section");
-  const { scene: visitors } = useGLTF(expoAssetUrl("grand-rental-finish-v2-visitors", rentalLayout.stats.visitors.sha256), false);
+  // The same file the rental booth draws (its lod1 below high quality), so it loads once.
+  const visitorsUrl = useModelUrl(expoAssetUrl("grand-rental-finish-v2-visitors", rentalLayout.stats.visitors.sha256))!;
+  const gl = useThree(state => state.gl);
+  const { scene: visitors } = useGLTF(visitorsUrl, false, true, gltfExtender(gl));
   useMemo(() => refineAvatarSkin(visitors), [visitors]);
   const zones = useMemo(() => hallZones(), []);
   return <group visible={!diagnostic} name="Hall dressing">

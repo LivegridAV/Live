@@ -2,16 +2,44 @@
 import { createContext, useContext, useEffect, useMemo, useRef, type ReactNode } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { MediaEngine } from "./engine";
+import { MediaEngine, perfHandle } from "./engine";
 import { CRITICAL_MEDIA } from "../data/media";
 import { useVenue } from "../systems/store";
+import { useLiteMode } from "../loading/liteMode";
 
 const Ctx = createContext<MediaEngine | null>(null);
 
+let darkPanel: THREE.DataTexture | null = null;
+/** The one texture every screen shows in a light pack: a plain dark panel. */
+function liteScreen() {
+  if (!darkPanel) {
+    darkPanel = new THREE.DataTexture(new Uint8Array([9, 12, 15, 255]), 1, 1);
+    darkPanel.colorSpace = THREE.SRGBColorSpace;
+    darkPanel.name = "Light pack screen";
+    darkPanel.needsUpdate = true;
+  }
+  return darkPanel;
+}
+
+/**
+ * In a light pack (lite mode) screens get the dark panel and the engine is
+ * never asked for, or told about, their media: nothing is fetched or painted.
+ * Everything else reads through to the engine.
+ */
+function liteMedia(engine: MediaEngine): MediaEngine {
+  return Object.assign(Object.create(engine) as MediaEngine, {
+    acquire: () => liteScreen(),
+    release: () => {},
+    touch: () => {},
+  });
+}
+
 export function useMedia() {
   const engine = useContext(Ctx);
-  if (!engine) throw new Error("useMedia must be used inside <MediaProvider>");
-  return engine;
+  const lite = useLiteMode();
+  const media = useMemo(() => engine && lite ? liteMedia(engine) : engine, [engine, lite]);
+  if (!media) throw new Error("useMedia must be used inside <MediaProvider>");
+  return media;
 }
 
 /**
@@ -33,7 +61,8 @@ export function MediaProvider({ children }: { children: ReactNode }) {
     engine.setMobile(isMobile);
     engine.setQuality(quality);
     engine.prime(CRITICAL_MEDIA);
-    return () => engine.dispose();
+    if (new URLSearchParams(location.search).has("perf")) perfHandle.engine = engine;
+    return () => { if (perfHandle.engine === engine) perfHandle.engine = null; engine.dispose(); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [engine]);
 

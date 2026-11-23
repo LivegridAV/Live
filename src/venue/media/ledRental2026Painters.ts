@@ -1,5 +1,6 @@
 import { DefaultLoadingManager } from "three";
 import type { PaintCtx } from "./painters";
+import { prefetchedImage } from "../loading/prefetched";
 
 /** Isolated content for the October 18 rental pavilion's actual LED surfaces. */
 export const LED_RENTAL_2026_ART = {
@@ -23,6 +24,9 @@ const phase = (t: number) => (((t % 24) + 24) % 24) / 24 * TAU;
 function artwork(url: string) {
   if (typeof Image === "undefined") return undefined;
   let image = images.get(url);
+  // The streamer may already hold this file decoded (load group prefetch).
+  const ready = image ? undefined : prefetchedImage(url);
+  if (ready) { images.set(url, ready); decoded.add(ready); return ready; }
   if (!image) {
     image = new Image();
     image.decoding = "async";

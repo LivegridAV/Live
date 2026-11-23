@@ -1,6 +1,6 @@
 "use client";
 import { Suspense, useEffect, useMemo, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import { ExpoAsset, expoAssetUrl } from "../three/ExpoAsset";
@@ -14,7 +14,11 @@ import { ProjectionRays, type ProjectorRay } from "../three/ProjectionRays";
 import { PROJECTION_ROOT, PROJECTION_ROTATION, PROJECTION_SCALE, PROJECTION_SCULPTURE_OFFSET, PROJECTION_SCULPTURE_SCALE, inProjectionShowcase } from "../data/projection";
 import { useVenue } from "../systems/store";
 import { journey } from "../systems/journey";
-import { preloadProjectionArtwork } from "../media/projectionPainters";
+import { prepareProjectionArtwork } from "../media/projectionPainters";
+import { holdWarmUntil } from "../three/warmScene";
+import { useLiteMode } from "../loading/liteMode";
+import { useModelUrl } from "../loading/useModelUrl";
+import { gltfExtender } from "../three/textureLoading";
 import layout from "../../../public/models/expo/projection-finish-v2-blender-layout.json";
 import sculptureLayout from "../../../public/models/expo/projection-finish-v2-crystals-layout.json";
 
@@ -84,7 +88,12 @@ function ProjectionDisplay({a}:{a:DisplayAperture&{flipU?:boolean}}){
 }
 
 function MappedSculpture(){
-  const {scene}=useGLTF(expoAssetUrl("projection-finish-v2-crystals",sculptureLayout.sha256),false);
+  const url=useModelUrl(expoAssetUrl("projection-finish-v2-crystals",sculptureLayout.sha256));
+  return url?<MappedSculptureModel url={url}/>:null;
+}
+function MappedSculptureModel({url}:{url:string}){
+  const gl=useThree(state=>state.gl);
+  const {scene}=useGLTF(url,false,true,gltfExtender(gl));
   const media=useMedia(),entered=useVenue(s=>s.entered);
   const texture=useMemo(()=>media.acquire("projection-crystal-pattern"),[media]);
   const projection=useMemo(()=>{
@@ -109,9 +118,13 @@ function MappedSculpture(){
 export function ReferenceProjection(){
   const open=useVenue(s=>s.openPavilion),hotspot=projectionLayout.interaction;
   const visit=useVenue(s=>s.stallVisit);
-  useEffect(()=>preloadProjectionArtwork(),[]);
+  // The light pack shows plain screens: no artwork fetch until the full group.
+  const lite=useLiteMode();
+  // The group is not shown before its artwork is decoded and graded.
+  const root=useRef<THREE.Group>(null);
+  useEffect(()=>{ if(lite||!root.current) return undefined; return holdWarmUntil(root.current,prepareProjectionArtwork()); },[lite]);
   useEffect(()=>()=>{document.body.style.cursor="";},[]);
-  return <group position={PROJECTION_ROOT} rotation={PROJECTION_ROTATION} scale={PROJECTION_SCALE}
+  return <group ref={root} position={PROJECTION_ROOT} rotation={PROJECTION_ROTATION} scale={PROJECTION_SCALE}
     userData={{projectionPavilion:true,placementId:"S4"}} name="Projection mapping · crystalline architecture pavilion">
     <ExpoAsset name="projection-finish-v2-blender-shell" revision={layout.stats.shell.sha256}/>
     <ExpoAsset name="projection-finish-v2-blender-interior" revision={layout.stats.interior.sha256}/>

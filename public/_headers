@@ -17,3 +17,10 @@
   Cache-Control: public, max-age=3600, stale-while-revalidate=2592000
 /media/*
   Cache-Control: public, max-age=3600, stale-while-revalidate=2592000
+# /media/* covers the .ktx2 siblings of the plain-loader textures too.
+
+# The Basis transcoder (three's examples/jsm/libs/basis, copied verbatim)
+# keeps the same unversioned names when three is upgraded, so it is cached like
+# the models, not as immutable.
+/basis/*
+  Cache-Control: public, max-age=3600, stale-while-revalidate=2592000

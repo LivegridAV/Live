@@ -7,6 +7,7 @@ import { LightPool } from "../three/environment";
 import { TECHNICAL_ROOT, TECHNICAL_ROTATION } from "../data/technical";
 import { useVenue } from "../systems/store";
 import { preloadTechnicalArtwork } from "../media/technicalPainters";
+import { useLiteMode } from "../loading/liteMode";
 import { ProjectionContactShadow } from "../three/ProjectionContactShadow";
 import layout from "../../../public/models/expo/grand-technical-shape-v3-layout.json";
 import hall from "../../../public/models/expo/technical-reference-hall-rig-v3.json";
@@ -23,7 +24,9 @@ const services: Record<string, string> = {
 /** Authored geometry and independent live displays share exported apertures. */
 export function ReferenceTechnical() {
   const open = useVenue(s => s.openPavilion);
-  useEffect(() => preloadTechnicalArtwork(), []);
+  // The light pack shows plain screens: no artwork fetch until the full group.
+  const lite = useLiteMode();
+  useEffect(() => lite ? undefined : preloadTechnicalArtwork(), [lite]);
   return <group position={TECHNICAL_ROOT} rotation={TECHNICAL_ROTATION} userData={{grandStall:"technical"}} name="Engineering, show control and live production">
     <ExpoAsset name="technical-reference-hall-rig-v3" revision={hall.asset.sha256}/>
     <ExpoAsset name="grand-technical-shape-v3-shell" revision={layout.assets["grand-technical-shape-v3-shell"].sha256}/>

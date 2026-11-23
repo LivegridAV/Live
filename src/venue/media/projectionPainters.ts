@@ -1,4 +1,5 @@
 import type { PaintCtx } from "./painters";
+import { prefetchedBlob, prefetchedImage, releaseBlob } from "../loading/prefetched";
 
 /** Only isolated content artwork is used on the physical pavilion's LED screens. */
 export const PROJECTION_ART = {
@@ -13,6 +14,7 @@ export const PROJECTION_ART = {
 
 const images = new Map<string, HTMLImageElement>();
 const decodedImages = new WeakSet<HTMLImageElement>();
+const decoding = new Map<string, Promise<HTMLImageElement | undefined>>();
 const W = 1920, H = 1080;
 const TAU = Math.PI * 2;
 const phase = (time: number) => (((time % 24) + 24) % 24) / 24 * TAU;
@@ -21,17 +23,96 @@ const fract = (value: number) => value - Math.floor(value);
 function artwork(url: string) {
   if (typeof Image === "undefined") return undefined;
   let image = images.get(url);
+  // The streamer may already hold this file decoded (load group prefetch).
+  const ready = image ? undefined : prefetchedImage(url);
+  if (ready) { images.set(url, ready); decodedImages.add(ready); return ready; }
   if (!image) {
     image = new Image(); image.decoding = "async"; image.crossOrigin = "anonymous";
     image.src = url; images.set(url, image);
     const requested=image;
-    void requested.decode().then(()=>decodedImages.add(requested)).catch(() => { /* Local content fades in after its first decoded frame. */ });
+    decoding.set(url, requested.decode().then(()=>{ decodedImages.add(requested); return requested; }).catch(() => undefined /* Local content fades in after its first decoded frame. */));
   }
   return decodedImages.has(image) && image.complete && image.naturalWidth > 0 ? image : undefined;
 }
 
+/** Artworks a painter draws (forest is in PROJECTION_ART but no painter uses it; crystal and backdrop only feed graded surfaces). */
+const DRAWN = new Set<string>([PROJECTION_ART.applications, PROJECTION_ART.hero, PROJECTION_ART.sculpture, PROJECTION_ART.cosmic]);
+/** Every url whose bytes the streamer keeps for a bitmap. */
+export const BITMAP_SOURCES: readonly string[] = [...DRAWN, PROJECTION_ART.crystal, PROJECTION_ART.backdrop];
+const bitmaps = new Map<string, ImageBitmap>();
+const bitmapPending = new Map<string, Promise<ImageBitmap | undefined>>();
+/** Urls with no bitmap (no bytes, or the decode failed): their painter draws the decoded image. */
+const noBitmap = new Set<string>();
+
+/**
+ * An ImageBitmap decoded on a worker from the streamer's bytes (drawImage of
+ * an HTMLImageElement decodes lazily on the main thread when the canvas
+ * rasters: 97 ms for a 2K artwork on the first frame it was drawn). Undefined
+ * when there are no bytes or the decode fails. Never rejects; the bytes are
+ * dropped either way.
+ */
+async function makeBitmap(url: string): Promise<ImageBitmap | undefined> {
+  try {
+    const image = await artworkReady(url);
+    const blob = prefetchedBlob(url);
+    if (!image || !blob || typeof createImageBitmap === "undefined") return undefined;
+    await yieldTask();
+    return await createImageBitmap(blob);
+  } catch { return undefined; } finally { releaseBlob(url); }
+}
+
+/** The shared, kept bitmap of an artwork a painter draws. */
+function artworkBitmap(url: string): Promise<ImageBitmap | undefined> {
+  const done = bitmaps.get(url);
+  if (done) return Promise.resolve(done);
+  let pending = bitmapPending.get(url);
+  if (!pending) {
+    pending = makeBitmap(url).then(bitmap => { if (bitmap) bitmaps.set(url, bitmap); else noBitmap.add(url); return bitmap; });
+    bitmapPending.set(url, pending);
+  }
+  return pending;
+}
+
+/** What a painter draws: the bitmap once it exists, the decoded image whenever there is none to wait for. */
+function drawable(url: string): CanvasImageSource | undefined {
+  const bitmap = bitmaps.get(url);
+  if (bitmap) return bitmap;
+  const image = artwork(url);
+  if (!image) return undefined;
+  if (noBitmap.has(url) || !DRAWN.has(url)) return image;
+  if (!bitmapPending.has(url) && !prefetchedBlob(url)) { noBitmap.add(url); return image; }
+  void artworkBitmap(url);
+  return undefined;
+}
+const sizeOf = (source: CanvasImageSource) => "naturalWidth" in source ? { w: source.naturalWidth, h: source.naturalHeight } : { w: (source as ImageBitmap).width, h: (source as ImageBitmap).height };
+
+/** The decoded artwork, once it is; undefined if it never decodes. Never rejects. */
+function artworkReady(url: string): Promise<HTMLImageElement | undefined> {
+  const ready = artwork(url);
+  return ready ? Promise.resolve(ready) : decoding.get(url) ?? Promise.resolve(undefined);
+}
+
+/** Start fetching and decoding the artwork and preparing the graded surfaces, before any painter's first frame. */
 export function preloadProjectionArtwork() {
-  for (const url of Object.values(PROJECTION_ART)) artwork(url);
+  for (const url of BITMAP_SOURCES) { artwork(url); if (DRAWN.has(url)) void artworkBitmap(url); }
+  backdropArtwork(); crystalArtwork();
+}
+
+/**
+ * Resolves when the artwork that is already decoded has its bitmaps and the
+ * graded surfaces are built, so the projection group's first shown frame has
+ * its content. Never rejects and never waits on a download: an artwork that is
+ * not decoded yet is not waited for (its painter draws it when it arrives).
+ */
+export async function prepareProjectionArtwork(): Promise<void> {
+  try {
+    preloadProjectionArtwork();
+    const decoded = (urls: string[]) => urls.every(url => artwork(url));
+    const waits: Promise<unknown>[] = [...DRAWN].filter(url => artwork(url)).map(artworkBitmap);
+    if (decoded([PROJECTION_ART.backdrop])) waits.push(backdropSurface.done ?? Promise.resolve());
+    if (decoded([PROJECTION_ART.crystal, PROJECTION_ART.sculpture])) waits.push(crystalSurface.done ?? Promise.resolve());
+    await Promise.all(waits);
+  } catch { /* a painter without its surface draws without it */ }
 }
 
 function start(p: PaintCtx, draw: (c: CanvasRenderingContext2D) => void, background = "#01050b") {
@@ -43,7 +124,7 @@ function start(p: PaintCtx, draw: (c: CanvasRenderingContext2D) => void, backgro
 
 function fullArtwork(p: PaintCtx, url: string, tint = 0) {
   start(p, c => {
-    const source = artwork(url); if (!source) return;
+    const source = drawable(url); if (!source) return;
     const zoom = 1.0018 + .0012 * Math.sin(phase(p.t));
     c.drawImage(source, (W - W * zoom) / 2, (H - H * zoom) / 2, W * zoom, H * zoom);
     if (tint) {
@@ -56,8 +137,8 @@ function fullArtwork(p: PaintCtx, url: string, tint = 0) {
 export function projectionApplications(p: PaintCtx) {
   const index = ((Math.round(p.variant) % 8) + 8) % 8;
   start(p, c => {
-    const source = artwork(PROJECTION_ART.applications); if (!source) return;
-    const sw = source.naturalWidth / 2, sh = source.naturalHeight / 4;
+    const source = drawable(PROJECTION_ART.applications); if (!source) return;
+    const { w: iw, h: ih } = sizeOf(source), sw = iw / 2, sh = ih / 4;
     c.drawImage(source, (index % 2) * sw, Math.floor(index / 2) * sh, sw, sh, 0, 0, W, H);
   });
 }
@@ -65,20 +146,71 @@ export function projectionApplications(p: PaintCtx) {
 /** Actual final crystal geometry rendered for the physical kiosk displays. */
 export function projectionHero(p: PaintCtx) { fullArtwork(p, PROJECTION_ART.hero); }
 
-let backdropSurface:HTMLCanvasElement|undefined;
+type Graded = { surface?: CanvasImageSource; pending?: boolean; done?: Promise<void> };
+/** Yield to the event loop (a message, not a timer: review captures run on a paused clock). */
+const yieldTask = () => new Promise<void>(resolve => { const channel = new MessageChannel(); channel.port1.onmessage = () => { channel.port1.close(); resolve(); }; channel.port2.postMessage(0); });
+/** Rows graded per task: about 256k pixels, a few ms. */
+const sliceRows = (width: number) => Math.max(1, Math.floor(262_144 / Math.max(1, width)));
+
+/**
+ * A graded copy of an artwork, prepared off the frame. Grading in the paint
+ * call decoded the image, read a GPU canvas back and walked every pixel in
+ * one frame (87–125 ms long tasks when the projection zone swapped in, Task
+ * 6b trace). Here the sources are decoded off the main thread
+ * (createImageBitmap), drawn into a CPU-backed canvas, and `grade` adjusts
+ * one band of rows per task. Until it is done this returns undefined, as an
+ * artwork does until it is decoded.
+ */
+function gradedSurface(slot: Graded, urls: string[],
+  compose: (c: CanvasRenderingContext2D, layers: CanvasImageSource[], canvas: HTMLCanvasElement) => void,
+  grade: (pixels: Uint8ClampedArray) => void) {
+  if (slot.surface) return slot.surface;
+  if (slot.pending || typeof document === "undefined" || typeof Image === "undefined") return undefined;
+  slot.pending = true;
+  slot.done = (async () => {
+    // Never inside a paint frame: wait for the decoded images, then one step
+    // per task. Bitmaps come from the streamer's bytes (a worker decodes a
+    // Blob); an HTMLImageElement source would decode on the main thread.
+    const sources = await Promise.all(urls.map(artworkReady));
+    const first = sources[0];
+    if (!first || sources.some(source => !source)) return; // never decoded: the painter keeps drawing without it
+    // Shared bitmaps (decoded on a worker); the decoded image when there are no bytes.
+    // Compose-only layers are not kept: closed once the surface is built (or fails).
+    const temporary: ImageBitmap[] = [];
+    try {
+      const layers: CanvasImageSource[] = await Promise.all(urls.map(async (url, i) => {
+        if (DRAWN.has(url)) return (await artworkBitmap(url)) ?? sources[i]!;
+        const bitmap = await makeBitmap(url);
+        if (bitmap) temporary.push(bitmap);
+        return bitmap ?? sources[i]!;
+      }));
+      await yieldTask();
+      const canvas = document.createElement("canvas"); ({ w: canvas.width, h: canvas.height } = sizeOf(layers[0]));
+      const c = canvas.getContext("2d", { willReadFrequently: true });
+      if (!c) { slot.surface = first; return; }
+      compose(c, layers, canvas);
+      const rows = sliceRows(canvas.width);
+      for (let y = 0; y < canvas.height; y += rows) {
+        await yieldTask();
+        const band = c.getImageData(0, y, canvas.width, Math.min(rows, canvas.height - y));
+        grade(band.data);
+        c.putImageData(band, 0, y);
+      }
+      slot.surface = canvas;
+    } finally { temporary.forEach(bitmap => bitmap.close()); }
+  })().catch(() => { slot.surface = decodedFirst(urls[0]); });
+  return undefined;
+}
+const decodedFirst = (url: string) => { const image = images.get(url); return image && decodedImages.has(image) ? image : undefined; };
+
+const backdropSurface: Graded = {};
 function backdropArtwork(){
-  const source=artwork(PROJECTION_ART.backdrop);
-  if(!source||typeof document==="undefined")return undefined;
-  if(backdropSurface)return backdropSurface;
-  const canvas=document.createElement("canvas");canvas.width=source.naturalWidth;canvas.height=source.naturalHeight;
-  const c=canvas.getContext("2d");if(!c)return source;
-  c.drawImage(source,0,0);
-  const field=c.getImageData(0,0,canvas.width,canvas.height),pixels=field.data;
-  for(let i=0;i<pixels.length;i+=4){
-    const luma=pixels[i]*.2126+pixels[i+1]*.7152+pixels[i+2]*.0722;
-    for(let channel=0;channel<3;channel++)pixels[i+channel]=pixels[i+channel]*.75+luma*.25;
-  }
-  c.putImageData(field,0,0);backdropSurface=canvas;return canvas;
+  return gradedSurface(backdropSurface, [PROJECTION_ART.backdrop], (c, [source]) => c.drawImage(source,0,0), pixels => {
+    for(let i=0;i<pixels.length;i+=4){
+      const luma=(pixels[i]*.2126+pixels[i+1]*.7152+pixels[i+2]*.0722)*.25;
+      pixels[i]=pixels[i]*.75+luma;pixels[i+1]=pixels[i+1]*.75+luma;pixels[i+2]=pixels[i+2]*.75+luma;
+    }
+  });
 }
 
 /** Wide curved LED content with clear copy bands outside the central real model. */
@@ -108,7 +240,7 @@ export function projectionBackdrop(p: PaintCtx) {
 /** Content for actual circular/elliptical overhead surfaces, with no painted rim. */
 export function projectionCeiling(p: PaintCtx) {
   start(p, c => {
-    const source = artwork(PROJECTION_ART.cosmic); if (!source) return;
+    const source = drawable(PROJECTION_ART.cosmic); if (!source) return;
     c.fillStyle = "#01070d"; c.fillRect(0, 0, W, H);
     c.save(); c.translate(W / 2, H / 2); c.rotate(.012 * Math.sin(phase(p.t)));
     const dx=9*Math.sin(phase(p.t)),dy=6*Math.cos(phase(p.t));
@@ -142,7 +274,7 @@ export function projectionKiosk(p: PaintCtx) {
     text(c, "PROJECTION DESIGN  /  SHOW CONTROL", 62, 105, 23, "#8eb5c9");
     text(c, "3 PROJECTORS ONLINE", 1440, 61, 21, "#58e2c2", 600);
     line(c, 60, 157, 1860, 157, "#31495b", 2);
-    const hero = artwork(PROJECTION_ART.hero);
+    const hero = drawable(PROJECTION_ART.hero);
     c.fillStyle = "#000409"; c.fillRect(62, 196, 1118, 629);
     if (hero) c.drawImage(hero, 62, 196, 1118, 629);
     c.strokeStyle = "#497787"; c.lineWidth = 2; c.strokeRect(62, 196, 1118, 629);
@@ -181,7 +313,7 @@ export function projectionKiosk(p: PaintCtx) {
 export function projectionSculpture(p: PaintCtx) {
   const c = p.ctx; c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = 1; c.globalCompositeOperation = "source-over";
   c.fillStyle = "#eef1f3"; c.fillRect(0, 0, p.w, p.h);
-  const source = artwork(PROJECTION_ART.sculpture);
+  const source = drawable(PROJECTION_ART.sculpture);
   if (source) {
     const zoom = 1.025, dx = .007 * Math.sin(phase(p.t)), dy = .006 * Math.cos(phase(p.t));
     c.drawImage(source, p.w * ((1 - zoom) / 2 + dx), p.h * ((1 - zoom) / 2 + dy), p.w * zoom, p.h * zoom);
@@ -189,27 +321,22 @@ export function projectionSculpture(p: PaintCtx) {
   c.restore();
 }
 
-let crystalSurface: HTMLCanvasElement | undefined;
+const crystalSurface: Graded = {};
 function crystalArtwork() {
-  const source=artwork(PROJECTION_ART.crystal);
-  const branching=artwork(PROJECTION_ART.sculpture);
-  if(!source||!branching||typeof document==="undefined")return undefined;
-  if(crystalSurface)return crystalSurface;
-  const canvas=document.createElement("canvas");canvas.width=source.naturalWidth;canvas.height=source.naturalHeight;
-  const c=canvas.getContext("2d");if(!c)return source;
-  c.drawImage(source,0,0);
-  // The reference mixes sparse branching blue-white light with the denser
-  // refracted field. Both are registered to the real model's shared domain.
-  c.globalAlpha=.80;c.drawImage(branching,0,0,canvas.width,canvas.height);c.globalAlpha=1;
-  const field=c.getImageData(0,0,canvas.width,canvas.height),pixels=field.data;
-  // Grade only blue troughs once. White vein cores and champagne light keep
-  // their source values, making the existing fine branches read at a distance.
-  for(let i=0;i<pixels.length;i+=4){
-    const blue=Math.max(0,Math.min(1,(pixels[i+2]-pixels[i]-12)/120));
-    const amount=.12*blue;
-    pixels[i]*=1-amount*.92;pixels[i+1]*=1-amount*.85;pixels[i+2]*=1-amount*.60;
-  }
-  c.putImageData(field,0,0);crystalSurface=canvas;return canvas;
+  return gradedSurface(crystalSurface, [PROJECTION_ART.crystal, PROJECTION_ART.sculpture], (c, [source, branching], canvas) => {
+    c.drawImage(source,0,0);
+    // The reference mixes sparse branching blue-white light with the denser
+    // refracted field. Both are registered to the real model's shared domain.
+    c.globalAlpha=.80;c.drawImage(branching,0,0,canvas.width,canvas.height);c.globalAlpha=1;
+  }, pixels => {
+    // Grade only blue troughs once. White vein cores and champagne light keep
+    // their source values, making the existing fine branches read at a distance.
+    for(let i=0;i<pixels.length;i+=4){
+      const blue=Math.max(0,Math.min(1,(pixels[i+2]-pixels[i]-12)/120));
+      const amount=.12*blue;
+      pixels[i]*=1-amount*.92;pixels[i+1]*=1-amount*.85;pixels[i+2]*=1-amount*.60;
+    }
+  });
 }
 
 /** Blue, white and champagne light projected onto actual faceted crystal geometry. */

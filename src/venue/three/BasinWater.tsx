@@ -4,11 +4,17 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useVenue } from "../systems/store";
 import { inExhibitionRange, placementWorldMatrix } from "../data/placements";
+import { useLiteMode } from "../loading/liteMode";
 
 /** The basin reflects the real LED leaves, rocks and visitors. Its render target
  * updates only while the basin is in view; the material itself stays mounted so
  * the loader can warm the same shader that is used during the walkthrough. */
-export function BasinWater({polygonXZ,height}:{polygonXZ:number[][];height:number}) {
+type BasinProps={polygonXZ:number[][];height:number};
+/** Skipped in the zone's light pack (lite mode): no reflection render target until the full group is warm. */
+export function BasinWater(props:BasinProps){
+  return useLiteMode()?null:<BasinReflection {...props}/>;
+}
+function BasinReflection({polygonXZ,height}:BasinProps) {
   const mesh=useRef<THREE.Mesh>(null);
   const quality=useVenue(s=>s.quality);
   const resolution=quality==="high"?256:128;

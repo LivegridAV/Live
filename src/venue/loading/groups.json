@@ -1,0 +1,136 @@
+[
+  {
+    "id": "start",
+    "switchOnZ": 80,
+    "zoneZ": 80,
+    "assets": [
+      "/models/entrance/entrance-refined.glb",
+      "/models/expo/hall-bay.glb",
+      "/models/expo/grand-rental-finish-v2-visitors.glb",
+      "/models/expo/grand-pillar-gallery.glb",
+      "/models/expo/grand-pillar-visitors.glb",
+      "/models/expo/grand-reception-brand-wall-v2.glb",
+      "/models/expo/grand-reception-visitors.glb",
+      "/media/technical-showcase/materials/floor-color.webp",
+      "/media/technical-showcase/materials/floor-orm.webp",
+      "/media/technical-showcase/materials/floor-normal.webp",
+      "/media/pillars/ribbon-wrap.webp",
+      "/media/pillars/forest-wrap.webp",
+      "/media/pillars/alpine-wrap.webp",
+      "/media/reception/cylinder-reference-art-v1.webp",
+      "/media/reception/ribbon-reference-art-v1.webp",
+      "/media/reception/counter-reference-art-v2.webp",
+      "/media/reception/panorama-reference-art-v1.webp"
+    ],
+    "variants": {
+      "mobile": [
+        "/media/pillars/ribbon-wrap-mobile.webp",
+        "/media/pillars/forest-wrap-mobile.webp",
+        "/media/pillars/alpine-wrap-mobile.webp"
+      ]
+    },
+    "replaces": {
+      "/media/pillars/ribbon-wrap-mobile.webp": "/media/pillars/ribbon-wrap.webp",
+      "/media/pillars/forest-wrap-mobile.webp": "/media/pillars/forest-wrap.webp",
+      "/media/pillars/alpine-wrap-mobile.webp": "/media/pillars/alpine-wrap.webp"
+    }
+  },
+  {
+    "id": "rental",
+    "switchOnZ": -8.64,
+    "zoneZ": -66.64,
+    "assets": [
+      "/models/expo/grand-rental-finish-v2-shell.glb",
+      "/models/expo/grand-rental-finish-v2-interior.glb",
+      "/models/expo/grand-rental-finish-v2-hall.glb",
+      "/media/led-rental-2026/backdrop.webp",
+      "/media/led-rental-2026/flat.webp",
+      "/media/led-rental-2026/curved.webp",
+      "/media/led-rental-2026/cylinder.webp",
+      "/media/led-rental-2026/corner.webp",
+      "/media/led-rental-2026/sphere.webp",
+      "/media/led-rental-2026/application-0.webp",
+      "/media/led-rental-2026/application-1.webp",
+      "/media/led-rental-2026/application-2.webp",
+      "/media/led-rental-2026/application-3.webp"
+    ]
+  },
+  {
+    "id": "anamorphic",
+    "switchOnZ": -12.65,
+    "zoneZ": -70.65,
+    "assets": [
+      "/models/expo/grand-anamorphic-shape-v3-shell.glb",
+      "/models/expo/grand-anamorphic-shape-v3-interior.glb",
+      "/models/expo/grand-anamorphic-shape-v3-visitors.glb",
+      "/media/anamorphic-stall/sculpture-master-v1.webp",
+      "/media/anamorphic-stall/chrome-orb-landscape-v1.webp",
+      "/media/anamorphic-stall/content-portrait-v1.webp",
+      "/media/anamorphic-stall/blue-silver-fluid-v1.webp",
+      "/media/anamorphic-stall/forest-wrap.webp"
+    ],
+    "variants": {
+      "mobile": [
+        "/media/anamorphic-stall/forest-wrap-mobile.webp"
+      ]
+    },
+    "replaces": {
+      "/media/anamorphic-stall/forest-wrap-mobile.webp": "/media/anamorphic-stall/forest-wrap.webp"
+    }
+  },
+  {
+    "id": "technical",
+    "switchOnZ": -48.27,
+    "zoneZ": -106.27,
+    "assets": [
+      "/models/expo/technical-reference-hall-rig-v3.glb",
+      "/models/expo/grand-technical-shape-v3-shell.glb",
+      "/models/expo/grand-technical-shape-v3-interior.glb",
+      "/models/expo/grand-technical-shape-v3-visitors.glb",
+      "/media/final/technical-control.webp",
+      "/media/technical-showcase/materials/steel-color.webp",
+      "/media/technical-showcase/materials/steel-orm.webp",
+      "/media/technical-showcase/materials/steel-normal.webp",
+      "/media/technical-showcase/materials/cast-color.webp",
+      "/media/technical-showcase/materials/cast-orm.webp",
+      "/media/technical-showcase/materials/cast-normal.webp",
+      "/media/technical-showcase/materials/wool-color.webp",
+      "/media/technical-showcase/materials/wool-orm.webp",
+      "/media/technical-showcase/materials/wool-normal.webp"
+    ]
+  },
+  {
+    "id": "projection",
+    "switchOnZ": -50.08,
+    "zoneZ": -108.08,
+    "assets": [
+      "/models/expo/projection-finish-v2-blender-shell.glb",
+      "/models/expo/projection-finish-v2-blender-interior.glb",
+      "/models/expo/projection-finish-v2-visitors.glb",
+      "/models/expo/projection-finish-v2-hall.glb",
+      "/models/expo/projection-finish-v2-crystals.glb",
+      "/media/projection-mapping-v6/applications.webp",
+      "/media/projection-mapping-v12/crystals-hero.webp",
+      "/media/projection-mapping-v7/rear-ocean-particulate.webp",
+      "/media/projection-mapping/forest.webp",
+      "/media/projection-mapping-v3/sculpture-caustics.webp",
+      "/media/projection-mapping-v7/roof-teal-particulate.webp",
+      "/media/projection-mapping-v6/crystal-caustic.webp"
+    ]
+  },
+  {
+    "id": "arena",
+    "switchOnZ": -88.5,
+    "zoneZ": -134.5,
+    "assets": [
+      "/models/expo/flagship-stage.glb",
+      "/media/final/creative-world.webp",
+      "/media/final/stage-conference.webp"
+    ],
+    "variants": {
+      "festival": [
+        "/media/final/stage-social.webp"
+      ]
+    }
+  }
+]

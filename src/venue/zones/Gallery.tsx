@@ -8,6 +8,7 @@ import { ReferenceAnamorphic } from "./ReferenceAnamorphic";
 import { ReferencePillars } from "./ReferencePillars";
 import { Aisle } from "./Exhibition";
 import { EXHIBITION_RANGES, PLACEMENTS } from "../data/placements";
+import { LoadGroupGate } from "../loading/LoadGroupGate";
 
 /** Retained redesigned installations and their shared exhibition hall. */
 
@@ -39,7 +40,7 @@ export function Gallery() {
         <ReferenceReception />
       </ZoneGroup>
       <ZoneGroup {...EXHIBITION_RANGES.anamorphic} ahead={58} behind={38}>
-        <ReferenceAnamorphic />
+        <LoadGroupGate id="anamorphic"><ReferenceAnamorphic /></LoadGroupGate>
       </ZoneGroup>
       {quality !== "low" && (
         <Haze count={9} area={[40, 8, 54]} position={[0, 5.5, -68]} color="#7f9aa4" opacity={0.009} scale={15} seed={2} />

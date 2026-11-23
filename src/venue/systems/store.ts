@@ -30,6 +30,14 @@ export interface VenueState {
   loadPercent: number;
   /** The visitor has pressed ENTER THE EXPERIENCE. */
   entered: boolean;
+  /** Load groups whose files are parsed and decoded (see loading/streamer.ts). */
+  readyGroups: string[];
+  /** Load groups that are mounted and shader-warmed, so they can be shown. */
+  warmGroups: string[];
+  /** Load groups whose light pack has arrived (normal visits only; review modes load full groups). */
+  liteGroups: string[];
+  /** Load groups whose light pack is mounted and shader-warmed, so it can be shown in place of the full group. */
+  liteWarmGroups: string[];
 
   /* ── interaction ── */
   /** Slug of the pavilion whose detail panel is open, or null. */
@@ -58,6 +66,10 @@ export interface VenueState {
   setLoadPercent: (p: number) => void;
   setLoaded: (v: boolean) => void;
   enter: () => void;
+  markGroupReady: (id: string) => void;
+  markGroupWarm: (id: string) => void;
+  markLiteReady: (id: string) => void;
+  markLiteWarm: (id: string) => void;
   openPavilion: (slug: string) => void;
   closePavilion: () => void;
   setStageMode: (m: StageMode) => void;
@@ -80,6 +92,10 @@ export const useVenue = create<VenueState>((set, get) => ({
   loaded: false,
   loadPercent: 0,
   entered: false,
+  readyGroups: [],
+  warmGroups: [],
+  liteGroups: [],
+  liteWarmGroups: [],
   activePavilion: null,
   restoreProgress: null,
   stageMode: "corporate",
@@ -103,6 +119,18 @@ export const useVenue = create<VenueState>((set, get) => ({
   setLoadPercent: (p) => set({ loadPercent: p }),
   setLoaded: (v) => set({ loaded: v }),
   enter: () => set({ entered: true }),
+  markGroupReady: (id) => {
+    if (!get().readyGroups.includes(id)) set({ readyGroups: [...get().readyGroups, id] });
+  },
+  markGroupWarm: (id) => {
+    if (!get().warmGroups.includes(id)) set({ warmGroups: [...get().warmGroups, id] });
+  },
+  markLiteReady: (id) => {
+    if (!get().liteGroups.includes(id)) set({ liteGroups: [...get().liteGroups, id] });
+  },
+  markLiteWarm: (id) => {
+    if (!get().liteWarmGroups.includes(id)) set({ liteWarmGroups: [...get().liteWarmGroups, id] });
+  },
 
   openPavilion: (slug) =>
     set({ activePavilion: slug, restoreProgress: get().progress }),

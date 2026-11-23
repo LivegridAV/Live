@@ -3,18 +3,37 @@ import { useEffect, useMemo } from "react";
 import { useThree } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
-import { afterWarmup } from "./warmScene";
+import { programsReady, useAfterWarmup } from "./warmScene";
+import { useLiteMode } from "../loading/liteMode";
+import { useModelUrl } from "../loading/useModelUrl";
+import { gltfExtender } from "./textureLoading";
 import { HorizontalBlurShader } from "three/examples/jsm/shaders/HorizontalBlurShader.js";
 import { VerticalBlurShader } from "three/examples/jsm/shaders/VerticalBlurShader.js";
 
-/** A single geometry-derived capture grounds guests, chair legs and planters. */
-export function ProjectionContactShadow({boothUrl,visitorsUrl,detailsUrl,width,depth:depthSize,centerZ=0,floorHeight=.10}:{boothUrl:string;visitorsUrl:string;detailsUrl?:string;width:number;depth:number;centerZ?:number;floorHeight?:number}) {
-  const {scene:booth}=useGLTF(boothUrl,false),{scene:visitors}=useGLTF(visitorsUrl,false);
-  const {scene:details}=useGLTF(detailsUrl??boothUrl,false);
+type ContactShadowProps={boothUrl:string;visitorsUrl:string;detailsUrl?:string;width:number;depth:number;centerZ?:number;floorHeight?:number};
+/**
+ * A single geometry-derived capture grounds guests, chair legs and planters.
+ * Not baked in a zone's light pack (lite mode). Bakes from the same files the
+ * zone draws (the lod1 models below high quality), so nothing loads twice.
+ */
+export function ProjectionContactShadow(props:ContactShadowProps){
+  return useLiteMode()?null:<ContactShadowFiles {...props}/>;
+}
+function ContactShadowFiles({boothUrl,visitorsUrl,detailsUrl,...rest}:ContactShadowProps){
+  const booth=useModelUrl(boothUrl),visitors=useModelUrl(visitorsUrl),details=useModelUrl(detailsUrl??boothUrl);
+  if(!booth||!visitors||!details)return null;
+  return <ContactShadowBake {...rest} boothUrl={booth} visitorsUrl={visitors} detailsUrl={detailsUrl?details:undefined}/>;
+}
+function ContactShadowBake({boothUrl,visitorsUrl,detailsUrl,width,depth:depthSize,centerZ=0,floorHeight=.10}:ContactShadowProps) {
   const {gl}=useThree();
+  const {scene:booth}=useGLTF(boothUrl,false,true,gltfExtender(gl)),{scene:visitors}=useGLTF(visitorsUrl,false,true,gltfExtender(gl));
+  const {scene:details}=useGLTF(detailsUrl??boothUrl,false,true,gltfExtender(gl));
   const target=useMemo(()=>new THREE.WebGLRenderTarget(1024,512,{minFilter:THREE.LinearFilter,magFilter:THREE.LinearFilter}),[]);
-  // Baked once every shader is ready, so the bake never compiles inside a frame.
-  useEffect(()=>afterWarmup(()=>{
+  // Baked once every shader is ready (the venue's, or the streamed group's), so
+  // the bake never compiles inside a frame.
+  const schedule=useAfterWarmup();
+  useEffect(()=>{let cancelled=false;const cancel=schedule(async()=>{
+    if(cancelled)return;
     const stage=new THREE.Scene();
     for(const source of detailsUrl?[booth,visitors,details]:[booth,visitors]){
       const model=source.clone(true);
@@ -36,6 +55,24 @@ export function ProjectionContactShadow({boothUrl,visitorsUrl,detailsUrl,width,d
     const temporary=new THREE.WebGLRenderTarget(1024,512),geometry=new THREE.PlaneGeometry(2,2);
     const quad=new THREE.Mesh(geometry,horizontal),blurCamera=new THREE.OrthographicCamera(-1,1,1,-1,.1,10);
     blurCamera.position.z=1;
+    try{
+    // Submit the bake's own programs first and let the driver finish them off
+    // the frame. The materials are new for every bake, so drawn cold they
+    // would compile inside this task, after the venue has opened.
+    const swapped:[THREE.Mesh,THREE.Material|THREE.Material[]][]=[],previous=gl.getRenderTarget();
+    try{
+      stage.traverse(object=>{if(object instanceof THREE.Mesh){swapped.push([object,object.material]);object.material=depth;}});
+      gl.setRenderTarget(target);gl.compile(stage,camera);
+      for(const [mesh,material] of swapped)mesh.material=material;
+      swapped.length=0;
+      gl.setRenderTarget(temporary);gl.compile(quad,blurCamera);
+      quad.material=vertical;gl.setRenderTarget(target);gl.compile(quad,blurCamera);
+    }finally{
+      for(const [mesh,material] of swapped)mesh.material=material;
+      quad.material=horizontal;gl.setRenderTarget(previous);
+    }
+    await programsReady(gl,()=>cancelled,undefined,30_000);
+    if(cancelled)return;
     const before={target:gl.getRenderTarget(),color:gl.getClearColor(new THREE.Color()),alpha:gl.getClearAlpha(),autoClear:gl.autoClear,shadow:gl.shadowMap.autoUpdate};
     try{
       gl.autoClear=true;gl.shadowMap.autoUpdate=false;gl.setClearColor(0,0);
@@ -47,9 +84,11 @@ export function ProjectionContactShadow({boothUrl,visitorsUrl,detailsUrl,width,d
       target.texture.repeat.y=-1;target.texture.offset.y=1;
     }finally{
       gl.setRenderTarget(before.target);gl.setClearColor(before.color,before.alpha);gl.autoClear=before.autoClear;gl.shadowMap.autoUpdate=before.shadow;
+    }
+    }finally{
       depth.dispose();horizontal.dispose();vertical.dispose();temporary.dispose();geometry.dispose();
     }
-  }),[booth,visitors,details,detailsUrl,gl,target,width,depthSize,centerZ,floorHeight]);
+  });return()=>{cancelled=true;cancel();};},[schedule,booth,visitors,details,detailsUrl,gl,target,width,depthSize,centerZ,floorHeight]);
   useEffect(()=>()=>target.dispose(),[target]);
   return <mesh position={[0,floorHeight+.005,centerZ]} rotation={[-Math.PI/2,0,0]} renderOrder={2}>
     <planeGeometry args={[width,depthSize]}/>

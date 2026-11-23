@@ -92,6 +92,10 @@ export default function Venue() {
               // higher exposure would flatten the LED artwork into white.
               gl.toneMappingExposure = 1.15;
               gl.outputColorSpace = THREE.SRGBColorSpace;
+              // A program's first draw otherwise asks the driver for its info
+              // log, which waits for the link: 100+ ms long tasks when a group
+              // streams in during the walk (Task 6b trace). Kept in dev.
+              gl.debug.checkShaderErrors = process.env.NODE_ENV === "development";
               scene.background = new THREE.Color("#05090a");
               // Environment lifetime is owned by VenueEnvironment.
             }}

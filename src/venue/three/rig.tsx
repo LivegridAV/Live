@@ -2,6 +2,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import { useLiteMode } from "../loading/liteMode";
 import { useVenue } from "../systems/store";
 import { show } from "../systems/journey";
 
@@ -297,7 +298,12 @@ const hazeTexture = (() => {
  * Drifting haze. Large soft billboards that keep moving whether or not the
  * visitor scrolls — the room is never allowed to look frozen.
  */
-export function Haze({
+type HazeProps = { count?: number; area?: Vec3; position?: Vec3; color?: string; opacity?: number; scale?: number; seed?: number };
+/** Drifting haze sprites. Skipped in a zone's light pack (lite mode). */
+export function Haze(props: HazeProps) {
+  return useLiteMode() ? null : <HazeLayer {...props} />;
+}
+function HazeLayer({
   count = 14,
   area = [30, 8, 40] as Vec3,
   position = [0, 4, 0] as Vec3,
@@ -305,7 +311,7 @@ export function Haze({
   opacity = 0.05,
   scale = 14,
   seed = 1,
-}) {
+}: HazeProps) {
   const ref = useRef<THREE.InstancedMesh>(null);
   const quality = useVenue((s) => s.quality);
   const n = quality === "low" ? Math.ceil(count * 0.4) : quality === "medium" ? Math.ceil(count * 0.7) : count;
