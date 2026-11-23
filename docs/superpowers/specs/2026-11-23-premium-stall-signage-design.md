@@ -88,9 +88,9 @@ Reception brand wall and pillar gallery are in the start group (22.69 of 24 MiB;
 3. Arial Narrow captions → Segoe UI Semibold (the font isn't installed here).
 4. Content Studio gains a grid logo on its main (portal) fascia, to the left of the wordmark as on the rental stall; the logo plus wordmark are fitted together to today's wordmark width (`PORTAL_WIDTH-.86`), so the wordmark becomes about 20% smaller. Same rule for the gallery fascia wordmark (:227). Desk and counter wordmarks get no logo.
 5. Halo only on each stall's main fascia sign: Rental main fascia, Content Studio portal, Technical crown, Projection main fascia. The reception brand wall and the pillar gallery get **no halo** (they are not stalls, and they are in the start group); desk, blade and plaque wordmarks get no halo.
+6. Screen and canvas wordmarks are corrected in 2D only.
 7. Lettering keeps its current face colour family (ivory or aqua); nothing that is an accent colour today turns ivory.
 8. Start-group budget is protected by building those two areas first and stepping their signs down if needed (see "Start-group budget").
-6. Screen and canvas wordmarks are corrected in 2D only.
 
 ## Left to the builder
 
