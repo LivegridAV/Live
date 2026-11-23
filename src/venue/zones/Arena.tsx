@@ -90,8 +90,7 @@ function ramp(a: number, b: number) {
    later. A finale whose final card is never seen is not a finale. */
 const showOut = ramp(0.944, 0.958); // the performance ends, the room settles
 const brandUp = ramp(0.954, 0.968); // livegridAV takes every major surface
-const lineUp = ramp(0.968, 0.979); // the strapline follows
-const ctaUp = ramp(0.979, 0.9885); // and then the invitation
+const ctaUp = ramp(0.968, 0.98); // then the invitation floats in over it
 const showLive = () => 1 - showOut();
 
 /* ── approach ──────────────────────────────────────────── */
@@ -178,6 +177,7 @@ function Panel({
   power,
   reveal = 0.11,
   chrome = true,
+  additive,
 }: {
   media: string;
   width: number;
@@ -200,6 +200,8 @@ function Panel({
    * were covered by the switched-off finale sitting on top of them.
    */
   chrome?: boolean;
+  /** light only: no box, the content floats on the screen behind it */
+  additive?: boolean;
 }) {
   return (
     <group position={position} rotation={rotation}>
@@ -225,6 +227,7 @@ function Panel({
         flat
         uv={uv}
         power={power}
+        additive={additive}
       />
     </group>
   );
@@ -492,37 +495,24 @@ function ArenaDressing() {
 /* ── the finale sequence ───────────────────────────────── */
 
 /**
- * After the brand takes the room, the strapline and then the invitation
- * arrive on the canvas in front of it. They are separate surfaces rather than
- * one changing texture so each can be timed independently — which is what
- * lets the sequence breathe instead of cross-dissolving through itself.
+ * After the brand takes the room (the 3D wall and its glass logo), the
+ * invitation fades in on the wall's front plane. It is light-only: no box,
+ * just the type floating over the scene, with the scene veiled behind it.
  */
 function FinaleSequence({ rim }: { rim: THREE.Material }) {
   return (
-    <group>
-      <Panel
-        media="finale-word"
-        width={19}
-        height={4.6}
-        // kept below the 3D glass logo in the wall, like the invitation screen
-        position={[0, HERO_Y - 0.9, STAGE.wallZ + 0.12]}
-        rim={rim}
-        brightness={1.05}
-        chrome={false}
-        power={() => lineUp() * (1 - ctaUp() * 0.9)}
-      />
-      <Panel
-        media="finale-cta"
-        width={18}
-        height={4.2}
-        // sits 0.9 m low so the 3D glass logo in the wall has room above it
-        position={[0, HERO_Y - 0.9, STAGE.wallZ + 0.18]}
-        rim={rim}
-        brightness={1.08}
-        chrome={false}
-        power={ctaUp}
-      />
-    </group>
+    <Panel
+      media="finale-cta"
+      width={18}
+      height={4.2}
+      // sits 0.9 m low so the 3D glass logo in the wall has room above it
+      position={[0, HERO_Y - 0.9, STAGE.wallZ + 0.18]}
+      rim={rim}
+      brightness={1.08}
+      chrome={false}
+      additive
+      power={ctaUp}
+    />
   );
 }
 

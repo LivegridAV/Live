@@ -127,6 +127,8 @@ const finaleBrand = wrap(/* glsl */ `
   vec2 ribbonPath(float x, float t){
     float y = 0.22 * sin(x * 0.55 + t * 0.35) - 0.12 + 0.08 * sin(x * 1.3 - t * 0.5);
     float z = -1.4 + 1.3 * sin(x * 0.42 - t * 0.28) + 0.25 * sin(x * 0.9 + t * 0.4);
+    // dives deeper through the centre, so it always passes behind the words
+    z -= 1.3 * exp(-x * x / 5.0);
     return vec2(y, z);
   }
 
@@ -213,6 +215,8 @@ const finaleBrand = wrap(/* glsl */ `
       float shadow = 1.0 - 0.75 * exp(-pow((hb.z - c.y) * 1.6, 2.0));
       col += vec3(0.20, 0.16, 0.11) * exp(-pow(hb.z + 1.6, 2.0) * 0.35) * shadow * 0.6;
       col *= shadow;
+      // the words on the front plane light the floor just behind them
+      col += vec3(0.80, 0.86, 0.84) * exp(-hb.x * hb.x * 0.3 - pow(hb.z + 0.25, 2.0) * 4.0) * 0.09;
     }
     // a faint aqua pool on the ceiling above the glowing logo
     if (nb.y < -0.5) col += uAccent * exp(-pow(hb.x * 2.2, 2.0) - pow((hb.z - LOGO_C.z) * 2.0, 2.0)) * 0.06;
@@ -247,7 +251,9 @@ const finaleBrand = wrap(/* glsl */ `
       if (d > far) break;
     }
 
-    float quiet = 1.0 - 0.35 * exp(-pow(s.x / 2.4, 4.0)) * exp(-s.y * s.y * 4.0);
+    // A soft veil behind the words floating on the front plane, so the type
+    // stays readable while the scene keeps moving around it.
+    float quiet = 1.0 - 0.72 * exp(-pow(s.x / 1.9, 4.0)) * exp(-pow((s.y + 0.14) / 0.34, 2.0));
 
     if (hit > 0.0 && mat < 0.5) {
       // liquid chrome

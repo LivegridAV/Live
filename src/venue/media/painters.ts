@@ -106,7 +106,8 @@ const makeSign =
 
 const wordmark = (p: PaintCtx) => {
   const { ctx, w, h } = p;
-  ctx.fillStyle = "#05090a";
+  // pure black: shown light-only over the finale wall, so black disappears
+  ctx.fillStyle = "#000000";
   ctx.fillRect(0, 0, w, h);
   ctx.font = `600 ${h * 0.4}px ${SANS_OF()}`;
   ctx.textBaseline = "middle";
@@ -190,10 +191,9 @@ const brandFascia = (p: PaintCtx) => {
 export const FINALE_CTA_TITLE = "Let’s build your next experience";
 const finaleCta = (p: PaintCtx) => {
   const { ctx, w, h, t, accent } = p;
-  const g = ctx.createLinearGradient(0, 0, 0, h);
-  g.addColorStop(0, "#0a1213");
-  g.addColorStop(1, "#040708");
-  ctx.fillStyle = g;
+  // Pure black: the panel is light-only on the stage wall, so black is
+  // invisible and the type floats in the 3D scene with no box around it.
+  ctx.fillStyle = "#000000";
   ctx.fillRect(0, 0, w, h);
 
   // the wordmark, centred
