@@ -3,6 +3,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
+// reports/ is git-ignored, but blender-saved-transforms.json is tracked (git add -f) and MUST stay tracked:
+// the live projection-finish-v2-blender-* files cannot be rebuilt without it (release.test.mjs checks).
 const root=path.resolve(import.meta.dirname,'..'),models=path.join(root,'public/models/expo');
 const saved=JSON.parse(fs.readFileSync(path.join(root,'reports/projection-gallery-edit/blender-saved-transforms.json')));
 const layout=JSON.parse(fs.readFileSync(path.join(models,'projection-finish-v2-gallery-layout.json')));
