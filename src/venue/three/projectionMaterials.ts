@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { isPremiumSignMaterial, stylePremiumSign } from "./premiumSignMaterials";
 
 const prepared = new WeakSet<THREE.Material>();
 
@@ -38,6 +39,7 @@ export function applyProjectionBoothMaterials(model: THREE.Object3D) {
       if (!(material instanceof THREE.MeshStandardMaterial) || prepared.has(material)) continue;
       prepared.add(material);
       const name = material.name;
+      if (isPremiumSignMaterial(name)) { stylePremiumSign(material); continue; }
       material.onBeforeCompile = () => {};
       material.emissive.set(0x000000);
       material.emissiveIntensity = 0;
@@ -119,6 +121,7 @@ export function applyProjectionFinishV2Materials(model: THREE.Object3D) {
       if(!(material instanceof THREE.MeshStandardMaterial)||seen.has(material))continue;
       seen.add(material);
       const name=material.name;
+      if(isPremiumSignMaterial(name)){stylePremiumSign(material);continue;}
       material.onBeforeCompile=()=>{};
       material.emissive.set(0);material.emissiveIntensity=0;material.toneMapped=true;
       if(/Rocketbox/i.test(name)){

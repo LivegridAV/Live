@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { isPremiumSignMaterial, stylePremiumSign } from "./premiumSignMaterials";
 import { placementWorldMatrix, type InstallationId } from "../data/placements";
 
 type FinishFrame={worldToBaseline:THREE.Matrix4;baselineToWorldRotation:THREE.Matrix3};
@@ -30,6 +31,7 @@ export function prepareArchitecture(model: THREE.Object3D,installation?:Installa
     for (const material of materials) {
       if (!(material instanceof THREE.MeshStandardMaterial) || prepared.has(material)) continue;
       prepared.add(material);
+      if (isPremiumSignMaterial(material.name)) { stylePremiumSign(material); continue; }
       // The photographed skin, hair and clothing maps already carry their
       // surface detail; architectural world-space grain would damage it.
       if (/^Rocketbox\s*\|/i.test(material.name)) continue;

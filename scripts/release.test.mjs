@@ -506,3 +506,44 @@ test("brand check flags every wrong spelling and passes the real wordmark", () =
 test("every signed asset passes the brand check", () => {
   for (const entry of SIGNED_ASSETS) assert.deepEqual(checkSignedAsset(entry), [], entry.layout);
 });
+
+const SIGN_MATERIALS = [
+  "Premium Sign | ivory lit face", "Premium Sign | aqua lit face",
+  "Premium Sign | brushed champagne return", "Premium Sign | polished champagne edge",
+  "Premium Sign | frosted aqua cell", "Premium Sign | dim signal cell", "Premium Sign | aqua halo",
+];
+
+test("premium sign materials are styled the same in every stall", async () => {
+  const { isPremiumSignMaterial, stylePremiumSign } = await import("../src/venue/three/premiumSignMaterials.ts");
+  const styled = Object.fromEntries(SIGN_MATERIALS.map(name => {
+    assert.ok(isPremiumSignMaterial(name), name);
+    const material = new THREE.MeshStandardMaterial({ name });
+    stylePremiumSign(material);
+    return [name.replace("Premium Sign | ", ""), material];
+  }));
+  assert.equal(isPremiumSignMaterial("Rental | champagne trim"), false);
+  assert.equal(isPremiumSignMaterial("Premium Sign"), false);
+  for (const key of ["brushed champagne return", "polished champagne edge"]) assert.equal(styled[key].metalness, .82, key);
+  assert.equal(styled["aqua halo"].transparent, true);
+  assert.equal(styled["aqua halo"].depthWrite, false);
+  assert.equal(styled["dim signal cell"].depthWrite, true);
+  assert.equal(styled["dim signal cell"].transparent, false);
+  // Lit faces and cells keep the emissive the GLB gave them.
+  const lit = new THREE.MeshStandardMaterial({ name: SIGN_MATERIALS[0], emissive: new THREE.Color("#123456"), emissiveIntensity: .6 });
+  stylePremiumSign(lit);
+  assert.equal(lit.emissive.getHexString(), "123456");
+  assert.equal(lit.emissiveIntensity, .6);
+  // Running it twice (or in a second stall) changes nothing.
+  const again = styled["polished champagne edge"].clone();
+  stylePremiumSign(again);
+  assert.deepEqual([again.metalness, again.roughness, again.envMapIntensity], [.82, .29, 1.2]);
+});
+
+test("every stall material pass hands sign materials to stylePremiumSign", () => {
+  for (const file of ["rental2026Materials", "architecturalFinish", "projectionMaterials", "technicalMaterials"]) {
+    const source = read(`src/venue/three/${file}.ts`);
+    assert.match(source, /isPremiumSignMaterial\(/, file);
+    assert.match(source, /stylePremiumSign\(/, file);
+  }
+  assert.equal((read("src/venue/three/projectionMaterials.ts").match(/isPremiumSignMaterial\(/g) ?? []).length, 2, "both projection passes");
+});
