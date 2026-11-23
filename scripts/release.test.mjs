@@ -507,6 +507,11 @@ test("every signed asset passes the brand check", () => {
   for (const entry of SIGNED_ASSETS) assert.deepEqual(checkSignedAsset(entry), [], entry.layout);
 });
 
+test("all six signed areas are in the brand check", () => {
+  assert.equal(SIGNED_ASSETS.length, 6);
+  assert.equal(SIGNED_ASSETS.reduce((sum, entry) => sum + (entry.halo ?? 0), 0), 4);
+});
+
 const SIGN_MATERIALS = [
   "Premium Sign | ivory lit face", "Premium Sign | aqua lit face",
   "Premium Sign | brushed champagne return", "Premium Sign | polished champagne edge",
