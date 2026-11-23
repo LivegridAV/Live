@@ -80,14 +80,71 @@ def batch_export(name,objects):
     bpy.ops.export_scene.gltf(filepath=str(path),export_format='GLB',use_selection=True,export_yup=True,export_apply=True,export_materials='EXPORT',export_extras=True,export_cameras=False,export_lights=False,export_animations=False)
     EXPORTS[name]={'sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'bytes':path.stat().st_size,'bounds':bounds(result)}
 
-def label(body,p,height,width,yaw=0,tracking=1.05,centered=False):
+SIGNAGE_MODULE=premium_signage();SIGNAGE_MODULE.SIGN_LOG.clear()
+
+def flat_label(body,p,height,width,yaw=0,tracking=1.05,centered=False):
     # Existing lettering is a genuine font mesh. Fit uniformly to real width.
     ob=text(body,p,height,yaw,centered,tracking)
     natural=max(v.co.x for v in ob.data.vertices)-min(v.co.x for v in ob.data.vertices)
     factor=min(1,width/max(natural,.001))
     for v in ob.data.vertices:v.co*=factor
-    SIGNS.append({'body':body,'position':list(p),'yaw':yaw,'availableWidth':width,'measuredWidth':natural*factor,'uniformFit':factor,'horizontalAspectRatio':1})
+    return ob,natural,factor
+
+def sign_point(p,yaw,u,y,front):
+    # A point in a sign's own frame (u along, y up, front toward the visitor),
+    # the frame text() and transform() place glyphs in.
+    return(p[0]+math.cos(yaw)*u+math.sin(yaw)*front,p[1]+y,p[2]-math.sin(yaw)*u+math.cos(yaw)*front)
+
+def label(body,p,height,width,yaw=0,tracking=1.05,centered=False,*,logo=False,halo_face=None,slogan=True):
+    """Every sign here is a premium sign. Copy is built as today and deepened in
+    place before batch_export bakes it (local +Z still faces the visitor); the
+    wordmark becomes premium_wordmark in today's ink box, or with `logo` the
+    grid logo + wordmark fitted to today's wordmark width (premium_lockup's
+    rule). `halo_face` (the panel's front, in the sign frame) adds the stall's
+    one halo behind the logo and wordmark."""
+    if SIGNAGE_MODULE.is_wordmark(body):return label_wordmark(p,height,width,yaw,tracking,logo,halo_face)
+    ob,natural,factor=flat_label(body,p,height,width,yaw,tracking,centered)
+    SIGNAGE_MODULE.premiumize_lettering([ob],body,slogan=slogan,position=p)
+    SIGNS.append({'body':body,'position':list(p),'yaw':yaw,'availableWidth':width,'measuredWidth':natural*factor,'uniformFit':factor,'horizontalAspectRatio':1,'premium':True})
     return ob
+
+def label_wordmark(p,height,width,yaw,tracking,logo,halo_face):
+    signs=SIGNAGE_MODULE
+    # Today's flat Segoe wordmark, fitted as before, gives the ink box (sign frame).
+    old,natural,factor=flat_label('LivegridAV',p,height,width,yaw,tracking)
+    x0=min(v.co.x for v in old.data.vertices);x1=max(v.co.x for v in old.data.vertices)
+    y0=min(v.co.y for v in old.data.vertices);y1=max(v.co.y for v in old.data.vertices)
+    back=min(v.co.z for v in old.data.vertices)
+    pivot=old.parent;mesh=old.data
+    bpy.data.objects.remove(old,do_unlink=True);bpy.data.meshes.remove(mesh)
+    if pivot:bpy.data.objects.remove(pivot,do_unlink=True)
+    if logo:
+        # premium_lockup's rule (Ruling 10): the pair spans today's ink width,
+        # never taller than today's ink, left-aligned, centred on it vertically.
+        aspect=_wordmark_aspect(signs)
+        h=min(y1-y0,(x1-x0)/(1+LOCKUP_GAP+aspect));total=h*(1+LOCKUP_GAP+aspect)
+        left=x0;bottom=(y0+y1-h)/2;eh=h/.80
+        signs.premium_emblem(sign_point(p,yaw,left,bottom-.10*eh,back),eh,yaw)
+        word_u=left+h*(1+LOCKUP_GAP);word_at=sign_point(p,yaw,word_u,bottom,back)
+        obs=signs.premium_wordmark(word_at,h,width=total-h*(1+LOCKUP_GAP),yaw=yaw)
+    else:
+        word_u=x0;bottom=y0;word_at=sign_point(p,yaw,x0,y0,back)
+        obs=signs.premium_wordmark(word_at,y1-y0,width=x1-x0,yaw=yaw)
+    bpy.context.view_layer.update()
+    along=Vector(xyz((math.cos(yaw),0,-math.sin(yaw))));up=Vector((0,0,1))
+    pts=[v.co for ob in obs for v in ob.data.vertices]
+    word_w=max(q.dot(along) for q in pts)-min(q.dot(along) for q in pts)
+    word_h=max(q.dot(up) for q in pts)-min(q.dot(up) for q in pts)
+    if halo_face is not None:
+        # The stall's one halo, sized from the fitted wordmark ink as in the
+        # approved test: -1.25 h to the wordmark end + .30 h, -.30 h to 1.30 h.
+        # premium_halo sits HALO_OFFSET behind its anchor plane, so the anchor
+        # plane is the panel face + offset + 4 mm: the wash lies on the panel.
+        signs.premium_halo(sign_point(p,yaw,word_u-1.25*word_h,bottom-.30*word_h,halo_face+signs.HALO_OFFSET+.004),
+            word_w+1.55*word_h,1.60*word_h,yaw)
+    SIGNS.append({'body':'livegridAV','position':list(word_at),'yaw':yaw,'availableWidth':width,'measuredWidth':word_w,'inkHeight':word_h,'uniformFit':1,'horizontalAspectRatio':1,'premium':True,'logo':logo,
+        'replaces':{'position':list(p),'inkWidth':x1-x0,'inkHeight':y1-y0,'uniformFit':factor}})
+    return obs
 
 def portal_p(u,y,front=0):
     return(PORTAL_B[0]+math.cos(PORTAL_YAW)*u+math.sin(PORTAL_YAW)*front,y,
@@ -180,8 +237,8 @@ box('Content Studio occupied-room rear enclosure',((ROOM_XMIN+ROOM_XMAX)/2,(ROOM
 record('rear-boundary',before)
 before=set(bpy.context.scene.objects)
 terminate_portal_at_led(portal_box('Content Studio oblique upper entrance fascia',PORTAL_WIDTH/2,(STUDIO_TOP+PORTAL_UNDERSIDE)/2,PORTAL_WIDTH,STUDIO_TOP-PORTAL_UNDERSIDE,.45,WALL))
-label('LivegridAV',portal_p(.43,STUDIO_TOP-1.14,.244),1.47,PORTAL_WIDTH-.86,PORTAL_YAW)
-label('CONTENT STUDIO',portal_p(.45,STUDIO_TOP-1.90,.248),.52,PORTAL_WIDTH-.90,PORTAL_YAW,tracking=1.18)
+label('livegridAV',portal_p(.43,STUDIO_TOP-1.14,.244),1.47,PORTAL_WIDTH-.86,PORTAL_YAW,logo=True,halo_face=.225-.244)
+label('CONTENT STUDIO',portal_p(.45,STUDIO_TOP-1.90,.248),.52,PORTAL_WIDTH-.90,PORTAL_YAW,tracking=1.18,slogan=False)
 terminate_portal_at_led(portal_box('Content Studio oblique entrance thin warm reveal',PORTAL_WIDTH/2,PORTAL_UNDERSIDE-.018,PORTAL_WIDTH-.12,.024,.025,COVE,.24))
 inner_notch_lintel()
 record('fascia-brand',before,True)
@@ -224,7 +281,7 @@ def gallery_box(name,u,y,w,h,d,mat,front=0):
     ob=box(name,gallery_p(u,y,front),(w,h,d),mat,.014);ob.rotation_euler[2]=GYAW;return ob
 gallery_box('Content Gallery connected oblique backing',GW/2,(GALLERY_TOP+F)/2,GW,GALLERY_TOP-F,.30,WALL,-.15)
 gallery_box('Content Gallery lower wordmark crown',GW/2,GALLERY_TOP-.96,GW,1.92,.53,WALL,.005)
-label('LivegridAV',gallery_p(.32,GALLERY_TOP-.92,.282),.88,GW-.64,GYAW)
+label('livegridAV',gallery_p(.32,GALLERY_TOP-.92,.282),.88,GW-.64,GYAW,logo=True)
 label('VISUALS FOR A BRIGHTER TOMORROW',gallery_p(.30,GALLERY_TOP-1.49,.285),.25,GW-.60,GYAW,tracking=1.04)
 aperture('gallery-upper-portrait',gallery_p(.90,7.06,.282),1.46,2.54,'gallery-ice-vortex',GYAW)
 for i,line in enumerate(('CONTENT','PRODUCTION','VIRTUAL PRODUCTION','LIVE EXPERIENCES','LED SOLUTIONS')):
@@ -310,7 +367,7 @@ before=set(bpy.context.scene.objects)
 box('Studio rear consultation counter',(-7.2,.62,-6.6),(5.8,1.0,.94),BLACK,.035)
 box('Studio rear stone countertop',(-7.2,1.1475,-6.6),(5.86,.055,1.0),STUDIO_STONE,.015)
 box('Studio rear service desk concealed toe',(-7.2,.15,-6.11),(5.65,.023,.020),COVE,.003)
-label('LivegridAV',(-9.55,.72,-6.11),.55,4.7)
+label('livegridAV',(-9.55,.72,-6.11),.55,4.7)
 flowers(-5.10,1.18,-6.6,.36)
 for xx in(-8.6,-7.9):drinking_glass(xx,1.18,-6.5,mat=CLEAR_GLASS)
 record('rear-service-counter',before)
@@ -326,15 +383,15 @@ before=set(bpy.context.scene.objects)
 box('Studio left-wall consultation counter',(-10.35,.62,4.20),(.94,1.0,3.60),BLACK,.035)
 box('Studio left-wall honed consultation top',(-10.35,1.1475,4.20),(1.00,.055,3.66),STUDIO_STONE,.015)
 box('Studio left-wall counter warm toe',(-9.870,.155,4.20),(.020,.024,3.48),COVE,.003)
-label('LivegridAV',(-9.866,.72,5.75),.53,3.12,math.pi/2)
+label('livegridAV',(-9.866,.72,5.75),.53,3.12,math.pi/2)
 flowers(-10.35,1.18,3.12,.34)
 for zz in(4.10,4.65):drinking_glass(-10.24,1.18,zz,mat=CLEAR_GLASS)
 record('left-consultation-service',before)
-before=set(bpy.context.scene.objects);front_sign_start=len(SIGNS)
+before=set(bpy.context.scene.objects);front_sign_start=len(SIGNS);front_log_start=len(SIGNAGE_MODULE.SIGN_LOG)
 box('Studio native scale front reception black carcass',(-9.20,.62,6.78),(3.30,1.0,.95),BLACK,.045)
 box('Studio native scale front honed countertop',(-9.20,1.1475,6.78),(3.36,.055,1.01),STUDIO_STONE,.018)
 box('Studio reception recessed warm toe',(-9.20,.155,7.264),(3.20,.024,.019),COVE,.003)
-label('LivegridAV',(-10.65,.71,7.269),.66,2.90)
+label('livegridAV',(-10.65,.71,7.269),.66,2.90)
 flowers(-8.15,1.18,6.75,.34);drinking_glass(-9.75,1.18,6.90,mat=CLEAR_GLASS)
 box('Studio slim tablet on reception',(-9.1,1.29,6.75),(.28,.22,.025),BLACK,.011)
 desk_objects=set(bpy.context.scene.objects)-before
@@ -345,6 +402,9 @@ for ob in desk_objects:
     if ob.parent not in desk_objects:ob.matrix_world=desk_fit@ob.matrix_world
 for sign in SIGNS[front_sign_start:]:
     pp=desk_fit@Vector(xyz(sign['position']));sign['position']=[pp.x,pp.z,-pp.y];sign['yaw']+=PORTAL_YAW
+# The premium sign log moves with the reception desk, as the typography does.
+for sign in SIGNAGE_MODULE.SIGN_LOG[front_log_start:]:
+    pp=desk_fit@Vector(xyz(sign['position']));sign['position']=[round(pp.x,4),round(pp.z,4),round(-pp.y,4)]
 record('front-reception',before)
 
 # Basin with deliberate L outline, a narrow continuous lip and actual fractured
@@ -437,7 +497,7 @@ layout={'version':'reference-led-cutaway-v3-20261019','assetNames':list(EXPORTS)
     'innerLedJoin':{'returnWallCenterX':1.45,'returnWallInteriorX':ROOM_XMAX,'returnWallFrontZ':1.20,'jamb':{'center':[1.21,(INTERIOR_CEILING_TOP+F)/2,1.30],'size':[.18,INTERIOR_CEILING_TOP-F,.80]},'lintelFromXZ':list(PORTAL_A),'lintelToXZ':[FOLD[0]+LEFT_CUTOUT['right'],FOLD[1]],'lintelStartBottomTop':[9.26,9.50],'lintelEndBottomTop':[8.20,8.24],'physicalTrim':'actual six-point cabinet profile plus 18mm clearance','scope':'Only opening joinery and room right/rear closure moved; native furniture, people, oval canopy and all room screens preserved'}},
  'shapeHierarchy':{'heroCrownTop':TOP,'leftPortalTop':STUDIO_TOP,'galleryTop':GALLERY_TOP,'galleryPlane':'oblique connected return from right LED end within 16m reservation','galleryYaw':GYAW,'galleryFrontX':GX,'galleryFromZ':GZ,'galleryToZ':GZ-math.sin(GYAW)*GW,'galleryEndX':GX+math.cos(GYAW)*GW,'occupiedRoof':ROOM_ROOF,'portalPlane':{'left':list(PORTAL_B),'right':list(PORTAL_A),'yaw':PORTAL_YAW,'width':PORTAL_WIDTH,'normal':[math.sin(PORTAL_YAW),0,math.cos(PORTAL_YAW)]},'canopyClearance':{'centerXZ':list(CC),'outerRadiiXZ':[4.18,4.10],'frontmostZ':CC[1]+4.10,'bladeMinimumZ':PORTAL_B[1]-math.sin(PORTAL_YAW)*2.375-math.cos(PORTAL_YAW)*.14,'bladeGapZ':PORTAL_B[1]-math.sin(PORTAL_YAW)*2.375-math.cos(PORTAL_YAW)*.14-(CC[1]+4.10),'heroCutoutGapX':FOLD[0]+LEFT_CUTOUT['right']-(CC[0]+4.18),'heroWingVerticalGap':LEFT_CUTOUT['top']-7.97},'reference':'ChatGPT Image Sep 23, 2026, 12_29_33 AM (4).png'},
  'apertures':APERTURES,'screens':APERTURES,'water':{'y':.595,'polygonXZ':BASIN,'outerPolygonXZ':BASIN},'waterJets':[],
- 'typography':SIGNS,'roles':ROLE_BOUNDS,'humans':HUMAN_PLACEMENTS,'plants':PLANTS,'views':views,
+ 'typography':SIGNS,'signage':[dict(sign) for sign in SIGNAGE_MODULE.SIGN_LOG],'roles':ROLE_BOUNDS,'humans':HUMAN_PLACEMENTS,'plants':PLANTS,'views':views,
  'routes':[{'id':'studio-oblique-occupied-entry','width':2,'centerline':[[-2.8,F,8.8],[-2.8,F,3],[-8.5,F,3],[-8.5,F,-4.8]],
  'clearEnvelopesXZ':[[-3.8,-1.8,3,8.8],[-9.5,-1.8,2,4],[-9.5,-7.5,-4.8,3]],
  'measurement':'2m L-shaped principal route reaches the genuine oblique side portal, then the occupied room, without passing through LED or reception'}],

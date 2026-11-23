@@ -1,0 +1,91 @@
+{
+  "sourceFile": "grand-reception.glb",
+  "sourceSha256": "42c6838c655ab9b95209c3b9852f94076d2d9f7af5dddfae86e06ff5de872310",
+  "targetFile": "grand-reception-brand-wall-v2.glb",
+  "targetSha256": "2e5b85e82fe443572452aacb1852fd964c2c4a2c979ebf127aaf1ac60e194a17",
+  "ledRightEndpointXZ": [
+    11.671094393614652,
+    0.23236310051019737
+  ],
+  "jointMetres": 0.03,
+  "originalPivot": [
+    10.649999618530273,
+    0,
+    -0.5
+  ],
+  "newPivot": [
+    12.704402923583984,
+    0,
+    0.3193845748901367
+  ],
+  "translation": [
+    2.054403305053711,
+    0,
+    0.8193845748901367
+  ],
+  "yawUnchanged": -0.2,
+  "scaleUnchanged": [
+    1,
+    1.1702127659574468,
+    1
+  ],
+  "movedBoundsBefore": {
+    "min": [
+      9.6510591506958,
+      0.11999988555908203,
+      -0.8113105893135071
+    ],
+    "max": [
+      11.648940086364746,
+      11.119998931884766,
+      -0.18777421116828918
+    ]
+  },
+  "movedBoundsAfter": {
+    "min": [
+      11.705462455749512,
+      0.11999988555908203,
+      0.008073985576629639
+    ],
+    "max": [
+      13.703343391418457,
+      11.119998931884766,
+      0.6316103935241699
+    ]
+  },
+  "changedMeshes": [
+    {
+      "mesh": "Premium Sign | ivory lit face | interior",
+      "vertices": 2339,
+      "faces": 1308
+    },
+    {
+      "mesh": "Premium Sign | ivory lit face | interior",
+      "vertices": 5408,
+      "faces": 2704
+    },
+    {
+      "mesh": "Reception | matte charcoal panel | interior",
+      "vertices": 96,
+      "faces": 60
+    },
+    {
+      "mesh": "Reception | porcelain brand lettering | interior",
+      "vertices": 24,
+      "faces": 12
+    }
+  ],
+  "movedSigns": [
+    "LED",
+    "DESIGN",
+    "TECHNOLOGY",
+    "PEOPLE",
+    "IMPACT"
+  ],
+  "translatedVertices": 7867,
+  "unchangedVertices": 135123,
+  "trianglesUnchanged": 181357,
+  "allOtherVerticesPreserved": true,
+  "sourceFilePreserved": true,
+  "exportMethod": "Direct original GLB POSITION byte patch; no mesh/material/image roundtrip"
+}

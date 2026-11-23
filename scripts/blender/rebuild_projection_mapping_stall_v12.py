@@ -55,7 +55,13 @@ def place(objects,position=(0,0,0),yaw=0,scale=(1,1,1),rotation=None):
         ob.matrix_world=Matrix.Identity(4)
 
 
-def label(body,p,height,width=None,yaw=0,centered=False,mat=BRAND,semibold=False,tracking=1.12):
+def label(body,p,height,width=None,yaw=0,centered=False,mat=BRAND,semibold=False,tracking=1.12,*,premium=False,accent=None,slogan=False):
+    # premium=True (opt-in) builds a premium sign: the livegridAV wordmark goes
+    # to premium_label_wordmark; other copy is sized as today, then deepened in
+    # place by premiumize_lettering before the bake (local +Z still faces the
+    # visitor), with an aqua face when `mat` is a teal/mint/cyan material.
+    if premium and premium_signage().is_wordmark(body):
+        return premium_label_wordmark(p,height,width,yaw,centered)
     before=set(bpy.context.scene.objects)
     ob=text(body,(0,0,0),1,mat=mat,centered=centered,semibold=semibold,tracking=tracking)
     lo=min(v.co.y for v in ob.data.vertices);hi=max(v.co.y for v in ob.data.vertices)
@@ -63,9 +69,28 @@ def label(body,p,height,width=None,yaw=0,centered=False,mat=BRAND,semibold=False
     fit=min(1,width/natural) if width else 1
     for vertex in ob.data.vertices:
         vertex.co.y-=lo;vertex.co*=factor*fit
+    if premium:
+        if accent is None:accent=any(w in mat.name.lower() for w in("teal","mint","cyan","aqua"))
+        premium_signage().premiumize_lettering([ob],body,accent=accent,slogan=slogan,position=p)
     place(set(bpy.context.scene.objects)-before,p,yaw)
     record={"body":body,"position":list(p),"yaw":yaw,"capHeight":height*fit,"width":natural*fit,"uniformFit":fit,"horizontalAspectRatio":1}
+    if premium:record["premium"]=True
     SIGNAGE.append(record);SIGNAGE_OBJECTS.append((ob,record));return ob
+
+
+def premium_label_wordmark(p,height,width,yaw=0,centered=False):
+    """premium_wordmark at label()'s anchor (ink bottom on p.y, ink left on
+    p.x or centred on it), `height` the ink height, never wider than `width`,
+    backs on p's plane. Built unplaced so its ink can be measured, then baked
+    with place() like every other label. The typography record carries the
+    fitted ink, from which the caller sizes a halo."""
+    obs=premium_signage().premium_wordmark(p,height,width,centered=centered,yaw=yaw,place=lambda obs,p,yaw:None)
+    xs=[v.co.x for ob in obs for v in ob.data.vertices];ys=[v.co.y for ob in obs for v in ob.data.vertices]
+    ink_w,ink_h=max(xs)-min(xs),max(ys)-min(ys)
+    place(obs,p,yaw)
+    record={"body":"livegridAV","position":list(p),"yaw":yaw,"capHeight":ink_h,"width":ink_w,
+        "uniformFit":ink_h/height,"horizontalAspectRatio":1,"premium":True,"font":"Space Grotesk 600"}
+    SIGNAGE.append(record);SIGNAGE_OBJECTS.append((obs,record));return obs
 
 
 def uv_mesh(name,vertices,faces,mat,uvs=None,smooth=True):

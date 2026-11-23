@@ -66,7 +66,9 @@ function patchAsset(kind){
       const tangents=primitive.attributes.TANGENT===undefined?null:access(primitive.attributes.TANGENT);
       selected.forEach((yes,i)=>{
         if(!yes)return;
-        const lettering=/clean ivory brand lettering/.test(material);
+        // Captions are rigid letters (rotated with the gallery, never stretched):
+        // the old flat porcelain lettering or the premium sign face/return/edge.
+        const lettering=/clean ivory brand lettering|^Premium Sign \| (ivory lit face|aqua lit face|brushed champagne return|polished champagne edge)$/.test(material);
         const moved=move(points[i]);
         write(pos,i,lettering?moveLetter(points[i]):moved);
         if(lettering){
@@ -115,6 +117,8 @@ for(const t of layout.typography)if(t.position&&contains(t.position)){
   if(typeof t.yaw==='number')t.yaw=newYaw(t.yaw);
   t.fontAspectRatioPreserved=true;
 }
+// Premium sign anchors (the gallery captions) move exactly like their letters.
+for(const s of layout.signage??[])if(contains(s.position))s.position=moveLetter(s.position);
 layout.version='projection-galleries-rear-wide-20261021';
 layout.galleryEdit={backMetres:back,widthScale,outerAnchor:outer,source:'projection-finish-v2-layout.json'};
 layout.assets=Object.fromEntries(Object.values(layout.stats).map(v=>[v.file.replace('.glb',''),v]));

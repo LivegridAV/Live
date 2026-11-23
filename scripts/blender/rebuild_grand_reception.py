@@ -29,6 +29,9 @@ for name,objects in ns['ASSEMBLIES'].items():
         if ob.parent not in objects:ob.location.z+=F
 for ob in list(bpy.context.scene.objects):
     if 'staff concealed black working platform' in ob.name:bpy.data.objects.remove(ob,do_unlink=True)
+# Premium signs built above (every one sits in a raised assembly, so its anchor rises by F too).
+# Copied now: later helper files share this Blender session's sign log.
+signage=[dict(sign,position=[sign['position'][0],round(sign['position'][1]+F,4),sign['position'][2]]) for sign in ns['premium_signage']().SIGN_LOG]
 # Detailed multi-branch foliage uses the existing original botanical atlas.
 furn=HERE/'rebuild_led_rental_2026_interior.py'
 # Its helpers clear the scene, so preserve the reception objects temporarily.
@@ -75,6 +78,6 @@ for role,key,x,z,yaw in [('host','reception-host',3.5,4.65,-.1),('bar adviser','
 for ob in original:
     if ob.name in bpy.data.objects:bpy.data.objects.remove(ob,do_unlink=True)
 people=export(ROOT/'public/models/expo/grand-reception-visitors.glb',created)
-layout={'version':'grand-20261018','openFeatureReservation':cfg['master'],'geometry':stats,'people':people,'placements':placements,'assemblies':ns['LAYOUT'],'route':{'width':2,'xMin':-3.4,'xMax':-1.4,'zMin':1.8,'zMax':8},'provenance':'Original selected reception joinery reused and reflowed; original botanical helper/atlas; Microsoft Rocketbox MIT textured people. No full-assembly scaling.'}
+layout={'version':'grand-20261018','openFeatureReservation':cfg['master'],'geometry':stats,'people':people,'placements':placements,'assemblies':ns['LAYOUT'],'signage':signage,'route':{'width':2,'xMin':-3.4,'xMax':-1.4,'zMin':1.8,'zMax':8},'provenance':'Original selected reception joinery reused and reflowed; original botanical helper/atlas; Microsoft Rocketbox MIT textured people. No full-assembly scaling.'}
 (ROOT/'public/models/expo/grand-reception-layout.json').write_text(json.dumps(layout,indent=2),encoding='utf-8')
 print('GRAND_RECEPTION '+json.dumps({'geometry':stats,'people':people}),flush=True)

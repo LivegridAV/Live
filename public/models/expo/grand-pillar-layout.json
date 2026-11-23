@@ -1,8 +1,8 @@
 {
   "geometry": {
-    "sha256": "8b0b8be67495875d3a8b7b4d33c5903290791bf17299a6911784863d472b670d",
-    "bytes": 4366056,
-    "triangles": 99484
+    "sha256": "3f80b02130e8ca52e82ae6861bef4893b4a28745bfd492d4a06038fdd7ffa3cc",
+    "bytes": 4505176,
+    "triangles": 98273
   },
   "people": {
     "sha256": "a0c399100149095ae821e0b0532f8218b638011d5cce9111d5675363571b4ab8",
@@ -72,6 +72,89 @@
         -7.95
       ],
       "scale": 0.94
+    }
+  ],
+  "signage": [
+    {
+      "body": "signal grid logo",
+      "kind": "emblem",
+      "position": [
+        -3.9483,
+        4.5498,
+        -8.8238
+      ]
+    },
+    {
+      "body": "livegridAV",
+      "kind": "wordmark",
+      "position": [
+        -3.4938,
+        4.5952,
+        -8.8238
+      ]
+    },
+    {
+      "body": "VISUAL EXPERIENCES",
+      "kind": "name",
+      "position": [
+        -2.8,
+        3.93,
+        -8.815
+      ]
+    },
+    {
+      "body": "THAT MOVE PEOPLE",
+      "kind": "name",
+      "position": [
+        -2.8,
+        3.48,
+        -8.815
+      ]
+    },
+    {
+      "body": "PEOPLE",
+      "kind": "name",
+      "position": [
+        4.7,
+        5.1,
+        -8.807
+      ]
+    },
+    {
+      "body": "PLACES",
+      "kind": "name",
+      "position": [
+        4.7,
+        4.65,
+        -8.807
+      ]
+    },
+    {
+      "body": "IDEAS",
+      "kind": "name",
+      "position": [
+        4.7,
+        4.2,
+        -8.807
+      ]
+    },
+    {
+      "body": "BRIGHTER",
+      "kind": "name",
+      "position": [
+        4.7,
+        3.75,
+        -8.807
+      ]
+    },
+    {
+      "body": "TOGETHER",
+      "kind": "name",
+      "position": [
+        4.7,
+        3.3,
+        -8.807
+      ]
     }
   ],
   "provenance": "Original retained gallery joinery; original textured curved-leaf botany; Microsoft Rocketbox Avatar Library MIT Copyright (c) 2020 Microsoft. Gallery raises .111m with common .12m finished floor. Main central route world X[-1,1] kept clear of planters/avatars."

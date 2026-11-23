@@ -85,8 +85,12 @@ def export_asset(suffix, objects):
             'bounds': before_bounds}
 
 
+# Premium signs (shell and interior) log themselves into the shared SIGN_LOG.
+SIGN_LOG = premium_signage().SIGN_LOG
+SIGN_LOG.clear()
 shell = load_module('projection_finish_v2_shell').build_projection_finish_v2_shell(globals())
 interior = load_module('projection_finish_v2_interior').build_projection_finish_v2_interior(globals())
+signage = [dict(entry) for entry in SIGN_LOG]
 stats = {'shell': export_asset('shell', shell['objects']),
          'interior': export_asset('interior', interior['objects'])}
 
@@ -211,7 +215,7 @@ layout = {
                        'asset': 'projection-finish-v2-crystals.glb'},
     'apertures': shell['apertures']+interior['screens'], 'projectors': shell['projectors'],
     'fixtures': shell['fixtures'], 'opticalPaths': shell['opticalPaths'],
-    'interiorLights': interior['lights'], 'typography': shell['typography'],
+    'interiorLights': interior['lights'], 'typography': shell['typography'], 'signage': signage,
     'furniture': interior['furniture'], 'seats': interior['seats'], 'plants': interior['plants'],
     'leafCount': interior['leafCount'], 'reception': interior['reception'], 'kiosks': interior['kiosks'],
     'supportedProps': interior['supportedProps'], 'routes': interior['routes'],
@@ -234,4 +238,5 @@ path = OUT/'projection-finish-v2-layout.json'
 path.write_text(json.dumps(layout, indent=2), encoding='utf-8')
 print('PROJECTION_FINISH_V2_READY '+json.dumps({'stats': stats, 'visitors': len(visitors),
     'leaves': interior['leafCount'], 'seats': len(interior['seats']), 'apertures': len(layout['apertures']),
-    'visitorRouteIntersections': visitor_route_hits}), flush=True)
+    'visitorRouteIntersections': visitor_route_hits,
+    'signage': {kind: sum(s['kind'] == kind for s in signage) for kind in ('wordmark', 'emblem', 'halo', 'name')}}), flush=True)

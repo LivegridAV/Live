@@ -6,6 +6,7 @@ import { ImmersiveVolume, type Surface } from "../three/ImmersiveVolume";
 import { LightPool } from "../three/environment";
 import { useVenue } from "../systems/store";
 import { LocalPointLight } from "../three/LocalLights";
+import { drawWordmark } from "../media/brandMarks";
 
 /** Four-sided LED room: walls, ceiling and floor share the same world-space
  * shader and master clock. The rectangular architecture follows the reference. */
@@ -109,9 +110,8 @@ export function Tunnel() {
     const canvas = document.createElement("canvas"); canvas.width = 1536; canvas.height = 512;
     const ctx = canvas.getContext("2d")!;
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.font = "500 150px Arial"; ctx.fillStyle = "#f5f1e8";
-    ctx.fillText("LivegridAV", 768, 205);
-    ctx.font = "400 30px Arial";
+    drawWordmark(ctx, 768, 205, 150, { align: "center", ink: "#f5f1e8" });
+    ctx.font = "400 30px Arial"; ctx.fillStyle = "#f5f1e8";
     ctx.fillText("I M M E R S I V E   W O R L D S", 768, 348);
     ctx.fillText("R E A L   I M P A C T", 768, 413);
     const texture = new THREE.CanvasTexture(canvas);

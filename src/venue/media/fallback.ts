@@ -1,3 +1,4 @@
+import { drawWordmark } from "./brandMarks";
 /** A deliberate slate, never an uninitialised black texture. Retained on
  * network/codec failure and replaced in-place when the source becomes ready. */
 export function mediaSlate(): HTMLCanvasElement {
@@ -10,7 +11,7 @@ export function mediaSlate(): HTMLCanvasElement {
   ctx.strokeStyle = "#70808b"; ctx.lineWidth = 1;
   ctx.strokeRect(36, 36, 952, 440);
   ctx.textAlign = "center"; ctx.fillStyle = "#ffffff";
-  ctx.font = "500 74px Arial"; ctx.fillText("LivegridAV", 512, 244);
+  drawWordmark(ctx, 512, 244 - 26, 74, { align: "center", ink: "#ffffff" });
   ctx.font = "400 20px Arial";
   ctx.fillText("IDEAS · CONTENT · EXPERIENCES", 512, 298);
   return canvas;

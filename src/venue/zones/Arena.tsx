@@ -15,6 +15,7 @@ import { useVenue } from "../systems/store";
 import { ZoneGroup } from "../three/ZoneGroup";
 import { LoadGroupGate } from "../loading/LoadGroupGate";
 import { ARENA_SHIFT } from "../data/grand";
+import { drawWordmark } from "../media/brandMarks";
 
 /**
  * The arena and the main stage.
@@ -89,8 +90,7 @@ function ramp(a: number, b: number) {
    later. A finale whose final card is never seen is not a finale. */
 const showOut = ramp(0.944, 0.958); // the performance ends, the room settles
 const brandUp = ramp(0.954, 0.968); // livegridAV takes every major surface
-const lineUp = ramp(0.968, 0.979); // the strapline follows
-const ctaUp = ramp(0.979, 0.9885); // and then the invitation
+const ctaUp = ramp(0.968, 0.98); // then the invitation floats in over it
 const showLive = () => 1 - showOut();
 
 /* ── approach ──────────────────────────────────────────── */
@@ -177,6 +177,7 @@ function Panel({
   power,
   reveal = 0.11,
   chrome = true,
+  additive,
 }: {
   media: string;
   width: number;
@@ -199,6 +200,8 @@ function Panel({
    * were covered by the switched-off finale sitting on top of them.
    */
   chrome?: boolean;
+  /** light only: no box, the content floats on the screen behind it */
+  additive?: boolean;
 }) {
   return (
     <group position={position} rotation={rotation}>
@@ -224,6 +227,7 @@ function Panel({
         flat
         uv={uv}
         power={power}
+        additive={additive}
       />
     </group>
   );
@@ -248,8 +252,7 @@ function StageBrand() {
     const canvas = document.createElement("canvas"); canvas.width = 1536; canvas.height = 288;
     const ctx = canvas.getContext("2d")!;
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.font = "600 166px Arial"; ctx.fillStyle = "#ffffff";
-    ctx.fillText("LivegridAV", 768, 118);
+    drawWordmark(ctx, 768, 118, 166, { align: "center", ink: "#ffffff" });
     ctx.font = "400 24px Arial"; ctx.fillStyle = "#e3c49d";
     ctx.fillText("P E O P L E   /   P L A T F O R M S   /   P O S S I B I L I T I E S", 768, 230);
     const t = new THREE.CanvasTexture(canvas); t.colorSpace = THREE.SRGBColorSpace; return t;
@@ -276,12 +279,22 @@ function StageScreens({ rim }: { rim: THREE.Material }) {
       { x: side * 35.85, y: 5.05, w: 8.8, h: 4.15, media: "stage-outer" },
     ]),
   ];
+  // The finale plays as ONE picture across the whole array: each panel shows
+  // its own slice of a wall-wide render, so the light runs continuously from
+  // the outer screens through the strips to the centre.
+  const wall = {
+    x0: Math.min(...panels.map(p => p.x - p.w / 2)), x1: Math.max(...panels.map(p => p.x + p.w / 2)),
+    y0: Math.min(...panels.map(p => p.y - p.h / 2)), y1: Math.max(...panels.map(p => p.y + p.h / 2)),
+  };
+  const W = wall.x1 - wall.x0, H = wall.y1 - wall.y0;
+  const slice = (p: { x: number; y: number; w: number; h: number }): [number, number, number, number] =>
+    [p.w / W, p.h / H, (p.x - p.w / 2 - wall.x0) / W, (p.y - p.h / 2 - wall.y0) / H];
   return <group>
     {panels.map((p, i) => <group key={i}>
       <Panel media={p.media} width={p.w} height={p.h} position={[p.x,p.y,STAGE.wallZ]}
         rim={rim} brightness={1} reveal={.045} power={() => .08 + .92 * showLive()} />
       <Panel media="finale" width={p.w} height={p.h} position={[p.x,p.y,STAGE.wallZ+.07]}
-        rim={rim} chrome={false} power={brandUp} />
+        rim={rim} chrome={false} power={brandUp} uv={slice(p)} />
     </group>)}
     <StageBrand />
     <Screen media="stage-floor" width={26} height={14}
@@ -482,35 +495,24 @@ function ArenaDressing() {
 /* ── the finale sequence ───────────────────────────────── */
 
 /**
- * After the brand takes the room, the strapline and then the invitation
- * arrive on the canvas in front of it. They are separate surfaces rather than
- * one changing texture so each can be timed independently — which is what
- * lets the sequence breathe instead of cross-dissolving through itself.
+ * After the brand takes the room (the 3D wall and its glass logo), the
+ * invitation fades in on the wall's front plane. It is light-only: no box,
+ * just the type floating over the scene, with the scene veiled behind it.
  */
 function FinaleSequence({ rim }: { rim: THREE.Material }) {
   return (
-    <group>
-      <Panel
-        media="finale-word"
-        width={19}
-        height={4.6}
-        position={[0, HERO_Y + 0.4, STAGE.wallZ + 0.12]}
-        rim={rim}
-        brightness={1.05}
-        chrome={false}
-        power={() => lineUp() * (1 - ctaUp() * 0.9)}
-      />
-      <Panel
-        media="finale-cta"
-        width={18}
-        height={4.2}
-        position={[0, HERO_Y, STAGE.wallZ + 0.18]}
-        rim={rim}
-        brightness={1.08}
-        chrome={false}
-        power={ctaUp}
-      />
-    </group>
+    <Panel
+      media="finale-cta"
+      width={18}
+      height={4.2}
+      // sits 0.9 m low so the 3D glass logo in the wall has room above it
+      position={[0, HERO_Y - 0.9, STAGE.wallZ + 0.18]}
+      rim={rim}
+      brightness={1.08}
+      chrome={false}
+      additive
+      power={ctaUp}
+    />
   );
 }
 

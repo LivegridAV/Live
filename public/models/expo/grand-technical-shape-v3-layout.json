@@ -8,24 +8,24 @@
   ],
   "assets": {
     "grand-technical-shape-v3-shell": {
-      "sha256": "5dfebd2f0a53c2d362803f6240006c9c672d6f65b9e0ee658b4cf705ec5f3bf2",
-      "bytes": 1271800,
+      "sha256": "7c34b74af5fb49b14f443f2ca4eb34e2464a84e9f5bc97d19ccd5970dcfdb395",
+      "bytes": 1576520,
       "bounds": {
         "min": [
-          -12.0,
+          -12.011199951171875,
           0.0,
           -8.0
         ],
         "max": [
-          12.0,
+          12.011199951171875,
           7.5,
           8.0
         ]
       }
     },
     "grand-technical-shape-v3-interior": {
-      "sha256": "a6422f5a97ae67ee7a9396591fb2a27ea677621215afaddcae60d0e20193c2cf",
-      "bytes": 5314728,
+      "sha256": "d3ec098f72d3856d42f20f24ba62d894f923bd51ff75bfbf1e75ad536dc5fee5",
+      "bytes": 5672276,
       "bounds": {
         "min": [
           -11.36460018157959,
@@ -2553,7 +2553,8 @@
       "width": 1.309409737586975,
       "maxWidth": 1.5,
       "uniformFit": 1,
-      "font": "Segoe UI Semibold"
+      "font": "Segoe UI Semibold",
+      "premium": true
     },
     {
       "text": "CREATIVE",
@@ -2568,7 +2569,8 @@
       "width": 1.0924383401870728,
       "maxWidth": 1.5,
       "uniformFit": 1,
-      "font": "Segoe UI Semibold"
+      "font": "Segoe UI Semibold",
+      "premium": true
     },
     {
       "text": "HUMAN",
@@ -2583,7 +2585,8 @@
       "width": 0.8950417339801788,
       "maxWidth": 1.5,
       "uniformFit": 1,
-      "font": "Segoe UI Semibold"
+      "font": "Segoe UI Semibold",
+      "premium": true
     },
     {
       "text": "TECHNICAL",
@@ -2598,7 +2601,8 @@
       "width": 1.309409737586975,
       "maxWidth": 1.5,
       "uniformFit": 1,
-      "font": "Segoe UI Semibold"
+      "font": "Segoe UI Semibold",
+      "premium": true
     },
     {
       "text": "CREATIVE",
@@ -2613,7 +2617,8 @@
       "width": 1.0924383401870728,
       "maxWidth": 1.5,
       "uniformFit": 1,
-      "font": "Segoe UI Semibold"
+      "font": "Segoe UI Semibold",
+      "premium": true
     },
     {
       "text": "HUMAN",
@@ -2628,7 +2633,8 @@
       "width": 0.8950417339801788,
       "maxWidth": 1.5,
       "uniformFit": 1,
-      "font": "Segoe UI Semibold"
+      "font": "Segoe UI Semibold",
+      "premium": true
     },
     {
       "text": "PEOPLE  TECHNOLOGY  EXTRAORDINARY EVENTS",
@@ -2643,7 +2649,8 @@
       "width": 6.538381814956665,
       "maxWidth": 9.8,
       "uniformFit": 1,
-      "font": "Segoe UI Semibold"
+      "font": "Segoe UI Semibold",
+      "premium": true
     },
     {
       "text": "BIGGER",
@@ -2658,7 +2665,8 @@
       "width": 0.7413418013602495,
       "maxWidth": 1.4720000000000002,
       "uniformFit": 1,
-      "font": "Segoe UI Semibold"
+      "font": "Segoe UI Semibold",
+      "premium": true
     },
     {
       "text": "BRIGHTER",
@@ -2673,7 +2681,8 @@
       "width": 1.0106286127120256,
       "maxWidth": 1.4720000000000002,
       "uniformFit": 1,
-      "font": "Segoe UI Semibold"
+      "font": "Segoe UI Semibold",
+      "premium": true
     },
     {
       "text": "BOLDER",
@@ -2688,7 +2697,8 @@
       "width": 0.8005124647170305,
       "maxWidth": 1.4720000000000002,
       "uniformFit": 1,
-      "font": "Segoe UI Semibold"
+      "font": "Segoe UI Semibold",
+      "premium": true
     },
     {
       "text": "TOGETHER",
@@ -2703,7 +2713,8 @@
       "width": 1.0912683659698814,
       "maxWidth": 1.4720000000000002,
       "uniformFit": 1,
-      "font": "Segoe UI Semibold"
+      "font": "Segoe UI Semibold",
+      "premium": true
     },
     {
       "text": "\u2014",
@@ -2718,7 +2729,8 @@
       "width": 0.13332578539848328,
       "maxWidth": 0.8,
       "uniformFit": 1,
-      "font": "Segoe UI Semibold"
+      "font": "Segoe UI Semibold",
+      "premium": true
     },
     {
       "text": "FROM",
@@ -2733,7 +2745,8 @@
       "width": 0.578562231734395,
       "maxWidth": 1.4720000000000002,
       "uniformFit": 1,
-      "font": "Segoe UI Semibold"
+      "font": "Segoe UI Semibold",
+      "premium": true
     },
     {
       "text": "VISION",
@@ -2748,7 +2761,8 @@
       "width": 0.7090859203599393,
       "maxWidth": 1.4720000000000002,
       "uniformFit": 1,
-      "font": "Segoe UI Semibold"
+      "font": "Segoe UI Semibold",
+      "premium": true
     },
     {
       "text": "TO LIVE",
@@ -2763,7 +2777,8 @@
       "width": 0.771205967059359,
       "maxWidth": 1.4720000000000002,
       "uniformFit": 1,
-      "font": "Segoe UI Semibold"
+      "font": "Segoe UI Semibold",
+      "premium": true
     },
     {
       "text": "\u2014",
@@ -2778,7 +2793,8 @@
       "width": 0.13332578539848328,
       "maxWidth": 0.8,
       "uniformFit": 1,
-      "font": "Segoe UI Semibold"
+      "font": "Segoe UI Semibold",
+      "premium": true
     },
     {
       "text": "AV ENGINEERING",
@@ -2793,7 +2809,8 @@
       "width": 4.157628097105771,
       "maxWidth": 6.246850930436468,
       "uniformFit": 1,
-      "font": "Segoe UI Semibold"
+      "font": "Segoe UI Semibold",
+      "premium": true
     },
     {
       "text": "DESIGN | INTEGRATE | DELIVER",
@@ -2808,7 +2825,8 @@
       "width": 2.59295267611742,
       "maxWidth": 6.246850930436468,
       "uniformFit": 1,
-      "font": "Segoe UI Semibold"
+      "font": "Segoe UI Semibold",
+      "premium": true
     },
     {
       "text": "SHOW CONTROL",
@@ -2823,7 +2841,8 @@
       "width": 4.05420333519578,
       "maxWidth": 5.900000226497646,
       "uniformFit": 1,
-      "font": "Segoe UI Semibold"
+      "font": "Segoe UI Semibold",
+      "premium": true
     },
     {
       "text": "CUES | TIMELINES | AUTOMATION",
@@ -2838,7 +2857,8 @@
       "width": 2.8341776789166033,
       "maxWidth": 5.900000226497646,
       "uniformFit": 1,
-      "font": "Segoe UI Semibold"
+      "font": "Segoe UI Semibold",
+      "premium": true
     },
     {
       "text": "LIVE PRODUCTION",
@@ -2853,7 +2873,8 @@
       "width": 4.388423051685095,
       "maxWidth": 6.246850930436468,
       "uniformFit": 1,
-      "font": "Segoe UI Semibold"
+      "font": "Segoe UI Semibold",
+      "premium": true
     },
     {
       "text": "CAPTURE | SWITCH | STREAM | DELIVER",
@@ -2868,7 +2889,8 @@
       "width": 3.3188628614880145,
       "maxWidth": 6.246850930436468,
       "uniformFit": 1,
-      "font": "Segoe UI Semibold"
+      "font": "Segoe UI Semibold",
+      "premium": true
     },
     {
       "text": "EVENT TECHNOLOGY",
@@ -2883,7 +2905,8 @@
       "width": 1.8579792976379395,
       "maxWidth": 3.25,
       "uniformFit": 1,
-      "font": "Segoe UI Semibold"
+      "font": "Segoe UI Semibold",
+      "premium": true
     },
     {
       "text": "FOR A BRIGHTER TOMORROW",
@@ -2898,7 +2921,8 @@
       "width": 2.4604049921035767,
       "maxWidth": 3.65,
       "uniformFit": 1,
-      "font": "Segoe UI Semibold"
+      "font": "Segoe UI Semibold",
+      "premium": true
     }
   ],
   "roles": [
@@ -2954,7 +2978,7 @@
       "role": "side-left",
       "bounds": {
         "min": [
-          -11.99679946899414,
+          -12.011199951171875,
           0.11999988555908203,
           -7.800000190734863
         ],
@@ -2975,7 +2999,7 @@
           -7.800000190734863
         ],
         "max": [
-          11.99679946899414,
+          12.011199951171875,
           5.599999904632568,
           5.299999713897705
         ]
@@ -2993,7 +3017,7 @@
         "max": [
           5.599999904632568,
           7.5,
-          6.399999618530273
+          6.443199634552002
         ]
       },
       "overhead": true
@@ -3041,7 +3065,7 @@
         "max": [
           -9.449999809265137,
           7.5,
-          6.928999900817871
+          6.934114456176758
         ]
       },
       "overhead": false
@@ -3057,7 +3081,7 @@
         "max": [
           11.995000839233398,
           7.5,
-          6.928999900817871
+          6.934114456176758
         ]
       },
       "overhead": false
@@ -3703,6 +3727,341 @@
           4.3852972984313965
         ]
       }
+    }
+  ],
+  "signage": [
+    {
+      "body": "TECHNICAL",
+      "kind": "name",
+      "position": [
+        -11.995,
+        4.85,
+        4.45
+      ]
+    },
+    {
+      "body": "CREATIVE",
+      "kind": "name",
+      "position": [
+        -11.995,
+        4.37,
+        4.45
+      ]
+    },
+    {
+      "body": "HUMAN",
+      "kind": "name",
+      "position": [
+        -11.995,
+        3.89,
+        4.45
+      ]
+    },
+    {
+      "body": "TECHNICAL",
+      "kind": "name",
+      "position": [
+        11.995,
+        4.85,
+        4.45
+      ]
+    },
+    {
+      "body": "CREATIVE",
+      "kind": "name",
+      "position": [
+        11.995,
+        4.37,
+        4.45
+      ]
+    },
+    {
+      "body": "HUMAN",
+      "kind": "name",
+      "position": [
+        11.995,
+        3.89,
+        4.45
+      ]
+    },
+    {
+      "body": "livegridAV",
+      "kind": "wordmark",
+      "position": [
+        -1.5173,
+        6.2851,
+        6.3782
+      ]
+    },
+    {
+      "body": "signal grid logo",
+      "kind": "emblem",
+      "position": [
+        -3.022,
+        6.2153,
+        6.3543
+      ]
+    },
+    {
+      "body": "aqua halo",
+      "kind": "halo",
+      "position": [
+        -3.2922,
+        6.0149,
+        6.334
+      ]
+    },
+    {
+      "body": "PEOPLE  TECHNOLOGY  EXTRAORDINARY EVENTS",
+      "kind": "name",
+      "position": [
+        0.0,
+        5.87,
+        6.375
+      ]
+    },
+    {
+      "body": "livegridAV",
+      "kind": "wordmark",
+      "position": [
+        -10.9867,
+        6.1884,
+        6.9138
+      ]
+    },
+    {
+      "body": "signal grid logo",
+      "kind": "emblem",
+      "position": [
+        -10.4849,
+        6.6002,
+        6.909
+      ]
+    },
+    {
+      "body": "BIGGER",
+      "kind": "name",
+      "position": [
+        -10.989,
+        5.72,
+        6.896
+      ]
+    },
+    {
+      "body": "BRIGHTER",
+      "kind": "name",
+      "position": [
+        -10.989,
+        5.26,
+        6.896
+      ]
+    },
+    {
+      "body": "BOLDER",
+      "kind": "name",
+      "position": [
+        -10.989,
+        4.8,
+        6.896
+      ]
+    },
+    {
+      "body": "TOGETHER",
+      "kind": "name",
+      "position": [
+        -10.989,
+        4.34,
+        6.896
+      ]
+    },
+    {
+      "body": "\u2014",
+      "kind": "name",
+      "position": [
+        -10.877,
+        3.81,
+        6.896
+      ]
+    },
+    {
+      "body": "livegridAV",
+      "kind": "wordmark",
+      "position": [
+        9.5833,
+        6.1884,
+        6.9138
+      ]
+    },
+    {
+      "body": "signal grid logo",
+      "kind": "emblem",
+      "position": [
+        10.0851,
+        6.6002,
+        6.909
+      ]
+    },
+    {
+      "body": "FROM",
+      "kind": "name",
+      "position": [
+        9.581,
+        5.72,
+        6.896
+      ]
+    },
+    {
+      "body": "VISION",
+      "kind": "name",
+      "position": [
+        9.581,
+        5.26,
+        6.896
+      ]
+    },
+    {
+      "body": "TO LIVE",
+      "kind": "name",
+      "position": [
+        9.581,
+        4.8,
+        6.896
+      ]
+    },
+    {
+      "body": "\u2014",
+      "kind": "name",
+      "position": [
+        9.693,
+        4.27,
+        6.896
+      ]
+    },
+    {
+      "body": "AV ENGINEERING",
+      "kind": "name",
+      "position": [
+        -9.5343,
+        4.8,
+        -4.3521
+      ]
+    },
+    {
+      "body": "DESIGN | INTEGRATE | DELIVER",
+      "kind": "name",
+      "position": [
+        -9.5332,
+        4.59,
+        -4.3472
+      ]
+    },
+    {
+      "body": "SHOW CONTROL",
+      "kind": "name",
+      "position": [
+        -2.95,
+        4.8,
+        -5.698
+      ]
+    },
+    {
+      "body": "CUES | TIMELINES | AUTOMATION",
+      "kind": "name",
+      "position": [
+        -2.95,
+        4.59,
+        -5.693
+      ]
+    },
+    {
+      "body": "LIVE PRODUCTION",
+      "kind": "name",
+      "position": [
+        3.4234,
+        4.8,
+        -5.6483
+      ]
+    },
+    {
+      "body": "CAPTURE | SWITCH | STREAM | DELIVER",
+      "kind": "name",
+      "position": [
+        3.4224,
+        4.59,
+        -5.6435
+      ]
+    },
+    {
+      "body": "livegridAV",
+      "kind": "wordmark",
+      "position": [
+        -0.3185,
+        0.6776,
+        6.2042
+      ]
+    },
+    {
+      "body": "signal grid logo",
+      "kind": "emblem",
+      "position": [
+        -0.9193,
+        0.6142,
+        6.206
+      ]
+    },
+    {
+      "body": "EVENT TECHNOLOGY",
+      "kind": "name",
+      "position": [
+        0.0,
+        0.465,
+        6.191
+      ]
+    },
+    {
+      "body": "FOR A BRIGHTER TOMORROW",
+      "kind": "name",
+      "position": [
+        0.0,
+        0.282,
+        6.191
+      ]
+    },
+    {
+      "body": "livegridAV",
+      "kind": "wordmark",
+      "position": [
+        -8.1965,
+        0.2918,
+        6.3732
+      ]
+    },
+    {
+      "body": "signal grid logo",
+      "kind": "emblem",
+      "position": [
+        -8.4794,
+        0.2601,
+        6.375
+      ]
+    },
+    {
+      "body": "livegridAV",
+      "kind": "wordmark",
+      "position": [
+        7.3435,
+        0.2918,
+        6.3732
+      ]
+    },
+    {
+      "body": "signal grid logo",
+      "kind": "emblem",
+      "position": [
+        7.0606,
+        0.2601,
+        6.375
+      ]
     }
   ],
   "provenance": {

@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { isPremiumSignMaterial, stylePremiumSign } from "./premiumSignMaterials";
 
 const prepared=new WeakSet<THREE.Material>();
 /** Restrained black metal, champagne highlights and the reference's warm white edge. */
@@ -9,6 +10,7 @@ export function applyRental2026Materials(model:THREE.Object3D,referenceFinish=fa
       if(!(material instanceof THREE.MeshStandardMaterial)||prepared.has(material))continue;
       prepared.add(material);
       const name=material.name;
+      if(isPremiumSignMaterial(name)){stylePremiumSign(material);continue;}
       if(/Rocketbox/i.test(name)){material.envMapIntensity=.65;continue;}
       if(referenceFinish){
         // The new pavilion has its own finish tuning. Older reception and

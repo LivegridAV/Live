@@ -1,5 +1,6 @@
 import { DefaultLoadingManager } from "three";
 import type { PaintCtx } from "./painters";
+import { drawSignalGrid, drawWordmark } from "./brandMarks";
 import { prefetchedImage } from "../loading/prefetched";
 
 /** Isolated content for the October 18 rental pavilion's actual LED surfaces. */
@@ -73,35 +74,14 @@ function family() {
   return font ? `${font}, Arial, sans-serif` : 'Arial, "Segoe UI", sans-serif';
 }
 
-/** The same folded-ribbon emblem used by the physical facade, drawn as vectors. */
-function logo(c: CanvasRenderingContext2D, x: number, y: number, size: number) {
-  const polygons = [
-    [[0, 0], [0, 1], [.18, .88], [.18, .30]],
-    [[.18, .88], [.72, .49], [.72, .31], [.35, .52]],
-    [[0, 0], [.72, .31], [.72, .49], [.18, .25]],
-  ];
-  c.save();
-  c.translate(x, y + size);
-  c.scale(size, -size);
-  c.fillStyle = "#34f6dc";
-  for (const polygon of polygons) {
-    c.beginPath();
-    polygon.forEach(([px, py], i) => i ? c.lineTo(px, py) : c.moveTo(px, py));
-    c.closePath(); c.fill();
-  }
-  c.restore();
-}
-
 function brand(c: CanvasRenderingContext2D, y: number) {
   const fontSize = 76, emblemSize = 100, gap = 25;
   c.font = `600 ${fontSize}px ${family()}`;
   c.letterSpacing = "-2px";
-  const copy = "livegrid AV", width = c.measureText(copy).width;
-  const x = (W - width - emblemSize * .72 - gap) / 2;
-  logo(c, x, y, emblemSize);
-  c.fillStyle = "#f8fcff";
-  c.textAlign = "left"; c.textBaseline = "top";
-  c.fillText(copy, x + emblemSize * .72 + gap, y + 16);
+  const width = c.measureText("livegridAV").width;
+  const x = (W - width - emblemSize - gap) / 2;
+  drawSignalGrid(c, x, y, emblemSize);
+  drawWordmark(c, x + emblemSize + gap, y + emblemSize / 2, fontSize, { letterSpacing: "-2px" });
   c.letterSpacing = "0px";
 }
 

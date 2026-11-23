@@ -71,7 +71,27 @@ def group(name,before,p=(0,0,0),yaw=0):
     return root
 
 
-def text(body,p,size,yaw=0,mat=BRAND,tracking=1,centered=False,semibold=False):
+def sign_anchor(p,signs):
+    """An empty at a premium sign's anchor, in the frame the sign is built in.
+    It moves with the sign's placement groups, so the driver can log where the
+    sign finally stands (SIGN_LOG holds the local `p`). Never exported."""
+    anchor=bpy.data.objects.new("Technical premium sign anchor",None)
+    bpy.context.collection.objects.link(anchor)
+    anchor.location=xyz(p)
+    anchor["signage_anchor"]=len(signs.SIGN_LOG)-1
+    return anchor
+
+
+def premiumize_text(ob,body,p,accent=False,slogan=True):
+    """Deepen a placed text() mesh in place. Its local +Z still faces the
+    visitor: text_add's pi/2 X turn under a yaw-only pivot, nothing baked."""
+    signs=premium_signage()
+    signs.premiumize_lettering([ob],body,accent=accent,slogan=slogan,position=p)
+    sign_anchor((0,0,0),signs).parent=ob.parent
+    return ob
+
+
+def text(body,p,size,yaw=0,mat=BRAND,tracking=1,centered=False,semibold=False,*,premium=False,accent=False,slogan=True):
     global FONT
     before=set(bpy.context.scene.objects)
     previous_font=FONT
@@ -80,11 +100,13 @@ def text(body,p,size,yaw=0,mat=BRAND,tracking=1,centered=False,semibold=False):
     FONT=previous_font
     ob.data.materials[0]=mat
     group("Technical lettering placement",before,p,yaw)
+    if premium:premiumize_text(ob,body,p,accent,slogan)
     return ob
 
 
-def caption_text(body,p,size,yaw=0,max_width=None,tracking=1,centered=False):
-    """Architectural copy uses semibold outlines with uniform width fitting."""
+def caption_text(body,p,size,yaw=0,max_width=None,tracking=1,centered=False,*,premium=False,accent=False,slogan=True):
+    """Architectural copy uses semibold outlines with uniform width fitting.
+    Premium copy is deepened after the fit, so its depth follows the fitted ink."""
     ob=text(body,p,size,yaw,tracking=tracking,centered=centered,semibold=True)
     natural_width=max(v.co.x for v in ob.data.vertices)-min(v.co.x for v in ob.data.vertices)
     fit=min(1,max_width/natural_width) if max_width else 1
@@ -93,9 +115,13 @@ def caption_text(body,p,size,yaw=0,max_width=None,tracking=1,centered=False):
     width=natural_width*fit
     height=max(v.co.y for v in ob.data.vertices)-min(v.co.y for v in ob.data.vertices)
     assert not max_width or width<=max_width+1e-6
-    TYPOGRAPHY.append({"text":body,"position":list(p),"requestedFontSize":size,
+    entry={"text":body,"position":list(p),"requestedFontSize":size,
         "fontSize":size*fit,"capHeight":height,"width":width,"maxWidth":max_width,
-        "uniformFit":fit,"font":"Segoe UI Semibold"})
+        "uniformFit":fit,"font":"Segoe UI Semibold"}
+    if premium:
+        premiumize_text(ob,body,p,accent,slogan)
+        entry["premium"]=True
+    TYPOGRAPHY.append(entry)
     return ob
 
 
@@ -175,7 +201,38 @@ def aperture(id,p,w,h,hint,yaw=0,frame=.035):
         "width":w,"height":h,"w":w,"h":h,"rotation":[0,yaw,0],"mediaHint":hint})
 
 
-def emblem(p,size=1,yaw=0):
+DIAMOND_BACK=-.035  # the faceted emblem's back plane, in its own frame
+
+
+def diamond_height(size):
+    """Vertical extent of emblem(p,size): the span of its outer facet corners."""
+    ys=[]
+    for i in range(4):
+        a=math.pi/2-i*math.pi/2+.035
+        ys+=[math.sin(a),math.sin(a-math.pi/2+.095)]
+    return size*(max(ys)-min(ys))
+
+
+def emblem(p,size=1,yaw=0,*,premium=False):
+    if not premium:return diamond_emblem(p,size,yaw)
+    # The grid logo takes the diamond's place: premium_emblem makes it .80 x
+    # the diamond's height, centred on the diamond's centre. Its lit faces
+    # stand on the diamond's front face plane: the diamond's back half sits
+    # inside the panel behind it (blades, plaques, counter), where thinner
+    # cells on that back plane would be buried.
+    before=set(bpy.context.scene.objects)
+    signs=premium_signage()
+    height=diamond_height(size)
+    cells=signs.premium_emblem((-.40*height,-.50*height,0),height)
+    depth=max(-v.co.y for ob in cells for v in ob.data.vertices)
+    for ob in cells:
+        for v in ob.data.vertices:v.co.y-=-DIAMOND_BACK-depth
+    sign_anchor((-.40*height,-.50*height,-DIAMOND_BACK-depth),signs)
+    return group("Technical grid logo",before,p,yaw)
+
+
+def diamond_emblem(p,size=1,yaw=0):
+    """Today's faceted diamond emblem (premium signs only measure it)."""
     before=set(bpy.context.scene.objects)
     # Four thick angular ribbons around a diamond-shaped negative space.
     for i,mat in enumerate((BLUE_LIGHT,BLUE,BLUE_DARK,BLUE_LIGHT)):
@@ -185,15 +242,16 @@ def emblem(p,size=1,yaw=0):
             (math.cos(b)*size,math.sin(b)*size),
             (math.cos(b)*size*.46,math.sin(b)*size*.46),
             (math.cos(a)*size*.46,math.sin(a)*size*.46)]
-        verts=[(x,y,z) for z in (-.035,.035) for x,y in poly]
+        verts=[(x,y,z) for z in (DIAMOND_BACK,-DIAMOND_BACK) for x,y in poly]
         faces=[(3,2,1,0),(4,5,6,7),(0,1,5,4),(1,2,6,5),(2,3,7,6),(3,0,4,7)]
         ob=patch_mesh("Technical angular diamond emblem facet",verts,faces,mat)
         for f in ob.data.polygons:f.use_smooth=False
     return group("Technical geometric brand emblem",before,p,yaw)
 
 
-def wordmark(p,size,yaw=0,with_emblem=True,word_scale=1,icon_scale=1,gap=0):
-    before=set(bpy.context.scene.objects)
+def flat_wordmark_runs(size,with_emblem,word_scale,gap):
+    """Today's "Livegrid" + "AV" runs in the wordmark frame. Returns the
+    height the emblem is centred on."""
     start=(size*1.45 if with_emblem else 0)+gap
     ob=text("Livegrid",(start,0,.015),size*word_scale)
     # Font side bearings are not the visible glyph edges. Normalize both
@@ -205,10 +263,67 @@ def wordmark(p,size,yaw=0,with_emblem=True,word_scale=1,icon_scale=1,gap=0):
     av=text("AV",(start+width+size*.025,0,.015),size*word_scale,mat=BLUE_LIGHT)
     left=min(v.co.x for v in av.data.vertices)
     for vertex in av.data.vertices:vertex.co.x-=left
-    if with_emblem:
-        cap_bottom=min(v.co.y for v in av.data.vertices)
-        emblem((size*.60,(cap_bottom+cap_top)/2,0),size*.54*icon_scale)
-    return group("Technical wordmark assembly",before,p,yaw)
+    cap_bottom=min(v.co.y for v in av.data.vertices)
+    return (cap_bottom+cap_top)/2
+
+
+def measure_flat_wordmark(size,with_emblem=True,word_scale=1,icon_scale=1,gap=0):
+    """Build today's flat lockup in its own frame, measure it and remove it.
+    Returns the "Livegrid"+"AV" ink box (x0, x1, y0, y1, back plane), the
+    height the diamond is centred on, and the whole lockup's bounds."""
+    before=set(bpy.context.scene.objects)
+    mid=flat_wordmark_runs(size,with_emblem,word_scale,gap)
+    words=[ob for ob in set(bpy.context.scene.objects)-before if ob.type=="MESH"]
+    if with_emblem:diamond_emblem((size*.60,mid,0),size*.54*icon_scale)
+    bpy.context.view_layer.update()
+    flat=set(bpy.context.scene.objects)-before
+    ink=[ob.matrix_world@v.co for ob in words for v in ob.data.vertices]
+    every=[ob.matrix_world@v.co for ob in flat if ob.type=="MESH" for v in ob.data.vertices]
+    box=(min(q.x for q in ink),max(q.x for q in ink),min(q.z for q in ink),max(q.z for q in ink),
+         min(-q.y for q in ink))
+    footprint={"min":[min(q.x for q in every),min(q.z for q in every),min(-q.y for q in every)],
+               "max":[max(q.x for q in every),max(q.z for q in every),max(-q.y for q in every)]}
+    for ob in flat:
+        mesh=ob.data if ob.type=="MESH" else None
+        bpy.data.objects.remove(ob,do_unlink=True)
+        if mesh is not None and mesh.users==0:bpy.data.meshes.remove(mesh)
+    return box,mid,footprint
+
+
+def premium_wordmark_lockup(size,with_emblem,word_scale,icon_scale,gap,scale=1):
+    """livegridAV, and the grid logo, where today's lockup stands, with the
+    whole frame scaled by `scale` (built at that size, so depth and bevel
+    follow the final letter height). The wordmark keeps today's ink box:
+    left edge, old back plane, never wider or taller, centred on the old ink
+    height like premium_lockup. The logo takes the diamond's place. Returns
+    today's lockup bounds (same scale) for callers to fit and centre on."""
+    signs=premium_signage()
+    (x0,x1,y0,y1,back),mid,footprint=measure_flat_wordmark(size,with_emblem,word_scale,icon_scale,gap)
+    x0,x1,y0,y1,back,mid=(scale*v for v in (x0,x1,y0,y1,back,mid))
+    height=min(y1-y0,(x1-x0)/_wordmark_aspect(signs))
+    q=(x0,(y0+y1-height)/2,back)
+    signs.premium_wordmark(q,height,width=x1-x0)
+    sign_anchor(q,signs)
+    if with_emblem:emblem((scale*size*.60,mid,0),scale*size*.54*icon_scale,premium=True)
+    return {key:[scale*v for v in footprint[key]] for key in footprint}
+
+
+def wordmark(p,size,yaw=0,with_emblem=True,word_scale=1,icon_scale=1,gap=0,*,premium=False,scale=1):
+    """Emblem + wordmark lockup, uniformly scaled by `scale` about p. With
+    premium=True: the grid logo and livegridAV in the old pieces' places,
+    and the root carries today's lockup bounds as "flat_bounds" (wordmark
+    frame, scaled, before p and yaw)."""
+    before=set(bpy.context.scene.objects)
+    if premium:
+        footprint=premium_wordmark_lockup(size,with_emblem,word_scale,icon_scale,gap,scale)
+        root=group("Technical wordmark assembly",before,p,yaw)
+        root["flat_bounds"]=footprint
+        return root
+    mid=flat_wordmark_runs(size,with_emblem,word_scale,gap)
+    if with_emblem:emblem((size*.60,mid,0),size*.54*icon_scale)
+    root=group("Technical wordmark assembly",before,p,yaw)
+    root.scale=(scale,scale,scale)
+    return root
 
 
 def keyboard(x,y,z,w=.74):

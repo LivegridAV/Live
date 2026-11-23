@@ -9,6 +9,7 @@ import { GRAND } from "../data/grand";
 import layout from "../../../public/models/expo/grand-reception-layout.json";
 import brandingLayout from "../../../public/models/expo/grand-reception-brand-wall-v2-layout.json";
 import { useVenue } from "../systems/store";
+import { drawWordmark } from "../media/brandMarks";
 
 type Brand = "cylinder" | "ring" | "ring-field" | "counter" | "panorama";
 
@@ -27,8 +28,7 @@ function identity(id: Brand){
   c.fillStyle=id==="panorama"?"#182738":"#f5f5fa";
   c.textBaseline="top";
   if(id==="cylinder"){
-    c.font="400 144px Arial, sans-serif";
-    c.fillText("LivegridAV",72,235,880);
+    drawWordmark(c,72,235+72,144,{ink:c.fillStyle as string,maxWidth:880});
     c.font="400 48px Arial, sans-serif";c.letterSpacing="11px";
     ["IDEAS","IN HIGHER","DEFINITION"].forEach((s,i)=>c.fillText(s,92,530+i*82));
   }else if(id==="ring"){
@@ -37,10 +37,7 @@ function identity(id: Brand){
   }else if(id==="counter"){
     // One full-fascia UV layout keeps the wordmark proportionate to the 7.44m
     // arc. The artwork supplies the calm navy field behind this live type.
-    c.font="400 96px Arial, sans-serif";c.textAlign="center";
-    const word=c.measureText("LivegridAV");
-    const wordY=canvas.height*.376677-(word.actualBoundingBoxDescent-word.actualBoundingBoxAscent)/2;
-    c.fillText("LivegridAV",canvas.width*.438922,wordY);
+    drawWordmark(c,canvas.width*.438922,canvas.height*.376677,96,{align:"center",ink:c.fillStyle as string});
     c.textAlign="left";c.font="400 30px Arial, sans-serif";c.letterSpacing="8px";
     const sloganY=canvas.height*.216146+c.measureText("GOOD").actualBoundingBoxAscent;
     ["GOOD","EVENTS","BRIGHTER","PEOPLE"].forEach((s,i)=>c.fillText(s,canvas.width*.564681,sloganY+i*48));

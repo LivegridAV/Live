@@ -5,6 +5,8 @@ import path from "node:path";
 import sharp from "sharp";
 import * as THREE from "three";
 import { warmScene } from "../src/venue/three/warmScene.ts";
+import { execFileSync } from "node:child_process";
+import { wordmarkProblems, checkSignedAsset, layoutProblems, SIGNED_ASSETS } from "./brand-check.mjs";
 
 const read = file => readFileSync(file, "utf8");
 const files = dir => readdirSync(dir, { withFileTypes: true }).flatMap(e =>
@@ -492,4 +494,294 @@ test("the build's Node version is pinned exactly and meets the engines floor", (
   const [major, minor] = pin.split(".").map(Number);
   assert.ok(major > 22 || (major === 22 && minor >= 18), `.nvmrc ${pin} is older than 22.18`);
   assert.match(read("scripts/optimize-export.mjs"), /needs Node >= 22\.18[^\n]*process\.version/, "the guard names the requirement and the running version");
+});
+
+test("brand check flags every wrong spelling and passes the real wordmark", () => {
+  assert.deepEqual(wordmarkProblems("livegridAV"), []);
+  for (const wrong of ["LivegridAV", "livegrid AV", "LIVEGRID AV", "livegrid-AV", "livegrid.AV", "livegrid_AV", "livegrid  AV",
+    "livegridAVs", "Livegrid", "LIVEGRID", "LIVEGRID teal", "livegridav"]) {
+    assert.notDeepEqual(wordmarkProblems(wrong), [], wrong);
+  }
+  for (const fine of ["PEOPLE TECHNOLOGY", "livegrid teal reveal", "LED Rental 2026 | livegrid teal perimeter reveal", "livegridAV.", "livegridAV LED"]) {
+    assert.deepEqual(wordmarkProblems(fine), [], fine);
+  }
+});
+
+test("the layout brand check reads the built 3D lettering, not only the signage log", () => {
+  const entry = { layout: "mem.json", halo: 0 };
+  const signage = [{ kind: "wordmark", body: "livegridAV" }, { kind: "emblem", body: "" }];
+  const clean = { signage, typography: [{ body: "livegridAV", premium: true }, { text: "TECHNICAL", premium: true }] };
+  assert.deepEqual(layoutProblems(clean, entry), []);
+  assert.deepEqual(layoutProblems({ signage }, entry), [], "layouts without typography still pass");
+  const misspelt = layoutProblems({ signage, typography: [{ body: "LivegridAV", premium: true }] }, entry);
+  assert.ok(misspelt.some(p => /wrong brand spelling/.test(p)), misspelt.join(", "));
+  const misspeltText = layoutProblems({ signage, typography: [{ text: "livegrid AV", premium: true }] }, entry);
+  assert.ok(misspeltText.some(p => /wrong brand spelling/.test(p)), "text field is read too");
+  const flat = layoutProblems({ signage, typography: [{ body: "livegridAV", premium: true }, { body: "SPACES", premium: false }] }, entry);
+  assert.ok(flat.some(p => /not premium/.test(p) && /SPACES/.test(p)), flat.join(", "));
+});
+
+test("the projection rebuild input is tracked in git", () => {
+  const file = "reports/projection-gallery-edit/blender-saved-transforms.json";
+  // /reports/ is git-ignored; the file was added with `git add -f` so the live projection GLBs can be rebuilt anywhere.
+  const tracked = execFileSync("git", ["ls-files", file], { encoding: "utf8" }).trim();
+  assert.equal(tracked, file, `${file} must stay tracked (git add -f)`);
+  assert.ok(JSON.parse(read(file)).length > 0);
+  assert.match(read("scripts/sync-blender-gallery-positions.mjs"), /blender-saved-transforms\.json/);
+});
+
+test("the aqua halo plane casts no shadow; lit sign faces still do, and a repeat pass changes nothing", async () => {
+  const { register } = await import("node:module");
+  register(new URL("./ts-extensionless-hook.mjs", import.meta.url));
+  const { prepareArchitecture } = await import("../src/venue/three/architecturalFinish.ts");
+  const mesh = name => new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshStandardMaterial({ name }));
+  const halo = mesh("Premium Sign | aqua halo"), face = mesh("Premium Sign | ivory lit face");
+  const model = new THREE.Group();
+  model.add(halo, face);
+  prepareArchitecture(model); prepareArchitecture(model);
+  assert.equal(halo.castShadow, false);
+  assert.equal(face.castShadow, true);
+  assert.equal(halo.receiveShadow, true);
+});
+
+test("every signed asset passes the brand check", () => {
+  for (const entry of SIGNED_ASSETS) assert.deepEqual(checkSignedAsset(entry), [], entry.layout);
+});
+
+test("all six signed areas are in the brand check", () => {
+  assert.equal(SIGNED_ASSETS.length, 6);
+  assert.equal(SIGNED_ASSETS.reduce((sum, entry) => sum + (entry.halo ?? 0), 0), 4);
+});
+
+const SIGN_MATERIALS = [
+  "Premium Sign | ivory lit face", "Premium Sign | aqua lit face",
+  "Premium Sign | brushed champagne return", "Premium Sign | polished champagne edge",
+  "Premium Sign | frosted aqua cell", "Premium Sign | dim signal cell", "Premium Sign | aqua halo",
+];
+
+test("premium sign materials are styled the same in every stall", async () => {
+  const { register } = await import("node:module");
+  register(new URL("./ts-extensionless-hook.mjs", import.meta.url));
+  const { isPremiumSignMaterial, stylePremiumSign } = await import("../src/venue/three/premiumSignMaterials.ts");
+  const authored = {
+    "brushed champagne return": [.9, .30], "polished champagne edge": [1.0, .10],
+  };
+  const styled = Object.fromEntries(SIGN_MATERIALS.map(name => {
+    assert.ok(isPremiumSignMaterial(name), name);
+    const key = name.replace("Premium Sign | ", "");
+    const [metalness, roughness] = authored[key] ?? [0, .5];
+    const material = new THREE.MeshStandardMaterial({ name, metalness, roughness, envMapIntensity: 1 });
+    stylePremiumSign(material);
+    return [key, material];
+  }));
+  assert.equal(isPremiumSignMaterial("Rental | champagne trim"), false);
+  assert.equal(isPremiumSignMaterial("Premium Sign"), false);
+  // Champagne keeps the GLB's own values: no rental rule restyles it.
+  for (const [key, [metalness, roughness]] of Object.entries(authored)) {
+    assert.equal(styled[key].metalness, metalness, key);
+    assert.equal(styled[key].roughness, roughness, key);
+    assert.equal(styled[key].envMapIntensity, 1, key);
+  }
+  // Exactly what prepareArchitecture gave them on the spike path: the plain grain, no installation frame.
+  for (const key of Object.keys(styled)) {
+    assert.equal(styled[key].customProgramCacheKey(), "architectural-finish-v4-false-false-false-false-false", key);
+    assert.equal(typeof styled[key].onBeforeCompile, "function", key);
+  }
+  const shader = { uniforms: {}, vertexShader: "#include <common> #include <begin_vertex>", fragmentShader: "#include <common> #include <roughnessmap_fragment> #include <color_fragment>" };
+  styled["polished champagne edge"].onBeforeCompile(shader);
+  assert.match(shader.vertexShader, /vFinishPosition = \(modelMatrix \* vec4\(position,1\.0\)\)\.xyz/);
+  assert.doesNotMatch(shader.fragmentShader, /uFinishBaselineToWorldRotation/);
+  assert.equal(styled["aqua halo"].transparent, true);
+  assert.equal(styled["aqua halo"].depthWrite, false);
+  assert.equal(styled["dim signal cell"].depthWrite, true);
+  assert.equal(styled["dim signal cell"].transparent, false);
+  assert.equal(styled["frosted aqua cell"].depthWrite, true);
+  // Lit faces and cells keep the emissive the GLB gave them; a second stall's pass changes nothing.
+  const lit = new THREE.MeshStandardMaterial({ name: SIGN_MATERIALS[0], emissive: new THREE.Color("#123456"), emissiveIntensity: .6 });
+  stylePremiumSign(lit); stylePremiumSign(lit);
+  assert.equal(lit.emissive.getHexString(), "123456");
+  assert.equal(lit.emissiveIntensity, .6);
+});
+
+test("every stall material pass hands sign materials to stylePremiumSign", () => {
+  for (const file of ["rental2026Materials", "architecturalFinish", "projectionMaterials", "technicalMaterials"]) {
+    const source = read(`src/venue/three/${file}.ts`);
+    assert.match(source, /isPremiumSignMaterial\(/, file);
+    assert.match(source, /stylePremiumSign\(/, file);
+  }
+  assert.equal((read("src/venue/three/projectionMaterials.ts").match(/isPremiumSignMaterial\(/g) ?? []).length, 2, "both projection passes");
+});
+
+test("only the projection stall's pass darkens and roughens its aqua AV face, once", async () => {
+  const { register } = await import("node:module");
+  register(new URL("./ts-extensionless-hook.mjs", import.meta.url));
+  const { applyProjectionFinishV2Materials, applyProjectionBoothMaterials, PROJECTION_AQUA_FACE } = await import("../src/venue/three/projectionMaterials.ts");
+  const { applyRental2026Materials } = await import("../src/venue/three/rental2026Materials.ts");
+  const { prepareArchitecture } = await import("../src/venue/three/architecturalFinish.ts");
+  assert.deepEqual({ ...PROJECTION_AQUA_FACE }, { roughness: .9, colorScale: .25 });
+  const AQUA = "#1fa093";
+  const signModel = () => {
+    const materials = SIGN_MATERIALS.map(name => new THREE.MeshStandardMaterial({ name, color: AQUA, roughness: .38 }));
+    const model = new THREE.Group();
+    model.add(new THREE.Mesh(new THREE.BufferGeometry(), materials));
+    return { model, byName: Object.fromEntries(materials.map(m => [m.name.replace("Premium Sign | ", ""), m])) };
+  };
+  const expected = new THREE.Color(AQUA).multiplyScalar(.25);
+  const assertTuned = (material, label) => {
+    assert.equal(material.roughness, .9, label);
+    for (const c of ["r", "g", "b"]) assert.ok(Math.abs(material.color[c] - expected[c]) < 1e-9, `${label} ${c}`);
+  };
+  const untouched = new THREE.Color(AQUA);
+  // The projection stall's pass, run twice on the same materials: tuned exactly once.
+  const { model, byName } = signModel();
+  applyProjectionFinishV2Materials(model);
+  applyProjectionFinishV2Materials(model);
+  assertTuned(byName["aqua lit face"], "aqua lit face after two passes");
+  // A clone of the tuned material keeps the flag, so a later pass leaves it alone too.
+  const clone = byName["aqua lit face"].clone();
+  const cloneModel = new THREE.Group();
+  cloneModel.add(new THREE.Mesh(new THREE.BufferGeometry(), clone));
+  applyProjectionFinishV2Materials(cloneModel);
+  assertTuned(clone, "clone of the tuned material");
+  for (const [key, material] of Object.entries(byName)) {
+    if (key === "aqua lit face") continue;
+    assert.equal(material.roughness, .38, key);
+    assert.ok(material.color.equals(untouched), key);
+  }
+  // The other stalls' passes (and the older projection booth pass) leave it as authored.
+  for (const [label, pass] of [["rental", m => applyRental2026Materials(m, true)], ["architecture", m => prepareArchitecture(m)], ["projection booth", applyProjectionBoothMaterials]]) {
+    const other = signModel();
+    pass(other.model);
+    assert.equal(other.byName["aqua lit face"].roughness, .38, label);
+    assert.ok(other.byName["aqua lit face"].color.equals(untouched), label);
+  }
+  assert.doesNotMatch(read("src/venue/three/technicalMaterials.ts"), /PROJECTION_AQUA_FACE|projectionAquaFace/, "technical");
+});
+
+test("the canvas signal grid lights 18 cells in the brand pattern", async () => {
+  const { register } = await import("node:module");
+  register(new URL("./ts-extensionless-hook.mjs", import.meta.url));
+  const { signalGridCells } = await import("../src/venue/media/brandMarks.ts");
+  const cells = signalGridCells();
+  assert.equal(cells.length, 25);
+  assert.equal(cells.filter(c => c.lit).length, 18);
+  for (let row = 0; row < 5; row++) assert.equal(cells.find(c => c.col === 3 && c.row === row).lit, true);
+  for (let row = 0; row < 5; row++) assert.equal(cells.find(c => c.col === 0 && c.row === row).lit, row >= 3);
+});
+
+test("no screen or source file spells the brand wrong", () => {
+  // Drops // and /* */ comments but leaves anything inside a string literal alone.
+  const strip = src => {
+    let out = "", i = 0, quote = "";
+    while (i < src.length) {
+      const ch = src[i], next = src[i + 1];
+      if (quote) {
+        out += ch;
+        if (ch === "\\") { out += next ?? ""; i += 2; continue; }
+        if (ch === quote) quote = "";
+        i++;
+      } else if (ch === "/" && next === "/") {
+        while (i < src.length && src[i] !== "\n") i++;
+      } else if (ch === "/" && next === "*") {
+        const end = src.indexOf("*/", i + 2);
+        i = end < 0 ? src.length : end + 2;
+      } else {
+        if (ch === '"' || ch === "'" || ch === "`") quote = ch;
+        out += ch; i++;
+      }
+    }
+    return out;
+  };
+  const bad = [];
+  for (const file of files("src/venue").filter(f => /\.tsx?$/.test(f))) {
+    for (const m of strip(read(file)).matchAll(/(["'`])((?:\\.|(?!\1).)*)\1/g)) {
+      const problems = wordmarkProblems(m[2]);
+      if (problems.length) bad.push(`${file}: ${problems.join("; ")}`);
+    }
+  }
+  assert.deepEqual(bad, []);
+});
+
+test("drawWordmark shrinks to fit maxWidth", async () => {
+  const { register } = await import("node:module");
+  register(new URL("./ts-extensionless-hook.mjs", import.meta.url));
+  const { drawWordmark } = await import("../src/venue/media/brandMarks.ts");
+  const ctx = {
+    font: "", save() {}, restore() {}, fillText() {},
+    measureText(text) { return { width: text.length * parseFloat(/(\d+(?:\.\d+)?)px/.exec(this.font)[1]) * .6 }; },
+  };
+  assert.ok(drawWordmark(ctx, 0, 0, 200) > 880);
+  assert.ok(drawWordmark(ctx, 0, 0, 200, { maxWidth: 880 }) <= 880 + 1e-6);
+  assert.equal(drawWordmark(ctx, 0, 0, 20, { maxWidth: 880 }), 10 * 20 * .6);
+});
+
+test("the finale stage screen shows the wordmark and the invitation, all inside the screen (the logo is 3D glass above it)", async () => {
+  const { register } = await import("node:module");
+  register(new URL("./ts-extensionless-hook.mjs", import.meta.url));
+  const { PAINTERS, FINALE_CTA_TITLE } = await import("../src/venue/media/painters.ts");
+  const { wordmarkProblems } = await import("./brand-check.mjs");
+  const W = 1280, H = 300, rects = [], texts = [];
+  const gradient = { addColorStop() {} };
+  const ctx = {
+    font: "", fillStyle: "", globalAlpha: 1, letterSpacing: "0px", textAlign: "left", textBaseline: "alphabetic",
+    save() {}, restore() {}, createLinearGradient: () => gradient, createRadialGradient: () => gradient,
+    fillRect(x, y, w, h) { rects.push({ x, y, w, h, fill: this.fillStyle }); },
+    fillText(text, x, y) { texts.push({ text, x, y, fill: this.fillStyle }); },
+    measureText(text) { return { width: text.length * parseFloat(/(\d+(?:\.\d+)?)px/.exec(this.font)[1]) * .6 }; },
+  };
+  PAINTERS.signFinaleCta({ ctx, w: W, h: H, t: 0, accent: "#123456", variant: 0 });
+  assert.equal(rects.filter(r => r.fill === "#1FA093" || r.fill === "#0e1a18").length, 0, "no flat 2D grid: the logo is the 3D glass one in the wall");
+  const words = texts.map(t => t.text);
+  assert.equal(words.filter(t => t === "livegrid").length, 2, "wordmark in the lockup and in the call to action");
+  assert.equal(words.filter(t => t === "AV").length, 2);
+  assert.ok(texts.filter(t => t.text === "AV").every(t => t.fill === "#1FA093"), "AV is aqua");
+  assert.ok(words.includes(FINALE_CTA_TITLE));
+  assert.ok(words.includes("Talk to "));
+  for (const text of words) assert.deepEqual(wordmarkProblems(text), [], text);
+  for (const r of rects) assert.ok(r.x >= 0 && r.y >= 0 && r.x + r.w <= W + 1e-6 && r.y + r.h <= H + 1e-6, "drawn inside the screen");
+});
+
+test("the finale LED wall is one 3D picture across the array, with the glass logo lit 2-4-3-5-4", () => {
+  const programs = readFileSync("src/venue/media/programs.ts", "utf8");
+  const finale = programs.slice(programs.indexOf("const finaleBrand"), programs.indexOf("const pillarWrap"));
+  const heights = [...finale.matchAll(/return (\d)\.0;/g)].map(m => Number(m[1]));
+  assert.deepEqual(heights.slice(0, 5), [2, 4, 3, 5, 4], "the glass logo's lit cells follow the logo's columns");
+  assert.match(finale, /PITCH = LOGO_S \* 57\.0 \/ 276\.0/, "glass cells keep the logo's 57/276 pitch");
+  assert.match(finale, /refract\(/, "the glass refracts the space behind it");
+  assert.doesNotMatch(finale, /atan\(/, "no radial ray burst");
+  const arena = readFileSync("src/venue/zones/Arena.tsx", "utf8");
+  assert.match(arena, /media="finale"[^>]*uv=\{slice\(p\)\}/, "each stage panel samples its own slice of the wall-wide render");
+});
+
+test("the zone card becomes a bottom caption at the finale and contact stops", () => {
+  const hud = readFileSync("src/venue/ui/Hud.tsx", "utf8");
+  assert.match(hud, /finaleFrame\s*=\s*zone\.id\s*===\s*"finale"\s*\|\|\s*zone\.id\s*===\s*"contact"/);
+  assert.match(hud, /data-reception=\{[^}]*finaleFrame/);
+});
+
+test("lite models keep sign faces and drop the deep sign sides", async () => {
+  const { Document } = await import("@gltf-transform/core");
+  const { dropSignReturns, LITE_DROPPED_MATERIALS } = await import("./derived-models.mjs");
+  assert.deepEqual(LITE_DROPPED_MATERIALS, ["Premium Sign | brushed champagne return", "Premium Sign | polished champagne edge"]);
+  const document = new Document();
+  const buffer = document.createBuffer();
+  const material = name => document.createMaterial(name);
+  const face = material("Premium Sign | ivory lit face"), side = material("Premium Sign | brushed champagne return"), edge = material("Premium Sign | polished champagne edge");
+  const primitive = mat => document.createPrimitive().setMaterial(mat).setAttribute("POSITION",
+    document.createAccessor().setType("VEC3").setArray(new Float32Array(9)).setBuffer(buffer));
+  const first = document.createMesh("letters").addPrimitive(primitive(face)).addPrimitive(primitive(side)).addPrimitive(primitive(edge));
+  const second = document.createMesh("sides").addPrimitive(primitive(side));
+  const other = document.createMesh("other").addPrimitive(primitive(material("Steel")));
+  const firstNode = document.createNode("letters-node").setMesh(first);
+  const secondNode = document.createNode("sides-node").setMesh(second);
+  const otherNode = document.createNode("other-node").setMesh(other);
+  document.createScene().addChild(firstNode).addChild(secondNode).addChild(otherNode);
+  assert.equal(dropSignReturns(document), 3);
+  assert.deepEqual(first.listPrimitives().map(p => p.getMaterial().getName()), ["Premium Sign | ivory lit face"]);
+  assert.equal(secondNode.getName(), "sides-node");
+  assert.equal(secondNode.getMesh(), null);
+  assert.equal(secondNode.getParentNode(), null);
+  assert.ok(document.getRoot().listScenes()[0].listChildren().includes(secondNode));
+  assert.deepEqual(other.listPrimitives().map(p => p.getMaterial().getName()), ["Steel"]);
+  assert.equal(otherNode.getMesh(), other);
 });

@@ -16,6 +16,7 @@ import { hallZones, servicePosterTexture, type Zone } from "./hallFeatures";
 import { applySurface, refineAvatarSkin } from "../three/surfaceDetail";
 import { gltfExtender } from "../three/textureLoading";
 import { disposeMergedStatic, mergeStaticMeshes } from "../three/mergeStatic";
+import { drawWordmark } from "../media/brandMarks";
 
 /**
  * Hall dressing — renders the furniture, planting, LED sculptures, lightboxes,
@@ -53,8 +54,7 @@ function signTexture(sign: Sign) {
     g.beginPath(); g.moveTo(-46, 0); g.lineTo(46, 0); g.moveTo(16, -30); g.lineTo(46, 0); g.lineTo(16, 30); g.stroke();
     g.restore();
   }
-  g.fillStyle = "#6f655a"; g.font = "500 16px 'Segoe UI', Helvetica, Arial, sans-serif";
-  g.fillText("LIVEGRID AV", 128, 712);
+  drawWordmark(g, 128, 712 - 6, 16, { align: "center", ink: "#6f655a" });
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.anisotropy = 4;

@@ -1162,16 +1162,17 @@
   ],
   "typography": [
     {
-      "body": "livegrid AV",
+      "body": "livegridAV",
       "position": [
         -8.07269499178778,
         9.194999999999999,
         6.753741376459216
       ],
-      "height": 0.99,
-      "width": 4.977747707457133,
+      "height": 0.9900000095367432,
+      "width": 5.129400253295898,
       "yaw": 0.21026034715968,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "LED RENTAL SOLUTIONS",
@@ -1183,7 +1184,8 @@
       "height": 0.2033999625542839,
       "width": 4.6,
       "yaw": 0.21026034715968,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "FOR EVERY VISION",
@@ -1195,7 +1197,8 @@
       "height": 0.205,
       "width": 3.550781039690968,
       "yaw": 0.21026034715968,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "STAGES",
@@ -1207,7 +1210,8 @@
       "height": 0.135,
       "width": 0.6665419429135371,
       "yaw": -0.42285392613294076,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "EVENTS",
@@ -1219,7 +1223,8 @@
       "height": 0.135,
       "width": 0.6628072170712874,
       "yaw": -0.42285392613294076,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "EXHIBITIONS",
@@ -1231,7 +1236,8 @@
       "height": 0.135,
       "width": 1.139419991720641,
       "yaw": -0.42285392613294076,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "BRANDS",
@@ -1243,7 +1249,8 @@
       "height": 0.135,
       "width": 0.7301250030642008,
       "yaw": -0.42285392613294076,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "FIXED INSTALLATIONS",
@@ -1255,7 +1262,8 @@
       "height": 0.135,
       "width": 2.002275923763945,
       "yaw": -0.42285392613294076,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "AND MORE",
@@ -1267,7 +1275,8 @@
       "height": 0.135,
       "width": 1.0128835202617141,
       "yaw": -0.42285392613294076,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "IDEAS",
@@ -1279,7 +1288,8 @@
       "height": 0.19,
       "width": 0.8026050735049773,
       "yaw": 1.5707963267948966,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "IN",
@@ -1291,7 +1301,8 @@
       "height": 0.19,
       "width": 0.26248619796136485,
       "yaw": 1.5707963267948966,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "MOTION",
@@ -1303,7 +1314,8 @@
       "height": 0.19,
       "width": 1.1668462250954736,
       "yaw": 1.5707963267948966,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "TECHNOLOGY",
@@ -1315,7 +1327,8 @@
       "height": 0.13,
       "width": 1.1867701511178208,
       "yaw": 1.5707963267948966,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "PEOPLE",
@@ -1327,7 +1340,8 @@
       "height": 0.13,
       "width": 0.6094824732537576,
       "yaw": 1.5707963267948966,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "BIGGER",
@@ -1339,7 +1353,8 @@
       "height": 0.13,
       "width": 0.6090438146225959,
       "yaw": 1.5707963267948966,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "POSSIBILITIES",
@@ -1351,7 +1366,8 @@
       "height": 0.13,
       "width": 1.1347577693400304,
       "yaw": 1.5707963267948966,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "CORPORATE EVENTS",
@@ -1360,10 +1376,11 @@
         7.685,
         -6.88
       ],
-      "height": 0.1091373420276538,
+      "height": 0.09705328156078227,
       "width": 1.3,
       "yaw": 0,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "LIVE EXPERIENCES",
@@ -1372,10 +1389,11 @@
         5.685,
         -6.88
       ],
-      "height": 0.12119739618274149,
-      "width": 1.3,
+      "height": 0.11112681768137492,
+      "width": 1.3000000000000003,
       "yaw": 0,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "BRAND ACTIVATIONS",
@@ -1384,10 +1402,11 @@
         3.685,
         -6.88
       ],
-      "height": 0.11095666776245584,
+      "height": 0.09255255616950986,
       "width": 1.3,
       "yaw": 0,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "RETAIL & SHOWROOMS",
@@ -1396,10 +1415,11 @@
         1.685,
         -6.88
       ],
-      "height": 0.10033967534835442,
+      "height": 0.08421494595772241,
       "width": 1.3,
       "yaw": 0,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "FLAT LED",
@@ -1411,7 +1431,8 @@
       "height": 0.2,
       "width": 1.1772112856972703,
       "yaw": 0.21066377998456154,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "CURVED LED",
@@ -1423,7 +1444,8 @@
       "height": 0.2,
       "width": 1.6093974190064155,
       "yaw": 0.21066377998456154,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "CYLINDRICAL LED",
@@ -1435,7 +1457,8 @@
       "height": 0.19029262860369467,
       "width": 2.15,
       "yaw": 0.21066377998456154,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "SEAMLESS",
@@ -1447,7 +1470,8 @@
       "height": 0.2,
       "width": 1.2967077048304376,
       "yaw": 0.21066377998456154,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "CORNER LED",
@@ -1459,7 +1483,8 @@
       "height": 0.2,
       "width": 1.6344986753566484,
       "yaw": 0.21066377998456154,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "TRANSPARENT LED",
@@ -1471,7 +1496,8 @@
       "height": 0.17535843736422443,
       "width": 2.15,
       "yaw": 0.21066377998456154,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "DNA LED",
@@ -1483,7 +1509,8 @@
       "height": 0.2,
       "width": 1.160263545686736,
       "yaw": 0.21066377998456154,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
     },
     {
       "body": "SPHERE LED",
@@ -1495,7 +1522,316 @@
       "height": 0.2,
       "width": 1.5169547999516628,
       "yaw": 0.21066377998456154,
-      "uniformScale": true
+      "uniformScale": true,
+      "premium": true
+    }
+  ],
+  "signage": [
+    {
+      "body": "signal grid logo",
+      "kind": "emblem",
+      "position": [
+        -9.2927,
+        9.13,
+        7.0141
+      ]
+    },
+    {
+      "body": "livegridAV",
+      "kind": "wordmark",
+      "position": [
+        -8.0727,
+        9.195,
+        6.7537
+      ]
+    },
+    {
+      "body": "aqua halo",
+      "kind": "halo",
+      "position": [
+        -9.2829,
+        8.898,
+        7.012
+      ]
+    },
+    {
+      "body": "LED RENTAL SOLUTIONS",
+      "kind": "name",
+      "position": [
+        0.3073,
+        9.84,
+        4.9653
+      ]
+    },
+    {
+      "body": "FOR EVERY VISION",
+      "kind": "name",
+      "position": [
+        0.3073,
+        9.43,
+        4.9653
+      ]
+    },
+    {
+      "body": "STAGES",
+      "kind": "name",
+      "position": [
+        8.4044,
+        10.22,
+        5.1037
+      ]
+    },
+    {
+      "body": "EVENTS",
+      "kind": "name",
+      "position": [
+        8.4044,
+        10.037,
+        5.1037
+      ]
+    },
+    {
+      "body": "EXHIBITIONS",
+      "kind": "name",
+      "position": [
+        8.4044,
+        9.854,
+        5.1037
+      ]
+    },
+    {
+      "body": "BRANDS",
+      "kind": "name",
+      "position": [
+        8.4044,
+        9.671,
+        5.1037
+      ]
+    },
+    {
+      "body": "FIXED INSTALLATIONS",
+      "kind": "name",
+      "position": [
+        8.4044,
+        9.488,
+        5.1037
+      ]
+    },
+    {
+      "body": "AND MORE",
+      "kind": "name",
+      "position": [
+        8.4044,
+        9.305,
+        5.1037
+      ]
+    },
+    {
+      "body": "signal grid logo",
+      "kind": "emblem",
+      "position": [
+        11.914,
+        5.64,
+        5.8
+      ]
+    },
+    {
+      "body": "IDEAS",
+      "kind": "name",
+      "position": [
+        11.916,
+        4.44,
+        5.69
+      ]
+    },
+    {
+      "body": "IN",
+      "kind": "name",
+      "position": [
+        11.916,
+        4.13,
+        5.69
+      ]
+    },
+    {
+      "body": "MOTION",
+      "kind": "name",
+      "position": [
+        11.916,
+        3.82,
+        5.69
+      ]
+    },
+    {
+      "body": "TECHNOLOGY",
+      "kind": "name",
+      "position": [
+        11.916,
+        2.75,
+        5.71
+      ]
+    },
+    {
+      "body": "PEOPLE",
+      "kind": "name",
+      "position": [
+        11.916,
+        2.53,
+        5.71
+      ]
+    },
+    {
+      "body": "BIGGER",
+      "kind": "name",
+      "position": [
+        11.916,
+        2.31,
+        5.71
+      ]
+    },
+    {
+      "body": "POSSIBILITIES",
+      "kind": "name",
+      "position": [
+        11.916,
+        2.09,
+        5.71
+      ]
+    },
+    {
+      "body": "CORPORATE EVENTS",
+      "kind": "name",
+      "position": [
+        10.4,
+        7.685,
+        -6.88
+      ]
+    },
+    {
+      "body": "LIVE EXPERIENCES",
+      "kind": "name",
+      "position": [
+        10.4,
+        5.685,
+        -6.88
+      ]
+    },
+    {
+      "body": "BRAND ACTIVATIONS",
+      "kind": "name",
+      "position": [
+        10.4,
+        3.685,
+        -6.88
+      ]
+    },
+    {
+      "body": "RETAIL & SHOWROOMS",
+      "kind": "name",
+      "position": [
+        10.4,
+        1.685,
+        -6.88
+      ]
+    },
+    {
+      "body": "FLAT LED",
+      "kind": "name",
+      "position": [
+        -10.2686,
+        5.95,
+        4.7222
+      ]
+    },
+    {
+      "body": "CURVED LED",
+      "kind": "name",
+      "position": [
+        -7.4686,
+        5.95,
+        4.1234
+      ]
+    },
+    {
+      "body": "CYLINDRICAL LED",
+      "kind": "name",
+      "position": [
+        -4.7686,
+        5.85,
+        3.5461
+      ]
+    },
+    {
+      "body": "SEAMLESS",
+      "kind": "name",
+      "position": [
+        -10.3686,
+        3.225,
+        4.7435
+      ]
+    },
+    {
+      "body": "CORNER LED",
+      "kind": "name",
+      "position": [
+        -10.3686,
+        2.985,
+        4.7435
+      ]
+    },
+    {
+      "body": "TRANSPARENT LED",
+      "kind": "name",
+      "position": [
+        -7.9686,
+        3.1,
+        4.2303
+      ]
+    },
+    {
+      "body": "DNA LED",
+      "kind": "name",
+      "position": [
+        -6.0686,
+        2.8,
+        3.824
+      ]
+    },
+    {
+      "body": "SPHERE LED",
+      "kind": "name",
+      "position": [
+        -4.0686,
+        3.23,
+        3.3964
+      ]
+    },
+    {
+      "body": "SMALL MODULES. BIG POSSIBILITIES.",
+      "kind": "name",
+      "position": [
+        -7.5,
+        0.245,
+        6.965
+      ]
+    },
+    {
+      "body": "signal grid logo",
+      "kind": "emblem",
+      "position": [
+        6.05,
+        0.46,
+        6.435
+      ]
+    },
+    {
+      "body": "livegridAV",
+      "kind": "wordmark",
+      "position": [
+        8.0629,
+        0.4279,
+        6.452
+      ]
     }
   ],
   "furniture": [
@@ -1510,7 +1846,7 @@
         "max": [
           -3.5999999046325684,
           0.42149999737739563,
-          6.9710001945495605
+          6.982509136199951
         ]
       },
       "position": [
@@ -1536,7 +1872,7 @@
         "max": [
           10.612500190734863,
           1.2400000095367432,
-          6.454999923706055
+          6.477509021759033
         ]
       },
       "position": [
@@ -3029,10 +3365,10 @@
   "stats": {
     "shell": {
       "file": "grand-rental-finish-v2-shell.glb",
-      "bytes": 2659088,
-      "sha256": "249bae15e1e7c3c7fb3e2a6f6c2455b33856b84be44749081fac55055d24da40",
-      "meshes": 21,
-      "triangles": 58460,
+      "bytes": 2858924,
+      "sha256": "1733abb9e9b4c460dd856848a70f1de4f774cfc359904f1e008f4043ce1cb4a9",
+      "meshes": 25,
+      "triangles": 54320,
       "bounds": {
         "min": [
           -12.0,
@@ -3048,10 +3384,10 @@
     },
     "interior": {
       "file": "grand-rental-finish-v2-interior.glb",
-      "bytes": 17720468,
-      "sha256": "a95bf956945e4eb868e3b7446fe13d6d73070b21f877edc0e298f315c9b2fcd6",
-      "meshes": 89,
-      "triangles": 490792,
+      "bytes": 17782044,
+      "sha256": "53054d4f1cf226adbd309988f60c640c74c8e015202537ea35b43f6423c6cdb0",
+      "meshes": 91,
+      "triangles": 474127,
       "bounds": {
         "min": [
           -11.81283950805664,
@@ -3107,10 +3443,10 @@
   "assets": {
     "grand-rental-finish-v2-shell": {
       "file": "grand-rental-finish-v2-shell.glb",
-      "bytes": 2659088,
-      "sha256": "249bae15e1e7c3c7fb3e2a6f6c2455b33856b84be44749081fac55055d24da40",
-      "meshes": 21,
-      "triangles": 58460,
+      "bytes": 2858924,
+      "sha256": "1733abb9e9b4c460dd856848a70f1de4f774cfc359904f1e008f4043ce1cb4a9",
+      "meshes": 25,
+      "triangles": 54320,
       "bounds": {
         "min": [
           -12.0,
@@ -3126,10 +3462,10 @@
     },
     "grand-rental-finish-v2-interior": {
       "file": "grand-rental-finish-v2-interior.glb",
-      "bytes": 17720468,
-      "sha256": "a95bf956945e4eb868e3b7446fe13d6d73070b21f877edc0e298f315c9b2fcd6",
-      "meshes": 89,
-      "triangles": 490792,
+      "bytes": 17782044,
+      "sha256": "53054d4f1cf226adbd309988f60c640c74c8e015202537ea35b43f6423c6cdb0",
+      "meshes": 91,
+      "triangles": 474127,
       "bounds": {
         "min": [
           -11.81283950805664,

@@ -53,6 +53,12 @@ def build_projection_finish_v2_shell(ctx):
     ellipse, ellipse_annulus = ctx['ellipse'], ctx['ellipse_annulus']
     outline_tube, extruded_outline = ctx['outline_tube'], ctx['extruded_outline']
     label, place, aperture, disk = (ctx[n] for n in ('label', 'place', 'aperture', 'disk'))
+    # Every sign on this shell is a premium sign (built-up lettering, the
+    # livegridAV wordmark, the 5x5 signal-grid logo); see premium_signage.py.
+    signs = ctx['premium_signage']()
+
+    def sign(body, *args, slogan=True, **kwargs):
+        return label(body, *args, premium=True, slogan=slogan, **kwargs)
 
     def mark(objects, role='architecture'):
         for ob in objects:
@@ -196,22 +202,37 @@ def build_projection_finish_v2_shell(ctx):
         for group_index, lines in enumerate(copies):
             y = 8.10 if group_index == 0 else 4.9
             for index, copy in enumerate(lines):
-                label(copy, (x-.68, y-index*.46, z+.142), .24, 1.40, tracking=1.04)
+                sign(copy, (x-.68, y-index*.46, z+.142), .24, 1.40, tracking=1.04)
         channel('guide emerald grounded edge '+str(side), [(x-side*.83, .15, z+.144), (x-side*.83, 10.70, z+.144)], .007, mats['teal'])
     section(before)
     before = set(bpy.context.scene.objects)
-    emblem_before = set(bpy.context.scene.objects)
-    ctx['triangle_emblem']((-5.2, 11.32, 7.46), 1.06)
-    for ob in set(bpy.context.scene.objects)-emblem_before:
-        if ob.type == 'MESH':
-            for slot in ob.material_slots:
-                slot.material = mats['mint']
-    label('livegrid AV', (-3.95, 11.31, 7.46), .76, 5.5, semibold=True, tracking=1)
+    # Main fascia: the signal-grid logo replaces the old mint folded triangle
+    # at the triangle's anchor (.80 x its 1.06 m height, same left edge, cell
+    # backs on the triangle's centre plane, as on the rental fascia), and the
+    # livegridAV wordmark takes the old wordmark's anchor and width limit.
+    emblem_at, emblem_height = (-5.2, 11.32, 7.46), 1.06
+    signs.premium_emblem(emblem_at, emblem_height, place=place)
+    word_at = (-3.95, 11.31, 7.46)
+    sign('livegridAV', word_at, .76, 5.5)
+    word = typography[-1]
+    assert word['body'] == 'livegridAV'
+    # The stall's one halo, sized as on the rental fascia from the fitted ink
+    # h: from the lockup's left (word start - 1.25 h, or the logo if further
+    # left) to the word end + .30 h, 1.60 h tall centred on the lockup, but
+    # kept on the fascia face (bottom edge + 3 cm), 4 mm off its front.
+    h = word['capHeight']
+    logo_low, logo_high = emblem_at[1]+.10*emblem_height, emblem_at[1]+.90*emblem_height
+    centre = (min(word_at[1], logo_low)+max(word_at[1]+h, logo_high))/2
+    left = min(emblem_at[0], word_at[0]-1.25*h)
+    right = word_at[0]+word['width']+.30*h
+    low, high = max(11.25+.03, centre-.80*h), centre+.80*h
+    face = max(p.z for p in fascia_path if left-.5 <= p.x <= right+.5)
+    signs.premium_halo((left, low, face+.004+signs.HALO_OFFSET), right-left, high-low, place=place)
     channel('header brand divider', [(1.95, 11.15, 7.46), (1.95, 12.25, 7.46)], .007, mats['brand'], role='overhead')
-    label('PROJECTION MAPPING', (2.50, 11.92, 7.46), .30, 5.7, tracking=1.28)
-    label('TRANSFORM SPACES INTO STORIES', (2.52, 11.44, 7.46), .18, 5.65, mat=mats['mint'], tracking=1.16)
+    sign('PROJECTION MAPPING', (2.50, 11.92, 7.46), .30, 5.7, tracking=1.28, slogan=False)
+    sign('TRANSFORM SPACES INTO STORIES', (2.52, 11.44, 7.46), .18, 5.65, mat=mats['mint'], tracking=1.16)
     for i, copy in enumerate(('ANY', 'SURFACE', 'A CANVAS')):
-        label(copy, (9.30, 12.24-i*.31, 7.26), .19, 1.40, tracking=1.08)
+        sign(copy, (9.30, 12.24-i*.31, 7.26), .19, 1.40, tracking=1.08)
     section(before, 'overhead')
 
     # The eight independent application screens sit in a deep matte-black
@@ -222,12 +243,12 @@ def build_projection_finish_v2_shell(ctx):
     for side in (-1, 1):
         x, z, yaw, w = side*8.72, .80, -side*.25, 4.05
         gb = set(bpy.context.scene.objects)
-        caption_start = len(typography)
+        caption_start, sign_start = len(typography), len(signs.SIGN_LOG)
         tagged_box('matte black application gallery backing', (0, 5.36, -.16), (4.63, 10.25, .34), mats['gallery'])
         for row in range(4):
             idx = row+(0 if side < 0 else 4); y = 9.22-row*2.33
             aperture('projection-application-'+str(idx), (0, y, .022), w, 1.80, 'projection-application-'+str(idx))
-            label(captions[idx], (0, y-1.16, .05), .19, w, centered=True, tracking=1.06)
+            sign(captions[idx], (0, y-1.16, .05), .19, w, centered=True, tracking=1.06)
         tagged_box('gallery recessed dark top soffit', (0, 10.70, .02), (4.76, .24, .92), mats['gallery'])
         channel('gallery top warm inner cove', [(-2.24, 10.56, .36), (2.24, 10.56, .36)], .010, normal=(0, -1, 0))
         for lx in (-1.82, -.91, 0, .91, 1.82):
@@ -242,6 +263,11 @@ def build_projection_finish_v2_shell(ctx):
         for record in typography[caption_start:]:
             p = Matrix.Rotation(yaw, 4, 'Y')@Vector(record['position'])+Vector((x, 0, z))
             record.update(position=list(p), yaw=yaw)
+        # The captions logged their gallery-local anchors; give the log the
+        # same placement as their letters and typography records.
+        for entry in signs.SIGN_LOG[sign_start:]:
+            p = Matrix.Rotation(yaw, 4, 'Y')@Vector(entry['position'])+Vector((x, 0, z))
+            entry['position'] = [round(c, 4) for c in p]
         galleries.append({'side': side, 'center': [x, 0, z], 'yaw': yaw, 'width': 4.63,
                           'screenWidth': 4.05, 'screenHeight': 1.80, 'clearInnerEdge': 6.43})
         for kind, fx, fz, width in (('inboard', side*6.05, .25, .90), ('outboard', side*11.10, 1.40, .80)):
@@ -359,7 +385,8 @@ def build_projection_finish_v2_shell(ctx):
     objects = [o for o in set(bpy.context.scene.objects)-start if o.type == 'MESH']
     lowest_projector = min(p['bounds']['min'][1] for p in projector_bounds)
     for ob, record in glyph_objects:
-        record['bounds'] = bounds([ob]); record['fontAspectRatioPreserved'] = True
+        # A premium wordmark is two objects (livegrid + AV); bound them together.
+        record['bounds'] = bounds(ob if isinstance(ob, list) else [ob]); record['fontAspectRatioPreserved'] = True
     return {'objects': objects, 'apertures': screens, 'projectors': projectors,
         'fixtures': fixtures, 'typography': typography, 'opticalPaths': optical_paths,
         'pedestal': {'center': stage_center, 'radius': stage_radius, 'top': .95},

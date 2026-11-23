@@ -12,8 +12,8 @@
   },
   "geometry": {
     "file": "grand-reception-brand-wall-v2.glb",
-    "bytes": 5797332,
-    "sha256": "af4c8b0e12e377adb40bf92d12595f59869d6061572ed4b3f6cd466656ef9796",
+    "bytes": 5939940,
+    "sha256": "2e5b85e82fe443572452aacb1852fd964c2c4a2c979ebf127aaf1ac60e194a17",
     "bounds": {
       "min": [
         -11.824999809265137,
@@ -26,7 +26,7 @@
         5.9757466316223145
       ]
     },
-    "triangles": 183596
+    "triangles": 181357
   },
   "people": {
     "bytes": 17314244,
@@ -269,6 +269,143 @@
       "rotation_y": 0.2400000000000002
     }
   },
+  "signage": [
+    {
+      "body": "signal grid logo",
+      "kind": "emblem",
+      "position": [
+        -5.2123,
+        4.9361,
+        -6.4819
+      ]
+    },
+    {
+      "body": "livegridAV",
+      "kind": "wordmark",
+      "position": [
+        -4.8427,
+        4.9741,
+        -6.5723
+      ]
+    },
+    {
+      "body": "EXPERIENCE",
+      "kind": "name",
+      "position": [
+        -5.2099,
+        4.02,
+        -6.4775
+      ]
+    },
+    {
+      "body": "CONNECT",
+      "kind": "name",
+      "position": [
+        -5.2099,
+        3.47,
+        -6.4775
+      ]
+    },
+    {
+      "body": "CREATE",
+      "kind": "name",
+      "position": [
+        -5.2099,
+        2.92,
+        -6.4775
+      ]
+    },
+    {
+      "body": "TOGETHER",
+      "kind": "name",
+      "position": [
+        -5.2099,
+        2.37,
+        -6.4775
+      ]
+    },
+    {
+      "body": "LED",
+      "kind": "name",
+      "position": [
+        11.8363,
+        8.52,
+        0.273
+      ]
+    },
+    {
+      "body": "DESIGN",
+      "kind": "name",
+      "position": [
+        11.8363,
+        8,
+        0.273
+      ]
+    },
+    {
+      "body": "TECHNOLOGY",
+      "kind": "name",
+      "position": [
+        11.8363,
+        7.4801,
+        0.273
+      ]
+    },
+    {
+      "body": "PEOPLE",
+      "kind": "name",
+      "position": [
+        11.8363,
+        6.96,
+        0.273
+      ]
+    },
+    {
+      "body": "IMPACT",
+      "kind": "name",
+      "position": [
+        11.8363,
+        6.44,
+        0.273
+      ]
+    },
+    {
+      "body": "A",
+      "kind": "name",
+      "position": [
+        -11.53,
+        4.82,
+        -5.642
+      ]
+    },
+    {
+      "body": "BRIGHTER",
+      "kind": "name",
+      "position": [
+        -11.53,
+        4.44,
+        -5.642
+      ]
+    },
+    {
+      "body": "TOMORROW",
+      "kind": "name",
+      "position": [
+        -11.53,
+        4.06,
+        -5.642
+      ]
+    },
+    {
+      "body": "TOGETHER",
+      "kind": "name",
+      "position": [
+        -11.53,
+        3.68,
+        -5.642
+      ]
+    }
+  ],
   "route": {
     "width": 2,
     "xMin": -3.4,
@@ -279,9 +416,9 @@
   "provenance": "Original selected reception joinery reused and reflowed; original botanical helper/atlas; Microsoft Rocketbox MIT textured people. No full-assembly scaling.",
   "brandingWallRelocation": {
     "sourceFile": "grand-reception.glb",
-    "sourceSha256": "6f2d98da1961e0a24f00c2b651da146262e071856a0df759ca34650aecd0a0e2",
+    "sourceSha256": "42c6838c655ab9b95209c3b9852f94076d2d9f7af5dddfae86e06ff5de872310",
     "targetFile": "grand-reception-brand-wall-v2.glb",
-    "targetSha256": "af4c8b0e12e377adb40bf92d12595f59869d6061572ed4b3f6cd466656ef9796",
+    "targetSha256": "2e5b85e82fe443572452aacb1852fd964c2c4a2c979ebf127aaf1ac60e194a17",
     "ledRightEndpointXZ": [
       11.671094393614652,
       0.23236310051019737
@@ -317,7 +454,7 @@
       "max": [
         11.648940086364746,
         11.119998931884766,
-        -0.18868941068649292
+        -0.18777421116828918
       ]
     },
     "movedBoundsAfter": {
@@ -329,10 +466,20 @@
       "max": [
         13.703343391418457,
         11.119998931884766,
-        0.6306951642036438
+        0.6316103935241699
       ]
     },
     "changedMeshes": [
+      {
+        "mesh": "Premium Sign | ivory lit face | interior",
+        "vertices": 2339,
+        "faces": 1308
+      },
+      {
+        "mesh": "Premium Sign | ivory lit face | interior",
+        "vertices": 5408,
+        "faces": 2704
+      },
       {
         "mesh": "Reception | matte charcoal panel | interior",
         "vertices": 96,
@@ -340,13 +487,20 @@
       },
       {
         "mesh": "Reception | porcelain brand lettering | interior",
-        "vertices": 7514,
-        "faces": 5332
+        "vertices": 24,
+        "faces": 12
       }
     ],
-    "translatedVertices": 7610,
-    "unchangedVertices": 130043,
-    "trianglesUnchanged": 183596,
+    "movedSigns": [
+      "LED",
+      "DESIGN",
+      "TECHNOLOGY",
+      "PEOPLE",
+      "IMPACT"
+    ],
+    "translatedVertices": 7867,
+    "unchangedVertices": 135123,
+    "trianglesUnchanged": 181357,
     "allOtherVerticesPreserved": true,
     "sourceFilePreserved": true,
     "exportMethod": "Direct original GLB POSITION byte patch; no mesh/material/image roundtrip"

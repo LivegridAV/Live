@@ -185,7 +185,7 @@ export function PavilionPanel() {
           ))}
 
           <div className="v-panel-actions">
-            <a className="v-btn v-btn--primary" href={contactLinks.whatsapp(`Hi LiveGridAV — I'd like to talk about ${pav.headline}.`)} target="_blank" rel="noopener noreferrer">
+            <a className="v-btn v-btn--primary" href={contactLinks.whatsapp(`Hi livegridAV — I'd like to talk about ${pav.headline}.`)} target="_blank" rel="noopener noreferrer">
               Start a project
             </a>
             <Link href="/contact" className="v-btn">

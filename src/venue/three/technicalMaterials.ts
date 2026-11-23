@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { installationFinishFrame } from "./architecturalFinish";
+import { isPremiumSignMaterial, stylePremiumSign } from "./premiumSignMaterials";
 import { isCompressed, loadVenueTexture, placeholderTexture } from "./textureLoading";
 
 /** CC0 surface data only. Source/licence records live beside the texture files. */
@@ -133,6 +134,7 @@ export function applyTechnicalMaterials(model: THREE.Object3D, gl: THREE.WebGLRe
     for(const material of materials) {
       if (!(material instanceof THREE.MeshStandardMaterial) || prepared.has(material)) continue;
       const name=material.name;
+      if (isPremiumSignMaterial(name)) { stylePremiumSign(material); continue; }
       if (!name.startsWith("Technical |")) continue;
       if(/V3 cyan AV letters/i.test(name)){
         material.color.set("#35b7df");material.emissive.set("#2499c7");material.emissiveIntensity=.30;

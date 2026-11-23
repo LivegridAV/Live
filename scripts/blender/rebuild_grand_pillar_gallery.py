@@ -18,6 +18,8 @@ source=source.replace('(0, 6.75, -8.93), (22.0, .028, .05)','(-2.2, 6.75, -8.93)
 source=source.replace('(-8.2, -5.45, -2.7, .05, 2.8, 5.55, 8.3)','(-8.2, -5.45, -2.7, .05, 2.8, 5.55)')
 source=source.replace('(8.00, 5.10 - i * .45, -8.807)','(4.70, 5.10 - i * .45, -8.807)')
 ns={'__file__':str(f)};exec(compile(source,str(f),'exec'),ns)
+# Premium signs built above. Copied now: later helper files share this Blender session's sign log.
+signage=[dict(sign) for sign in ns['premium_signage']().SIGN_LOG]
 old=list(bpy.context.scene.objects)
 for ob in old:bpy.context.collection.objects.unlink(ob)
 furn=HERE/'rebuild_led_rental_2026_interior.py';fn={'__file__':str(furn)}
@@ -61,6 +63,6 @@ for role,key,x,z,yaw in [('foreground observer','conversation-left',-3.2,4.2,2.8
 for ob in original:
     if ob.name in bpy.data.objects:bpy.data.objects.remove(ob,do_unlink=True)
 people=export(ROOT/'public/models/expo/grand-pillar-visitors.glb',created)
-layout={'geometry':gallery,'people':people,'placements':placements,'provenance':'Original retained gallery joinery; original textured curved-leaf botany; Microsoft Rocketbox Avatar Library MIT Copyright (c) 2020 Microsoft. Gallery raises .111m with common .12m finished floor. Main central route world X[-1,1] kept clear of planters/avatars.'}
+layout={'geometry':gallery,'people':people,'placements':placements,'signage':signage,'provenance':'Original retained gallery joinery; original textured curved-leaf botany; Microsoft Rocketbox Avatar Library MIT Copyright (c) 2020 Microsoft. Gallery raises .111m with common .12m finished floor. Main central route world X[-1,1] kept clear of planters/avatars.'}
 (ROOT/'public/models/expo/grand-pillar-layout.json').write_text(json.dumps(layout,indent=2),encoding='utf-8')
 print('GRAND_PILLARS '+json.dumps(layout),flush=True)

@@ -8,6 +8,7 @@
  * need to tick, not animate.
  */
 
+import { drawWordmark } from "./brandMarks";
 import { TECHNICAL_PAINTERS } from "./technicalPainters";
 import { PROJECTION_PAINTERS } from "./projectionPainters";
 import { LED_RENTAL_2026_PAINTERS } from "./ledRental2026Painters";
@@ -105,7 +106,8 @@ const makeSign =
 
 const wordmark = (p: PaintCtx) => {
   const { ctx, w, h } = p;
-  ctx.fillStyle = "#05090a";
+  // pure black: shown light-only over the finale wall, so black disappears
+  ctx.fillStyle = "#000000";
   ctx.fillRect(0, 0, w, h);
   ctx.font = `600 ${h * 0.4}px ${SANS_OF()}`;
   ctx.textBaseline = "middle";
@@ -130,7 +132,7 @@ const wordmark = (p: PaintCtx) => {
  * The entrance fascia.
  *
  * The one surface on the whole site whose job is to say the name, so it does
- * exactly that: LIVEGRID AV, set large, tracked wide, lit from behind, with a
+ * exactly that: livegridAV, set large, tracked wide, lit from behind, with a
  * hairline rule under it. Everything else on this sign is restraint — a
  * flagship entrance says its name once and does not decorate it.
  */
@@ -163,7 +165,7 @@ const brandFascia = (p: PaintCtx) => {
   ctx.shadowColor = accent;
   ctx.shadowBlur = 0;
   ctx.fillStyle = "#f2f7f6";
-  ctx.fillText("LIVEGRID AV", w / 2, cy);
+  drawWordmark(ctx, w / 2, cy, size, { align: "center", ink: "#f2f7f6", letterSpacing: `${(size * 0.15).toFixed(2)}px` });
   ctx.shadowBlur = 0;
   ctx.letterSpacing = "0px";
 
@@ -177,6 +179,76 @@ const brandFascia = (p: PaintCtx) => {
   ctx.globalAlpha = 1;
 };
 
+/**
+ * The finale stage screen: the last thing a visitor sees.
+ *
+ * The signal-grid logo floats right above this screen as 3D glass in the
+ * stage wall (programs.ts, finaleBrand), so this screen carries the wordmark,
+ * set large and centred with one soft aqua wash behind it. Under it, the
+ * invitation, then "Talk to livegridAV" with the wordmark drawn as the
+ * wordmark (a mono uppercase caption would spell it LIVEGRIDAV).
+ */
+export const FINALE_CTA_TITLE = "Let’s build your next experience";
+const finaleCta = (p: PaintCtx) => {
+  const { ctx, w, h, t, accent } = p;
+  // Pure black: the panel is light-only on the stage wall, so black is
+  // invisible and the type floats in the 3D scene with no box around it.
+  ctx.fillStyle = "#000000";
+  ctx.fillRect(0, 0, w, h);
+
+  // the wordmark, centred
+  const mark = h * 0.34;
+  ctx.font = `600 ${mark}px ${SANS_OF()}`;
+  ctx.letterSpacing = "0px";
+  const lockW = ctx.measureText("livegridAV").width;
+  const x0 = (w - lockW) / 2;
+  const cy = h * 0.29;
+
+  // one slow-breathing aqua wash behind the lockup
+  const breath = 0.85 + 0.15 * Math.sin(t * 0.6);
+  const halo = ctx.createRadialGradient(w / 2, cy, 0, w / 2, cy, lockW * 0.62);
+  halo.addColorStop(0, `rgba(31,160,147,${(0.2 * breath).toFixed(3)})`);
+  halo.addColorStop(1, "rgba(31,160,147,0)");
+  ctx.fillStyle = halo;
+  ctx.fillRect(0, 0, w, h * 0.62);
+
+  drawWordmark(ctx, x0, cy, mark * 1.02, { ink: "#f2f7f6" });
+
+  // hairline rule
+  ctx.fillStyle = accent;
+  ctx.globalAlpha = 0.55;
+  ctx.fillRect(w * 0.42, h * 0.54, w * 0.16, Math.max(1, h * 0.008));
+  ctx.globalAlpha = 1;
+
+  // the invitation, fitted rather than clipped
+  let ts = h * 0.13;
+  ctx.font = `600 ${ts}px ${SANS_OF()}`;
+  while (ctx.measureText(FINALE_CTA_TITLE).width > w * 0.86 && ts > h * 0.07) {
+    ts *= 0.94;
+    ctx.font = `600 ${ts}px ${SANS_OF()}`;
+  }
+  ctx.fillStyle = BRIGHT;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(FINALE_CTA_TITLE, w / 2, h * 0.69);
+
+  // "Talk to livegridAV", centred as one line
+  const cs = h * 0.1;
+  ctx.font = `500 ${cs}px ${SANS_OF()}`;
+  const lead = "Talk to ";
+  const leadW = ctx.measureText(lead).width;
+  ctx.font = `600 ${cs}px ${SANS_OF()}`;
+  const ctaW = leadW + ctx.measureText("livegridAV").width;
+  const cx = (w - ctaW) / 2;
+  ctx.font = `500 ${cs}px ${SANS_OF()}`;
+  ctx.textAlign = "left";
+  ctx.fillStyle = DIM_LIGHT;
+  ctx.fillText(lead, cx, h * 0.86);
+  drawWordmark(ctx, cx + leadW, h * 0.86, cs, { ink: BRIGHT });
+  ctx.textAlign = "left";
+};
+const DIM_LIGHT = "#9fb0ad";
+
 /* Only painters with active architectural screens are registered. */
 export const PAINTERS = {
   ...TECHNICAL_PAINTERS,
@@ -186,7 +258,7 @@ export const PAINTERS = {
   brandFascia,
   signServices: makeSign("What We Do", "Eight disciplines"),
   signArena: makeSign("Main arena", "This way"),
-  signFinaleCta: makeSign("Let’s build your next experience", "Talk to livegridAV"),
+  signFinaleCta: finaleCta,
 } as const;
 
 export type PainterId = keyof typeof PAINTERS;

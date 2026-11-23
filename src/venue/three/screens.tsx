@@ -48,7 +48,7 @@ function ledKey(o: LEDOptions) {
   return [
     o.width, o.height, o.pitch, o.cabinet, o.brightness, o.tint, o.dot, o.doubleSided,
     o.swap, o.flip?.[0], o.flip?.[1], o.flat, o.fit, o.wrapX, o.mirrorX,
-    o.repeat?.[0], o.repeat?.[1], o.offset?.[0], o.offset?.[1],
+    o.repeat?.[0], o.repeat?.[1], o.offset?.[0], o.offset?.[1], o.additive,
   ].join("|");
 }
 
@@ -180,6 +180,8 @@ export interface ScreenProps extends BaseProps {
    */
   edge?: string;
   edgeWidth?: number;
+  /** light only: black content disappears, lit content adds onto what is behind */
+  additive?: boolean;
 }
 
 export function Screen({
@@ -206,6 +208,7 @@ export function Screen({
   mirrorX,
   edge,
   edgeWidth = 0.09,
+  additive,
 }: ScreenProps) {
   const mesh = useRef<THREE.Mesh>(null);
   const group = useRef<THREE.Group>(null);
@@ -225,6 +228,7 @@ export function Screen({
       flat,
       wrapX,
       mirrorX,
+      additive,
       fit: !uv,
       repeat: uv ? [uv[0], uv[1]] : [1, 1],
       offset: uv ? [uv[2], uv[3]] : [0, 0],

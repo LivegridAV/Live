@@ -191,6 +191,12 @@ export interface LEDOptions {
   /** Periodic edge blending for a closed ring/cylinder artwork strip. */
   wrapX?: boolean;
   mirrorX?: boolean;
+  /**
+   * Light only: the panel adds its light to whatever is behind it, so black
+   * content disappears and only the lit content shows. Used for type that
+   * floats over another screen without a box around it.
+   */
+  additive?: boolean;
 }
 
 /**
@@ -247,6 +253,7 @@ export function createLEDMaterial(texture: THREE.Texture, o: LEDOptions) {
     side: o.doubleSided ? THREE.DoubleSide : THREE.FrontSide,
     toneMapped: true,
     clipping: true,
+    ...(o.additive ? { transparent: true, blending: THREE.AdditiveBlending, depthWrite: false } : {}),
   });
 }
 

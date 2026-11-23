@@ -51,17 +51,31 @@ def build_shell_v2(ctx):
         pipe(name + ' black recessed carrier', aa, bb, radius * 1.7, BLACK, overhead)
         return pipe(name + ' opal rope lens', a, b, radius, finish, overhead)
 
+    # Every sign on this shell is a premium sign (built-up lettering, the
+    # livegridAV wordmark, the 5x5 signal-grid logo); see premium_signage.py.
+    signs = premium_signage()
+
     def physical_label(body, p, height, width=None, centered=False, yaw=0,
-                       tracking=1.06, semibold=False, mat=WHITE, font=None, overhead=False):
+                       tracking=1.06, semibold=False, mat=WHITE, font=None, overhead=False,
+                       slogan=True):
         start = set(bpy.context.scene.objects)
-        ob = label(body, p, height, width, centered, yaw, tracking, semibold, mat, font)
+        ob = label(body, p, height, width, centered, yaw, tracking, semibold, mat, font,
+                   premium=True, slogan=slogan)
         for item in set(bpy.context.scene.objects) - start:
             tagged(item, 'overhead' if overhead else 'architecture', overhead)
         return ob
 
     def physical_emblem(p, height, yaw=0, overhead=False):
+        """The signal-grid logo in place of the old folded emblem: square,
+        0.80 x the old emblem height, its cell backs on the old emblem's plane."""
         start = set(bpy.context.scene.objects)
-        emblem(p, height, yaw)
+        signs.premium_emblem(p, height, yaw)
+        for item in set(bpy.context.scene.objects) - start:
+            tagged(item, 'overhead' if overhead else 'architecture', overhead)
+
+    def physical_halo(p, width, height, yaw=0, overhead=False):
+        start = set(bpy.context.scene.objects)
+        signs.premium_halo(p, width, height, yaw)
         for item in set(bpy.context.scene.objects) - start:
             tagged(item, 'overhead' if overhead else 'architecture', overhead)
 
@@ -126,10 +140,21 @@ def build_shell_v2(ctx):
         return (x + main_n[0] * advance, y, z + main_n[1] * advance)
 
     physical_emblem(fascia_point(-9.30, bottom + .18), 1.12, main_yaw, True)
-    physical_label('livegrid AV', fascia_point(-8.08, bottom + .245), .99, 6.30,
+    word_at = fascia_point(-8.08, bottom + .245)
+    physical_label('livegridAV', word_at, .99, 6.30,
                    yaw=main_yaw, tracking=1, semibold=True, overhead=True)
+    # The stall's one halo: a soft aqua wash on the fascia behind the logo and
+    # wordmark, sized as in the approved test from the fitted wordmark ink:
+    # from -1.25 h to the wordmark's end + .30 h, and from -.30 h to 1.30 h.
+    word = ctx['SIGNAGE'][-1]
+    assert word['body'] == 'livegridAV'
+    h = word['height']
+    along = (math.cos(main_yaw), -math.sin(main_yaw))
+    physical_halo((word_at[0] - along[0] * 1.25 * h, word_at[1] - .30 * h,
+                   word_at[2] - along[1] * 1.25 * h),
+                  word['width'] + 1.55 * h, 1.60 * h, main_yaw, True)
     physical_label('LED RENTAL SOLUTIONS', fascia_point(.30, bottom + .89), .205, 4.60,
-                   yaw=main_yaw, tracking=1.34, overhead=True)
+                   yaw=main_yaw, tracking=1.34, overhead=True, slogan=False)
     physical_label('FOR EVERY VISION', fascia_point(.30, bottom + .48), .205, 4.60,
                    yaw=main_yaw, tracking=1.34, overhead=True)
 

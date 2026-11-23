@@ -168,9 +168,34 @@ function snapAttributes(document) {
   }
 }
 
+/** Sign materials the light pack drops: the deep letter sides and their bevels. The lit faces stay. */
+export const LITE_DROPPED_MATERIALS = ["Premium Sign | brushed champagne return", "Premium Sign | polished champagne edge"];
+
+/**
+ * Remove every primitive on a dropped sign material and detach meshes left
+ * empty from their nodes (the nodes keep name, transform and hierarchy).
+ * Returns the number of primitives removed; the accessors they leave behind
+ * are removed by the prune pass in simplifyDocument.
+ */
+export function dropSignReturns(document) {
+  let removed = 0;
+  const root = document.getRoot();
+  for (const mesh of root.listMeshes()) {
+    for (const primitive of mesh.listPrimitives()) {
+      if (!LITE_DROPPED_MATERIALS.includes(primitive.getMaterial()?.getName())) continue;
+      mesh.removePrimitive(primitive); primitive.dispose(); removed++;
+    }
+    if (mesh.listPrimitives().length) continue;
+    for (const node of root.listNodes()) if (node.getMesh() === mesh) node.setMesh(null);
+    mesh.dispose();
+  }
+  return removed;
+}
+
 /** Make a lite document from a source document (in place). */
 export async function makeLite(document, liteSource) {
   dropMorphAndSkin(document);
+  dropSignReturns(document);
   await simplifyDocument(document, LITE);
   snapAttributes(document);
   await shrinkTextures(document, LITE.maxTexture, liteSource);

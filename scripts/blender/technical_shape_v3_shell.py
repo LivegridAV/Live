@@ -8,6 +8,24 @@ box wings, and independent full-height outer display/branding towers.
 """
 
 
+def crown_halo(mark_before, face_z, bottom, top):
+    """The stall's one halo, behind the crown's grid logo and wordmark.
+    Task 6's wash around the wordmark (h = its ink height): from 1.25 h
+    before it to .30 h after it, from .30 h below its ink to 1.30 h above.
+    It is widened to clear the logo, kept within the crown face, and laid
+    4 mm off that face, behind the logo cells (about 5 cm proud of it)."""
+    signs = premium_signage()
+    new = [ob for ob in set(bpy.context.scene.objects) - mark_before if ob.type == 'MESH']
+    word = bounds([ob for ob in new if ob.name.startswith('Premium Sign | wordmark')])
+    logo = bounds([ob for ob in new if 'signal cell' in ob.name])
+    h = word['max'][1] - word['min'][1]
+    x0 = min(word['min'][0] - 1.25 * h, logo['min'][0] - .30 * h)
+    x1 = word['max'][0] + .30 * h
+    y0 = max(word['min'][1] - .30 * h, bottom + .03)
+    y1 = min(word['min'][1] + 1.30 * h, top - .03)
+    return signs.premium_halo((x0, y0, face_z + .004 + signs.HALO_OFFSET), x1 - x0, y1 - y0)
+
+
 def build_shell_v3(ctx):
     globals().update(ctx)
     floor = float(ctx.get('F', .12))
@@ -105,11 +123,14 @@ def build_shell_v3(ctx):
     # reference has a broad headline and a nearly matching emblem height.
     mark = wordmark((0, 0, 0), 1.12, word_scale=1.50,
                     icon_scale=1.05, gap=.045)
-    mark_bounds = bounds(set(bpy.context.scene.objects) - mark_before)
+    # A premium lockup stands where today's did: centre on today's bounds.
+    mark_bounds = mark.get('flat_bounds') or bounds(set(bpy.context.scene.objects) - mark_before)
     mark_mid_x = (mark_bounds['min'][0] + mark_bounds['max'][0]) / 2
     mark_mid_y = (mark_bounds['min'][1] + mark_bounds['max'][1]) / 2
     mark.location = xyz((-mark_mid_x, beam_bottom + 1.25 - mark_mid_y,
                          beam_front + .065))
+    if mark.get('flat_bounds'):
+        crown_halo(mark_before, beam_front, beam_bottom, top)
     exposed_sign('PEOPLE  TECHNOLOGY  EXTRAORDINARY EVENTS',
                  (0, beam_bottom + .27, beam_front + .075), .45,
                  9.80, centered=True, tracking=1.07)
@@ -207,12 +228,12 @@ def build_shell_v3(ctx):
             (blade_w, top - .045 - blade_bottom, .058), STEEL, .006)
         # Fit the physical lockup to the narrow blade without distorting
         # glyphs or the separate blue faceted emblem.
-        mark_before = set(bpy.context.scene.objects)
-        wm = wordmark((0, 0, 0), .285, word_scale=1.18,
-                      icon_scale=1.05, with_emblem=False)
-        wb = bounds(set(bpy.context.scene.objects) - mark_before)
+        # The fit comes from today's flat lockup, and the (premium) wordmark
+        # is built at that fit, so its depth follows its final letter height.
+        wb = measure_flat_wordmark(.285, False, 1.18, 1.05)[2]
         fit = min(1.50, (blade_w - .10) / (wb['max'][0] - wb['min'][0]))
-        wm.scale = (fit, fit, fit)
+        wm = wordmark((0, 0, 0), .285, word_scale=1.18,
+                      icon_scale=1.05, with_emblem=False, scale=fit)
         wm.location = xyz((blade_x - fit * (wb['min'][0] + wb['max'][0]) / 2,
                            top - 1.25, blade_z + .042))
         emblem((blade_x, top - .65, blade_z + .042), .25)
@@ -318,9 +339,10 @@ def build_shell_v3(ctx):
     # users, since that shared material also belongs to emblem facets.
     cyan_av = material('Technical | V3 cyan AV letters',
                        (.006, .42, .70), .10, .34, .20)
+    # A premium wordmark's AV keeps its aqua lit face.
     shell_objects = set(bpy.context.scene.objects) - shell_start
     for ob in shell_objects:
-        if ob.type == 'MESH' and ob.get('signage_body') == 'AV':
+        if ob.type == 'MESH' and ob.get('signage_body') == 'AV' and not keep_premium_av(ob):
             if ob.data.materials:
                 ob.data.materials[0] = cyan_av
             else:

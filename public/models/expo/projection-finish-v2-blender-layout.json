@@ -10354,6 +10354,7 @@
       "width": 1.146412996067364,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           -11.660405158996582,
@@ -10363,7 +10364,7 @@
         "max": [
           -10.513992309570312,
           8.34000015258789,
-          7.193020343780518
+          7.208979606628418
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10380,6 +10381,7 @@
       "width": 1.1251984121607832,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           -11.649555206298828,
@@ -10389,7 +10391,7 @@
         "max": [
           -10.524356842041016,
           7.87999963760376,
-          7.193020343780518
+          7.208979606628418
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10406,6 +10408,7 @@
       "width": 1.2696517188660015,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           -11.649555206298828,
@@ -10415,7 +10418,7 @@
         "max": [
           -10.379903793334961,
           7.419999599456787,
-          7.193020343780518
+          7.208979606628418
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10432,6 +10435,7 @@
       "width": 1.4,
       "uniformFit": 0.8308393943364843,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           -11.654705047607422,
@@ -10441,7 +10445,7 @@
         "max": [
           -10.254705429077148,
           6.919401168823242,
-          7.192847728729248
+          7.2091522216796875
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10458,6 +10462,7 @@
       "width": 1.2185941809555914,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           -11.64853572845459,
@@ -10467,7 +10472,7 @@
         "max": [
           -10.429941177368164,
           5.139999866485596,
-          7.193054676055908
+          7.208945274353027
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10484,6 +10489,7 @@
       "width": 1.4,
       "uniformFit": 0.7769976962349698,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           -11.664774894714355,
@@ -10493,7 +10499,7 @@
         "max": [
           -10.264775276184082,
           4.626479625701904,
-          7.192792892456055
+          7.209207057952881
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10510,6 +10516,7 @@
       "width": 1.4,
       "uniformFit": 0.6876830375484894,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           -11.659063339233398,
@@ -10519,7 +10526,7 @@
         "max": [
           -10.259063720703125,
           4.145043849945068,
-          7.192701816558838
+          7.209298133850098
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10536,6 +10543,7 @@
       "width": 0.8777457406136047,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           10.350444793701172,
@@ -10545,7 +10553,7 @@
         "max": [
           11.228190422058105,
           8.34000015258789,
-          7.193020343780518
+          7.208979606628418
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10562,6 +10570,7 @@
       "width": 1.3379246457476144,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           10.35146427154541,
@@ -10571,7 +10580,7 @@
         "max": [
           11.689388275146484,
           7.87999963760376,
-          7.193054676055908
+          7.208945274353027
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10588,6 +10597,7 @@
       "width": 1.1243885808417156,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           10.350444793701172,
@@ -10597,7 +10607,7 @@
         "max": [
           11.474833488464355,
           7.419999599456787,
-          7.193020343780518
+          7.208979606628418
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10614,6 +10624,7 @@
       "width": 1.4,
       "uniformFit": 0.8336419923624966,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           10.345379829406738,
@@ -10623,7 +10634,7 @@
         "max": [
           11.745380401611328,
           5.100074291229248,
-          7.192850589752197
+          7.209149360656738
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10640,6 +10651,7 @@
       "width": 1.1566154378363407,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           10.339594841003418,
@@ -10649,7 +10661,7 @@
         "max": [
           11.496210098266602,
           4.679999828338623,
-          7.193020343780518
+          7.208979606628418
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10666,6 +10678,7 @@
       "width": 1.4,
       "uniformFit": 0.8318787028144267,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           10.34532642364502,
@@ -10675,7 +10688,7 @@
         "max": [
           11.74532699584961,
           4.179650783538818,
-          7.1928486824035645
+          7.209150791168213
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10692,6 +10705,7 @@
       "width": 1.4,
       "uniformFit": 0.857030171343011,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           10.346092224121094,
@@ -10701,7 +10715,7 @@
         "max": [
           11.746091842651367,
           3.725687265396118,
-          7.192874431610107
+          7.209125518798828
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10718,6 +10732,7 @@
       "width": 1.4,
       "uniformFit": 0.6876830375484894,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           10.340936660766602,
@@ -10727,33 +10742,35 @@
         "max": [
           11.740936279296875,
           3.225043773651123,
-          7.192701816558838
+          7.209298133850098
         ]
       },
       "fontAspectRatioPreserved": true
     },
     {
-      "body": "livegrid AV",
+      "body": "livegridAV",
       "position": [
         -3.95,
         11.31,
         7.46
       ],
       "yaw": 0,
-      "capHeight": 0.76,
-      "width": 3.8213012703711327,
-      "uniformFit": 1,
+      "capHeight": 0.7599999904632568,
+      "width": 3.9377214908599854,
+      "uniformFit": 0.9999999874516537,
       "horizontalAspectRatio": 1,
+      "premium": true,
+      "font": "Space Grotesk 600",
       "bounds": {
         "min": [
-          -3.8925626277923584,
+          -3.950000047683716,
           11.3100004196167,
-          7.457581043243408
+          7.460000038146973
         ],
         "max": [
-          -0.07126140594482422,
+          -0.012278556823730469,
           12.070000648498535,
-          7.462419033050537
+          7.517000198364258
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10770,6 +10787,7 @@
       "width": 5.7,
       "uniformFit": 0.966254771539924,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           2.5367724895477295,
@@ -10779,7 +10797,7 @@
         "max": [
           8.236772537231445,
           12.20987606048584,
-          7.461232662200928
+          7.480508327484131
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10796,6 +10814,7 @@
       "width": 4.915900032785572,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           2.524979829788208,
@@ -10805,7 +10824,7 @@
         "max": [
           7.440879821777344,
           11.619999885559082,
-          7.460765361785889
+          7.477234840393066
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10822,6 +10841,7 @@
       "width": 0.5606034041419431,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           9.302915573120117,
@@ -10831,7 +10851,7 @@
         "max": [
           9.863518714904785,
           12.429999351501465,
-          7.26083517074585
+          7.277165412902832
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10848,6 +10868,7 @@
       "width": 1.1508001246616515,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           9.315512657165527,
@@ -10857,7 +10878,7 @@
         "max": [
           10.466313362121582,
           12.119999885559082,
-          7.260807991027832
+          7.277192115783691
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10874,6 +10895,7 @@
       "width": 1.3518307456511265,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           9.302821159362793,
@@ -10883,7 +10905,7 @@
         "max": [
           10.654651641845703,
           11.809999465942383,
-          7.260807991027832
+          7.277192115783691
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10900,16 +10922,17 @@
       "width": 3.4116150476471496,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           -10.713012418044146,
           8.06000051498413,
-          -5.121929703986833
+          -5.123424569111998
         ],
         "max": [
-          -7.3458691818616115,
+          -7.335779167146349,
           8.250000095367431,
-          -2.809571481196997
+          -2.7951679181709475
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10926,16 +10949,17 @@
       "width": 2.577240873069998,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           -10.294011154378692,
           5.730000114440918,
-          -4.845119823389654
+          -4.84661468851482
         ],
         "max": [
-          -7.750122607806616,
+          -7.740032593091353,
           5.920000171661377,
-          -3.0979086831109726
+          -3.083505120084922
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10952,16 +10976,17 @@
       "width": 2.5300538026342503,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           -10.269722015566698,
           3.400000190734863,
-          -4.8299287537393285
+          -4.831423618864495
         ],
         "max": [
-          -7.772391615821174,
+          -7.762301601105911,
           3.590000247955322,
-          -3.114678788377283
+          -3.1002752253512336
         ]
       },
       "fontAspectRatioPreserved": true
@@ -10978,16 +11003,17 @@
       "width": 2.6839114799837964,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
           -10.343251820945717,
           1.0700001478195187,
-          -4.883890391972671
+          -4.885385257097837
         ],
         "max": [
-          -7.694114307487812,
+          -7.684024292772548,
           1.2600002050399777,
-          -3.064428031483179
+          -3.050024468457129
         ]
       },
       "fontAspectRatioPreserved": true
@@ -11004,16 +11030,17 @@
       "width": 1.598492269011156,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
-          8.251679364158736,
+          8.241085565074469,
           8.06000051498413,
-          -4.460053171463347
+          -4.461681763422689
         ],
         "max": [
-          9.803868822451557,
+          9.804372607974686,
           8.250000095367431,
-          -3.4740535436024014
+          -3.4595162528400576
         ]
       },
       "fontAspectRatioPreserved": true
@@ -11030,16 +11057,17 @@
       "width": 2.6667281462558368,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
-          7.733398979392808,
+          7.722805180308542,
           5.730000114440918,
-          -4.78898078256821
+          -4.790609374527552
         ],
         "max": [
-          10.322149183270419,
+          10.322652968793548,
           5.920000171661377,
-          -3.145125877915016
+          -3.1305885871526717
         ]
       },
       "fontAspectRatioPreserved": true
@@ -11056,16 +11084,17 @@
       "width": 1.3291332502534339,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
-          8.382365007793005,
+          8.371771689153837,
           3.400000190734863,
-          -4.37711318262895
+          -4.378741583011777
         ],
         "max": [
-          9.673182281549858,
+          9.6736860711822,
           3.590000247955322,
-          -3.5569938610073066
+          -3.542456679410008
         ]
       },
       "fontAspectRatioPreserved": true
@@ -11082,19 +11111,364 @@
       "width": 2.9809706679417207,
       "uniformFit": 1,
       "horizontalAspectRatio": 1,
+      "premium": true,
       "bounds": {
         "min": [
-          7.5809363851593075,
+          7.570342638290425,
           1.0700001478195187,
-          -4.885741460239023
+          -4.887370052198365
         ],
         "max": [
-          10.474611777503918,
+          10.475115558705795,
           1.2600002050399777,
-          -3.048365200244202
+          -3.0338280186469033
         ]
       },
       "fontAspectRatioPreserved": true
+    }
+  ],
+  "signage": [
+    {
+      "body": "SPACES",
+      "kind": "name",
+      "position": [
+        -11.68,
+        8.1,
+        7.192
+      ]
+    },
+    {
+      "body": "PEOPLE",
+      "kind": "name",
+      "position": [
+        -11.68,
+        7.64,
+        7.192
+      ]
+    },
+    {
+      "body": "BRANDS",
+      "kind": "name",
+      "position": [
+        -11.68,
+        7.18,
+        7.192
+      ]
+    },
+    {
+      "body": "EMOTIONS",
+      "kind": "name",
+      "position": [
+        -11.68,
+        6.72,
+        7.192
+      ]
+    },
+    {
+      "body": "RENTAL",
+      "kind": "name",
+      "position": [
+        -11.68,
+        4.9,
+        7.192
+      ]
+    },
+    {
+      "body": "SOLUTIONS",
+      "kind": "name",
+      "position": [
+        -11.68,
+        4.44,
+        7.192
+      ]
+    },
+    {
+      "body": "EXPERIENCES",
+      "kind": "name",
+      "position": [
+        -11.68,
+        3.98,
+        7.192
+      ]
+    },
+    {
+      "body": "IDEAS",
+      "kind": "name",
+      "position": [
+        10.32,
+        8.1,
+        7.192
+      ]
+    },
+    {
+      "body": "MAPPED",
+      "kind": "name",
+      "position": [
+        10.32,
+        7.64,
+        7.192
+      ]
+    },
+    {
+      "body": "BIGGER",
+      "kind": "name",
+      "position": [
+        10.32,
+        7.18,
+        7.192
+      ]
+    },
+    {
+      "body": "BUILDINGS",
+      "kind": "name",
+      "position": [
+        10.32,
+        4.9,
+        7.192
+      ]
+    },
+    {
+      "body": "STAGES",
+      "kind": "name",
+      "position": [
+        10.32,
+        4.44,
+        7.192
+      ]
+    },
+    {
+      "body": "PRODUCTS",
+      "kind": "name",
+      "position": [
+        10.32,
+        3.98,
+        7.192
+      ]
+    },
+    {
+      "body": "INTERIORS",
+      "kind": "name",
+      "position": [
+        10.32,
+        3.52,
+        7.192
+      ]
+    },
+    {
+      "body": "EXPERIENCES",
+      "kind": "name",
+      "position": [
+        10.32,
+        3.06,
+        7.192
+      ]
+    },
+    {
+      "body": "signal grid logo",
+      "kind": "emblem",
+      "position": [
+        -5.2,
+        11.32,
+        7.46
+      ]
+    },
+    {
+      "body": "livegridAV",
+      "kind": "wordmark",
+      "position": [
+        -3.95,
+        11.31,
+        7.46
+      ]
+    },
+    {
+      "body": "aqua halo",
+      "kind": "halo",
+      "position": [
+        -5.2,
+        11.28,
+        7.434
+      ]
+    },
+    {
+      "body": "PROJECTION MAPPING",
+      "kind": "name",
+      "position": [
+        2.5,
+        11.92,
+        7.46
+      ]
+    },
+    {
+      "body": "TRANSFORM SPACES INTO STORIES",
+      "kind": "name",
+      "position": [
+        2.52,
+        11.44,
+        7.46
+      ]
+    },
+    {
+      "body": "ANY",
+      "kind": "name",
+      "position": [
+        9.3,
+        12.24,
+        7.26
+      ]
+    },
+    {
+      "body": "SURFACE",
+      "kind": "name",
+      "position": [
+        9.3,
+        11.93,
+        7.26
+      ]
+    },
+    {
+      "body": "A CANVAS",
+      "kind": "name",
+      "position": [
+        9.3,
+        11.62,
+        7.26
+      ]
+    },
+    {
+      "body": "ARCHITECTURAL MAPPING",
+      "kind": "name",
+      "position": [
+        -9.023219284548404,
+        8.060000095367432,
+        -3.970660168329123
+      ]
+    },
+    {
+      "body": "STAGE EXPERIENCES",
+      "kind": "name",
+      "position": [
+        -9.023219284548404,
+        5.730000095367432,
+        -3.970660168329123
+      ]
+    },
+    {
+      "body": "PRODUCT MAPPING",
+      "kind": "name",
+      "position": [
+        -9.023219284548404,
+        3.400000095367431,
+        -3.970660168329123
+      ]
+    },
+    {
+      "body": "INTERACTIVE SPACES",
+      "kind": "name",
+      "position": [
+        -9.023219284548404,
+        1.0700000953674316,
+        -3.970660168329123
+      ]
+    },
+    {
+      "body": "LANDMARKS",
+      "kind": "name",
+      "position": [
+        9.023219288065679,
+        8.060000095367432,
+        -3.9706601655753313
+      ]
+    },
+    {
+      "body": "BRAND EXPERIENCES",
+      "kind": "name",
+      "position": [
+        9.023219288065679,
+        5.730000095367432,
+        -3.9706601655753313
+      ]
+    },
+    {
+      "body": "INTERIORS",
+      "kind": "name",
+      "position": [
+        9.023219288065679,
+        3.400000095367431,
+        -3.9706601655753313
+      ]
+    },
+    {
+      "body": "EVENTS & EXHIBITIONS",
+      "kind": "name",
+      "position": [
+        9.023219288065679,
+        1.0700000953674316,
+        -3.9706601655753313
+      ]
+    },
+    {
+      "body": "signal grid logo",
+      "kind": "emblem",
+      "position": [
+        -9.66,
+        0.42,
+        6.538
+      ]
+    },
+    {
+      "body": "livegridAV",
+      "kind": "wordmark",
+      "position": [
+        -7.2372,
+        0.4206,
+        6.5539
+      ]
+    },
+    {
+      "body": "RENTAL  |  SOLUTIONS  |  EXPERIENCES",
+      "kind": "name",
+      "position": [
+        -7.56,
+        0.265,
+        6.557
+      ]
+    },
+    {
+      "body": "EXPLORE",
+      "kind": "name",
+      "position": [
+        4.5,
+        0.86,
+        6.199
+      ]
+    },
+    {
+      "body": "POSSIBILITIES",
+      "kind": "name",
+      "position": [
+        4.5,
+        0.61,
+        6.199
+      ]
+    },
+    {
+      "body": "EXPLORE",
+      "kind": "name",
+      "position": [
+        -3.8,
+        0.86,
+        4.939
+      ]
+    },
+    {
+      "body": "POSSIBILITIES",
+      "kind": "name",
+      "position": [
+        -3.8,
+        0.61,
+        4.939
+      ]
     }
   ],
   "furniture": [
@@ -11573,7 +11947,7 @@
         "max": [
           5.199999809265137,
           1.7387369871139526,
-          6.199490547180176
+          6.216595649719238
         ]
       },
       "position": [
@@ -11598,7 +11972,7 @@
         "max": [
           -3.509999990463257,
           1.6419183015823364,
-          4.9392852783203125
+          4.956811428070068
         ]
       },
       "position": [
@@ -13466,10 +13840,10 @@
   "assets": {
     "projection-finish-v2-blender-shell": {
       "file": "projection-finish-v2-blender-shell.glb",
-      "bytes": 5618948,
-      "sha256": "9c175df7085ed083bc4fa792216028806a3c58095edf8b99d6ae42a7dd993b26",
-      "meshes": 40,
-      "triangles": 150800,
+      "bytes": 6052788,
+      "sha256": "2bf79ef722a310f6dae7d0323a40b5bb603c6fcbbb6c4bc5ba12215f5f5b9f17",
+      "meshes": 43,
+      "triangles": 142367,
       "bounds": {
         "min": [
           -12,
@@ -13485,10 +13859,10 @@
     },
     "projection-finish-v2-blender-interior": {
       "file": "projection-finish-v2-blender-interior.glb",
-      "bytes": 40667172,
-      "sha256": "bc435201b816c83e1ed02555bf73e1e25264e60737a0fb4f4ab9be0e4d1e8d41",
-      "meshes": 171,
-      "triangles": 774170,
+      "bytes": 41108096,
+      "sha256": "6cb6fa123378d33f2689b0a66ad0c7011c5d613e98d5a7bf2ba92a603c5127a4",
+      "meshes": 173,
+      "triangles": 746771,
       "bounds": {
         "min": [
           -11.813202857971191,
@@ -13544,10 +13918,10 @@
   "stats": {
     "shell": {
       "file": "projection-finish-v2-blender-shell.glb",
-      "bytes": 5618948,
-      "sha256": "9c175df7085ed083bc4fa792216028806a3c58095edf8b99d6ae42a7dd993b26",
-      "meshes": 40,
-      "triangles": 150800,
+      "bytes": 6052788,
+      "sha256": "2bf79ef722a310f6dae7d0323a40b5bb603c6fcbbb6c4bc5ba12215f5f5b9f17",
+      "meshes": 43,
+      "triangles": 142367,
       "bounds": {
         "min": [
           -12,
@@ -13563,10 +13937,10 @@
     },
     "interior": {
       "file": "projection-finish-v2-blender-interior.glb",
-      "bytes": 40667172,
-      "sha256": "bc435201b816c83e1ed02555bf73e1e25264e60737a0fb4f4ab9be0e4d1e8d41",
-      "meshes": 171,
-      "triangles": 774170,
+      "bytes": 41108096,
+      "sha256": "6cb6fa123378d33f2689b0a66ad0c7011c5d613e98d5a7bf2ba92a603c5127a4",
+      "meshes": 173,
+      "triangles": 746771,
       "bounds": {
         "min": [
           -11.813202857971191,
