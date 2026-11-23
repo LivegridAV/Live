@@ -70,8 +70,11 @@ def export_asset(suffix,objects):
             'meshes':len(result),'triangles':sum(sum(len(p.vertices)-2 for p in ob.data.polygons) for ob in result),
             'bounds':before_bounds}
 
+# Premium signs log themselves (shell and interior) into the shared SIGN_LOG.
+SIGN_LOG=premium_signage().SIGN_LOG;SIGN_LOG.clear()
 shell=load_module('rental_finish_v2_shell').build_shell_v2(globals())
 interior=load_module('rental_finish_v2_interior').build_rental_finish_v2_interior(globals())
+signage=[dict(entry) for entry in SIGN_LOG]
 stats={'shell':export_asset('shell',shell['objects']),
        'interior':export_asset('interior',interior['objects'])}
 
@@ -150,7 +153,7 @@ layout={
  'architecturalDimensions':{'fasciaTop':10.5,'clearHeight':8.293,'height':10.38},
  'architecture':shell['architecture'],'clearOverhead':8.293,
  'shellBounds':stats['shell']['bounds'],'apertures':shell['apertures'],'products':shell['products'],
- 'fixtures':shell['fixtures'],'typography':shell['signage'],
+ 'fixtures':shell['fixtures'],'typography':shell['signage'],'signage':signage,
  'furniture':interior['furniture'],'seats':interior['seats'],'plants':interior['plants'],
  'leafCount':interior['leafCount'],'reception':interior['reception'],'routes':interior['routes'],
  'visitorPlacements':visitors,'stats':stats,

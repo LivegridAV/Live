@@ -45,6 +45,16 @@ const SPIKE_VIEWS = {
   close: "camera=qa&pos=7,4.5,-89.15&look=13.4,9.4,-89.0&fov=34",
   angle: "camera=qa&pos=7.5,8.4,-95.6&look=14.2,9.6,-88.2&fov=26",
 };
+// The rental stall's main fascia is the sign the owner approved from the spike:
+// its three approved views, plus the visit camera, the reception desk sign and
+// the outside-return logo. Placement S2: root [20, 0, -82.65], yaw -pi/2, so
+// venue = (20 - z, y, -82.65 + x) for a layout point (x, y, z).
+STALLS.rental = {
+  ...SPIKE_VIEWS,
+  visit: "shot=led-rental&view=front",
+  desk: "camera=qa&pos=9.0,1.4,-75.15&look=13.55,0.75,-75.15&fov=34",
+  return: "camera=qa&pos=14.0,4.2,-63.5&look=14.2,4.2,-70.74&fov=40",
+};
 
 if (stall && !STALLS[stall]) {
   console.error(`unknown --stall ${stall}; known: ${Object.keys(STALLS).join(", ")}`);

@@ -104,7 +104,12 @@ def lathe26(name,x,z,profile,finish,sides=40):
     for p in ob.data.polygons:p.use_smooth=True
     return ob
 
-def label26(body,p,height,width=None,finish=WHITE26,center=True,tracking=1.08):
+def label26(body,p,height,width=None,finish=WHITE26,center=True,tracking=1.08,*,premium=False,accent=None,slogan=False):
+    # premium=True (opt-in) builds a premium sign: the livegridAV wordmark becomes
+    # premium_wordmark in today's ink box; other copy is deepened in place by
+    # premiumize_lettering (aqua face when `finish` is a teal/mint material).
+    if premium and premium_signage().is_wordmark(body):
+        return premium_wordmark26(body,p,height,width,finish,center,tracking)
     data=bpy.data.curves.new(PREFIX+'precise signage '+body,'FONT');data.body=body;data.font=SEMIBOLD
     data.size=1;data.space_character=tracking;data.align_x='CENTER' if center else 'LEFT';data.extrude=.0013;data.bevel_depth=.00035;data.bevel_resolution=1;data.resolution_u=10
     ob=bpy.data.objects.new(PREFIX+'lettering '+body,data);bpy.context.collection.objects.link(ob)
@@ -116,7 +121,23 @@ def label26(body,p,height,width=None,finish=WHITE26,center=True,tracking=1.08):
     span_y=max(v.co.y for v in ob.data.vertices)-min(v.co.y for v in ob.data.vertices)
     span_x=max(v.co.x for v in ob.data.vertices)-min(v.co.x for v in ob.data.vertices)
     factor=height/span_y;ob.scale=(min(factor,width/span_x) if width else factor,factor,factor)
+    if premium:
+        if accent is None:accent=any(w in finish.name.lower() for w in ('teal','mint','cyan','aqua'))
+        premium_signage().premiumize_lettering([ob],body,accent=accent,slogan=slogan,position=p)
     return ob
+
+def premium_wordmark26(body,p,height,width,finish,center,tracking):
+    # Measure today's flat label26 ink box, remove it, and set the premium pair
+    # in it: same ink bottom and height, centred (or left-aligned) like it, the
+    # letter backs on its back plane, never wider than `width`. Today's box was
+    # set by the old spelling, so that is what is measured.
+    old=label26('livegrid AV',p,height,width,finish,center,tracking)
+    bpy.context.view_layer.update()
+    ink=[old.matrix_world@v.co for v in old.data.vertices]
+    x0,x1=min(q.x for q in ink),max(q.x for q in ink);y0,y1=min(q.z for q in ink),max(q.z for q in ink)
+    back=min(-q.y for q in ink);mesh=old.data
+    bpy.data.objects.remove(old,do_unlink=True);bpy.data.meshes.remove(mesh)
+    return premium_signage().premium_wordmark(((x0+x1)/2 if center else x0,y0,back),y1-y0,width,centered=center)
 
 def emblem26(x,y,z,h):
     polygons=[[(0,0),(0,1),(.18,.88),(.18,.30)],[(.18,.88),(.72,.49),(.72,.31),(.35,.52)],[(0,0),(.72,.31),(.72,.49),(.18,.25)]]

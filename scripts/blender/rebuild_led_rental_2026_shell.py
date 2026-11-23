@@ -11,7 +11,9 @@ from mathutils import Matrix
 
 HELPERS = Path(__file__).with_name("exhibition_base_helpers.py")
 exec(compile(HELPERS.read_text(encoding="utf-8"), str(HELPERS), "exec"))
-CONDENSED_FONT = bpy.data.fonts.load("C:/Windows/Fonts/ARIALN.TTF")
+# Arial Narrow (ARIALN.TTF) is not installed on the build machine; the
+# condensed captions use Segoe UI Semibold, fitted by label() to the same width.
+CONDENSED_FONT = bpy.data.fonts.load("C:/Windows/Fonts/seguisb.ttf", check_existing=True)
 PREFIX = "LED Rental 2026 | "
 OUT = ROOT / "public/models/expo/led-rental-2026-shell.glb"
 LAYOUT_OUT = ROOT / "public/models/expo/led-rental-2026-layout.json"
@@ -51,9 +53,19 @@ def transform(objects, p=(0, 0, 0), yaw=0):
         ob.matrix_world = Matrix.Identity(4)
 
 
-def label(body, p, height, width=None, centered=False, yaw=0, tracking=1.06, semibold=False, mat=WHITE, font=None):
-    """Uniformly fit physical vector glyphs; never stretch their aspect ratio."""
+def label(body, p, height, width=None, centered=False, yaw=0, tracking=1.06, semibold=False, mat=WHITE, font=None,
+          *, premium=False, accent=None, slogan=False):
+    """Uniformly fit physical vector glyphs; never stretch their aspect ratio.
+
+    premium=True (opt-in) builds a premium sign: the livegridAV wordmark goes
+    through premium_wordmark (Space Grotesk `livegrid` + aqua `AV`, ink bottom
+    on p.y, ink left on p.x, backs on p's plane); any other body is built as
+    today and deepened in place by premiumize_lettering before the transform
+    is baked (local +Z still faces the visitor). `accent` (default: a teal or
+    mint `mat`) gives an aqua face; `slogan` marks non-name copy."""
     global FONT
+    if premium and premium_signage().is_wordmark(body):
+        return premium_label_wordmark(p, height, width, centered, yaw)
     before = set(bpy.context.scene.objects)
     previous_font = FONT
     FONT = font or (CAPTION_FONT if semibold else FONT)
@@ -69,10 +81,29 @@ def label(body, p, height, width=None, centered=False, yaw=0, tracking=1.06, sem
     for v in ob.data.vertices:
         v.co.y -= low
         v.co *= factor * fit
+    if premium:
+        if accent is None:
+            accent = any(word in mat.name.lower() for word in ("teal", "mint", "cyan", "aqua"))
+        premium_signage().premiumize_lettering([ob], body, accent=accent, slogan=slogan, position=p)
     transform(set(bpy.context.scene.objects) - before, p, yaw)
     SIGNAGE.append({"body": body, "position": list(p), "height": height * fit,
-        "width": natural * fit, "yaw": yaw, "uniformScale": True})
+        "width": natural * fit, "yaw": yaw, "uniformScale": True, **({"premium": True} if premium else {})})
     return ob
+
+
+def premium_label_wordmark(p, height, width=None, centered=False, yaw=0):
+    """label(premium=True) for the wordmark: the premium livegridAV pair in
+    label()'s ink box (as the approved test placed it). Returns its objects;
+    SIGNAGE records the fitted ink height and width (the halo is sized from it)."""
+    signs = premium_signage()
+    obs = signs.premium_wordmark(p, height, width, centered=centered, yaw=yaw,
+                                 place=lambda objects, at, turn: None)
+    xs = [v.co.x for ob in obs for v in ob.data.vertices]
+    ys = [v.co.y for ob in obs for v in ob.data.vertices]
+    transform(set(obs), p, yaw)
+    SIGNAGE.append({"body": "livegridAV", "position": list(p), "height": max(ys) - min(ys),
+        "width": max(xs) - min(xs), "yaw": yaw, "uniformScale": True, "premium": True})
+    return obs
 
 
 def emblem(p, height, yaw=0):

@@ -134,7 +134,7 @@ def build_rental_finish_v2_interior(ctx):
     soft(prefix + 'garden fine pearl upper reveal', (-7.5, .413, 6.953),
          (7.63, .017, .017), ns['WARM26'], .004)
     ns['label26']('SMALL MODULES. BIG POSSIBILITIES.', (-7.5, .245, 6.965),
-                  .125, 7.15, tracking=1.20)
+                  .125, 7.15, tracking=1.20, premium=True, slogan=True)
     record('front-left-product-garden', start, position=[-7.5, floor, 6.1],
            size=[7.8, .30, 1.7], topY=.42)
     lights.extend([{'id': 'garden teal rope', 'position': [-7.5, .143, 6.965],
@@ -171,9 +171,13 @@ def build_rental_finish_v2_interior(ctx):
                      [(end_x, .146, cz - depth / 2 + .06),
                       (end_x, .146, cz), (end_x, .146, cz + depth / 2 - .06)],
                      .011, ns['WARM26'], 8)
-    ns['emblem26'](cx - 1.75, .46, front_z + .014, .52)
-    ns['label26']('livegrid AV', (cx + .25, .51, front_z + .022), .34,
-                  3.4, tracking=.99)
+    # Desk sign: the signal-grid logo (0.80 x the old .52 emblem, its cell
+    # backs on the old emblem's back plane, front_z + .014 - .01) and the
+    # livegridAV wordmark in today's ink box. No halo: the stall's one halo is
+    # on the main fascia.
+    ns['premium_signage']().premium_emblem((cx - 1.75, .46, front_z + .004), .52)
+    ns['label26']('livegridAV', (cx + .25, .51, front_z + .022), .34,
+                  3.4, tracking=.99, premium=True)
     reception_geometry = record('front-right-reception', start,
                                 position=[cx, floor, cz], size=[width, counter_y - floor, depth],
                                 countertopY=counter_y)
