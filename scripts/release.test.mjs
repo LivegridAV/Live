@@ -515,28 +515,44 @@ const SIGN_MATERIALS = [
 
 test("premium sign materials are styled the same in every stall", async () => {
   const { isPremiumSignMaterial, stylePremiumSign } = await import("../src/venue/three/premiumSignMaterials.ts");
+  const authored = {
+    "brushed champagne return": [.9, .30], "polished champagne edge": [1.0, .10],
+  };
   const styled = Object.fromEntries(SIGN_MATERIALS.map(name => {
     assert.ok(isPremiumSignMaterial(name), name);
-    const material = new THREE.MeshStandardMaterial({ name });
+    const key = name.replace("Premium Sign | ", "");
+    const [metalness, roughness] = authored[key] ?? [0, .5];
+    const material = new THREE.MeshStandardMaterial({ name, metalness, roughness, envMapIntensity: 1 });
     stylePremiumSign(material);
-    return [name.replace("Premium Sign | ", ""), material];
+    return [key, material];
   }));
   assert.equal(isPremiumSignMaterial("Rental | champagne trim"), false);
   assert.equal(isPremiumSignMaterial("Premium Sign"), false);
-  for (const key of ["brushed champagne return", "polished champagne edge"]) assert.equal(styled[key].metalness, .82, key);
+  // Champagne keeps the GLB's own values: no rental rule restyles it.
+  for (const [key, [metalness, roughness]] of Object.entries(authored)) {
+    assert.equal(styled[key].metalness, metalness, key);
+    assert.equal(styled[key].roughness, roughness, key);
+    assert.equal(styled[key].envMapIntensity, 1, key);
+  }
+  // Exactly what prepareArchitecture gave them on the spike path: the plain grain, no installation frame.
+  for (const key of Object.keys(styled)) {
+    assert.equal(styled[key].customProgramCacheKey(), "architectural-finish-v4-false-false-false-false-false", key);
+    assert.equal(typeof styled[key].onBeforeCompile, "function", key);
+  }
+  const shader = { uniforms: {}, vertexShader: "#include <common> #include <begin_vertex>", fragmentShader: "#include <common> #include <roughnessmap_fragment> #include <color_fragment>" };
+  styled["polished champagne edge"].onBeforeCompile(shader);
+  assert.match(shader.vertexShader, /vFinishPosition = \(modelMatrix \* vec4\(position,1\.0\)\)\.xyz/);
+  assert.doesNotMatch(shader.fragmentShader, /uFinishBaselineToWorldRotation/);
   assert.equal(styled["aqua halo"].transparent, true);
   assert.equal(styled["aqua halo"].depthWrite, false);
   assert.equal(styled["dim signal cell"].depthWrite, true);
   assert.equal(styled["dim signal cell"].transparent, false);
-  // Lit faces and cells keep the emissive the GLB gave them.
+  assert.equal(styled["frosted aqua cell"].depthWrite, true);
+  // Lit faces and cells keep the emissive the GLB gave them; a second stall's pass changes nothing.
   const lit = new THREE.MeshStandardMaterial({ name: SIGN_MATERIALS[0], emissive: new THREE.Color("#123456"), emissiveIntensity: .6 });
-  stylePremiumSign(lit);
+  stylePremiumSign(lit); stylePremiumSign(lit);
   assert.equal(lit.emissive.getHexString(), "123456");
   assert.equal(lit.emissiveIntensity, .6);
-  // Running it twice (or in a second stall) changes nothing.
-  const again = styled["polished champagne edge"].clone();
-  stylePremiumSign(again);
-  assert.deepEqual([again.metalness, again.roughness, again.envMapIntensity], [.82, .29, 1.2]);
 });
 
 test("every stall material pass hands sign materials to stylePremiumSign", () => {
