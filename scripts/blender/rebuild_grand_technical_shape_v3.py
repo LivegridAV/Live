@@ -20,21 +20,65 @@ TAUPE_LEATHER=LOUNGE_GREY
 
 # The new four-view reference uses the heavier brand wordmark. Scope the
 # semibold outlines to this new asset generation, preserving prior exports.
-_reference_wordmark=wordmark
+# Today's semibold lockup still sets the footprint the premium grid logo and
+# wordmark are placed in, so measuring it is scoped the same way.
+# Every sign of this asset is a premium sign (opt-in routing): the wordmark,
+# emblem and copy wrappers below always pass premium=True.
+def _semibold(build):
+    def scoped(*args,**kwargs):
+        global FONT
+        previous_font=FONT
+        FONT=SEMIBOLD_FONT
+        try:return build(*args,**kwargs)
+        finally:FONT=previous_font
+    return scoped
+
+measure_flat_wordmark=_semibold(measure_flat_wordmark)
+_reference_wordmark=_semibold(wordmark)
 def wordmark(*args,**kwargs):
-    global FONT
-    previous_font=FONT
-    FONT=SEMIBOLD_FONT
-    try:return _reference_wordmark(*args,**kwargs)
-    finally:FONT=previous_font
+    kwargs['premium']=True
+    return _reference_wordmark(*args,**kwargs)
+
+_reference_emblem=emblem
+def emblem(*args,**kwargs):
+    kwargs['premium']=True
+    return _reference_emblem(*args,**kwargs)
+
+_reference_sign=sign
+def sign(*args,**kwargs):
+    kwargs['premium']=True
+    return _reference_sign(*args,**kwargs)
+
+_reference_exposed_sign=exposed_sign
+def exposed_sign(*args,**kwargs):
+    kwargs['premium']=True
+    return _reference_exposed_sign(*args,**kwargs)
+
+SIGNS=premium_signage()
+SIGNS.SIGN_LOG.clear()
+
+def place_sign_log():
+    """SIGN_LOG holds each sign's anchor in its own placement frame; the
+    anchors now stand where the signs finally are (native stall metres)."""
+    bpy.context.view_layer.update()
+    for ob in bpy.context.scene.objects:
+        if 'signage_anchor' in ob:
+            q=ob.matrix_world.translation
+            SIGNS.SIGN_LOG[ob['signage_anchor']]['position']=[round(float(c),4) for c in (q.x,q.z,-q.y)]
+
+def keep_premium_av(ob):
+    return any(m and m.name.startswith('Premium Sign |') for m in ob.data.materials)
 
 shell=build_shell_v3(globals())
+place_sign_log()
 batch_export(ASSET_PREFIX+'-shell',shell.pop('objects'))
 interior=build_interior_v3(globals())
+place_sign_log()
 for ob in interior['objects']:
-    if ob.type=='MESH' and ob.get('signage_body')=='AV' and ob.data.materials:
+    if ob.type=='MESH' and ob.get('signage_body')=='AV' and ob.data.materials and not keep_premium_av(ob):
         ob.data.materials[0]=bpy.data.materials['Technical | V3 cyan AV letters']
 batch_export(ASSET_PREFIX+'-interior',interior.pop('objects'))
+SIGNAGE=[dict(entry) for entry in SIGNS.SIGN_LOG]
 
 people_before=set(bpy.context.scene.objects)
 def seated_person(p,yaw,avatar,sofa=False):
@@ -86,6 +130,7 @@ layout={'version':'four-view-technical-v3-20261019','units':'metres','assetNames
  'architecture':shell['architecture'],'sharedFloor':{'owner':'Continuous venue stone','height':F,'authoredSupportHidden':True,'edgeOpticsBottom':F+.001,'edgeOpticsTop':F+.011},'apertures':SCREENS,'screens':SCREENS,'bays':interior['bays'],
  'furniture':interior['furniture'],'reception':interior['reception'],'operatorSeats':interior['operatorSeats'],
  'routes':[interior['route']],'views':views,'typography':TYPOGRAPHY,'roles':ROLE_BOUNDS,'humans':HUMAN_PLACEMENTS,
+ 'signage':SIGNAGE,
  'provenance':{'architecture':'Original bespoke Blender geometry reconstructed from LivegridAV Exhibition Booth Views.png',
      'humans':'Existing Microsoft Rocketbox MIT source rigs and textures; new native seated poses',
      'priorAssets':'All previous files preserved; new versioned assets only'},

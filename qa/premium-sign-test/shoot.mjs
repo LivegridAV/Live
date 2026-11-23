@@ -72,6 +72,21 @@ STALLS.anamorphic = {
   "left-counter": "camera=qa&pos=-15.06,1.4,-76.78&look=-15.06,0.8,-72.78&fov=45",
 };
 
+// AV Engineering / Show Control (venue id "technical"). Placement S3: root
+// [-20, 0, -126.28], yaw +pi/2, so venue = (-20 + z, y, -126.28 - x) for a
+// layout point (x, y, z). sign / angle: the crown's grid logo + wordmark
+// (the stall's halo), 8 m out, angle 35 degrees toward the approach; blade:
+// the left tower's upper branding blade; desk: the reception counter
+// lockup; plaque: the left lounge tablet.
+STALLS.technical = {
+  front: "shot=technical&view=front",
+  sign: "camera=qa&pos=-5.6,6.85,-126.28&look=-13.6,6.85,-126.28&fov=34",
+  angle: "camera=qa&pos=-7.05,6.85,-121.69&look=-13.6,6.85,-126.28&fov=34",
+  blade: "camera=qa&pos=-8.12,6.2,-116.0&look=-13.12,6.2,-116.0&fov=34",
+  desk: "camera=qa&pos=-9.81,1.4,-126.28&look=-13.81,0.75,-126.28&fov=40",
+  plaque: "camera=qa&pos=-10.64,1.2,-118.51&look=-13.64,0.35,-118.51&fov=40",
+};
+
 if (stall && !STALLS[stall]) {
   console.error(`unknown --stall ${stall}; known: ${Object.keys(STALLS).join(", ")}`);
   process.exit(2);

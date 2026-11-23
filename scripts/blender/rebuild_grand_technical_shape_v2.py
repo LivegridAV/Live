@@ -74,7 +74,8 @@ def exposed_sign(body,p,cap,width,**kwargs):
     # Keep these native raised glyphs independent from both transmitting sheet
     # batches. Runtime draws this opaque white finish after its transmission
     # prepass, so the glazing cannot blur foreground copy into its background.
-    ob.data.materials[0]=EXPOSED_BRAND
+    # A premium sign keeps its own Premium Sign materials.
+    if not kwargs.get('premium'):ob.data.materials[0]=EXPOSED_BRAND
     return ob
 
 def solid_plan(name,plan,bottom,top,mat):

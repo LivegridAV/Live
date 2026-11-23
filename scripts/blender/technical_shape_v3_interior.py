@@ -118,7 +118,7 @@ def build_interior_v3(ctx: dict):
             (0, wall_top - .355, .020), (width - .09, .71, .13), STEEL, .014)
         header_y = wall_top - .45
         subtitle_y = wall_top - .66
-        sign(title, (-width / 2 + .25, header_y, .102), .90, width - .50)
+        sign(title, (-width / 2 + .25, header_y, .102), .90, width - .50, slogan=False)
         sign(subtitle, (-width / 2 + .25, subtitle_y, .107), .30, width - .50, tracking=1.035)
         screen_w = min(5.80 if index != 1 else 5.60, width - .68)
         screen_h = screen_w * 9 / 16
@@ -252,7 +252,9 @@ def build_interior_v3(ctx: dict):
         (0, 1.117, face_z + .008), (6.34, .020, .021), NEUTRAL_COVE, .002)
     brand_before = set(bpy.context.scene.objects)
     brand_root = wordmark((0, .734, face_z + .025), .46, icon_scale=.88, gap=.035)
-    brand_bounds = bounds(set(bpy.context.scene.objects) - brand_before)
+    # A premium lockup keeps today's centring: its root carries today's bounds
+    # (wordmark frame; the root's x is 0, so x is unchanged).
+    brand_bounds = brand_root.get('flat_bounds') or bounds(set(bpy.context.scene.objects) - brand_before)
     brand_root.location.x -= (brand_bounds['min'][0] + brand_bounds['max'][0]) / 2
     sign('EVENT TECHNOLOGY', (0, .465, face_z + .025), .30, 3.25, tracking=1.08, centered=True)
     sign('FOR A BRIGHTER TOMORROW', (0, .282, face_z + .025), .29, 3.65, tracking=1.04, centered=True)
