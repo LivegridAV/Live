@@ -8,7 +8,7 @@
  * need to tick, not animate.
  */
 
-import { drawSignalGrid, drawWordmark } from "./brandMarks";
+import { drawWordmark } from "./brandMarks";
 import { TECHNICAL_PAINTERS } from "./technicalPainters";
 import { PROJECTION_PAINTERS } from "./projectionPainters";
 import { LED_RENTAL_2026_PAINTERS } from "./ledRental2026Painters";
@@ -181,8 +181,9 @@ const brandFascia = (p: PaintCtx) => {
 /**
  * The finale stage screen: the last thing a visitor sees.
  *
- * The brand lockup (signal grid + livegridAV) is set large and centred, with
- * one soft aqua wash behind it, as on the stalls' main fascias. Under it, the
+ * The signal-grid logo floats right above this screen as 3D glass in the
+ * stage wall (programs.ts, finaleBrand), so this screen carries the wordmark,
+ * set large and centred with one soft aqua wash behind it. Under it, the
  * invitation, then "Talk to livegridAV" with the wordmark drawn as the
  * wordmark (a mono uppercase caption would spell it LIVEGRIDAV).
  */
@@ -195,13 +196,11 @@ const finaleCta = (p: PaintCtx) => {
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, w, h);
 
-  // the lockup: logo left of the wordmark, centred as one unit
+  // the wordmark, centred
   const mark = h * 0.34;
-  const gap = mark * 0.28;
   ctx.font = `600 ${mark}px ${SANS_OF()}`;
   ctx.letterSpacing = "0px";
-  const wordW = ctx.measureText("livegridAV").width;
-  const lockW = mark + gap + wordW;
+  const lockW = ctx.measureText("livegridAV").width;
   const x0 = (w - lockW) / 2;
   const cy = h * 0.29;
 
@@ -213,8 +212,7 @@ const finaleCta = (p: PaintCtx) => {
   ctx.fillStyle = halo;
   ctx.fillRect(0, 0, w, h * 0.62);
 
-  drawSignalGrid(ctx, x0, cy - mark / 2, mark);
-  drawWordmark(ctx, x0 + mark + gap, cy, mark * 1.02, { ink: "#f2f7f6" });
+  drawWordmark(ctx, x0, cy, mark * 1.02, { ink: "#f2f7f6" });
 
   // hairline rule
   ctx.fillStyle = accent;

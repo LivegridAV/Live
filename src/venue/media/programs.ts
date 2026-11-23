@@ -90,45 +90,201 @@ const wrap = (body: string) => PRELUDE + body;
 /** Retained stage finale and shared entrance / arena ribbon programs. */
 const finaleBrand = wrap(/* glsl */ `
   /**
-   * The closing image.
+   * The closing image: a naked-eye 3D (anamorphic) stage background.
    *
-   * It used to be a twenty-two column dot matrix, which on a forty-metre wall
-   * resolved into half-metre ovals — a coarse pixel grid, which is the one
-   * thing this venue must never show. What replaces it is light itself: a slow
-   * convergence of fine filaments toward the centre, a bloom, and a horizon
-   * line that settles as the room goes quiet. Nothing in it has a pixel size.
+   * Rendered once for the whole ~80 m array (each panel samples its own
+   * slice), so the array reads as one window. Behind the window is a deep
+   * dark vault; through it flows a liquid-chrome ribbon that swings toward
+   * the audience and out past the frame plane. Above the invitation screen
+   * floats the livegridAV signal grid as 25 glass blocks: the 18 lit cells
+   * are aqua glass glowing from within, the 7 unlit cells are clear glass.
+   * Every block reflects the studio and refracts the vault behind it, so the
+   * logo sits in the space rather than on top of it.
+   *
+   * The illusion is built the way real anamorphic billboards are: a fixed
+   * audience eye point, a box with visible depth, objects that cast shadows
+   * into the box and break its front plane. Palette: chrome, champagne and
+   * glass on rich black, with aqua only in the logo and a faint rim.
    */
-  void main(){
-    vec2 p = centred();
-    float t = uTime;
-    float r = length(p * vec2(0.62, 1.0));
+  const float DEPTH = 5.5;          // how far the vault recedes behind the wall
+  const float EYE = 3.2;            // audience eye distance in front of the wall
+  const vec3 LOGO_C = vec3(0.0, 0.40, -0.35);   // just behind the wall, above the finale screens
+  const float LOGO_S = 0.545;       // ~3 m overall
+  const float PITCH = LOGO_S * 57.0 / 276.0;
+  const float HALF = LOGO_S * 24.0 / 276.0;     // half of a 48/276 cell
+  const float DEPTH_HALF = 0.045;
+  const float ROUND = 0.012;
 
-    // Filaments drawn toward the centre, slowing as they arrive.
-    float a = atan(p.y, p.x);
-    float filaments = 0.0;
-    for (int i = 0; i < 3; i++){
-      float fi = float(i);
-      float freq = 14.0 + fi * 9.0;
-      float phase = t * (0.22 + fi * 0.09) + fi * 2.1;
-      float band = pow(0.5 + 0.5 * sin(a * freq + phase), 22.0 + fi * 16.0);
-      filaments += band * exp(-r * (0.9 + fi * 0.5)) * (1.0 - fi * 0.22);
+  float signalHeight(float c){
+    if (c < 0.5) return 2.0;
+    if (c < 1.5) return 4.0;
+    if (c < 2.5) return 3.0;
+    if (c < 3.5) return 5.0;
+    return 4.0;
+  }
+
+  // The ribbon's centre line, as a function of x across the wall.
+  vec2 ribbonPath(float x, float t){
+    float y = 0.22 * sin(x * 0.55 + t * 0.35) - 0.12 + 0.08 * sin(x * 1.3 - t * 0.5);
+    float z = -1.4 + 1.3 * sin(x * 0.42 - t * 0.28) + 0.25 * sin(x * 0.9 + t * 0.4);
+    return vec2(y, z);
+  }
+
+  float ribbon(vec3 p, float t){
+    vec2 c = ribbonPath(p.x, t);
+    vec2 d = vec2(p.y - c.x, p.z - c.y);
+    float a = p.x * 0.7 + t * 0.3;
+    d = mat2(cos(a), -sin(a), sin(a), cos(a)) * d;
+    float r = 0.40 + 0.05 * sin(p.x * 2.1 + t * 0.9);
+    return (length(d * vec2(1.0, 1.7)) - r) * 0.55;
+  }
+
+  // The logo's own frame: a slow turn so the glass shows its depth.
+  vec3 logoLocal(vec3 p, float t){
+    vec3 q = p - LOGO_C;
+    float yaw = 0.38 * sin(t * 0.22);
+    float tilt = 0.08 * sin(t * 0.17);
+    q.xz = mat2(cos(yaw), sin(yaw), -sin(yaw), cos(yaw)) * q.xz;
+    q.yz = mat2(cos(tilt), sin(tilt), -sin(tilt), cos(tilt)) * q.yz;
+    return q;
+  }
+
+  vec2 logoCell(vec3 q){ return clamp(floor(q.xy / PITCH + 0.5), -2.0, 2.0); }
+
+  float logo(vec3 p, float t){
+    vec3 q = logoLocal(p, t);
+    vec3 l = q - vec3(logoCell(q) * PITCH, 0.0);
+    vec3 b = abs(l) - vec3(HALF - ROUND, HALF - ROUND, DEPTH_HALF - ROUND);
+    return (length(max(b, 0.0)) + min(max(b.x, max(b.y, b.z)), 0.0) - ROUND) * 0.85;
+  }
+
+  vec3 ribbonNormal(vec3 p, float t){
+    vec2 e = vec2(0.004, 0.0);
+    return normalize(vec3(
+      ribbon(p + e.xyy, t) - ribbon(p - e.xyy, t),
+      ribbon(p + e.yxy, t) - ribbon(p - e.yxy, t),
+      ribbon(p + e.yyx, t) - ribbon(p - e.yyx, t)));
+  }
+
+  vec3 logoNormal(vec3 p, float t){
+    vec2 e = vec2(0.0015, 0.0);
+    return normalize(vec3(
+      logo(p + e.xyy, t) - logo(p - e.xyy, t),
+      logo(p + e.yxy, t) - logo(p - e.yxy, t),
+      logo(p + e.yyx, t) - logo(p - e.yyx, t)));
+  }
+
+  // A dark studio: two warm softbox strips, a cool top light, black elsewhere.
+  vec3 studio(vec3 r){
+    vec3 c = vec3(0.004, 0.005, 0.006);
+    c += vec3(1.0, 0.84, 0.62) * smoothstep(0.86, 0.98, r.y) * 1.4;
+    c += vec3(1.0, 0.86, 0.66) * exp(-pow((r.x - 0.62) * 9.0, 2.0)) * smoothstep(-0.2, 0.5, r.y) * 1.1;
+    c += vec3(0.92, 0.88, 0.80) * exp(-pow((r.x + 0.70) * 11.0, 2.0)) * smoothstep(-0.4, 0.4, r.y) * 0.7;
+    c += vec3(0.80, 0.86, 0.90) * smoothstep(-0.3, -0.9, r.y) * 0.08;
+    return c;
+  }
+
+  // The vault's surfaces seen along a ray (an analytic box), with the
+  // ribbon's shadow on the floor. Returns the colour; hb is the hit point.
+  vec3 vault(vec3 o, vec3 rd, float A, float t, out vec3 hb){
+    float tb = 1e3;
+    vec3 nb = vec3(0.0, 0.0, 1.0);
+    if (rd.x > 0.0) { float k = (A - o.x) / rd.x; if (k < tb) { tb = k; nb = vec3(-1, 0, 0); } }
+    if (rd.x < 0.0) { float k = (-A - o.x) / rd.x; if (k < tb) { tb = k; nb = vec3(1, 0, 0); } }
+    if (rd.y < 0.0) { float k = (-1.0 - o.y) / rd.y; if (k < tb) { tb = k; nb = vec3(0, 1, 0); } }
+    if (rd.y > 0.0) { float k = (1.0 - o.y) / rd.y; if (k < tb) { tb = k; nb = vec3(0, -1, 0); } }
+    if (rd.z < 0.0) { float k = (-DEPTH - o.z) / rd.z; if (k < tb) { tb = k; nb = vec3(0, 0, 1); } }
+    hb = o + rd * tb;
+
+    float depthFade = exp(hb.z * 0.32);
+    vec3 col = vec3(0.016, 0.017, 0.019) * (0.6 + 0.4 * depthFade);
+    // a warm glow on the back wall, so shapes read in silhouette
+    if (nb.z > 0.5) col += vec3(0.30, 0.24, 0.17) * exp(-hb.y * hb.y * 2.5) * exp(-hb.x * hb.x * 0.04) * 0.22;
+    // fine champagne seams that sell the depth
+    vec2 g = nb.y != 0.0 ? hb.xz : nb.x != 0.0 ? hb.zy : hb.xy;
+    vec2 cell = abs(fract(g * 0.9) - 0.5);
+    float seam = smoothstep(0.012, 0.0, min(0.5 - cell.x, 0.5 - cell.y));
+    col += vec3(0.62, 0.52, 0.38) * seam * 0.18 * depthFade;
+    // the vault's mouth: a thin lit edge where its walls meet the wall plane
+    col += vec3(0.85, 0.74, 0.56) * exp(hb.z * 9.0) * (nb.z == 0.0 ? 1.0 : 0.0) * 0.35;
+    // warm light pooling on the floor, the ribbon's soft shadow on it
+    if (nb.y > 0.5) {
+      vec2 c = ribbonPath(hb.x, t);
+      float shadow = 1.0 - 0.75 * exp(-pow((hb.z - c.y) * 1.6, 2.0));
+      col += vec3(0.20, 0.16, 0.11) * exp(-pow(hb.z + 1.6, 2.0) * 0.35) * shadow * 0.6;
+      col *= shadow;
+    }
+    // a faint aqua pool on the ceiling above the glowing logo
+    if (nb.y < -0.5) col += uAccent * exp(-pow(hb.x * 2.2, 2.0) - pow((hb.z - LOGO_C.z) * 2.0, 2.0)) * 0.06;
+    return col;
+  }
+
+  void main(){
+    vec2 s = centred();               // x spans the wall (about +-7.3), y is -1..1
+    float A = uAspect.x / uAspect.y;
+    float t = uTime;
+
+    // Ray from the audience eye through this point of the wall, into the vault.
+    vec3 ro = vec3(0.0, -0.05, EYE);
+    vec3 rd = normalize(vec3(s, 0.0) - ro);
+
+    vec3 hb;
+    vec3 col = vault(vec3(s, 0.0), rd, A, t, hb);
+    float far = length(hb - ro);
+
+    // March the ribbon and the glass logo together, starting at the eye so
+    // both can come out of the wall.
+    float d = 0.0, hit = -1.0, mat = 0.0, minL = 1e3;
+    vec3 p = ro;
+    for (int i = 0; i < 96; i++) {
+      p = ro + rd * d;
+      float hr = ribbon(p, t);
+      float hl = logo(p, t);
+      minL = min(minL, hl);
+      float h = min(hr, hl);
+      if (h < 0.0015) { hit = d; mat = hl < hr ? 1.0 : 0.0; break; }
+      d += h;
+      if (d > far) break;
     }
 
-    // A calm breathing core, and the halo it throws.
-    float pulse = 0.5 + 0.5 * sin(t * 0.42);
-    float core = exp(-r * r * 3.2) * (0.72 + 0.28 * pulse);
-    float halo = exp(-r * 1.15) * 0.34;
+    float quiet = 1.0 - 0.35 * exp(-pow(s.x / 2.4, 4.0)) * exp(-s.y * s.y * 4.0);
 
-    // The horizon the room settles onto.
-    float horizon = exp(-abs(p.y) * 26.0) * smoothstep(1.9, 0.2, abs(p.x)) * (0.35 + 0.3 * pulse);
+    if (hit > 0.0 && mat < 0.5) {
+      // liquid chrome
+      vec3 n = ribbonNormal(p, t);
+      vec3 r = reflect(rd, n);
+      float fres = pow(1.0 - max(dot(-rd, n), 0.0), 4.0);
+      vec3 chrome = mix(vec3(0.78, 0.76, 0.72), vec3(0.95, 0.80, 0.58), 0.35 + 0.25 * sin(p.x * 0.8 + t * 0.2));
+      col = chrome * studio(r) * 1.7 + chrome * (0.07 + 0.08 * max(n.y, 0.0)) + uAccent * fres * 0.25;
+      col *= quiet;
+    } else if (hit > 0.0) {
+      // glass signal grid
+      vec3 n = logoNormal(p, t);
+      vec3 q = logoLocal(p, t);
+      vec2 idx = logoCell(q);
+      vec2 l = abs(q.xy - idx * PITCH) / HALF;
+      // bevelled edges catch the studio light, so even clear glass reads
+      float edge = smoothstep(0.72, 0.98, max(l.x, l.y));
+      float c = idx.x + 2.0, row = 2.0 - idx.y;          // row 0 at the top
+      float lit = (5.0 - row) <= signalHeight(c) ? 1.0 : 0.0;
+      float fres = 0.04 + 0.96 * pow(1.0 - max(dot(-rd, n), 0.0), 5.0);
+      vec3 refl = studio(reflect(rd, n));
+      vec3 rr = refract(rd, n, 1.0 / 1.45);
+      vec3 hb2;
+      vec3 behind = vault(p + rr * 0.05, rr, A, t, hb2);
+      float breathe = 0.85 + 0.15 * sin(t * 0.6 + c * 0.5 + row * 0.3);
+      vec3 body = lit > 0.5
+        ? behind * uAccent * 2.2 + uAccent * 0.55 * breathe            // aqua glass, glowing from within
+        : behind * vec3(0.80, 0.86, 0.88) + vec3(0.05, 0.058, 0.062);  // clear, slightly smoky glass
+      col = mix(body, refl * 1.6, fres);
+      col += mix(vec3(0.62, 0.66, 0.66), vec3(0.75, 1.0, 0.96), lit) * edge * 0.45;
+    } else {
+      col *= quiet;
+    }
+    // the lit glass throws a soft aqua light into the space around it
+    if (mat < 0.5) col += uAccent * exp(-minL * 34.0) * 0.22;
 
-    vec3 col = vec3(0.006, 0.013, 0.014);
-    col += uAccent * (filaments * 0.55 + core * 1.5 + halo);
-    col += vec3(0.96, 0.88, 0.74) * core * core * 0.9;
-    col += uAccent * horizon * 0.9;
-    col += vec3(0.9, 0.95, 0.96) * horizon * 0.35;
-
-    gl_FragColor = vec4(tone(col * 1.15), 1.0);
+    gl_FragColor = vec4(tone(col * 1.05), 1.0);
   }
 `);
 

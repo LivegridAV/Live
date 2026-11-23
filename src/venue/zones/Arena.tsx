@@ -276,12 +276,22 @@ function StageScreens({ rim }: { rim: THREE.Material }) {
       { x: side * 35.85, y: 5.05, w: 8.8, h: 4.15, media: "stage-outer" },
     ]),
   ];
+  // The finale plays as ONE picture across the whole array: each panel shows
+  // its own slice of a wall-wide render, so the light runs continuously from
+  // the outer screens through the strips to the centre.
+  const wall = {
+    x0: Math.min(...panels.map(p => p.x - p.w / 2)), x1: Math.max(...panels.map(p => p.x + p.w / 2)),
+    y0: Math.min(...panels.map(p => p.y - p.h / 2)), y1: Math.max(...panels.map(p => p.y + p.h / 2)),
+  };
+  const W = wall.x1 - wall.x0, H = wall.y1 - wall.y0;
+  const slice = (p: { x: number; y: number; w: number; h: number }): [number, number, number, number] =>
+    [p.w / W, p.h / H, (p.x - p.w / 2 - wall.x0) / W, (p.y - p.h / 2 - wall.y0) / H];
   return <group>
     {panels.map((p, i) => <group key={i}>
       <Panel media={p.media} width={p.w} height={p.h} position={[p.x,p.y,STAGE.wallZ]}
         rim={rim} brightness={1} reveal={.045} power={() => .08 + .92 * showLive()} />
       <Panel media="finale" width={p.w} height={p.h} position={[p.x,p.y,STAGE.wallZ+.07]}
-        rim={rim} chrome={false} power={brandUp} />
+        rim={rim} chrome={false} power={brandUp} uv={slice(p)} />
     </group>)}
     <StageBrand />
     <Screen media="stage-floor" width={26} height={14}
@@ -494,7 +504,8 @@ function FinaleSequence({ rim }: { rim: THREE.Material }) {
         media="finale-word"
         width={19}
         height={4.6}
-        position={[0, HERO_Y + 0.4, STAGE.wallZ + 0.12]}
+        // kept below the 3D glass logo in the wall, like the invitation screen
+        position={[0, HERO_Y - 0.9, STAGE.wallZ + 0.12]}
         rim={rim}
         brightness={1.05}
         chrome={false}
@@ -504,7 +515,8 @@ function FinaleSequence({ rim }: { rim: THREE.Material }) {
         media="finale-cta"
         width={18}
         height={4.2}
-        position={[0, HERO_Y, STAGE.wallZ + 0.18]}
+        // sits 0.9 m low so the 3D glass logo in the wall has room above it
+        position={[0, HERO_Y - 0.9, STAGE.wallZ + 0.18]}
         rim={rim}
         brightness={1.08}
         chrome={false}

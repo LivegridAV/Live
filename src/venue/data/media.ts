@@ -187,7 +187,8 @@ export const MEDIA: Record<string, MediaDesc> = {
   "stage-wing": { kind: "image", desktop: "/media/final/stage-conference.webp", festival: "/media/final/stage-social.webp", brightness: 0.9, syncGroup: "stage" },
 
   /* Finale */
-  "finale": { kind: "shader", program: "finaleBrand", accent: ACCENT.brand, res: [1024, 448], fps: 30, syncGroup: "finale" },
+  // Wall-wide: the stage array is ~80.5 x 11 m, and each panel samples its slice.
+  "finale": { kind: "shader", program: "finaleBrand", accent: ACCENT.brand, res: [2048, 280], fps: 30, syncGroup: "finale" },
   "finale-word": { kind: "canvas", painter: "wordmark", accent: ACCENT.brand, res: [768, 192], fps: 12 },
   "finale-cta": { kind: "canvas", painter: "signFinaleCta", accent: ACCENT.brand, res: [1280, 300], fps: 6 },
 };

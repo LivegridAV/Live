@@ -715,7 +715,7 @@ test("drawWordmark shrinks to fit maxWidth", async () => {
   assert.equal(drawWordmark(ctx, 0, 0, 20, { maxWidth: 880 }), 10 * 20 * .6);
 });
 
-test("the finale stage screen shows the grid logo, the wordmark and the invitation, all inside the screen", async () => {
+test("the finale stage screen shows the wordmark and the invitation, all inside the screen (the logo is 3D glass above it)", async () => {
   const { register } = await import("node:module");
   register(new URL("./ts-extensionless-hook.mjs", import.meta.url));
   const { PAINTERS, FINALE_CTA_TITLE } = await import("../src/venue/media/painters.ts");
@@ -730,8 +730,7 @@ test("the finale stage screen shows the grid logo, the wordmark and the invitati
     measureText(text) { return { width: text.length * parseFloat(/(\d+(?:\.\d+)?)px/.exec(this.font)[1]) * .6 }; },
   };
   PAINTERS.signFinaleCta({ ctx, w: W, h: H, t: 0, accent: "#123456", variant: 0 });
-  assert.equal(rects.filter(r => r.fill === "#1FA093").length, 18, "18 lit grid cells");
-  assert.equal(rects.filter(r => r.fill === "#0e1a18").length, 7, "7 unlit grid cells");
+  assert.equal(rects.filter(r => r.fill === "#1FA093" || r.fill === "#0e1a18").length, 0, "no flat 2D grid: the logo is the 3D glass one in the wall");
   const words = texts.map(t => t.text);
   assert.equal(words.filter(t => t === "livegrid").length, 2, "wordmark in the lockup and in the call to action");
   assert.equal(words.filter(t => t === "AV").length, 2);
@@ -740,6 +739,18 @@ test("the finale stage screen shows the grid logo, the wordmark and the invitati
   assert.ok(words.includes("Talk to "));
   for (const text of words) assert.deepEqual(wordmarkProblems(text), [], text);
   for (const r of rects) assert.ok(r.x >= 0 && r.y >= 0 && r.x + r.w <= W + 1e-6 && r.y + r.h <= H + 1e-6, "drawn inside the screen");
+});
+
+test("the finale LED wall is one 3D picture across the array, with the glass logo lit 2-4-3-5-4", () => {
+  const programs = readFileSync("src/venue/media/programs.ts", "utf8");
+  const finale = programs.slice(programs.indexOf("const finaleBrand"), programs.indexOf("const pillarWrap"));
+  const heights = [...finale.matchAll(/return (\d)\.0;/g)].map(m => Number(m[1]));
+  assert.deepEqual(heights.slice(0, 5), [2, 4, 3, 5, 4], "the glass logo's lit cells follow the logo's columns");
+  assert.match(finale, /PITCH = LOGO_S \* 57\.0 \/ 276\.0/, "glass cells keep the logo's 57/276 pitch");
+  assert.match(finale, /refract\(/, "the glass refracts the space behind it");
+  assert.doesNotMatch(finale, /atan\(/, "no radial ray burst");
+  const arena = readFileSync("src/venue/zones/Arena.tsx", "utf8");
+  assert.match(arena, /media="finale"[^>]*uv=\{slice\(p\)\}/, "each stage panel samples its own slice of the wall-wide render");
 });
 
 test("the zone card becomes a bottom caption at the finale and contact stops", () => {
