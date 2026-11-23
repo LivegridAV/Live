@@ -164,7 +164,7 @@ const brandFascia = (p: PaintCtx) => {
   ctx.shadowColor = accent;
   ctx.shadowBlur = 0;
   ctx.fillStyle = "#f2f7f6";
-  drawWordmark(ctx, w / 2, cy, size, { align: "center", ink: "#f2f7f6" });
+  drawWordmark(ctx, w / 2, cy, size, { align: "center", ink: "#f2f7f6", letterSpacing: `${(size * 0.15).toFixed(2)}px` });
   ctx.shadowBlur = 0;
   ctx.letterSpacing = "0px";
 

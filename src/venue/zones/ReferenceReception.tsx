@@ -38,7 +38,7 @@ function identity(id: Brand){
     // One full-fascia UV layout keeps the wordmark proportionate to the 7.44m
     // arc. The artwork supplies the calm navy field behind this live type.
     drawWordmark(c,canvas.width*.438922,canvas.height*.376677,96,{align:"center",ink:c.fillStyle as string});
-    c.textAlign="left";c.font="400 96px Arial, sans-serif";c.font="400 30px Arial, sans-serif";c.letterSpacing="8px";
+    c.textAlign="left";c.font="400 30px Arial, sans-serif";c.letterSpacing="8px";
     const sloganY=canvas.height*.216146+c.measureText("GOOD").actualBoundingBoxAscent;
     ["GOOD","EVENTS","BRIGHTER","PEOPLE"].forEach((s,i)=>c.fillText(s,canvas.width*.564681,sloganY+i*48));
     c.fillRect(canvas.width*.564681,canvas.height*.72,76,3);

@@ -54,7 +54,7 @@ function signTexture(sign: Sign) {
     g.beginPath(); g.moveTo(-46, 0); g.lineTo(46, 0); g.moveTo(16, -30); g.lineTo(46, 0); g.lineTo(16, 30); g.stroke();
     g.restore();
   }
-  drawWordmark(g, 128, 712 - 6, 16, { ink: "#6f655a" });
+  drawWordmark(g, 128, 712 - 6, 16, { align: "center", ink: "#6f655a" });
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.anisotropy = 4;

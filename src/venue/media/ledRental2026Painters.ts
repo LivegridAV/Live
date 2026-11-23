@@ -81,7 +81,7 @@ function brand(c: CanvasRenderingContext2D, y: number) {
   const width = c.measureText("livegridAV").width;
   const x = (W - width - emblemSize - gap) / 2;
   drawSignalGrid(c, x, y, emblemSize);
-  drawWordmark(c, x + emblemSize + gap, y + emblemSize / 2, fontSize);
+  drawWordmark(c, x + emblemSize + gap, y + emblemSize / 2, fontSize, { letterSpacing: "-2px" });
   c.letterSpacing = "0px";
 }
 

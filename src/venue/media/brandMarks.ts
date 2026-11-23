@@ -35,14 +35,15 @@ function family() {
 }
 
 /** Draws `livegrid` then aqua `AV`, vertically centred on y. x is the left, centre or
- * right edge depending on `align` (default left). `maxWidth` shrinks the font to fit. Honours the context's letterSpacing.
+ * right edge depending on `align` (default left). `maxWidth` shrinks the font to fit. Sets its own letterSpacing (`opts.letterSpacing`, default "0px").
  * Returns the total width. */
 export function drawWordmark(
   ctx: CanvasRenderingContext2D, x: number, y: number, fontPx: number,
-  opts: { align?: CanvasTextAlign; ink?: string; maxWidth?: number } = {},
+  opts: { align?: CanvasTextAlign; ink?: string; maxWidth?: number; letterSpacing?: string } = {},
 ): number {
-  const { align = "left", ink = "#f8fcff", maxWidth } = opts;
+  const { align = "left", ink = "#f8fcff", maxWidth, letterSpacing = "0px" } = opts;
   ctx.save();
+  ctx.letterSpacing = letterSpacing;
   const face = family();
   ctx.font = `600 ${fontPx}px ${face}`;
   ctx.textBaseline = "middle";

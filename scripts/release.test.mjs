@@ -578,10 +578,31 @@ test("the canvas signal grid lights 18 cells in the brand pattern", async () => 
 });
 
 test("no screen or source file spells the brand wrong", () => {
-  const strip = s => s.replace(/\/\*[\s\S]*?\*\//g, "").replace(/(^|[^:"'`\\])\/\/.*$/gm, "$1");
+  // Drops // and /* */ comments but leaves anything inside a string literal alone.
+  const strip = src => {
+    let out = "", i = 0, quote = "";
+    while (i < src.length) {
+      const ch = src[i], next = src[i + 1];
+      if (quote) {
+        out += ch;
+        if (ch === "\\") { out += next ?? ""; i += 2; continue; }
+        if (ch === quote) quote = "";
+        i++;
+      } else if (ch === "/" && next === "/") {
+        while (i < src.length && src[i] !== "\n") i++;
+      } else if (ch === "/" && next === "*") {
+        const end = src.indexOf("*/", i + 2);
+        i = end < 0 ? src.length : end + 2;
+      } else {
+        if (ch === '"' || ch === "'" || ch === "`") quote = ch;
+        out += ch; i++;
+      }
+    }
+    return out;
+  };
   const bad = [];
   for (const file of files("src/venue").filter(f => /\.tsx?$/.test(f))) {
-    for (const m of strip(read(file)).matchAll(/(["'`])((?:\.|(?!\1).)*)\1/g)) {
+    for (const m of strip(read(file)).matchAll(/(["'`])((?:\\.|(?!\1).)*)\1/g)) {
       const problems = wordmarkProblems(m[2]);
       if (problems.length) bad.push(`${file}: ${problems.join("; ")}`);
     }
