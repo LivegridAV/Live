@@ -5,6 +5,7 @@ import path from "node:path";
 import sharp from "sharp";
 import * as THREE from "three";
 import { warmScene } from "../src/venue/three/warmScene.ts";
+import { wordmarkProblems, checkSignedAsset, SIGNED_ASSETS } from "./brand-check.mjs";
 
 const read = file => readFileSync(file, "utf8");
 const files = dir => readdirSync(dir, { withFileTypes: true }).flatMap(e =>
@@ -492,4 +493,16 @@ test("the build's Node version is pinned exactly and meets the engines floor", (
   const [major, minor] = pin.split(".").map(Number);
   assert.ok(major > 22 || (major === 22 && minor >= 18), `.nvmrc ${pin} is older than 22.18`);
   assert.match(read("scripts/optimize-export.mjs"), /needs Node >= 22\.18[^\n]*process\.version/, "the guard names the requirement and the running version");
+});
+
+test("brand check flags every wrong spelling and passes the real wordmark", () => {
+  assert.deepEqual(wordmarkProblems("livegridAV"), []);
+  for (const wrong of ["LivegridAV", "livegrid AV", "LIVEGRID AV"]) {
+    assert.notDeepEqual(wordmarkProblems(wrong), [], wrong);
+  }
+  assert.deepEqual(wordmarkProblems("PEOPLE TECHNOLOGY"), []);
+});
+
+test("every signed asset passes the brand check", () => {
+  for (const entry of SIGNED_ASSETS) assert.deepEqual(checkSignedAsset(entry), [], entry.layout);
 });
