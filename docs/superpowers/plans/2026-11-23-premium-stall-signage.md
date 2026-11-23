@@ -330,3 +330,18 @@
 - [ ] **Step 7: Check the artwork.** Open (view) every `.webp` under `public/media/` that a load group lists and the inventory did not open. Report each image showing a brand mark, with its path; the owner decides whether it is redrawn. This is a report, not a fix.
 - [ ] **Step 8: Commit** with message `test: premium signage covers all six areas; final speed report`.
 - [ ] **Step 9: Hand the pictures to the owner.** Send every stall's before/after front and angle pictures from `qa/premium-sign-test/<id>/`, with the speed numbers, and ask for approval before any push. The spike branch `spike/premium-sign` is deleted only after this goes live.
+
+### Task 6b: Light pack keeps sign faces only (inserted by controller, Ruling 11)
+
+**Files:**
+- Modify: `scripts/derived-models.mjs` (`makeLite`)
+- Test: `scripts/release.test.mjs`
+
+**Interfaces:**
+- Produces: `export const LITE_DROPPED_MATERIALS = ["Premium Sign | brushed champagne return", "Premium Sign | polished champagne edge"]` and `export function dropSignReturns(document) => number` (count of primitives removed). `makeLite` calls it before simplifying. A mesh left with no primitives is detached from its node; the node itself (name, transform, hierarchy) stays.
+
+- [ ] **Step 1: Write the failing test** `test("lite models keep sign faces and drop the deep sign sides")`. Build a gltf-transform `Document` in memory with one node → mesh holding three primitives (materials `Premium Sign | ivory lit face`, `Premium Sign | brushed champagne return`, `Premium Sign | polished champagne edge`) and a second node → mesh with one `Premium Sign | brushed champagne return` primitive. Assert that `dropSignReturns` returns 3, that the first mesh keeps exactly the ivory primitive, that the second node still exists with its name but has no mesh, and that a primitive on any other material is untouched.
+- [ ] **Step 2: Run** `node --test --test-name-pattern "deep sign sides" scripts/release.test.mjs`. Expected: FAIL (export missing).
+- [ ] **Step 3: Implement** `dropSignReturns` and call it at the top of `makeLite`. Dispose of orphaned accessors with the existing `prune` pass.
+- [ ] **Step 4: Run** the focused test, then `npm run build` and the full `node --test scripts/release.test.mjs`. Expected: all pass. The total light pack is reported below today's 8,172,120 bytes, and the rental shell lite is back near its pre-premium 248 KB.
+- [ ] **Step 5: Commit** `perf(build): light pack shows sign faces without their deep sides`.
