@@ -566,6 +566,52 @@ test("every stall material pass hands sign materials to stylePremiumSign", () =>
   assert.equal((read("src/venue/three/projectionMaterials.ts").match(/isPremiumSignMaterial\(/g) ?? []).length, 2, "both projection passes");
 });
 
+test("only the projection stall's pass darkens and roughens its aqua AV face, once", async () => {
+  const { register } = await import("node:module");
+  register(new URL("./ts-extensionless-hook.mjs", import.meta.url));
+  const { applyProjectionFinishV2Materials, applyProjectionBoothMaterials, PROJECTION_AQUA_FACE } = await import("../src/venue/three/projectionMaterials.ts");
+  const { applyRental2026Materials } = await import("../src/venue/three/rental2026Materials.ts");
+  const { prepareArchitecture } = await import("../src/venue/three/architecturalFinish.ts");
+  assert.deepEqual({ ...PROJECTION_AQUA_FACE }, { roughness: .9, colorScale: .25 });
+  const AQUA = "#1fa093";
+  const signModel = () => {
+    const materials = SIGN_MATERIALS.map(name => new THREE.MeshStandardMaterial({ name, color: AQUA, roughness: .38 }));
+    const model = new THREE.Group();
+    model.add(new THREE.Mesh(new THREE.BufferGeometry(), materials));
+    return { model, byName: Object.fromEntries(materials.map(m => [m.name.replace("Premium Sign | ", ""), m])) };
+  };
+  const expected = new THREE.Color(AQUA).multiplyScalar(.25);
+  const assertTuned = (material, label) => {
+    assert.equal(material.roughness, .9, label);
+    for (const c of ["r", "g", "b"]) assert.ok(Math.abs(material.color[c] - expected[c]) < 1e-9, `${label} ${c}`);
+  };
+  const untouched = new THREE.Color(AQUA);
+  // The projection stall's pass, run twice on the same materials: tuned exactly once.
+  const { model, byName } = signModel();
+  applyProjectionFinishV2Materials(model);
+  applyProjectionFinishV2Materials(model);
+  assertTuned(byName["aqua lit face"], "aqua lit face after two passes");
+  // A clone of the tuned material keeps the flag, so a later pass leaves it alone too.
+  const clone = byName["aqua lit face"].clone();
+  const cloneModel = new THREE.Group();
+  cloneModel.add(new THREE.Mesh(new THREE.BufferGeometry(), clone));
+  applyProjectionFinishV2Materials(cloneModel);
+  assertTuned(clone, "clone of the tuned material");
+  for (const [key, material] of Object.entries(byName)) {
+    if (key === "aqua lit face") continue;
+    assert.equal(material.roughness, .38, key);
+    assert.ok(material.color.equals(untouched), key);
+  }
+  // The other stalls' passes (and the older projection booth pass) leave it as authored.
+  for (const [label, pass] of [["rental", m => applyRental2026Materials(m, true)], ["architecture", m => prepareArchitecture(m)], ["projection booth", applyProjectionBoothMaterials]]) {
+    const other = signModel();
+    pass(other.model);
+    assert.equal(other.byName["aqua lit face"].roughness, .38, label);
+    assert.ok(other.byName["aqua lit face"].color.equals(untouched), label);
+  }
+  assert.doesNotMatch(read("src/venue/three/technicalMaterials.ts"), /PROJECTION_AQUA_FACE|projectionAquaFace/, "technical");
+});
+
 test("the canvas signal grid lights 18 cells in the brand pattern", async () => {
   const { register } = await import("node:module");
   register(new URL("./ts-extensionless-hook.mjs", import.meta.url));

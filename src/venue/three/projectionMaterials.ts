@@ -3,6 +3,17 @@ import { isPremiumSignMaterial, stylePremiumSign } from "./premiumSignMaterials"
 
 const prepared = new WeakSet<THREE.Material>();
 
+/** Projection stall only: the header key light (ReferenceProjection.tsx:142) washes the aqua AV face out to white, so it is rougher and darker here. */
+export const PROJECTION_AQUA_FACE = { roughness: .9, colorScale: .25 } as const;
+
+function tuneProjectionAquaFace(material: THREE.MeshStandardMaterial) {
+  // The flag lives in userData so a clone of a tuned material is never darkened twice.
+  if (material.name !== "Premium Sign | aqua lit face" || material.userData.projectionAquaFace) return;
+  material.userData.projectionAquaFace = true;
+  material.roughness = PROJECTION_AQUA_FACE.roughness;
+  material.color.multiplyScalar(PROJECTION_AQUA_FACE.colorScale);
+}
+
 /** Metre-scale, low-contrast surface finish; the geometry carries the reveals
  * and the lights carry the reflections. No painted highlights on metal. */
 function finish(material: THREE.MeshStandardMaterial, kind: "metal" | "paint" | "fabric", specular=1, opticalGradient=false) {
@@ -121,7 +132,7 @@ export function applyProjectionFinishV2Materials(model: THREE.Object3D) {
       if(!(material instanceof THREE.MeshStandardMaterial)||seen.has(material))continue;
       seen.add(material);
       const name=material.name;
-      if(isPremiumSignMaterial(name)){stylePremiumSign(material);continue;}
+      if(isPremiumSignMaterial(name)){stylePremiumSign(material);tuneProjectionAquaFace(material);continue;}
       material.onBeforeCompile=()=>{};
       material.emissive.set(0);material.emissiveIntensity=0;material.toneMapped=true;
       if(/Rocketbox/i.test(name)){
