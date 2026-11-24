@@ -1,0 +1,9 @@
+# livegridAV welcomes search engines and AI assistants.
+# Content-Signal (https://contentsignals.org): search = search results,
+# ai-input = quoting the site in AI answers, ai-train = AI model training.
+
+User-Agent: *
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
+Allow: /
+
+Sitemap: https://livegridav.com/sitemap.xml

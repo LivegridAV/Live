@@ -842,3 +842,13 @@ test("shared links get a large brand image and AI search gets a summary", async 
   assert.match(llms, /^# livegridAV/);
   for (const text of ["Delhi", "India", "info@livegridav.com", "https://livegridav.com/services/led-display-rental"]) assert.ok(llms.includes(text), text);
 });
+test("AI assistants are invited in and Bing can be pinged", () => {
+  const robots = read("out/robots.txt");
+  assert.match(robots, /^User-Agent: \*$/m);
+  assert.match(robots, /^Content-Signal: search=yes, ai-input=yes, ai-train=yes$/m);
+  assert.match(robots, /^Allow: \/$/m);
+  assert.doesNotMatch(robots, /^Disallow: \/$/m);
+  assert.match(robots, /^Sitemap: https:\/\/livegridav.com\/sitemap.xml$/m);
+  const key = read("scripts/indexnow.mjs").match(/KEY = "([0-9a-f]{32})"/)[1];
+  assert.equal(read(`out/${key}.txt`), key);
+});
