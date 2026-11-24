@@ -21,11 +21,11 @@ export async function generateMetadata({
   const url = `https://livegridav.com/work/${project.slug}`;
   const description = projectSummary(project);
   return {
-    title: `${project.name} — ${project.client} | LiveGridAV Work`,
+    title: `${project.name} — ${project.client} | livegridAV Work`,
     description,
     alternates: { canonical: url },
     openGraph: {
-      title: `${project.name} — LiveGridAV`,
+      title: `${project.name} — livegridAV`,
       description,
       url,
       siteName: "livegridAV",
@@ -53,7 +53,7 @@ export default async function ProjectPage({
       description: projectSummary(project),
       dateCreated: project.year,
       locationCreated: { "@type": "Place", name: project.location },
-      creator: { "@type": "Organization", name: "LiveGridAV", url: "https://livegridav.com" },
+      creator: { "@type": "Organization", name: "livegridAV", url: "https://livegridav.com" },
       url,
     },
     {

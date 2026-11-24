@@ -9,12 +9,12 @@ import HeroVisual from "@/components/site/HeroVisual";
 import { contactLinks } from "@/experience/contact";
 
 export const metadata: Metadata = {
-  title: "AV Lab — Explore the Signal Path | LiveGridAV",
+  title: "AV Lab — Explore the Signal Path | livegridAV",
   description:
     "Explore how event AV signals travel — camera, media server, LED processor, Watchout playback and streaming — in an interactive walkthrough of the full signal path.",
   alternates: { canonical: "https://livegridav.com/av-lab" },
   openGraph: {
-    title: "LiveGridAV AV Lab — the signal path, explored",
+    title: "livegridAV AV Lab — the signal path, explored",
     description: "An interactive walkthrough of how event AV signals travel from source to screen.",
     url: "https://livegridav.com/av-lab",
     siteName: "livegridAV",

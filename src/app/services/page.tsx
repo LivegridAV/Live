@@ -9,12 +9,12 @@ import { contactLinks } from "@/experience/contact";
 import { SERVICES, SERVICE_GROUPS } from "@/content/services";
 
 export const metadata: Metadata = {
-  title: "Services — AV Engineering, Content, LED & Show Control | LiveGridAV",
+  title: "Services — AV Engineering, Content, LED & Show Control | livegridAV",
   description:
-    "LiveGridAV's services: AV engineering, content and visual production, LED display solutions, 3D anamorphic content and show-control / media-server operations — one visual production team.",
+    "livegridAV's services: AV engineering, content and visual production, LED display solutions, 3D anamorphic content and show-control / media-server operations — one visual production team.",
   alternates: { canonical: "https://livegridav.com/services" },
   openGraph: {
-    title: "LiveGridAV Services — one visual production team",
+    title: "livegridAV Services — one visual production team",
     description:
       "Engineering, content, LED and live operation — the complete visual system, designed, built and run by one team.",
     url: "https://livegridav.com/services",
@@ -27,7 +27,7 @@ export default function ServicesHub() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: "LiveGridAV Services",
+    name: "livegridAV Services",
     itemListElement: SERVICES.map((s, i) => ({
       "@type": "ListItem",
       position: i + 1,
@@ -53,7 +53,7 @@ export default function ServicesHub() {
             </h1>
             <p className="mt-5 max-w-[60ch] text-lg leading-relaxed text-muted">
               From the signal path to the content on screen to the operator firing
-              cues live — LiveGridAV designs, builds and runs the parts of your
+              cues live — livegridAV designs, builds and runs the parts of your
               event the audience actually sees.
             </p>
           </Reveal>

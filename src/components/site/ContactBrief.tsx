@@ -87,7 +87,7 @@ export default function ContactBrief() {
 
   const whatsapp = () => {
     const text = [
-      "Hi LiveGridAV — I'd like to plan a project.",
+      "Hi livegridAV — I'd like to plan a project.",
       projectType ? `Type: ${projectType}` : null,
       needs.length ? `Needs: ${needs.join(", ")}` : null,
     ]

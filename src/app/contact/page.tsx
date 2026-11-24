@@ -5,14 +5,15 @@ import SignalGrid from "@/components/SignalGrid";
 import ContactBrief from "@/components/site/ContactBrief";
 import HeroVisual from "@/components/site/HeroVisual";
 import { CONTACT, contactLinks } from "@/experience/contact";
+import { AREA_SERVED, PROVIDER } from "@/content/seo";
 
 export const metadata: Metadata = {
-  title: "Contact — Start a Project | LiveGridAV",
+  title: "Contact — Start a Project | livegridAV",
   description:
-    "Tell LiveGridAV what you're building — event type, what you need, date, venue and audience — and start a project. Reach us by brief, email, phone or WhatsApp.",
+    "Tell livegridAV what you're building — event type, what you need, date, venue and audience. Based in Delhi, working across India. Reach us by brief, email, phone or WhatsApp.",
   alternates: { canonical: "https://livegridav.com/contact" },
   openGraph: {
-    title: "Start a project with LiveGridAV",
+    title: "Start a project with livegridAV",
     description: "Send a project brief, or reach us on WhatsApp, email or phone.",
     url: "https://livegridav.com/contact",
     siteName: "livegridAV",
@@ -24,15 +25,9 @@ export default function Contact() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ContactPage",
-    name: "Contact LiveGridAV",
+    name: "Contact livegridAV",
     url: "https://livegridav.com/contact",
-    mainEntity: {
-      "@type": "Organization",
-      name: "LiveGridAV",
-      email: CONTACT.email,
-      telephone: CONTACT.phone,
-      address: { "@type": "PostalAddress", streetAddress: CONTACT.address },
-    },
+    mainEntity: { ...PROVIDER, areaServed: AREA_SERVED },
   };
 
   return (

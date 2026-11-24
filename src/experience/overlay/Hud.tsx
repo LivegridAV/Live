@@ -69,7 +69,7 @@ export default function Hud() {
     <>
       {/* top bar */}
       <header className="lg-hud-top">
-        <button className="lg-wordmark" onClick={onLogoClick} aria-label="LiveGridAV">
+        <button className="lg-wordmark" onClick={onLogoClick} aria-label="livegridAV">
           livegrid<span>AV</span>
         </button>
         <div className="lg-hud-actions">
@@ -188,7 +188,7 @@ export default function Hud() {
             <h3>Built like a show.</h3>
             <p className="lg-modal-body">
               Real-time WebGL · React Three Fiber · custom GLSL · procedural audio.
-              Designed and engineered for LiveGridAV. You found the fifth click —
+              Designed and engineered for livegridAV. You found the fifth click —
               try the Konami code next.
             </p>
             <button className="lg-btn" onClick={() => s.setShowCredits(false)}>Back to the show</button>

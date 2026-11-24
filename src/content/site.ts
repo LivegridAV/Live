@@ -1,5 +1,5 @@
 /**
- * Single source of truth for LiveGridAV's real content.
+ * Single source of truth for livegridAV's real content.
  *
  * BOTH the immersive 3D experience (src/experience/scenes/*) and the classic
  * 2D fallback (src/components/*) import from here, so the two never drift.
@@ -12,7 +12,7 @@ export const COMPANY = {
   name: "livegridAV",
   tagline: "Video walls that come to life.",
   intro:
-    "LiveGridAV designs, builds and operates LED displays, show control and full event technology — turning any stage, wall or storefront into a living signal.",
+    "livegridAV designs, builds and operates LED displays, show control and full event technology — turning any stage, wall or storefront into a living signal.",
   headline: "POWERING EVENTS WITH BRILLIANT VISUAL EXPERIENCES",
 } as const;
 
@@ -65,7 +65,7 @@ export interface Project {
   vibe: string;
 }
 
-// Capability demonstrations — the KINDS of shows LiveGridAV builds, not client
+// Capability demonstrations — the KINDS of shows livegridAV builds, not client
 // case studies. No fabricated clients, named venues or delivery dates. `client`
 // is the sector/context, `location` the venue scale, `year` the concept label.
 // Natural accent tones (not cyan) reinforce the material palette.

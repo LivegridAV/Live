@@ -10,12 +10,12 @@ import { EQUIPMENT_DIRECTORY } from "@/content/equipment";
 import { getService } from "@/content/services";
 
 export const metadata: Metadata = {
-  title: "Equipment — AV Technology Directory | LiveGridAV",
+  title: "Equipment — AV Technology Directory | livegridAV",
   description:
     "An educational guide to event AV technology — LED, video processing, media servers, switching, projection, camera, streaming, sound and lighting — and what each part does.",
   alternates: { canonical: "https://livegridav.com/equipment" },
   openGraph: {
-    title: "LiveGridAV Equipment — AV technology, explained",
+    title: "livegridAV Equipment — AV technology, explained",
     description:
       "What each part of an event AV system does, and the technology we use where it's relevant.",
     url: "https://livegridav.com/equipment",

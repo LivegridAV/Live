@@ -13,6 +13,20 @@ import ShowControlCues from "./ShowControlCues";
 import Icon, { SERVICE_ICON } from "./Icon";
 import { contactLinks } from "@/experience/contact";
 
+/** Renders [text](/path) inside an FAQ answer as an in-site link. */
+function withLinks(text: string) {
+  return text.split(/(\[[^\]]+\]\([^)]+\))/g).map((part, i) => {
+    const m = part.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+    return m ? (
+      <Link key={i} href={m[2]} className="text-aqua hover:underline">
+        {m[1]}
+      </Link>
+    ) : (
+      part
+    );
+  });
+}
+
 /** Page-specific interactive stage (brief §30's "one unforgettable interaction"). */
 const SERVICE_FEATURE: Record<string, () => React.JSX.Element> = {
   "professional-sound": SoundCoverage,
@@ -53,7 +67,7 @@ export default function ServiceDetailView({ service }: { service: ServiceDetail 
     .filter((s): s is ServiceDetail => Boolean(s));
   const work = relatedWork(service.order);
   const Feature = SERVICE_FEATURE[service.slug];
-  const waText = `Hi LiveGridAV — I'd like to talk about ${service.title} for an event.`;
+  const waText = `Hi livegridAV — I'd like to talk about ${service.title} for an event.`;
 
   return (
     <>
@@ -265,7 +279,7 @@ export default function ServiceDetailView({ service }: { service: ServiceDetail 
                     +
                   </span>
                 </summary>
-                <p className="mt-3 max-w-[62ch] leading-relaxed text-muted">{f.a}</p>
+                <p className="mt-3 max-w-[62ch] leading-relaxed text-muted">{withLinks(f.a)}</p>
               </details>
             ))}
           </div>

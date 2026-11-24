@@ -18,9 +18,10 @@ const spaceMono = Space_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://livegridav.com"),
-  title: "livegridAV — LED Displays, AV Technology & Live Event Production",
+  title: "livegridAV — LED Screen Rental & Event AV in Delhi, across India",
   description:
-    "LivegridAV designs, builds and operates LED displays, naked-eye 3D, projection mapping, content and show control — AV engineering, content and live production as one team.",
+    "livegridAV designs, builds and operates LED displays, naked-eye 3D, projection mapping, content and show control — Delhi-based, working across India.",
+  twitter: { card: "summary_large_image" },
   openGraph: {
     title: "livegridAV — We turn ideas into unforgettable experiences",
     description:

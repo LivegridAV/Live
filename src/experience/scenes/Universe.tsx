@@ -9,7 +9,7 @@ import { signals, THEMES, useExperience } from "../store";
 /**
  * Scene 3 — the impossible world inside the LED wall.
  * One instanced particle field (thousands of glowing cubes) morphs between
- * formations: the LiveGridAV signal-grid logo by default, and short
+ * formations: the livegridAV signal-grid logo by default, and short
  * "naked-eye 3D" demonstrations when a glass cube is clicked. The particles
  * also flee from the cursor, so the logo feels alive under the mouse.
  */

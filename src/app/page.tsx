@@ -7,9 +7,10 @@ import { LED_TYPES } from "@/content/led";
 import { ZONES } from "@/venue/data/zones";
 import { PAVILIONS, PARTNER_BAY } from "@/venue/data/pavilions";
 import { CONTACT, contactLinks } from "@/experience/contact";
+import { ORGANIZATION } from "@/content/seo";
 
 /**
- * The LivegridAV homepage — a virtual event walkthrough.
+ * The livegridAV homepage — a virtual event walkthrough.
  *
  * The WebGL venue is the experience; everything below it is the same business
  * rendered as real, server-side HTML. Search engines, screen readers and
@@ -18,14 +19,14 @@ import { CONTACT, contactLinks } from "@/experience/contact";
  */
 
 export const metadata: Metadata = {
-  title: "LivegridAV — Interactive LED, AV & Live Production Experience",
+  title: "livegridAV — LED Screen Rental & Event AV in Delhi, across India",
   description:
-    "Explore a livegridAV event experience: a four-sided immersive LED tunnel, creative LED installations, working service environments and a main stage that transforms from meetings and conferences to celebrations and social events.",
+    "Delhi-based, working across India: livegridAV designs, builds and operates LED screens, naked-eye 3D, projection mapping, show control and live event production for conferences, launches, concerts and weddings.",
   alternates: { canonical: "https://livegridav.com/" },
   openGraph: {
     title: "livegridAV — We turn ideas into unforgettable experiences",
     description:
-      "Explore LivegridAV capabilities: immersive LED, creative content, AV engineering and two distinct main-stage experiences.",
+      "LED screens, content, AV engineering and live event production — Delhi-based, working across India.",
     url: "https://livegridav.com/",
     siteName: "livegridAV",
     type: "website",
@@ -56,24 +57,7 @@ export default function Home() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
-      {
-        "@type": "Organization",
-        "@id": "https://livegridav.com/#org",
-        name: "livegridAV",
-        url: "https://livegridav.com",
-        email: CONTACT.email,
-        telephone: CONTACT.phone,
-        address: {
-          "@type": "PostalAddress",
-          streetAddress: "Uday Vihar 2, Khushi Ram Park, Nangloi",
-          addressLocality: "Delhi",
-          addressRegion: "Delhi",
-          postalCode: "110041",
-          addressCountry: "IN",
-        },
-        description:
-          "livegridAV designs, engineers and operates LED displays, immersive content, projection mapping, show control and live event production.",
-      },
+      ORGANIZATION,
       {
         "@type": "WebSite",
         "@id": "https://livegridav.com/#website",
@@ -107,7 +91,7 @@ export default function Home() {
       <section className="v-seo">
         <div className="v-seo-inner">
           <div>
-            <p className="v-mono">livegridAV · Delhi</p>
+            <p className="v-mono">livegridAV · Delhi-based, working across India</p>
             <h1>We turn ideas into unforgettable experiences</h1>
             <p style={{ marginTop: 18 }}>
               livegridAV designs, engineers and operates the visual side of live

@@ -3,6 +3,7 @@ import { SERVICES } from "@/content/services";
 import { WORK } from "@/content/work";
 import { LED_TYPES } from "@/content/led";
 import { ARTICLES } from "@/content/insights";
+import { CITIES } from "@/content/cities";
 
 // Required for `output: export` — emit a static sitemap.xml at build time.
 export const dynamic = "force-static";
@@ -39,6 +40,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: now,
       changeFrequency: monthly,
       priority: 0.6,
+    })),
+    ...CITIES.map((c) => ({
+      url: `${BASE}/locations/${c.slug}`,
+      lastModified: now,
+      changeFrequency: monthly,
+      priority: 0.8,
     })),
     ...ARTICLES.map((a) => ({
       url: `${BASE}/insights/${a.slug}`,

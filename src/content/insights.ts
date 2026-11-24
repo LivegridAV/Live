@@ -65,7 +65,7 @@ export const ARTICLES: Article[] = [
       { label: "LED Display Solutions", href: "/services/led-display-rental" },
     ],
     related: ["indoor-vs-outdoor-led", "what-is-floor-led"],
-    metaTitle: "What Pixel Pitch for an Event LED Screen? | LiveGridAV",
+    metaTitle: "What Pixel Pitch for an Event LED Screen? | livegridAV",
     metaDescription:
       "A plain-language guide to LED pixel pitch for events — the simple viewing-distance rule of thumb, how cameras and environment change it, and when to confirm the spec.",
   },
@@ -106,7 +106,7 @@ export const ARTICLES: Article[] = [
       { label: "Outdoor LED", href: "/led/outdoor-led" },
     ],
     related: ["what-pixel-pitch-for-event-led", "what-is-floor-led"],
-    metaTitle: "Indoor vs Outdoor LED, Explained | LiveGridAV",
+    metaTitle: "Indoor vs Outdoor LED, Explained | livegridAV",
     metaDescription:
       "Indoor vs outdoor event LED — the difference in brightness, weather rating, pitch and viewing distance, and a simple way to choose the right one for your event.",
   },
@@ -141,7 +141,7 @@ export const ARTICLES: Article[] = [
       { label: "Immersive Experiences", href: "/services/immersive-experiences" },
     ],
     related: ["indoor-vs-outdoor-led", "what-is-3d-anamorphic-content"],
-    metaTitle: "What Is Floor LED? | LiveGridAV",
+    metaTitle: "What Is Floor LED? | livegridAV",
     metaDescription:
       "Floor LED explained — walkable, load-rated digital stage surfaces where content plays and reacts underfoot, and where they work best for reveals and immersive shows.",
   },
@@ -177,7 +177,7 @@ export const ARTICLES: Article[] = [
       { label: "Content & Visual Production", href: "/services/content-design" },
     ],
     related: ["what-is-floor-led", "how-projection-mapping-works"],
-    metaTitle: "What Is 3D Anamorphic Content? | LiveGridAV",
+    metaTitle: "What Is 3D Anamorphic Content? | livegridAV",
     metaDescription:
       "3D anamorphic (naked-eye 3D) content explained — how forced perspective makes a flat LED wall appear to have depth, why it works from one viewpoint, and where it's used.",
   },
@@ -212,7 +212,7 @@ export const ARTICLES: Article[] = [
       { label: "Live Production", href: "/services/live-production" },
     ],
     related: ["what-is-a-hybrid-event", "what-is-3d-anamorphic-content"],
-    metaTitle: "What Does a Media Server Operator Do? | LiveGridAV",
+    metaTitle: "What Does a Media Server Operator Do? | livegridAV",
     metaDescription:
       "A media server operator runs live playback — loading content, programming cues and firing them so the right visuals hit the right screen on time, with a backup ready.",
   },
@@ -247,7 +247,7 @@ export const ARTICLES: Article[] = [
       { label: "Immersive Experiences", href: "/services/immersive-experiences" },
     ],
     related: ["what-is-3d-anamorphic-content", "what-is-a-hybrid-event"],
-    metaTitle: "How Projection Mapping Works | LiveGridAV",
+    metaTitle: "How Projection Mapping Works | livegridAV",
     metaDescription:
       "How projection mapping works — surveying the surface, rebuilding it in 3D, then warping and edge-blending projectors so a building, stage or object becomes the animation.",
   },
@@ -283,7 +283,7 @@ export const ARTICLES: Article[] = [
       { label: "Virtual Events", href: "/services/virtual-events" },
     ],
     related: ["what-does-a-media-server-operator-do", "how-projection-mapping-works"],
-    metaTitle: "What Is a Hybrid Event? | LiveGridAV",
+    metaTitle: "What Is a Hybrid Event? | livegridAV",
     metaDescription:
       "A hybrid event connects the venue audience and the online audience as one production — venue cameras, remote speakers, return feeds, live switching, streaming and recording.",
   },
