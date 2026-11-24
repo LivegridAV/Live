@@ -29,9 +29,9 @@ export const LED_TYPES: LedType[] = [
       "Camera-friendly setups for shows that are filmed or streamed.",
     ],
     bestFor: ["Conferences & keynotes", "Product launches", "Indoor stages", "Exhibitions"],
-    metaTitle: "Indoor Event LED — Sharp Screens for Controlled Rooms | LiveGridAV",
+    metaTitle: "Indoor Event LED — Sharp Screens for Controlled Rooms | livegridAV",
     metaDescription:
-      "Indoor event LED from LiveGridAV — sharp, colour-calibrated walls for keynotes, launches and stages, planned to the audience distance and confirmed after technical review.",
+      "Indoor event LED from livegridAV — sharp, colour-calibrated walls for keynotes, launches and stages, planned to the audience distance and confirmed after technical review.",
   },
   {
     slug: "outdoor-led",
@@ -46,9 +46,9 @@ export const LED_TYPES: LedType[] = [
       "Robust power and signal for open-air sites.",
     ],
     bestFor: ["Concerts & festivals", "Public events", "Outdoor stages", "Large screens"],
-    metaTitle: "Outdoor LED — Bright, Weather-Rated Event Screens | LiveGridAV",
+    metaTitle: "Outdoor LED — Bright, Weather-Rated Event Screens | livegridAV",
     metaDescription:
-      "Outdoor LED from LiveGridAV — high-brightness, weather-rated screens for concerts, festivals and public events, sized for distance and confirmed after technical review.",
+      "Outdoor LED from livegridAV — high-brightness, weather-rated screens for concerts, festivals and public events, sized for distance and confirmed after technical review.",
   },
   {
     slug: "floor-led",
@@ -63,9 +63,9 @@ export const LED_TYPES: LedType[] = [
       "Pairs with wall and ceiling LED for a full environment.",
     ],
     bestFor: ["Performances & shows", "Product reveals", "Immersive stages", "Fashion & dance"],
-    metaTitle: "Floor LED — Walkable Digital Stage Surfaces | LiveGridAV",
+    metaTitle: "Floor LED — Walkable Digital Stage Surfaces | livegridAV",
     metaDescription:
-      "Floor LED from LiveGridAV — walkable, load-rated digital stage surfaces where content plays and reacts underfoot, for reveals, performances and immersive stages.",
+      "Floor LED from livegridAV — walkable, load-rated digital stage surfaces where content plays and reacts underfoot, for reveals, performances and immersive stages.",
   },
   {
     slug: "stage-led",
@@ -80,9 +80,9 @@ export const LED_TYPES: LedType[] = [
       "Driven and mapped as one seamless canvas.",
     ],
     bestFor: ["Keynotes & summits", "Concerts", "Award shows", "Corporate stages"],
-    metaTitle: "Stage LED — Backdrops, Wings & Ribbons | LiveGridAV",
+    metaTitle: "Stage LED — Backdrops, Wings & Ribbons | livegridAV",
     metaDescription:
-      "Stage LED from LiveGridAV — main backdrops, wings and ribbons that carry content and live camera, mapped as one seamless canvas and sized to the stage.",
+      "Stage LED from livegridAV — main backdrops, wings and ribbons that carry content and live camera, mapped as one seamless canvas and sized to the stage.",
   },
   {
     slug: "creative-led",
@@ -97,9 +97,9 @@ export const LED_TYPES: LedType[] = [
       "A feature piece as much as a display.",
     ],
     bestFor: ["Brand activations", "Retail & showrooms", "Set design", "Exhibitions"],
-    metaTitle: "Creative LED — Curved, Columnar & Custom Shapes | LiveGridAV",
+    metaTitle: "Creative LED — Curved, Columnar & Custom Shapes | livegridAV",
     metaDescription:
-      "Creative LED from LiveGridAV — curved, columnar, cube and custom-canvas configurations designed to the set geometry, turning LED into a feature, not just a screen.",
+      "Creative LED from livegridAV — curved, columnar, cube and custom-canvas configurations designed to the set geometry, turning LED into a feature, not just a screen.",
   },
 ];
 

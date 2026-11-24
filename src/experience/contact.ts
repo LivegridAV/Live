@@ -11,7 +11,7 @@ export const contactLinks = {
   email: (subject = "Event enquiry — livegridav.com") =>
     `mailto:${CONTACT.email}?subject=${encodeURIComponent(subject)}`,
   call: () => `tel:${CONTACT.phone}`,
-  whatsapp: (text = "Hi LiveGridAV — I'd like a quote for an event.") =>
+  whatsapp: (text = "Hi livegridAV — I'd like a quote for an event.") =>
     `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(text)}`,
 };
 

@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* ── LivegridAV brand tokens ───────────────────────────── */
+/* ── livegridAV brand tokens ───────────────────────────── */
 :root {
   --paper: #eceeed;      /* light surface        */
   --ink: #13201e;        /* dark surface / ink   */

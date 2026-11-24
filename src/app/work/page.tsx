@@ -8,12 +8,12 @@ import { contactLinks } from "@/experience/contact";
 import { WORK } from "@/content/work";
 
 export const metadata: Metadata = {
-  title: "Work — Capability Demonstrations | LiveGridAV",
+  title: "Work — Capability Demonstrations | livegridAV",
   description:
-    "Capability demonstrations from LiveGridAV — the kinds of shows we build: LED walls, live events, naked-eye 3D, projection and show control. Filter by what you're planning.",
+    "Capability demonstrations from livegridAV — the kinds of shows we build: LED walls, live events, naked-eye 3D, projection and show control. Filter by what you're planning.",
   alternates: { canonical: "https://livegridav.com/work" },
   openGraph: {
-    title: "LiveGridAV — Capability demonstrations",
+    title: "livegridAV — Capability demonstrations",
     description:
       "The kinds of shows we build — LED, content, anamorphic and live production. Capability demonstrations, not client case studies.",
     url: "https://livegridav.com/work",
@@ -26,7 +26,7 @@ export default function WorkHub() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: "LiveGridAV Work",
+    name: "livegridAV Work",
     itemListElement: WORK.map((w, i) => ({
       "@type": "ListItem",
       position: i + 1,
@@ -50,7 +50,7 @@ export default function WorkHub() {
               The shows we build.
             </h1>
             <p className="mt-5 max-w-[60ch] text-lg leading-relaxed text-muted">
-              Capability demonstrations — the kinds of shows LiveGridAV designs, builds
+              Capability demonstrations — the kinds of shows livegridAV designs, builds
               and operates: LED, content, anamorphic, projection and live show control.
               Filter by what you&rsquo;re planning, then open one to see the system
               behind it.

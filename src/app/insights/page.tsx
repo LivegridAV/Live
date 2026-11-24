@@ -7,12 +7,12 @@ import HeroVisual from "@/components/site/HeroVisual";
 import { ARTICLES } from "@/content/insights";
 
 export const metadata: Metadata = {
-  title: "Insights — LED, Content, Show Control & Event AV Explained | LiveGridAV",
+  title: "Insights — LED, Content, Show Control & Event AV Explained | livegridAV",
   description:
     "Plain-language guides to event AV — pixel pitch, indoor vs outdoor LED, floor LED, anamorphic content, media server operators, projection mapping and hybrid events.",
   alternates: { canonical: "https://livegridav.com/insights" },
   openGraph: {
-    title: "LiveGridAV Insights — event AV, explained simply",
+    title: "livegridAV Insights — event AV, explained simply",
     description: "Useful guides to LED, content, show control and live production.",
     url: "https://livegridav.com/insights",
     siteName: "livegridAV",
@@ -24,7 +24,7 @@ export default function InsightsHub() {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Blog",
-    name: "LiveGridAV Insights",
+    name: "livegridAV Insights",
     url: "https://livegridav.com/insights",
     blogPost: ARTICLES.map((a) => ({
       "@type": "BlogPosting",

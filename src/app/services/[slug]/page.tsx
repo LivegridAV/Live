@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import PageShell from "@/components/site/PageShell";
 import ServiceDetailView from "@/components/site/ServiceDetailView";
-import { SERVICES, getService } from "@/content/services";
-import { CONTACT } from "@/experience/contact";
+import { SERVICES, getService, faqText } from "@/content/services";
+import { AREA_SERVED, PROVIDER } from "@/content/seo";
 
 // Fixed catalogue → only these slugs are built; anything else 404s.
 export const dynamicParams = false;
@@ -55,14 +55,8 @@ export default async function ServicePage({
       serviceType: service.eyebrow,
       description: service.metaDescription,
       url,
-      provider: {
-        "@type": "Organization",
-        name: "LiveGridAV",
-        email: CONTACT.email,
-        telephone: CONTACT.phone,
-        url: "https://livegridav.com",
-      },
-      areaServed: "IN",
+      provider: PROVIDER,
+      areaServed: AREA_SERVED,
     },
     {
       "@context": "https://schema.org",
@@ -79,7 +73,7 @@ export default async function ServicePage({
       mainEntity: service.faq.map((f) => ({
         "@type": "Question",
         name: f.q,
-        acceptedAnswer: { "@type": "Answer", text: f.a },
+        acceptedAnswer: { "@type": "Answer", text: faqText(f.a) },
       })),
     },
   ];

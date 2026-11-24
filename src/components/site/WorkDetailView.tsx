@@ -17,7 +17,7 @@ export default function WorkDetailView({ project }: { project: WorkItem }) {
     (w) => w.slug !== project.slug && w.categories.some((c) => project.categories.includes(c)),
   ).slice(0, 3);
   const pool = related.length ? related : WORK.filter((w) => w.slug !== project.slug).slice(0, 3);
-  const waText = `Hi LiveGridAV — I saw ${project.name} and I'd like to plan something similar.`;
+  const waText = `Hi livegridAV — I saw ${project.name} and I'd like to plan something similar.`;
 
   return (
     <>

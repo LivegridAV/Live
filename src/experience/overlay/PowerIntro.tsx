@@ -69,7 +69,7 @@ export default function PowerIntro() {
       onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && activate()}
       role="button"
       tabIndex={0}
-      aria-label="Power on the LiveGridAV experience"
+      aria-label="Power on the livegridAV experience"
     >
       {!powered && (
         <>

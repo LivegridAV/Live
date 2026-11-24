@@ -785,3 +785,60 @@ test("lite models keep sign faces and drop the deep sign sides", async () => {
   assert.deepEqual(other.listPrimitives().map(p => p.getMaterial().getName()), ["Steel"]);
   assert.equal(otherNode.getMesh(), other);
 });
+
+/* ── Search visibility across India ────────────────────────────────── */
+const CITY_PAGES = { delhi: /Delhi/, mumbai: /Mumbai/, hyderabad: /Hyderabad/, bangalore: /Bengaluru|Bangalore/, kolkata: /Kolkata/ };
+
+test("every city has its own crawlable page with local business data", () => {
+  for (const [slug, name] of Object.entries(CITY_PAGES)) {
+    const file = path.join("out", "locations", `${slug}.html`);
+    assert.ok(existsSync(file), `missing ${file}`);
+    const html = read(file);
+    assert.match(html, new RegExp(`rel="canonical" href="https://livegridav.com/locations/${slug}"`));
+    const title = (html.match(/<title>([^<]*)<\/title>/) || [])[1] || "";
+    assert.match(title, name, `${slug}: title should name the city`);
+    assert.match(title, /livegridAV/);
+    const h1 = (html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/) || [])[1] || "";
+    assert.match(h1.replace(/<[^>]+>/g, ""), name);
+    assert.match(html, /"areaServed"/);
+    assert.match(html, /"@type":"FAQPage"/);
+    assert.match(html, /Uday Vihar 2/, "the Delhi office is the only address");
+    const words = html.replace(/<script[\s\S]*?<\/script>/g, "").replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length;
+    assert.ok(words > 450, `${slug}: ${words} words is too thin to rank`);
+    assert.match(read("out/sitemap.xml"), new RegExp(`https://livegridav.com/locations/${slug}<`));
+  }
+});
+
+test("city pages are not listed in the menu, footer or home page", () => {
+  for (const file of ["out/index.html", "out/about.html", "out/services.html", "out/contact.html"]) {
+    assert.doesNotMatch(read(file), /href="\/locations\//, `${file} links a city page`);
+  }
+  // one FAQ answer is the only in-site path to them
+  assert.match(read("out/services/led-display-rental.html"), /Do you work outside Delhi\?[\s\S]*href="\/locations\/mumbai"/);
+});
+
+test("the business reads as Delhi-based, working across India", () => {
+  const home = read("out/index.html");
+  assert.match((home.match(/<title>([^<]*)/) || [])[1], /India/);
+  assert.match(home, /"areaServed":\[[^\]]*"India"/);
+  for (const city of ["Mumbai", "Hyderabad", "Bengaluru", "Kolkata"]) assert.match(home, new RegExp(`"name":"${city}"`));
+  assert.match(home, /working across India/);
+});
+
+test("brand is spelt livegridAV in every page's copy and metadata", () => {
+  for (const file of pages) {
+    const html = read(file).replace(/<script(?![^>]*ld\+json)[\s\S]*?<\/script>/g, "");
+    assert.doesNotMatch(html, /LiveGridAV|LivegridAV/, `${file} misspells the brand`);
+  }
+});
+
+test("shared links get a large brand image and AI search gets a summary", async () => {
+  const home = read("out/index.html");
+  assert.match(home, /property="og:image" content="https:\/\/livegridav.com\/opengraph-image\.jpg/);
+  assert.match(home, /name="twitter:card" content="summary_large_image"/);
+  const meta = await sharp(path.join("out", "opengraph-image.jpg")).metadata();
+  assert.deepEqual([meta.width, meta.height], [1200, 630]);
+  const llms = read("out/llms.txt");
+  assert.match(llms, /^# livegridAV/);
+  for (const text of ["Delhi", "India", "info@livegridav.com", "https://livegridav.com/services/led-display-rental"]) assert.ok(llms.includes(text), text);
+});

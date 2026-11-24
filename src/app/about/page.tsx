@@ -6,14 +6,15 @@ import SignalGrid from "@/components/SignalGrid";
 import HeroVisual from "@/components/site/HeroVisual";
 import { contactLinks, CONTACT } from "@/experience/contact";
 import { COMPANY, STATS } from "@/content/site";
+import { AREA_SERVED, PROVIDER } from "@/content/seo";
 
 export const metadata: Metadata = {
-  title: "About — Engineers, Creators, Operators, Storytellers | LiveGridAV",
+  title: "About — Engineers, Creators, Operators, Storytellers | livegridAV",
   description:
-    "LiveGridAV combines AV engineering, content creation and live show operation. We design the visuals, engineer the system, create the content and operate it live — as one team.",
+    "livegridAV combines AV engineering, content creation and live show operation. We design the visuals, engineer the system, create the content and operate it live — as one team.",
   alternates: { canonical: "https://livegridav.com/about" },
   openGraph: {
-    title: "About LiveGridAV — the team that connects creativity and technology",
+    title: "About livegridAV — the team that connects creativity and technology",
     description:
       "Engineers, creators, operators and storytellers — one team for the whole visual show.",
     url: "https://livegridav.com/about",
@@ -50,14 +51,9 @@ const WORKFLOW = [
 export default function About() {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Organization",
-    name: "LiveGridAV",
-    url: "https://livegridav.com",
-    email: CONTACT.email,
-    telephone: CONTACT.phone,
+    ...PROVIDER,
     description: COMPANY.intro,
-    address: { "@type": "PostalAddress", streetAddress: CONTACT.address },
-    areaServed: "IN",
+    areaServed: AREA_SERVED,
   };
 
   return (

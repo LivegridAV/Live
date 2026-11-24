@@ -27,7 +27,7 @@ export default function Services() {
           </h2>
           <p className="mt-5 max-w-[52ch] leading-relaxed text-muted">
             From the LED wall to the media server to the operator at front of
-            house — LiveGridAV designs, builds and runs the whole visual show.
+            house — livegridAV designs, builds and runs the whole visual show.
           </p>
           <Link
             href="/services"

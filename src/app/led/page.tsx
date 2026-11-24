@@ -10,7 +10,7 @@ import { contactLinks } from "@/experience/contact";
 import { LED_TYPES } from "@/content/led";
 
 export const metadata: Metadata = {
-  title: "LED Screens — Indoor, Outdoor, Floor, Stage & Creative | LiveGridAV",
+  title: "LED Screens — Indoor, Outdoor, Floor, Stage & Creative | livegridAV",
   description:
     "Understand event LED — indoor, outdoor, floor, stage and creative screens — and use our pixel-pitch planner to rough out the right screen for your venue and audience.",
   alternates: { canonical: "https://livegridav.com/led" },

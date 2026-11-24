@@ -23,8 +23,12 @@ export type ServiceGroup =
 
 export interface ServiceFaq {
   q: string;
+  /** may contain in-site links written as [text](/path) */
   a: string;
 }
+
+/** An FAQ answer as plain text, for structured data. */
+export const faqText = (a: string) => a.replace(/\[([^\]]+)\]\([^)]+\)/g, "$1");
 
 export interface ServiceWorkflowStep {
   step: string;
@@ -137,9 +141,9 @@ export const SERVICES: ServiceDetail[] = [
       },
     ],
     related: ["show-control-media-server", "led-display-rental", "live-production"],
-    metaTitle: "AV Engineering — Signal Design & Live Technical Operation | LiveGridAV",
+    metaTitle: "AV Engineering — Signal Design & Live Technical Operation | livegridAV",
     metaDescription:
-      "LiveGridAV plans and operates the complete AV signal path — sources, switching, media servers, processing and redundant output — so your visual system stays reliable all show.",
+      "livegridAV plans and operates the complete AV signal path — sources, switching, media servers, processing and redundant output — so your visual system stays reliable all show.",
   },
 
   /* ── 02 · Content & Visual Production ────────────────── */
@@ -197,9 +201,9 @@ export const SERVICES: ServiceDetail[] = [
       },
     ],
     related: ["presentation-content", "3d-anamorphic", "led-display-rental"],
-    metaTitle: "Content & Visual Production — Stage Graphics, Motion & 3D | LiveGridAV",
+    metaTitle: "Content & Visual Production — Stage Graphics, Motion & 3D | livegridAV",
     metaDescription:
-      "LiveGridAV designs and builds visuals for the exact resolution of your screen — motion graphics, 3D and real-time content, anamorphic sequences and stage presentation visuals.",
+      "livegridAV designs and builds visuals for the exact resolution of your screen — motion graphics, 3D and real-time content, anamorphic sequences and stage presentation visuals.",
   },
 
   /* ── 03 · Presentation Content (SEO landing) ─────────── */
@@ -251,9 +255,9 @@ export const SERVICES: ServiceDetail[] = [
       },
     ],
     related: ["content-design", "show-control-media-server", "live-production"],
-    metaTitle: "Presentation & PPT Content for Large LED Screens | LiveGridAV",
+    metaTitle: "Presentation & PPT Content for Large LED Screens | livegridAV",
     metaDescription:
-      "LiveGridAV redesigns presentations for large stage LED — ultra-wide and multi-screen layouts, speaker and award sequences, and cue-friendly structures built for live shows.",
+      "livegridAV redesigns presentations for large stage LED — ultra-wide and multi-screen layouts, speaker and award sequences, and cue-friendly structures built for live shows.",
   },
 
   /* ── 04 · LED Display Solutions ──────────────────────── */
@@ -309,11 +313,15 @@ export const SERVICES: ServiceDetail[] = [
         q: "Indoor vs outdoor LED — what's the difference?",
         a: "Outdoor LED is brighter and weather-rated for daylight and the elements; indoor LED prioritises image quality for controlled rooms. We match the type to the environment.",
       },
+      {
+        q: "Do you work outside Delhi?",
+        a: "Yes. Our office is in [Delhi](/locations/delhi), and our own crew travels with the equipment to events anywhere in India — often to [Mumbai](/locations/mumbai), [Hyderabad](/locations/hyderabad), [Bengaluru](/locations/bangalore) and [Kolkata](/locations/kolkata).",
+      },
     ],
     related: ["3d-anamorphic", "av-engineering", "projection-mapping"],
-    metaTitle: "LED Display Solutions — Indoor, Outdoor, Floor & Creative LED | LiveGridAV",
+    metaTitle: "LED Display Solutions — Indoor, Outdoor, Floor & Creative LED | livegridAV",
     metaDescription:
-      "LiveGridAV plans, builds and operates event LED — indoor, outdoor, floor, stage and creative walls — engineered to the venue and viewing distance, with specs confirmed after technical review.",
+      "livegridAV plans, builds and operates event LED — indoor, outdoor, floor, stage and creative walls — engineered to the venue and viewing distance, with specs confirmed after technical review.",
   },
 
   /* ── 05 · 3D / Anamorphic Content ────────────────────── */
@@ -366,9 +374,9 @@ export const SERVICES: ServiceDetail[] = [
       },
     ],
     related: ["content-design", "led-display-rental", "immersive-experiences"],
-    metaTitle: "3D & Anamorphic Content — Naked-Eye 3D for LED Walls | LiveGridAV",
+    metaTitle: "3D & Anamorphic Content — Naked-Eye 3D for LED Walls | livegridAV",
     metaDescription:
-      "LiveGridAV designs naked-eye 3D and anamorphic content that appears to break past the LED — viewpoint-accurate perspective, choreographed objects and exact-geometry delivery.",
+      "livegridAV designs naked-eye 3D and anamorphic content that appears to break past the LED — viewpoint-accurate perspective, choreographed objects and exact-geometry delivery.",
   },
 
   /* ── 06 · Show Control & Media Server Operations ─────── */
@@ -426,9 +434,9 @@ export const SERVICES: ServiceDetail[] = [
       },
     ],
     related: ["av-engineering", "content-design", "live-production"],
-    metaTitle: "Show Control & Media Server Operations — VJ, Watchout, Resolume | LiveGridAV",
+    metaTitle: "Show Control & Media Server Operations — VJ, Watchout, Resolume | livegridAV",
     metaDescription:
-      "LiveGridAV operates the show live — media servers, VJ / Resolume, Watchout timelines and AV-console routing — so the right content plays on the right screen at the right moment.",
+      "livegridAV operates the show live — media servers, VJ / Resolume, Watchout timelines and AV-console routing — so the right content plays on the right screen at the right moment.",
   },
 
   /* ── 07 · Projection Mapping ─────────────────────────── */
@@ -486,9 +494,9 @@ export const SERVICES: ServiceDetail[] = [
       },
     ],
     related: ["immersive-experiences", "content-design", "led-display-rental"],
-    metaTitle: "Projection Mapping — Building, Stage & Object Mapping | LiveGridAV",
+    metaTitle: "Projection Mapping — Building, Stage & Object Mapping | livegridAV",
     metaDescription:
-      "LiveGridAV shapes content to the real surface — building, stage and object mapping with multi-projector edge blending and on-site warping for a seamless mapped show.",
+      "livegridAV shapes content to the real surface — building, stage and object mapping with multi-projector edge blending and on-site warping for a seamless mapped show.",
   },
 
   /* ── 08 · Immersive Experiences ──────────────────────── */
@@ -542,9 +550,9 @@ export const SERVICES: ServiceDetail[] = [
       },
     ],
     related: ["projection-mapping", "3d-anamorphic", "content-design"],
-    metaTitle: "Immersive Experiences — LED, Projection, Light & Interaction | LiveGridAV",
+    metaTitle: "Immersive Experiences — LED, Projection, Light & Interaction | livegridAV",
     metaDescription:
-      "LiveGridAV builds immersive environments where LED, projection, content, light and sound surround the audience — including interactive and sensor-driven experiences.",
+      "livegridAV builds immersive environments where LED, projection, content, light and sound surround the audience — including interactive and sensor-driven experiences.",
   },
 
   /* ── 09 · Live Production ────────────────────────────── */
@@ -603,9 +611,9 @@ export const SERVICES: ServiceDetail[] = [
       },
     ],
     related: ["av-engineering", "show-control-media-server", "hybrid-events"],
-    metaTitle: "Live Production — Event AV, Screens, Cameras & Show Operation | LiveGridAV",
+    metaTitle: "Live Production — Event AV, Screens, Cameras & Show Operation | livegridAV",
     metaDescription:
-      "LiveGridAV plans, builds and operates the visual side of live events as one production — system design, content, cameras, switching, playback and live show operation.",
+      "livegridAV plans, builds and operates the visual side of live events as one production — system design, content, cameras, switching, playback and live show operation.",
   },
 
   /* ── 10 · Virtual Events ─────────────────────────────── */
@@ -663,9 +671,9 @@ export const SERVICES: ServiceDetail[] = [
       },
     ],
     related: ["hybrid-events", "broadcast-streaming", "live-production"],
-    metaTitle: "Virtual Events — Branded Online Stages & Streaming | LiveGridAV",
+    metaTitle: "Virtual Events — Branded Online Stages & Streaming | livegridAV",
     metaDescription:
-      "LiveGridAV produces virtual events like a broadcast — branded online stages, remote speakers, live switching, streaming and recording for online audiences.",
+      "livegridAV produces virtual events like a broadcast — branded online stages, remote speakers, live switching, streaming and recording for online audiences.",
   },
 
   /* ── 11 · Hybrid Events ──────────────────────────────── */
@@ -723,9 +731,9 @@ export const SERVICES: ServiceDetail[] = [
       },
     ],
     related: ["virtual-events", "broadcast-streaming", "live-production"],
-    metaTitle: "Hybrid Events — Venue + Online Audience, One Production | LiveGridAV",
+    metaTitle: "Hybrid Events — Venue + Online Audience, One Production | livegridAV",
     metaDescription:
-      "LiveGridAV connects the venue and the remote audience as one production — venue cameras, remote speakers, return feeds, LED integration, streaming and recording.",
+      "livegridAV connects the venue and the remote audience as one production — venue cameras, remote speakers, return feeds, LED integration, streaming and recording.",
   },
 
   /* ── 12 · Broadcast & Streaming ──────────────────────── */
@@ -783,9 +791,9 @@ export const SERVICES: ServiceDetail[] = [
       },
     ],
     related: ["hybrid-events", "virtual-events", "live-production"],
-    metaTitle: "Broadcast & Streaming — Multi-Camera Live Production | LiveGridAV",
+    metaTitle: "Broadcast & Streaming — Multi-Camera Live Production | livegridAV",
     metaDescription:
-      "LiveGridAV produces events like a broadcast — multi-camera switching, graphics, RTMP/SRT streaming, recording and backup workflows for reliable delivery to any platform.",
+      "livegridAV produces events like a broadcast — multi-camera switching, graphics, RTMP/SRT streaming, recording and backup workflows for reliable delivery to any platform.",
   },
 
   /* ── 13 · Professional Sound ─────────────────────────── */
@@ -839,9 +847,9 @@ export const SERVICES: ServiceDetail[] = [
       },
     ],
     related: ["professional-lighting", "live-production", "av-engineering"],
-    metaTitle: "Professional Sound — Event Audio, Planned & Coordinated | LiveGridAV",
+    metaTitle: "Professional Sound — Event Audio, Planned & Coordinated | livegridAV",
     metaDescription:
-      "LiveGridAV plans event sound and delivers it with trusted specialist audio partners — line arrays, monitors, consoles, microphones and RF sized to your venue and show.",
+      "livegridAV plans event sound and delivers it with trusted specialist audio partners — line arrays, monitors, consoles, microphones and RF sized to your venue and show.",
   },
 
   /* ── 14 · Professional Lighting ──────────────────────── */
@@ -895,9 +903,9 @@ export const SERVICES: ServiceDetail[] = [
       },
     ],
     related: ["professional-sound", "live-production", "immersive-experiences"],
-    metaTitle: "Professional Lighting — Event Lighting, Coordinated | LiveGridAV",
+    metaTitle: "Professional Lighting — Event Lighting, Coordinated | livegridAV",
     metaDescription:
-      "LiveGridAV plans event lighting and coordinates specialist lighting teams and rigs with trusted partners — moving heads, wash, beam, follow spots, haze and control.",
+      "livegridAV plans event lighting and coordinates specialist lighting teams and rigs with trusted partners — moving heads, wash, beam, follow spots, haze and control.",
   },
 
   /* ── 15 · Web Development ─────────────────────────────── */
@@ -951,9 +959,9 @@ export const SERVICES: ServiceDetail[] = [
       },
     ],
     related: ["3d-anamorphic", "content-design", "immersive-experiences"],
-    metaTitle: "Web Development — Interactive & 3D Web Experiences | LiveGridAV",
+    metaTitle: "Web Development — Interactive & 3D Web Experiences | livegridAV",
     metaDescription:
-      "LiveGridAV builds business and event websites, interactive landing pages and 3D / WebGL experiences — fast, accessible and designed like a live show in the browser.",
+      "livegridAV builds business and event websites, interactive landing pages and 3D / WebGL experiences — fast, accessible and designed like a live show in the browser.",
   },
 ];
 
