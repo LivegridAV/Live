@@ -809,6 +809,20 @@ test("every city has its own crawlable page with local business data", () => {
   }
 });
 
+test("the Delhi page answers 'LED screen rental Delhi' with confirmed stock only", () => {
+  const html = read("out/locations/delhi.html");
+  const title = (html.match(/<title>([^<]*)<\/title>/) || [])[1] || "";
+  assert.match(title, /^LED Screen Rental in Delhi NCR/);
+  const text = html.replace(/<script[\s\S]*?<\/script>/g, "").replace(/<[^>]+>/g, " ");
+  assert.match(text, /LED screen rental in Delhi/);
+  for (const pitch of ["P2.6", "P3.9", "P4.8"]) assert.ok(text.includes(pitch), pitch);
+  assert.match(text, /operated by our own crew/);
+  assert.doesNotMatch(text, /₹|Rs\.? ?\d|per sq/i, "no prices on the page");
+  assert.match(html, /href="\/led\/indoor-led"/);
+  assert.match(html, /href="\/led\/outdoor-led"/);
+  assert.match(html, /"name":"How much does LED screen rental cost in Delhi\?"/);
+});
+
 test("city pages are not listed in the menu, footer or home page", () => {
   for (const file of ["out/index.html", "out/about.html", "out/services.html", "out/contact.html"]) {
     assert.doesNotMatch(read(file), /href="\/locations\//, `${file} links a city page`);
