@@ -818,6 +818,7 @@ test("the Delhi page answers 'LED screen rental Delhi' with confirmed stock only
   for (const pitch of ["P2.6", "P3.9", "P4.8"]) assert.ok(text.includes(pitch), pitch);
   assert.match(text, /operated by our own crew/);
   assert.doesNotMatch(text, /₹|Rs\.? ?\d|per sq/i, "no prices on the page");
+  assert.doesNotMatch(text, /floor/i, "LED floors are not offered for rent in Delhi");
   assert.match(html, /href="\/led\/indoor-led"/);
   assert.match(html, /href="\/led\/outdoor-led"/);
   assert.match(html, /"name":"How much does LED screen rental cost in Delhi\?"/);

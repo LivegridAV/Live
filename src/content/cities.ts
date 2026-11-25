@@ -91,7 +91,7 @@ export const CITIES: City[] = [
     h1: "LED screen rental and event AV in Delhi NCR",
     tagline: "Our home city. Our office is in Nangloi, west Delhi, so site visits and technical recces across NCR are easy to arrange.",
     intro: [
-      "livegridAV designs, builds and operates the visual side of events in Delhi, Gurugram and Noida: LED walls and floors, content made for the exact screen, projection mapping, show control and live production. One team plans the system, makes the content and runs it on the day.",
+      "livegridAV designs, builds and operates the visual side of events in Delhi, Gurugram and Noida: indoor and outdoor LED walls, content made for the exact screen, projection mapping, show control and live production. One team plans the system, makes the content and runs it on the day.",
       "Because we are based here, a Delhi NCR project gets the shortest planning loop we can offer — we can walk the venue with you, check power and rigging points in person and test content on a real panel before the show.",
     ],
     scene:
@@ -104,7 +104,7 @@ export const CITIES: City[] = [
       "Farmhouse and banquet venues in Chhatarpur and on the city's edges",
     ],
     highlights: [
-      { service: "led-display-rental", note: "Indoor walls for conference halls, outdoor high-brightness screens for daytime events and LED floors for stages and weddings." },
+      { service: "led-display-rental", note: "Indoor walls for conference halls, outdoor high-brightness screens for daytime events and LED backdrops for wedding and banquet stages." },
       { service: "live-production", note: "Keynotes and award nights run as one show — screens, cameras, playback and cues on a single plan." },
       { service: "broadcast-streaming", note: "Multi-camera streams for summits and town halls with remote audiences across India." },
       { service: "3d-anamorphic", note: "Naked-eye 3D content for launches and brand activations, made to the exact screen geometry." },
@@ -120,7 +120,7 @@ export const CITIES: City[] = [
       { q: "Do you rent LED screens without an operator?", a: "No. Every LED screen we rent in Delhi NCR is set up, operated and dismantled by our own crew, so the screen is looked after for the whole event." },
       { q: "Which parts of Delhi NCR do you cover?", a: "All of it — Delhi, Gurugram, Noida, Greater Noida, Faridabad and Ghaziabad. Our office is in Nangloi, west Delhi." },
       { q: "Can you visit our venue before the event?", a: "Yes. In Delhi NCR a site visit is the normal first step for anything beyond a simple screen." },
-      { q: "Do you handle weddings as well as corporate events?", a: "Yes. LED backdrops, floors, content and live operation work the same way for a wedding stage as for a conference — the content and the pace change." },
+      { q: "Do you handle weddings as well as corporate events?", a: "Yes. LED backdrops, content and live operation work the same way for a wedding stage as for a conference — the content and the pace change." },
       { q: "How early should we book?", a: "As early as you can, especially in the wedding and exhibition seasons. Tell us the date and venue and we will confirm what is possible." },
     ],
     rental: {
