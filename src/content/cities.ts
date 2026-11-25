@@ -27,6 +27,34 @@ export interface CityFaq {
   a: string;
 }
 
+/** An LED panel type the owner has confirmed is available to rent in a city. */
+export interface RentalScreen {
+  /** plain name, e.g. "Indoor fine-pitch LED" */
+  name: string;
+  /** the pixel pitch as the owner confirmed it */
+  pitch: string;
+  /** where it fits, one sentence */
+  bestFor: string;
+  /** LED type page in src/content/led.ts */
+  led: string;
+}
+
+/**
+ * The "LED screen rental in <city>" block. Only stock, inclusions and terms the
+ * owner has confirmed — no sizes, inventory counts or prices (quotes follow a
+ * technical review).
+ */
+export interface CityRental {
+  heading: string;
+  intro: string;
+  screens: RentalScreen[];
+  included: string[];
+  /** how the price is worked out — never a number */
+  pricing: string;
+  /** areas covered, in the order people search them */
+  areas: string[];
+}
+
 export interface City {
   slug: string;
   /** the name people search with */
@@ -48,6 +76,8 @@ export interface City {
   /** how a show in this city is planned and delivered from Delhi */
   logistics: { title: string; body: string }[];
   faq: CityFaq[];
+  /** LED rental details — only where the owner has confirmed them */
+  rental?: CityRental;
 }
 
 export const CITIES: City[] = [
@@ -55,10 +85,10 @@ export const CITIES: City[] = [
     slug: "delhi",
     name: "Delhi",
     region: "Delhi NCR · Gurugram · Noida",
-    metaTitle: "LED Screen Rental & Event AV in Delhi NCR | livegridAV",
+    metaTitle: "LED Screen Rental in Delhi NCR — LED Walls on Rent | livegridAV",
     metaDescription:
-      "Delhi-based LED screen rental, AV engineering, show control and live event production for Delhi, Gurugram and Noida — conferences, exhibitions, launches, concerts and weddings.",
-    h1: "LED screens and event AV in Delhi NCR",
+      "LED screen rental in Delhi, Gurugram and Noida: indoor P2.6 and P3.9 and outdoor P4.8 LED walls, set up and operated by our own crew for conferences, launches, concerts and weddings.",
+    h1: "LED screen rental and event AV in Delhi NCR",
     tagline: "Our home city. Our office is in Nangloi, west Delhi, so site visits and technical recces across NCR are easy to arrange.",
     intro: [
       "livegridAV designs, builds and operates the visual side of events in Delhi, Gurugram and Noida: LED walls and floors, content made for the exact screen, projection mapping, show control and live production. One team plans the system, makes the content and runs it on the day.",
@@ -85,11 +115,35 @@ export const CITIES: City[] = [
       { title: "Build, run, strike", body: "Our crew builds and calibrates the system, operates it through the show and clears the venue on schedule." },
     ],
     faq: [
+      { q: "How much does LED screen rental cost in Delhi?", a: "It depends on the screen size, the pixel pitch, indoor or outdoor, how many days, and whether content and show control are needed. Every rental includes our crew. Share your date, venue and audience size and we will send a quote after a quick technical review." },
+      { q: "Which LED screen should I rent for my event?", a: "Indoor P2.6 suits close audiences and filmed shows, indoor P3.9 suits most stage backdrops in halls and banquets, and outdoor P4.8 is for daylight and open-air venues. The rule of thumb: the nearest viewer should sit at least as many metres away as the pitch in millimetres." },
+      { q: "Do you rent LED screens without an operator?", a: "No. Every LED screen we rent in Delhi NCR is set up, operated and dismantled by our own crew, so the screen is looked after for the whole event." },
       { q: "Which parts of Delhi NCR do you cover?", a: "All of it — Delhi, Gurugram, Noida, Greater Noida, Faridabad and Ghaziabad. Our office is in Nangloi, west Delhi." },
       { q: "Can you visit our venue before the event?", a: "Yes. In Delhi NCR a site visit is the normal first step for anything beyond a simple screen." },
       { q: "Do you handle weddings as well as corporate events?", a: "Yes. LED backdrops, floors, content and live operation work the same way for a wedding stage as for a conference — the content and the pace change." },
       { q: "How early should we book?", a: "As early as you can, especially in the wedding and exhibition seasons. Tell us the date and venue and we will confirm what is possible." },
     ],
+    rental: {
+      heading: "LED screen rental in Delhi",
+      intro:
+        "We rent indoor and outdoor LED walls across Delhi NCR, and every screen is set up, run and dismantled by our own crew. The size is worked out for your venue and how far the audience sits, and confirmed after a recce, so you are not paying for a screen that is too big, too small or too coarse for the room.",
+      screens: [
+        { name: "Indoor fine-pitch LED", pitch: "P2.6", bestFor: "Conferences, launches and filmed or streamed shows, where people sit close or cameras are on the screen.", led: "indoor-led" },
+        { name: "Indoor LED", pitch: "P3.9", bestFor: "Stage backdrops in halls, hotel ballrooms and banquet venues, including wedding stages.", led: "indoor-led" },
+        { name: "Outdoor LED", pitch: "P4.8", bestFor: "Open-air events, farmhouse lawns and daytime screens, with the brightness and weather rating outdoor use needs.", led: "outdoor-led" },
+      ],
+      included: [
+        "A recce or remote check of the venue, power and where the audience sits",
+        "Screen size and layout planned to the viewing distance",
+        "Delivery, ground-support or rigging, and a calibrated wall",
+        "Processor setup (NovaStar, PixelHue or Magnimaze) and content checked on the real screen",
+        "The screen operated by our own crew for the whole event",
+        "Dismantling and clearing the venue on schedule",
+      ],
+      pricing:
+        "There is no fixed rate card: the price depends on the screen size, the pixel pitch, indoor or outdoor, the number of days and whether you also need content or show control. Send the date, venue and audience size and we will reply with a quote.",
+      areas: ["Delhi", "Gurugram", "Noida", "Greater Noida", "Faridabad", "Ghaziabad"],
+    },
   },
   {
     slug: "mumbai",

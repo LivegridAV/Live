@@ -75,10 +75,21 @@ export default async function CityPage({
       hasOfferCatalog: {
         "@type": "OfferCatalog",
         name: `${BRAND} services in ${city.name}`,
-        itemListElement: services.map((s) => ({
-          "@type": "Offer",
-          itemOffered: { "@type": "Service", name: s.title, url: `${SITE}/services/${s.service}` },
-        })),
+        itemListElement: [
+          ...(city.rental?.screens ?? []).map((s) => ({
+            "@type": "Offer",
+            itemOffered: {
+              "@type": "Service",
+              name: `${s.name} rental (${s.pitch}) in ${city.name}`,
+              description: s.bestFor,
+              url: `${SITE}/led/${s.led}`,
+            },
+          })),
+          ...services.map((s) => ({
+            "@type": "Offer",
+            itemOffered: { "@type": "Service", name: s.title, url: `${SITE}/services/${s.service}` },
+          })),
+        ],
       },
     },
     {
@@ -118,6 +129,59 @@ export default async function CityPage({
           </Reveal>
         </div>
       </section>
+
+      {city.rental && (
+        <section className="border-b border-line bg-white py-16 md:py-24">
+          <div className="mx-auto max-w-[1180px] px-6 md:px-12">
+            <Reveal>
+              <p className={eyebrow}>Screens on rent</p>
+              <h2 className="mt-4 text-3xl font-semibold tracking-[-0.02em] text-text md:text-4xl">
+                {city.rental.heading}
+              </h2>
+              <p className="mt-5 max-w-[64ch] leading-relaxed text-muted">{city.rental.intro}</p>
+            </Reveal>
+            <div className="mt-10 grid gap-5 md:grid-cols-3">
+              {city.rental.screens.map((s, i) => (
+                <Reveal key={s.name} delay={i * 0.05}>
+                  <Link
+                    href={`/led/${s.led}`}
+                    className="group flex h-full flex-col rounded-[20px] border border-line bg-paper p-6 transition-all duration-300 hover:-translate-y-1 hover:border-aqua/40"
+                  >
+                    <span className="font-mono text-2xl font-semibold text-aqua">{s.pitch}</span>
+                    <h3 className="mt-3 text-lg font-semibold tracking-[-0.01em] text-text group-hover:text-aqua">{s.name}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted">{s.bestFor}</p>
+                  </Link>
+                </Reveal>
+              ))}
+            </div>
+            <div className="mt-12 grid gap-12 md:grid-cols-2">
+              <Reveal>
+                <h3 className="text-base font-semibold text-text">Every rental includes</h3>
+                <ul className="mt-4 space-y-3">
+                  {city.rental.included.map((item) => (
+                    <li key={item} className="flex gap-3 leading-relaxed text-muted">
+                      <span aria-hidden className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-aqua" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </Reveal>
+              <Reveal delay={0.08}>
+                <h3 className="text-base font-semibold text-text">How the price is worked out</h3>
+                <p className="mt-4 max-w-[56ch] leading-relaxed text-muted">{city.rental.pricing}</p>
+                <h3 className="mt-8 text-base font-semibold text-text">Areas we cover</h3>
+                <p className="mt-4 leading-relaxed text-muted">{city.rental.areas.join(" · ")}</p>
+                <p className="mt-6 text-sm leading-relaxed text-faint">
+                  Not sure which screen fits?{" "}
+                  <Link href="/insights/what-pixel-pitch-for-event-led" className="text-aqua underline-offset-4 hover:underline">
+                    How to choose a pixel pitch
+                  </Link>
+                </p>
+              </Reveal>
+            </div>
+          </div>
+        </section>
+      )}
 
       <section className="bg-white py-16 md:py-24">
         <div className="mx-auto max-w-[1180px] px-6 md:px-12">
