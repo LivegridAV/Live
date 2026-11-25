@@ -42,7 +42,9 @@ import { NodeIO } from "@gltf-transform/core";
 import { ALL_EXTENSIONS, EXTMeshoptCompression, EXTTextureWebP } from "@gltf-transform/extensions";
 import { reorder } from "@gltf-transform/functions";
 import { LOAD_GROUPS, START_GROUP, assetsFor } from "../src/venue/loading/groups.ts";
-import { setImageURIs, writeDerivedModels } from "./derived-models.mjs";
+import { PHONE_MEDIA_SCALE, phoneMediaPath, phoneMediaSources } from "../src/venue/loading/phoneMedia.ts";
+import sharp from "sharp";
+import { phonePath, setImageURIs, writeDerivedModels } from "./derived-models.mjs";
 import { createKtx2Swap, webpOf, isNormalMap } from "./ktx2-swap.mjs";
 import { MeshoptEncoder, MeshoptDecoder } from "meshoptimizer";
 // sharp (WebP encoding) is imported by ktx2-swap.mjs and derived-models.mjs.
@@ -221,8 +223,33 @@ const derived = await writeDerivedModels({ io, outDir: OUT, groups: LOAD_GROUPS,
 report.derived = derived.files;
 {
   const liteBytes = derived.files.filter(f => f.kind === "lite").reduce((sum, f) => sum + f.bytes, 0);
-  console.log(`Derived ${derived.files.length} models: light pack ${mib(liteBytes)} in ${derived.files.filter(f => f.kind === "lite").length} files, ${derived.lod1.length} lod1${dryRun ? " [dry run]" : ""}.`);
+  const phoneBytes = derived.files.filter(f => f.kind === "phone").reduce((sum, f) => sum + f.bytes, 0);
+  console.log(`Derived ${derived.files.length} models: light pack ${mib(liteBytes)} in ${derived.files.filter(f => f.kind === "lite").length} files, ${derived.lod1.length} lod1, ${derived.phone.length} phone copies (${mib(phoneBytes)}, plus ${derived.phoneTextures.length} shared phone textures)${dryRun ? " [dry run]" : ""}.`);
   for (const f of derived.files) console.log(`  ${f.file}: ${(f.bytes / 1024).toFixed(0)} KiB, ${f.triangles} of ${f.sourceTriangles} triangles`);
+}
+
+// ------------------------------------------------------------- phone media
+// `<name>.phone.webp` at PHONE_MEDIA_SCALE of the width and height for every
+// load-group screen image phoneMediaSources lists (src/venue/loading/phoneMedia.ts).
+// Phones always load this file, so one is written even when it would not be
+// smaller (then with the original bytes).
+const phoneMedia = [];
+{
+  let saved = 0;
+  for (const source of phoneMediaSources(LOAD_GROUPS)) {
+    const file = path.join(OUT, source);
+    if (!existsSync(file)) throw new Error(`phone media: load group image missing from out/: ${source}`);
+    const original = readFileSync(file);
+    const { width, height } = await sharp(original).metadata();
+    const scaled = await sharp(original)
+      .resize(Math.max(1, Math.round(width * PHONE_MEDIA_SCALE)), Math.max(1, Math.round(height * PHONE_MEDIA_SCALE)))
+      .webp({ quality: 82, alphaQuality: 90, effort: 5 }).toBuffer();
+    const bytes = scaled.byteLength < original.byteLength ? scaled : original;
+    if (!dryRun) writeFileSync(path.join(OUT, phoneMediaPath(source)), bytes);
+    saved += original.byteLength - bytes.byteLength;
+    phoneMedia.push(phoneMediaPath(source));
+  }
+  console.log(`Phone media: ${phoneMedia.length} half-size screen images written, ${mib(saved)} lighter than their full files${dryRun ? " [dry run]" : ""}.`);
 }
 
 // -------------------------------------------------------------- KTX2 media
@@ -292,7 +319,15 @@ function writeLoadManifest() {
   const transcoderGroup = LOAD_GROUPS.findIndex(group => transferBytes(assetsFor(group, new Set())).usesKtx2);
   if (transcoderGroup >= 0 && !BASIS_FILES.every(file => existsSync(file))) throw new Error("KTX2 is used but out/basis/ has no Basis transcoder (public/basis/).");
   const transcoderBytes = transcoderGroup >= 0 ? BASIS_FILES.reduce((sum, file) => sum + statSync(file).size, 0) : 0;
-  const groupBytes = (group, i, conditions) => transferBytes(assetsFor(group, conditions)).bytes + (i === transcoderGroup ? transcoderBytes : 0);
+  // `phone`: the group as phones fetch it. Phones always have a mobile frame,
+  // so it starts from the mobile files; every GLB is swapped for its phone
+  // copy and every listed screen image for its phone copy.
+  const phoneSources = new Set(phoneMediaSources(LOAD_GROUPS));
+  const filesFor = (group, conditions) => conditions.has("phone")
+    ? assetsFor(group, new Set(["mobile"])).map(asset => asset.toLowerCase().endsWith(".glb") ? phonePath(asset)
+      : phoneSources.has(asset) ? phoneMediaPath(asset) : asset)
+    : assetsFor(group, conditions);
+  const groupBytes = (group, i, conditions) => transferBytes(filesFor(group, conditions)).bytes + (i === transcoderGroup ? transcoderBytes : 0);
   // The light pack's size: what the opening planner (liteBeforeOpening) and
   // the opening bar count for a group that opens on its light pack.
   const liteBytes = paths => dryRun ? 0 : paths.reduce((sum, p) => sum + statSync(path.join(OUT, p)).size, 0);
@@ -302,16 +337,17 @@ function writeLoadManifest() {
       return {
         id: group.id,
         bytes: groupBytes(group, i, new Set()),
-        bytesByCondition: Object.fromEntries(["mobile", "festival"].map(c => [c, groupBytes(group, i, new Set([c]))])),
+        bytesByCondition: Object.fromEntries(["mobile", "festival", "phone"].map(c => [c, groupBytes(group, i, new Set([c]))])),
         lite,
         liteBytes: liteBytes(lite),
       };
     }),
     lod1: derived.lod1,
+    phone: derived.phone,
     ktx2Media,
   };
   if (!dryRun) writeFileSync(path.join(OUT, "models", "load-manifest.json"), JSON.stringify(manifest, null, 2));
-  for (const g of manifest.groups) console.log(`  ${g.id}: ${mib(g.bytes)} (mobile ${mib(g.bytesByCondition.mobile)}, festival ${mib(g.bytesByCondition.festival)}); light pack ${mib(g.liteBytes)} in ${g.lite.length} files`);
+  for (const g of manifest.groups) console.log(`  ${g.id}: ${mib(g.bytes)} (mobile ${mib(g.bytesByCondition.mobile)}, festival ${mib(g.bytesByCondition.festival)}, phone ${mib(g.bytesByCondition.phone)}); light pack ${mib(g.liteBytes)} in ${g.lite.length} files`);
   console.log(`Load manifest written for ${manifest.groups.length} groups.`);
 }
 writeLoadManifest();

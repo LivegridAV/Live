@@ -1,12 +1,13 @@
 "use client";
 import { useEffect } from "react";
 import { useVenue } from "../systems/store";
+import { useUprightTouch } from "../systems/device";
 
 /**
  * The start of the walkthrough.
  *
  * There is no splash page and no door: the venue opens by itself the moment
- * its shaders are ready. Until then only a hairline progress bar runs across
+ * its shaders are ready (on a touch screen, once it is also held sideways). Until then only a hairline progress bar runs across
  * the top of the screen. Scrolling stays held while the scene prepares, so
  * the journey always starts from the first frame of the path.
  */
@@ -15,10 +16,13 @@ export function Loader() {
   const percent = useVenue((s) => s.loadPercent);
   const entered = useVenue((s) => s.entered);
   const enter = useVenue((s) => s.enter);
+  // A touch screen held upright waits behind the rotate screen (RotateGate):
+  // the walk starts, at the entrance, the moment it is turned sideways.
+  const upright = useUprightTouch();
 
   useEffect(() => {
-    if (loaded && !entered) enter();
-  }, [loaded, entered, enter]);
+    if (loaded && !entered && !upright) enter();
+  }, [loaded, entered, enter, upright]);
 
   // Hold the page still until the scene is ready. The browser's own scroll
   // restoration would otherwise drop a returning visitor into the middle of

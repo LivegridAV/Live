@@ -1,7 +1,8 @@
 // Mobile-emulation walk of the whole journey (the plan's in-browser walk, scripted). Usage:
-//   node scripts/walk-mobile.mjs [--label final] [--cpu 4] [--throttle none|fast4g]
+//   node scripts/walk-mobile.mjs [--label final] [--cpu 4] [--throttle none|fast4g] [--only walk] [--query phone=0] [--portrait]
 //
-// Chrome via playwright-core at 375x812, dpr 3, touch, an Android Chrome user agent, and CDP
+// Chrome via playwright-core at 812x375 (a phone held sideways, as the venue asks; --portrait for
+// 375x812 with ?rotate=0, which skips the rotate screen), dpr 3, touch, an Android Chrome user agent, and CDP
 // Emulation.setCPUThrottlingRate (default 4x). Passes, each on a fresh cold page:
 //   walk      ?perf: open; right after opening, jump to the far end with the menu's "Arena" stop and
 //             back; walk the journey at the test pace (0.02 progress every 250 ms) with screenshots;
@@ -24,6 +25,10 @@ const label = arg("label", "final");
 const cpu = Number(arg("cpu", "4"));
 const throttle = arg("throttle", "none");
 const onlyPass = arg("only", null);
+// --query phone=0: extra query for every page (e.g. the full files on the phone frame, for comparison).
+const portrait = process.argv.includes("--portrait");
+const extraQuery = [arg("query", ""), portrait ? "rotate=0" : ""].filter(Boolean).join("&");
+const VIEWPORT = portrait ? { width: 375, height: 812 } : { width: 812, height: 375 };
 const PROFILES = {
   fast4g: { offline: false, downloadThroughput: 9000 * 1000 / 8, uploadThroughput: 1500 * 1000 / 8, latency: 60 },
   none: { offline: false, downloadThroughput: -1, uploadThroughput: -1, latency: 0 },
@@ -47,7 +52,7 @@ try {
 
   async function open(query, { reducedMotion = "no-preference", waitAll = false } = {}) {
     const context = await browser.newContext({
-      viewport: { width: 375, height: 812 }, deviceScaleFactor: 3, isMobile: true, hasTouch: true, userAgent: UA, reducedMotion,
+      viewport: VIEWPORT, deviceScaleFactor: 3, isMobile: true, hasTouch: true, userAgent: UA, reducedMotion,
     });
     const page = await context.newPage();
     const cdp = await context.newCDPSession(page);
@@ -63,7 +68,7 @@ try {
       if (m.text().startsWith("[venue]")) venueLog.push(m.text().slice(0, 200));
     });
     const t0 = Date.now();
-    await page.goto(`${ORIGIN}/?${query}`, { waitUntil: "commit" });
+    await page.goto(`${ORIGIN}/?${query}${extraQuery ? `&${extraQuery}` : ""}`, { waitUntil: "commit" });
     await page.waitForFunction(() => window.__venuePerf?.loaded(), null, { timeout: 900000, polling: 250 });
     const msToOpen = Date.now() - t0;
     if (waitAll) await page.waitForFunction(() => window.__venuePerf.allReady(), null, { timeout: 900000, polling: 250 });
@@ -221,7 +226,7 @@ try {
   await browser?.close();
   server.kill();
 }
-writeFileSync(path.join(outDir, "walk.json"), JSON.stringify({ label, cpu, throttle, viewport: "375x812@3", passes }, null, 1));
+writeFileSync(path.join(outDir, "walk.json"), JSON.stringify({ label, cpu, throttle, viewport: `${VIEWPORT.width}x${VIEWPORT.height}@3`, passes }, null, 1));
 const bad = Object.entries(passes).filter(([, p]) => p.failed || p.gapFrames || p.loadingCueFrames || p.consoleErrors?.length || p.failedChecks?.length);
 for (const [name, p] of bad) console.log(`problem in ${name}: ${JSON.stringify({ failed: p.failed, gapFrames: p.gapFrames, cue: p.loadingCueFrames, errors: p.consoleErrors, checks: p.failedChecks })}`);
 process.exit(bad.length ? 1 : 0);

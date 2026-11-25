@@ -14,20 +14,31 @@
 // Node names and the node hierarchy are kept (simplify only rewrites
 // primitives), so the venue places a derived model exactly like its source.
 // Every derived file gets the same EXT_meshopt_compression as the rest.
-import { readFileSync, statSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { Logger, PropertyType } from "@gltf-transform/core";
 import { EXTMeshoptCompression, EXTTextureWebP } from "@gltf-transform/extensions";
 import { prune, reorder, simplify, weld } from "@gltf-transform/functions";
 import { MeshoptEncoder, MeshoptSimplifier } from "meshoptimizer";
 import sharp from "sharp";
+import { isNormalMap } from "./ktx2-swap.mjs";
 
 export const LITE = { ratio: 0.15, error: 0.02, maxTexture: 128 };
 export const LOD1 = { ratio: 0.40, error: 0.01 };
+/**
+ * The phone copy of every venue GLB (`<name>.phone.glb`): what phones draw
+ * instead of the full file (and instead of a lod1). Triangles simplified to
+ * `ratio` within `error` (relative to each mesh's size), positions and UVs
+ * snapped like the light pack, every texture at most `maxTexture` px.
+ * Morph targets, skins, materials and node names stay, so a phone copy is
+ * placed, animated and lit exactly like its source.
+ */
+export const PHONE = { ratio: 0.35, error: 0.005, maxTexture: 512 };
 
 export const litePath = file => file.replace(/\.glb$/i, ".lite.glb");
 export const lod1Path = file => file.replace(/\.glb$/i, ".lod1.glb");
-const isDerived = file => /\.(lite|lod1)\.glb$/i.test(file);
+export const phonePath = file => file.replace(/\.glb$/i, ".phone.glb");
+const isDerived = file => /\.(lite|lod1|phone)\.glb$/i.test(file);
 /** Sources that get a lod1: every visitors file and the projection interior. */
 export const wantsLod1 = file => !isDerived(file)
   && (/-visitors\.glb$/i.test(file) || /(^|\/)projection-finish-v2-blender-interior\.glb$/i.test(file));
@@ -136,7 +147,7 @@ async function writeCompressed(io, document, source, { compress, keepExternal })
     document.createExtension(EXTMeshoptCompression).setRequired(true)
       .setEncoderOptions({ method: EXTMeshoptCompression.EncoderMethod.FILTER });
   }
-  const external = keepExternal ? externalImageURIs(source) : new Map();
+  const external = keepExternal instanceof Map ? keepExternal : keepExternal ? externalImageURIs(source) : new Map();
   const textures = document.getRoot().listTextures();
   for (const index of external.keys()) textures[index].setImage(new Uint8Array(1));
   let output = await io.writeBinary(document);
@@ -204,6 +215,64 @@ export async function makeLite(document, liteSource) {
   if (root.listTextures().some(texture => texture.getMimeType() === "image/webp")) document.createExtension(EXTTextureWebP).setRequired(true);
 }
 
+/**
+ * Shrink one texture's image to fit `max` px for the phone copy. A KTX2
+ * image is replaced by the WebP it was made from, so phones need no Basis
+ * transcoder for their models. Colour at WebP quality 85, normal maps 92.
+ * Returns the new { image, mimeType }, or the original when it already fits
+ * and needs no conversion.
+ */
+async function phoneImage(texture, max, liteSource) {
+  let image = texture.getImage(), mimeType = texture.getMimeType();
+  if (mimeType === "image/ktx2") {
+    const source = liteSource?.(image);
+    if (!source) throw new Error(`phone: no WebP source for KTX2 texture "${texture.getName()}"`);
+    ({ image, mimeType } = source);
+  }
+  const meta = await sharp(Buffer.from(image)).metadata();
+  if (Math.max(meta.width ?? 0, meta.height ?? 0) <= max && mimeType === texture.getMimeType()) return { image, mimeType };
+  const resized = sharp(Buffer.from(image)).resize(max, max, { fit: "inside", withoutEnlargement: true });
+  const normal = isNormalMap(texture);
+  const encoded = mimeType === "image/jpeg" ? resized.jpeg({ quality: normal ? 92 : 85 })
+    : mimeType === "image/png" ? resized.png({ compressionLevel: 9 })
+    : resized.webp({ quality: normal ? 92 : 85, alphaQuality: 90, effort: 4 });
+  return { image: new Uint8Array(await encoded.toBuffer()), mimeType };
+}
+
+/**
+ * Make a phone document from a source document (in place). Textures the
+ * source shares from /textures/ get shared phone copies under
+ * /textures/phone/ (written once, via `writeShared(target, bytes)`); the
+ * returned map gives each such image index its new relative URI.
+ */
+export async function makePhone(document, { liteSource, sourceUris = new Map(), fileDir, writeShared }) {
+  await simplifyDocument(document, PHONE);
+  snapAttributes(document);
+  const external = new Map();
+  const textures = document.getRoot().listTextures();
+  for (const [index, texture] of textures.entries()) {
+    if (!texture.getImage()) continue;
+    const original = texture.getImage();
+    const { image, mimeType } = await phoneImage(texture, PHONE.maxTexture, liteSource);
+    texture.setImage(image).setMimeType(mimeType);
+    const uri = sourceUris.get(index);
+    if (!uri) { texture.setURI(""); continue; }
+    // Already phone-sized: keep sharing the full file's texture.
+    if (image === original) { external.set(index, uri); continue; }
+    const shared = path.posix.join(fileDir, uri);
+    const ext = { "image/webp": "webp", "image/jpeg": "jpg", "image/png": "png" }[mimeType];
+    const target = path.posix.join(path.posix.dirname(shared), "phone", path.posix.basename(shared).replace(/\.[^.]+$/, `-${PHONE.maxTexture}.${ext}`));
+    // The name carries the size: /textures/* is cached as immutable, so a later
+    // change to the phone recipe must give the file a new name.
+    writeShared(target, image);
+    external.set(index, path.posix.relative(fileDir, target));
+  }
+  const root = document.getRoot();
+  for (const extension of root.listExtensionsUsed()) if (extension.extensionName === "KHR_texture_basisu") extension.dispose();
+  if (textures.some(texture => texture.getMimeType() === "image/webp")) document.createExtension(EXTTextureWebP).setRequired(true);
+  return external;
+}
+
 /** Make a lod1 document from a source document (in place). */
 export async function makeLod1(document) {
   await simplifyDocument(document, LOD1);
@@ -217,23 +286,38 @@ export async function makeLod1(document) {
  */
 export async function writeDerivedModels({ io, outDir, groups, startId, compress = true, dryRun = false, liteSource }) {
   const lite = Object.fromEntries(groups.map(group => [group.id, []]));
-  const lod1 = [], files = [];
+  const lod1 = [], phone = [], files = [];
+  const sharedPhone = new Map();
+  const writeShared = (target, bytes) => {
+    if (sharedPhone.has(target)) return;
+    sharedPhone.set(target, bytes.byteLength);
+    if (!dryRun) { mkdirSync(path.dirname(path.join(outDir, target)), { recursive: true }); writeFileSync(path.join(outDir, target), bytes); }
+  };
   const glbsOf = group => [...new Set([...group.assets, ...Object.values(group.variants ?? {}).flat()])].filter(p => p.toLowerCase().endsWith(".glb"));
   const jobs = [];
   for (const group of groups) for (const asset of glbsOf(group)) {
     if (group.id !== startId) jobs.push({ group: group.id, asset, kind: "lite" });
     if (wantsLod1(asset)) jobs.push({ group: group.id, asset, kind: "lod1" });
+    if (!jobs.some(job => job.kind === "phone" && job.asset === asset)) jobs.push({ group: group.id, asset, kind: "phone" });
   }
   for (const job of jobs) {
     const source = path.join(outDir, job.asset);
     const document = (await io.read(source)).setLogger(new Logger(Logger.Verbosity.WARN));
     const before = triangleCount(document);
-    if (job.kind === "lite") await makeLite(document, liteSource); else await makeLod1(document);
-    const output = await writeCompressed(io, document, source, { compress, keepExternal: job.kind === "lod1" });
-    const target = job.kind === "lite" ? litePath(job.asset) : lod1Path(job.asset);
+    let keepExternal = job.kind === "lod1";
+    if (job.kind === "lite") await makeLite(document, liteSource);
+    else if (job.kind === "lod1") await makeLod1(document);
+    else {
+      const fileDir = path.posix.dirname(job.asset.replace(/^\//, ""));
+      keepExternal = await makePhone(document, { liteSource, sourceUris: externalImageURIs(source), fileDir, writeShared });
+    }
+    const output = await writeCompressed(io, document, source, { compress, keepExternal });
+    const target = { lite: litePath, lod1: lod1Path, phone: phonePath }[job.kind](job.asset);
     if (!dryRun) writeFileSync(path.join(outDir, target), output);
-    if (job.kind === "lite") lite[job.group].push(target); else if (!lod1.includes(target)) lod1.push(target);
+    if (job.kind === "lite") lite[job.group].push(target);
+    else if (job.kind === "lod1") { if (!lod1.includes(target)) lod1.push(target); }
+    else phone.push(target);
     files.push({ kind: job.kind, file: target, source: job.asset, bytes: output.byteLength, sourceBytes: statSync(source).size, triangles: triangleCount(document), sourceTriangles: before });
   }
-  return { lite, lod1, files };
+  return { lite, lod1, phone, phoneTextures: [...sharedPhone.keys()], files };
 }

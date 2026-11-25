@@ -12,6 +12,7 @@ import { PAINTERS, type PaintCtx } from "./painters";
 import type { QualityTier, StageMode } from "../systems/store";
 import { mediaSlate } from "./fallback";
 import { prefetchedImage } from "../loading/prefetched";
+import { phoneMediaUrl } from "../loading/phoneMediaUrl";
 
 /**
  * One engine owns every moving pixel in the venue.
@@ -279,7 +280,12 @@ export class MediaEngine {
     return this.createVideo(id, desc);
   }
 
+  /** The file an image screen shows now; on a phone, its phone copy when there is one. */
   private imageSource(desc: ImageMedia) {
+    return phoneMediaUrl(this.chosenImage(desc));
+  }
+
+  private chosenImage(desc: ImageMedia) {
     if (this.mode === "festival") {
       if (this.isMobile && desc.festivalMobile) return desc.festivalMobile;
       if (desc.festival) return desc.festival;

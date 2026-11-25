@@ -19,6 +19,7 @@ import { BottomDock } from "./ui/BottomDock";
 import { ReviewRecorder } from "./ui/ReviewRecorder";
 import { EntranceFinishes } from "./ui/EntranceFinishes";
 import { EntranceWalkthrough } from "./ui/EntranceWalkthrough";
+import { RotateGate } from "./ui/RotateGate";
 
 /**
  * The venue walkthrough.
@@ -64,7 +65,7 @@ export default function Venue() {
   const [profile] = useState(detectQuality);
 
   useEffect(() => {
-    useVenue.setState({ quality: profile.tier, isMobile: profile.mobile });
+    useVenue.setState({ quality: profile.tier, isMobile: profile.mobile, isPhone: profile.phone });
     // Without WebGL there is nothing to warm up — release the door immediately
     // so the visitor is never held at a loader that will not finish.
     if (!webgl) useVenue.setState({ loaded: true });
@@ -127,6 +128,7 @@ export default function Venue() {
       <ReviewRecorder />
       <EntranceFinishes />
       <EntranceWalkthrough />
+      <RotateGate />
     </div>
   );
 }
