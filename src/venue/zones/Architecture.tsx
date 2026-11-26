@@ -1,6 +1,7 @@
 "use client";
 import { useMemo } from "react";
-import { MeshReflectorMaterial } from "@react-three/drei";
+import { ThrottledReflectorMaterial } from "../three/ThrottledReflectorMaterial";
+import { PHONE_REFLECTION_INTERVAL } from "../systems/device";
 import { useWarmupOpen } from "../three/warmScene";
 import * as THREE from "three";
 import { ExpoAsset } from "../three/ExpoAsset";
@@ -49,6 +50,8 @@ function segments(from: number, to: number, size: number) {
 
 export function Ground() {
   const quality = useVenue((s) => s.quality);
+  // A phone redraws the floor's reflection at 15 Hz, not every frame.
+  const isPhone = useVenue((s) => s.isPhone);
   const reflect = useWarmupOpen();
   const stone = useVenueFloorMaps();
   const geometry = useMemo(() => {
@@ -70,7 +73,8 @@ export function Ground() {
         for the warm-up; before then the loader hides the plain stone. */}
     {!reflect ? <meshStandardMaterial color={VENUE_FLOOR.colour} map={stone.map} roughnessMap={stone.roughnessMap}
       normalMap={stone.normalMap} normalScale={[.045,.045]} metalness={.035} roughness={.43} envMapIntensity={.48}/> :
-    <MeshReflectorMaterial color={VENUE_FLOOR.colour}
+    <ThrottledReflectorMaterial color={VENUE_FLOOR.colour}
+      interval={isPhone ? PHONE_REFLECTION_INTERVAL : 0}
       onUpdate={material=>preparePolishedFloor(material)}
       map={stone.map} roughnessMap={stone.roughnessMap} normalMap={stone.normalMap}
       normalScale={[.045,.045]} metalness={.035} roughness={.43} envMapIntensity={.48}

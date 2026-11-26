@@ -1026,3 +1026,40 @@ test("KTX2: a parsed GLB with a failed texture is detected (the streamer then fa
   assert.equal(await missingTextures(gltf([{}, null, {}, null])), 2);
   assert.equal(await missingTextures(gltf([{}, {}])), 0);
 });
+
+test("phone glass: transmission becomes plain see-through, other materials are left alone", async () => {
+  const THREE = await import("three");
+  const { flattenGlass, flattenGlassIn, phoneGlassOpacity, PHONE_GLASS_OPACITY_FLOOR } = await import("../src/venue/three/phoneGlass.ts");
+  const glass = new THREE.MeshPhysicalMaterial({ transmission: 0.92, roughness: 0.05 });
+  const version = glass.version;
+  assert.equal(flattenGlass(glass), true);
+  assert.equal(glass.transmission, 0, "no transmission: three skips its extra scene pass");
+  assert.equal(glass.transparent, true);
+  assert.equal(glass.depthWrite, false);
+  assert.ok(Math.abs(glass.opacity - phoneGlassOpacity(0.92)) < 1e-9);
+  assert.ok(glass.version > version, "the material is rebuilt before its first compile");
+  assert.equal(flattenGlass(glass), false, "a second pass changes nothing");
+  assert.equal(phoneGlassOpacity(0.98), PHONE_GLASS_OPACITY_FLOOR, "the clearest sheets stay visible");
+  assert.equal(phoneGlassOpacity(0.5, 0.3), 0.3, "an already-faint sheet keeps its own opacity");
+  const plain = new THREE.MeshPhysicalMaterial({ clearcoat: 1 });
+  const standard = new THREE.MeshStandardMaterial();
+  assert.equal(flattenGlass(plain), false);
+  assert.equal(flattenGlass(standard), false);
+  assert.equal(plain.transparent, false);
+  const root = new THREE.Group();
+  const multi = new THREE.MeshPhysicalMaterial({ transmission: 0.76 });
+  root.add(new THREE.Mesh(new THREE.BufferGeometry(), [standard, multi]));
+  flattenGlassIn(root);
+  assert.equal(multi.transmission, 0, "multi-material meshes are covered");
+});
+
+test("phone speed: the canvas keeps its pixel ratio, the floor reflection is throttled on phones, glass is flattened at load", () => {
+  const read = f => readFileSync(path.resolve(f), "utf8");
+  const venue = read("src/venue/Venue.tsx");
+  assert.match(venue, /const VenueCanvas = memo\(/, "the Canvas is memoised, so Venue re-renders do not re-apply its dpr prop");
+  assert.match(venue, /gl=\{GL\}/); assert.match(venue, /camera=\{CAMERA\}/);
+  assert.match(read("src/venue/systems/Quality.tsx"), /dpr: startingDpr\(tier\)/, "the canvas starts at the tier's pixel ratio");
+  assert.match(read("src/venue/zones/Architecture.tsx"), /interval=\{isPhone \? PHONE_REFLECTION_INTERVAL : 0\}/);
+  assert.match(read("src/venue/three/textureLoading.ts"), /afterRoot[\s\S]{0,120}flattenGlassIn/);
+  assert.match(read("src/venue/three/technicalMaterials.ts"), /if\(detectPhone\(\)\)flattenGlass\(material\)/);
+});

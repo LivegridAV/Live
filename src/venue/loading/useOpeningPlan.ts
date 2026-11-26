@@ -43,9 +43,12 @@ export function useOpeningPlan(full: boolean) {
           // to the far end right after opening never meets empty space.
           // liteBeforeOpening (the walk-pace minimum) is kept for the day the
           // packs shrink; it is reported in ?perf for comparison.
-          const plan = full ? { full: groups.map(g => g.id), lite: [] }
-            : { full: [START_GROUP], lite: later.map(g => g.id) };
           const walkMinimum = liteBeforeOpening({ bytesPerSecond, groups: later, startZ });
+          // Review override: ?opening=walk opens with the walk-pace minimum
+          // instead, to measure what the "all lite" rule costs a device.
+          const walkOnly = new URLSearchParams(location.search).get("opening") === "walk";
+          const plan = full ? { full: groups.map(g => g.id), lite: [] }
+            : { full: [START_GROUP], lite: walkOnly ? walkMinimum : later.map(g => g.id) };
           current.planned = true;
           planOpening(plan);
           if (new URLSearchParams(location.search).has("perf")) {
