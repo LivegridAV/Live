@@ -20,12 +20,19 @@ export function detectPhone(): boolean {
 }
 
 
+let phone: boolean | undefined;
 /**
- * Least seconds between two renders of the floor's live reflection on a
- * phone. Each one redraws the whole venue; the basin, projection deck and
- * entrance water already hold theirs to 12-15 Hz.
+ * Phones render lean: no live planar reflections (floor, entrance water,
+ * basin, projection deck), no real-time shadow maps, and the warm-up builds
+ * only the shaders the screen uses. Each reflection redrew the whole venue
+ * and needed its own copy of every shader (offscreen colour space); on a
+ * phone GPU that was most of a 20 s+ opening and of the lag. Baked contact
+ * shadows, the environment lighting and every material stay. Read once.
  */
-export const PHONE_REFLECTION_INTERVAL = 1 / 15;
+export function phoneRendering(): boolean {
+  if (typeof window === "undefined") return false;
+  return phone ??= detectPhone();
+}
 
 /**
  * Touch screens (phones and tablets) held upright. The venue is a walk built

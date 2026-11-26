@@ -1,5 +1,6 @@
 import { createContext, useContext, useSyncExternalStore } from "react";
 import * as THREE from "three";
+import { phoneRendering } from "../systems/device";
 
 /**
  * Set while the venue warms up behind the loader. Anything that would draw the
@@ -80,6 +81,35 @@ export function useWarmupOpen() {
 const wait = (ms: number) => new Promise<void>(resolve => setTimeout(resolve, ms));
 
 /**
+ * The 32 px target the warm-up compiles and draws into. On a phone it stands
+ * in for the screen (three treats an XR target's tone mapping and colour
+ * space as the screen's), so only the programs the screen uses are built:
+ * a phone draws no live reflections, which needed a second, offscreen copy
+ * of every program (device.ts phoneRendering).
+ */
+export function warmTarget() {
+  const target = new THREE.WebGLRenderTarget(32, 32);
+  // r185 reads isXRRenderTarget at runtime; the type declarations omit it.
+  if (phoneRendering()) { (target as unknown as { isXRRenderTarget: boolean }).isXRRenderTarget = true; target.texture.colorSpace = THREE.SRGBColorSpace; }
+  return target;
+}
+
+/** Submit `compile` for the offscreen and the screen variants (one on a phone). */
+function compileVariants(gl: THREE.WebGLRenderer, target: THREE.WebGLRenderTarget, compile: () => void) {
+  const previousTarget = gl.getRenderTarget();
+  try {
+    gl.setRenderTarget(target);
+    compile();
+    if (phoneRendering()) return;
+    gl.setRenderTarget(previousTarget);
+    compile();
+  } finally {
+    gl.setRenderTarget(previousTarget);
+  }
+}
+
+
+/**
  * Resolve once the driver has finished every submitted program. Polling
  * COMPLETION_STATUS (KHR_parallel_shader_compile) never blocks, so the page
  * stays live and the driver can compile on all of its worker threads. The old
@@ -114,15 +144,7 @@ export async function programsReady(gl: THREE.WebGLRenderer, cancelled: () => bo
  */
 export function submitPrograms(gl: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera,
   target: THREE.WebGLRenderTarget) {
-  const previousTarget = gl.getRenderTarget();
-  try {
-    gl.setRenderTarget(target);
-    gl.compile(scene, camera);
-    gl.setRenderTarget(previousTarget);
-    gl.compile(scene, camera);
-  } finally {
-    gl.setRenderTarget(previousTarget);
-  }
+  compileVariants(gl, target, () => gl.compile(scene, camera));
   return gl.info?.programs?.length ?? 0;
 }
 
@@ -142,16 +164,9 @@ export async function warmScene(gl: THREE.WebGLRenderer, scene: THREE.Scene, cam
   // Warm the merged meshes, not the parts they replace.
   await preparedWithin(scene);
   if (cancelled()) return;
-  const target = new THREE.WebGLRenderTarget(32, 32);
+  const target = warmTarget();
   const previousTarget = gl.getRenderTarget();
-  try {
-    gl.setRenderTarget(target);
-    gl.compile(scene, camera);
-    gl.setRenderTarget(previousTarget);
-    gl.compile(scene, camera);
-  } finally {
-    gl.setRenderTarget(previousTarget);
-  }
+  compileVariants(gl, target, () => gl.compile(scene, camera));
   await programsReady(gl, cancelled, fraction => onProgress?.(fraction * 0.9));
   if (cancelled()) { target.dispose(); return; }
 
@@ -298,7 +313,7 @@ async function warmSubtreeNow(gl: THREE.WebGLRenderer, scene: THREE.Scene, camer
   root: THREE.Object3D, cancelled: () => boolean) {
   await preparedWithin(root);
   if (cancelled()) return;
-  const target = new THREE.WebGLRenderTarget(32, 32);
+  const target = warmTarget();
   try {
     submitSubtree(gl, scene, camera, root, target);
     await programsReady(gl, cancelled);
@@ -351,15 +366,7 @@ async function uploadTextures(gl: THREE.WebGLRenderer, root: THREE.Object3D, can
 
 function submitSubtree(gl: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera,
   root: THREE.Object3D, target: THREE.WebGLRenderTarget) {
-  const previousTarget = gl.getRenderTarget();
-  try {
-    gl.setRenderTarget(target);
-    gl.compile(root, camera, scene);
-    gl.setRenderTarget(previousTarget);
-    gl.compile(root, camera, scene);
-  } finally {
-    gl.setRenderTarget(previousTarget);
-  }
+  compileVariants(gl, target, () => gl.compile(root, camera, scene));
 }
 
 function drawSubtree(gl: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera,

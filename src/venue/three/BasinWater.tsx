@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useVenue } from "../systems/store";
+import { phoneRendering } from "../systems/device";
 import { inExhibitionRange, placementWorldMatrix } from "../data/placements";
 import { useLiteMode } from "../loading/liteMode";
 
@@ -85,7 +86,8 @@ function BasinReflection({polygonXZ,height}:BasinProps) {
     const state=useVenue.getState();
     reflection.uniforms.uBasinTime.value=state.reducedMotion?0:clock.elapsedTime;
     const surface=mesh.current;
-    if(!surface||!state.entered||state.pastVenue||!inExhibitionRange("anamorphic",state.progress)) return;
+    // A phone has no live reflections (device.ts): the basin keeps its water shading.
+    if(phoneRendering()||!surface||!state.entered||state.pastVenue||!inExhibitionRange("anamorphic",state.progress)) return;
     if(clock.elapsedTime-reflection.last<1/15) return;
     // A ZoneGroup remains mounted while hidden. Do not pay for a second scene
     // render just because the basin's material is still alive behind that group.

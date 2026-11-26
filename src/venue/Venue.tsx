@@ -67,10 +67,10 @@ const CAMERA = { fov: 52, near: 0.1, far: 340, position: [0, 2.35, 21] as [numbe
  * time Venue re-rendered (it does when the walk opens): phones ran at 2x
  * instead of their tier's 1.35x. With stable props the governor owns it.
  */
-const VenueCanvas = memo(function VenueCanvas({ dpr }: { dpr: number }) {
+const VenueCanvas = memo(function VenueCanvas({ dpr, shadows }: { dpr: number; shadows: boolean }) {
   return (
     <Canvas
-      shadows="percentage"
+      shadows={shadows ? "percentage" : false}
       dpr={dpr}
       gl={GL}
       camera={CAMERA}
@@ -112,7 +112,8 @@ export default function Venue() {
     <div className="venue" data-capture={capture&&entered?true:undefined}>
       {webgl && (
         <div className="venue-canvas">
-          <VenueCanvas dpr={profile.dpr} />
+          {/* A phone renders without shadow maps (device.ts phoneRendering). */}
+          <VenueCanvas dpr={profile.dpr} shadows={!profile.phone} />
         </div>
       )}
 

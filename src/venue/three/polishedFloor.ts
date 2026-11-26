@@ -34,8 +34,13 @@ export const PROJECTION_FLOOR_FINISH = Object.freeze({
 
 /** Installed drei reflector source is the basis of these patches. Reflector
  * samples share PBR UVs; radiance is composited once after physical lighting.
- * Softness belongs to the floor buffer, never the camera image. */
-export function preparePolishedFloor(material: THREE.MeshStandardMaterial) {
+ * Softness belongs to the floor buffer, never the camera image.
+ *
+ * `staticReflection` (a phone, which draws no live reflection): the same
+ * finish on a plain MeshStandardMaterial, with this linear colour standing
+ * in for the reflected hall, so the stone keeps its tone, joints and zone
+ * finishes. */
+export function preparePolishedFloor(material: THREE.MeshStandardMaterial, staticReflection?: THREE.Color) {
   if (prepared.has(material)) return;
   prepared.add(material);
   const original = material.onBeforeCompile;
@@ -93,11 +98,12 @@ export function preparePolishedFloor(material: THREE.MeshStandardMaterial) {
       .replace("#include <lights_fragment_end>", `#include <lights_fragment_end>
         reflectedLight.directSpecular*=.34;
         reflectedLight.indirectSpecular*=.58;`)
-      .replace("#include <opaque_fragment>", `
+      .replace("#include <opaque_fragment>", `${staticReflection ? `vec4 newMerge=vec4(${staticReflection.toArray().map(v => v.toFixed(5)).join(",")},1.0);` : ""}
         float venueFresnel=mix(mix(.22,${rental.reflectionBase.toFixed(4)},rentalFloorFinish),${projection.reflectionBase.toFixed(4)},projectionFloorFinish)+.26*pow(1.0-saturate(dot(normal,geometryViewDir)),3.0);
         outgoingLight=mix(outgoingLight,newMerge.rgb*vec3(.94,.96,.98),venueFresnel*(1.0-.16*venueGrout));
         #include <opaque_fragment>`);
   };
-  material.customProgramCacheKey = () => "venue-continuous-world-stone-grand-v3-permanent-native-finishes";
+  const key = "venue-continuous-world-stone-grand-v3-permanent-native-finishes" + (staticReflection ? `-static-${staticReflection.getHexString()}` : "");
+  material.customProgramCacheKey = () => key;
   material.needsUpdate = true;
 }

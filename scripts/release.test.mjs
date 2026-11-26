@@ -4,9 +4,12 @@ import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
 import * as THREE from "three";
-import { warmScene } from "../src/venue/three/warmScene.ts";
 import { execFileSync } from "node:child_process";
 import { wordmarkProblems, checkSignedAsset, layoutProblems, SIGNED_ASSETS } from "./brand-check.mjs";
+import { register } from "node:module";
+// warmScene imports extensionless siblings (systems/device): resolve them as the bundler does.
+register(new URL("./ts-extensionless-hook.mjs", import.meta.url));
+const { warmScene } = await import("../src/venue/three/warmScene.ts");
 
 const read = file => readFileSync(file, "utf8");
 const files = dir => readdirSync(dir, { withFileTypes: true }).flatMap(e =>
