@@ -6,7 +6,7 @@ import { SERVICES, SERVICE_GROUPS } from "@/content/services";
 import { LED_TYPES } from "@/content/led";
 import { ZONES } from "@/venue/data/zones";
 import { PAVILIONS, PARTNER_BAY } from "@/venue/data/pavilions";
-import { CONTACT, contactLinks } from "@/experience/contact";
+import { CONTACT, contactLinks, SOCIAL } from "@/experience/contact";
 import { ORGANIZATION } from "@/content/seo";
 
 /**
@@ -210,6 +210,13 @@ export default function Home() {
               <li>
                 <Link href="/contact">Send a project brief</Link>
               </li>
+              {SOCIAL.map((s) => (
+                <li key={s.id}>
+                  <a href={s.href} target="_blank" rel="noopener noreferrer me">
+                    {s.label} {s.handle}
+                  </a>
+                </li>
+              ))}
             </ul>
             <p style={{ marginTop: 14 }}>livegridAV · {CONTACT.address}</p>
           </div>

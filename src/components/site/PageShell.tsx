@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "motion/react";
 import SignalGrid from "../SignalGrid";
 import Wordmark from "../Wordmark";
 import { CONTACT, contactLinks } from "@/experience/contact";
+import SocialLinks from "../SocialLinks";
 
 /**
  * Route-aware chrome for every standard (non-experience) page. Light `paper`
@@ -135,6 +136,10 @@ function ShellFooter() {
             built and operated as one visual production.
           </p>
           <p className="mt-4 text-sm leading-relaxed text-text-inv/55">{CONTACT.address}</p>
+          <SocialLinks
+            className="mt-5 flex gap-2"
+            linkClassName="flex h-10 w-10 items-center justify-center rounded-full border border-ink-soft text-text-inv/70 transition-colors hover:border-glow/60 hover:text-glow"
+          />
         </div>
 
         <div className="grid grid-cols-2 gap-10 sm:grid-cols-3">

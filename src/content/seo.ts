@@ -7,7 +7,7 @@
  * Never add an address for a city we only travel to: a made-up office gets a
  * business listing suspended.
  */
-import { CONTACT } from "@/experience/contact";
+import { CONTACT, SOCIAL } from "@/experience/contact";
 
 export const SITE = "https://livegridav.com";
 export const BRAND = "livegridAV";
@@ -52,6 +52,8 @@ export const ORGANIZATION = {
   telephone: CONTACT.phone,
   address: ADDRESS,
   areaServed: AREA_SERVED,
+  // The company's own profiles, so search engines tie them to this business.
+  sameAs: SOCIAL.map((s) => s.href),
   description:
     "livegridAV is a Delhi-based event technology company working across India. It designs, engineers and operates LED displays, immersive content, projection mapping, show control and live event production.",
 } as const;

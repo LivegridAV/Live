@@ -4,6 +4,7 @@ import Reveal from "@/components/Reveal";
 import SignalGrid from "@/components/SignalGrid";
 import ContactBrief from "@/components/site/ContactBrief";
 import HeroVisual from "@/components/site/HeroVisual";
+import SocialLinks from "@/components/SocialLinks";
 import { CONTACT, contactLinks } from "@/experience/contact";
 import { AREA_SERVED, PROVIDER } from "@/content/seo";
 
@@ -91,6 +92,14 @@ export default function Contact() {
                   >
                     Message us
                   </a>
+                </li>
+                <li>
+                  <span className="block font-mono text-[10px] uppercase tracking-[0.16em] text-faint">Follow</span>
+                  <SocialLinks
+                    showLabel
+                    className="mt-1 flex flex-wrap gap-x-5 gap-y-2"
+                    linkClassName="inline-flex items-center gap-2 text-text-inv/85 transition-colors hover:text-glow"
+                  />
                 </li>
                 <li>
                   <span className="block font-mono text-[10px] uppercase tracking-[0.16em] text-faint">Studio</span>

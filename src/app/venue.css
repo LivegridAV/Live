@@ -651,6 +651,9 @@
 }
 .v-contact-details a { color: var(--v-muted); text-decoration: none; }
 .v-contact-details a:hover { color: var(--v-glow); }
+.v-contact-social { display: flex; gap: 18px; margin: 0; padding: 0; list-style: none; }
+.v-contact-social a { display: inline-flex; align-items: center; gap: 6px; }
+.v-contact-social svg { width: 15px; height: 15px; flex: none; }
 
 .v-form { display: grid; gap: 12px; }
 .v-form-grid {
