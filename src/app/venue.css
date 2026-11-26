@@ -1454,3 +1454,64 @@ html[data-grand-clean=true] .venue .v-review-recorder button {visibility:hidden!
   .v-stagemode-switch::after, .v-prompt::after, .v-guide::after, .v-stall-visit::after,
   .v-projection-views::after, .v-hud-fade::after, .v-contact-card::after, .v-nav-sheet::after { display: none; }
 }
+
+/* ── rotate screen (RotateGate) ─────────────────────────────
+   Touch screens held upright: one quiet instruction over the dark room.
+   Above the loader, so a visitor who turns mid-load sees the bar instead. */
+html.v-upright,
+html.v-upright body {
+  overflow: hidden;
+}
+.v-rotate {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 32px 28px;
+  text-align: center;
+  background: var(--v-ink);
+  color: var(--v-text);
+  touch-action: none;
+}
+.v-rotate-device {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 10px;
+  fill: none;
+  stroke: var(--v-glow);
+  stroke-width: 2;
+  stroke-linecap: round;
+  animation: v-rotate-turn 2.6s ease-in-out infinite;
+}
+.v-rotate-title {
+  max-width: 18ch;
+  font-size: 26px;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.v-rotate-body {
+  max-width: 30ch;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--v-muted);
+}
+.v-rotate-hint {
+  max-width: 32ch;
+  margin-top: 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--v-faint);
+}
+@keyframes v-rotate-turn {
+  0%, 20% { transform: rotate(0deg); }
+  55%, 85% { transform: rotate(-90deg); }
+  100% { transform: rotate(0deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .v-rotate-device { animation: none; transform: rotate(-90deg); }
+}

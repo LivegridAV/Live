@@ -608,6 +608,47 @@ test("lod1 replaces the full file below high quality when the manifest lists it"
   assert.equal(choose("/models/expo/x-visitors.glb", "medium", null), "full");
 });
 
+test("phones draw the phone copy where the build made one; lite mode still wins", () => {
+  const manifest = {
+    groups: [{ id: "rental", lite: ["/models/expo/r-shell.lite.glb"] }],
+    lod1: ["/models/expo/x-visitors.lod1.glb"],
+    phone: ["/models/expo/x-visitors.phone.glb", "/models/expo/r-shell.phone.glb", "/models/entrance/e.phone.glb"],
+  };
+  const startFiles = new Set(["/models/entrance/e.glb"]);
+  const choose = (path, { lite = false, quality = "medium", phone = true, m = manifest } = {}) =>
+    chooseModelVariant(path, { lite, quality, phone, manifest: m, startFiles });
+  assert.equal(choose("/models/expo/x-visitors.glb"), "phone", "phone beats lod1");
+  assert.equal(choose("/models/expo/x-visitors.glb", { phone: false }), "lod1");
+  assert.equal(choose("/models/entrance/e.glb", { quality: "high" }), "phone", "the start group too");
+  assert.equal(choose("/models/expo/r-shell.glb", { lite: true }), "lite");
+  assert.equal(choose("/models/expo/y-shell.glb"), "full", "no phone copy listed");
+  assert.equal(choose("/models/expo/x-visitors.glb", { m: null }), "full", "no manifest");
+  assert.equal(variantUrl("/models/expo/a.glb?v=1", "phone"), "/models/expo/a.phone.glb?v=1");
+});
+
+const { phoneMediaSources, phoneMediaPath } = await import("../src/venue/loading/phoneMedia.ts");
+
+test("phone screen images: every load-group WebP except the pixel-exact painters' and the PBR maps", () => {
+  const sources = phoneMediaSources(LOAD_GROUPS);
+  assert.ok(sources.includes("/media/reception/cylinder-reference-art-v1.webp"));
+  assert.ok(sources.includes("/media/pillars/ribbon-wrap-mobile.webp"), "mobile variants too");
+  assert.ok(sources.includes("/media/led-rental-2026/backdrop.webp"));
+  const projection = LOAD_GROUPS.find(group => group.id === "projection");
+  for (const file of projection.assets) assert.ok(!sources.includes(file), file);
+  assert.ok(!sources.includes("/media/final/technical-control.webp"));
+  assert.ok(!sources.some(file => file.includes("/technical-showcase/materials/")));
+  assert.equal(phoneMediaPath("/media/a/b.webp?v=2"), "/media/a/b.phone.webp?v=2");
+});
+
+test("the build wrote a phone copy of every group model and screen image, each lighter", { skip: !existsSync("out/models/load-manifest.json") }, () => {
+  const manifest = JSON.parse(readFileSync("out/models/load-manifest.json", "utf8"));
+  const glbs = new Set(LOAD_GROUPS.flatMap(group => [...group.assets, ...Object.values(group.variants ?? {}).flat()]).filter(file => file.endsWith(".glb")));
+  assert.deepEqual(new Set(manifest.phone), new Set([...glbs].map(file => variantPath(file, "phone"))));
+  for (const file of manifest.phone) assert.ok(existsSync(`out${file}`), file);
+  for (const file of phoneMediaSources(LOAD_GROUPS)) assert.ok(existsSync(`out${phoneMediaPath(file)}`), phoneMediaPath(file));
+  for (const group of manifest.groups) assert.ok(group.bytesByCondition.phone < group.bytesByCondition.mobile, `${group.id} is lighter on a phone`);
+});
+
 // ---- static mesh merging (Task 7) ----
 
 const THREE = await import("three");

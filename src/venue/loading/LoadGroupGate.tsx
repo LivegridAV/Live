@@ -1,10 +1,10 @@
 "use client";
 import { startTransition, useEffect, useLayoutEffect, useMemo, useRef, useState, type JSX, type ReactNode } from "react";
-import { useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import type * as THREE from "three";
 import { useVenue } from "../systems/store";
 import { WarmScope, afterWarmup, warmSubtree, warmupGateOpen, type WarmWork } from "../three/warmScene";
-import { startVenueStreaming } from "./stream";
+import { startVenueStreaming, visitorAt } from "./stream";
 import { LiteGroup } from "./LiteGroup";
 
 /**
@@ -14,11 +14,22 @@ import { LiteGroup } from "./LiteGroup";
  */
 export function VenueStreaming({ full }: { full: boolean }) {
   const gl = useThree(state => state.gl);
+  const phone = useVenue(state => state.isPhone);
+  const sinceReport = useRef(0);
   useEffect(() => {
     fullClaims.reset();
     liteClaims.reset();
     return startVenueStreaming(gl, { full });
   }, [gl, full]);
+  // Phones stream only the zones near the visitor (stream.ts, PHONE_LOOKAHEAD_M):
+  // report where the camera is, a few times a second.
+  useFrame(({ camera }, dt) => {
+    if (!phone) return;
+    sinceReport.current += dt;
+    if (sinceReport.current < 0.25) return;
+    sinceReport.current = 0;
+    visitorAt(camera.position.z);
+  });
   return null;
 }
 

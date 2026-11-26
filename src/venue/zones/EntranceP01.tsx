@@ -8,6 +8,7 @@ import { createEntranceWater, captureEntranceWater } from "../three/entranceRefl
 import { createEntranceClock, advanceEntranceClock, useEntranceFinishes } from "../systems/entranceFinishes";
 import { LocalPointLight } from "../three/LocalLights";
 import { gltfExtender } from "../three/textureLoading";
+import { useModelUrl } from "../loading/useModelUrl";
 import { disposeMergedStatic, mergeStaticMeshes } from "../three/mergeStatic";
 
 /** P01 local +Y maps to world -Z. Landing Y14 meets the existing -28.4 m ramp. */
@@ -15,7 +16,10 @@ export function EntranceP01() {
   const worldScene=useThree(s=>s.scene);
   const gl=useThree(s=>s.gl);
   // drei's default flags (Draco on), as the streamer's modelRequest expects.
-  const { scene, animations } = useGLTF("/models/entrance/entrance-refined.glb", true, true, gltfExtender(gl));
+  // The start group is never in lite mode, so there is always a file; on a
+  // phone it is the phone copy (useModelUrl).
+  const url = useModelUrl("/models/entrance/entrance-refined.glb")!;
+  const { scene, animations } = useGLTF(url, true, true, gltfExtender(gl));
   const finish = useMemo(() => {
     const copy = scene.clone(true);
     copy.animations = animations;

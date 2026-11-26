@@ -58,8 +58,8 @@ export type ModelRequest = { url: string; useDraco: boolean };
 export function modelRequest(path: string, variant: ModelVariant = "full"): ModelRequest {
   const expo = /^\/models\/expo\/([^/]+)\.glb$/.exec(path);
   if (expo) return { url: variantUrl(expoAssetUrl(expo[1], GLB_REVISIONS[expo[1]]), variant), useDraco: false };
-  // EntranceP01 calls useGLTF(path) with drei's default flags.
-  return { url: path, useDraco: true };
+  // EntranceP01 calls useGLTF(useModelUrl(path)) with drei's default flags.
+  return { url: variantUrl(path, variant), useDraco: true };
 }
 
 let mediaUrls: Map<string, string[]> | null = null;

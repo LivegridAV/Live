@@ -2,6 +2,7 @@
 import { useEffect, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useVenue, type QualityTier } from "./store";
+import { detectPhone } from "./device";
 
 /**
  * Device profiling and adaptive resolution.
@@ -13,8 +14,8 @@ import { useVenue, type QualityTier } from "./store";
  */
 
 /** Runs outside the canvas: picks the starting tier before anything is built. */
-export function detectQuality(): { tier: QualityTier; mobile: boolean; dpr: number } {
-  if (typeof window === "undefined") return { tier: "high", mobile: false, dpr: 1 };
+export function detectQuality(): { tier: QualityTier; mobile: boolean; phone: boolean; dpr: number } {
+  if (typeof window === "undefined") return { tier: "high", mobile: false, phone: false, dpr: 1 };
 
   const coarse = window.matchMedia("(pointer: coarse)").matches;
   const narrow = window.innerWidth < 760;
@@ -38,7 +39,7 @@ export function detectQuality(): { tier: QualityTier; mobile: boolean; dpr: numb
   const forced = new URLSearchParams(window.location.search).get("quality");
   if (forced === "low" || forced === "medium" || forced === "high") tier = forced;
 
-  return { tier, mobile, dpr };
+  return { tier, mobile, phone: detectPhone(), dpr };
 }
 
 const TARGET_DPR: Record<QualityTier, [number, number]> = {

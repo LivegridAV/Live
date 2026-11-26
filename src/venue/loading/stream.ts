@@ -9,6 +9,8 @@ import { settleManifest } from "./manifest";
 import { variantPath, type ModelVariant } from "./modelVariants";
 import { streamedVariant } from "./useModelUrl";
 import { useVenue } from "../systems/store";
+import { phoneMediaUrl } from "./phoneMediaUrl";
+import { phoneMediaPath } from "./phoneMedia";
 import { forgetVenueTexture, gltfExtender, ktx2Available, ktx2Sibling, loadVenueTexture, missingTextures, usesKtx2 } from "../three/textureLoading";
 
 /**
@@ -42,6 +44,18 @@ let opening: { full: string[]; lite: string[] } | null = null;
 let opened = false;
 /** Light packs that have arrived, failed for good or been dropped (their full group arrived first). */
 const liteSettled = new Set<string>();
+/**
+ * Phones: a later group's full files start downloading only once the visitor
+ * has come within this many metres (camera z) of where its zone switches on.
+ * A zone switches on about 58 m before its own content begins, and the path
+ * winds, so this still leaves well over 80 m of walking. Until then its light pack
+ * stands in, as it does on any slow connection, and a visitor who leaves
+ * early never pays for zones they did not reach. Jumps (prioritizeZ) still
+ * fetch their destination at once.
+ */
+export const PHONE_LOOKAHEAD_M = 30;
+/** The furthest camera z the visitor has reached (phones; the walk heads toward -z). */
+let deepestZ = Infinity;
 
 const LITE = ".lite";
 /** The queue item of a group's light pack. */
@@ -55,11 +69,14 @@ const perf = () => typeof location !== "undefined" && new URLSearchParams(locati
 /**
  * The file conditions the venue loads under: always `festival` (the stage's
  * festival package is preloaded, so the show cue never fetches), plus
- * `mobile` on phones.
+ * `mobile` on a mobile frame and `phone` on phones (the phone copies; see
+ * plannerGroups). groups.json has no `phone` variants: the phone files are
+ * chosen per file (streamedVariant, phoneMediaUrl).
  */
 export function loadConditions(): Set<string> {
   const conditions = new Set(["festival"]);
   if (useVenue.getState().isMobile) conditions.add("mobile");
+  if (useVenue.getState().isPhone) conditions.add("phone");
   return conditions;
 }
 
@@ -172,7 +189,7 @@ async function fetchGroup(id: string) {
   // through the loader its component uses; everything else is an image.
   const media = paths.filter(path => !path.endsWith(".glb"));
   const ktx2 = media.filter(hasKtx2);
-  const images = media.filter(path => !hasKtx2(path)).flatMap(mediaRequests);
+  const images = [...new Set(media.filter(path => !hasKtx2(path)).flatMap(mediaRequests).map(phoneMediaUrl))];
   await Promise.all([...models.map(path => loadModel(path, true)), ...images.map(loadImage),
     ...ktx2.map(path => loadVenueTexture(path, renderer!))]);
 }
@@ -209,15 +226,15 @@ function forgetItem(item: string) {
 
 const sourceOfLite = (path: string) => path.replace(/\.lite\.glb$/i, ".glb");
 
-/** A group's own files, including the lod1 models it may load instead, plus the light packs of `liteIds`. */
+/** A group's own files, including the lod1 and phone files it may load instead, plus the light packs of `liteIds`. */
 function ownFiles(ids: readonly string[], liteIds: readonly string[] = []) {
   const files = new Set<string>(liteIds.flatMap(liteFiles));
   for (const group of LOAD_GROUPS) {
     if (!ids.includes(group.id)) continue;
     for (const path of [...group.assets, ...Object.values(group.variants ?? {}).flat()]) {
       files.add(path);
-      if (path.endsWith(".glb")) files.add(variantPath(path, "lod1"));
-      if (path.endsWith(".webp")) files.add(ktx2Sibling(path));
+      if (path.endsWith(".glb")) { files.add(variantPath(path, "lod1")); files.add(variantPath(path, "phone")); }
+      if (path.endsWith(".webp")) { files.add(ktx2Sibling(path)); files.add(phoneMediaPath(path)); }
     }
   }
   return files;
@@ -269,6 +286,7 @@ export function startVenueStreaming(gl: THREE.WebGLRenderer, { full = false }: {
   opening = null;
   opened = false;
   liteSettled.clear();
+  deepestZ = Infinity;
   useVenue.setState({ readyGroups: [], warmGroups: [], liteGroups: [], liteWarmGroups: [] });
   // The default buffer (250) fills before the last group arrives.
   try { performance.setResourceTimingBufferSize(2000); } catch { /* not supported */ }
@@ -348,9 +366,23 @@ function settleLite(id: string) {
   releaseFullWhenLiteDone();
 }
 
+/** The later groups whose full files may stream now: all of them, or on a phone the ones near the visitor. */
+function fullReleasable(): string[] {
+  const ids = laterIds();
+  if (fullMode || !useVenue.getState().isPhone) return ids;
+  return LOAD_GROUPS.filter(group => ids.includes(group.id) && deepestZ <= group.switchOnZ + PHONE_LOOKAHEAD_M).map(group => group.id);
+}
+
 /** After opening, once every light pack has settled: the full groups stream, in journey order. */
 function releaseFullWhenLiteDone() {
-  if (opened && withLitePack().every(id => liteSettled.has(id))) handle?.release(laterIds());
+  if (opened && withLitePack().every(id => liteSettled.has(id))) handle?.release(fullReleasable());
+}
+
+/** The camera is at `z` (reported on phones): release the full groups the visitor is now near. */
+export function visitorAt(z: number) {
+  if (!Number.isFinite(z) || z >= deepestZ - 0.5) return;
+  deepestZ = z;
+  releaseFullWhenLiteDone();
 }
 
 /**
@@ -394,7 +426,9 @@ export function plannerGroups() {
     const entry = manifest!.groups.find(g => g.id === group.id);
     const base = entry?.bytes ?? 0;
     // Each active condition adds what it changes: bytes + Σ (bytesByCondition[c] − bytes).
-    const bytes = [...conditions].reduce((sum, c) => sum + ((entry?.bytesByCondition?.[c] ?? base) - base), base);
+    // `phone` already counts the mobile files (phones always have a mobile frame).
+    const counted = conditions.has("phone") ? [...conditions].filter(c => c !== "mobile") : [...conditions];
+    const bytes = counted.reduce((sum, c) => sum + ((entry?.bytesByCondition?.[c] ?? base) - base), base);
     return { id: group.id, switchOnZ: group.switchOnZ, bytes, liteBytes: entry?.liteBytes ?? 0 };
   });
 }

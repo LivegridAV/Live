@@ -2,6 +2,7 @@ import { DefaultLoadingManager } from "three";
 import type { PaintCtx } from "./painters";
 import { drawSignalGrid, drawWordmark } from "./brandMarks";
 import { prefetchedImage } from "../loading/prefetched";
+import { phoneMediaUrl } from "../loading/phoneMediaUrl";
 
 /** Isolated content for the October 18 rental pavilion's actual LED surfaces. */
 export const LED_RENTAL_2026_ART = {
@@ -22,8 +23,10 @@ const decoded = new WeakSet<HTMLImageElement>();
 const W = 1920, H = 1080, TAU = Math.PI * 2;
 const phase = (t: number) => (((t % 24) + 24) % 24) / 24 * TAU;
 
-function artwork(url: string) {
+function artwork(source: string) {
   if (typeof Image === "undefined") return undefined;
+  // On a phone the half-size copy (every draw below scales to the canvas).
+  const url = phoneMediaUrl(source);
   let image = images.get(url);
   // The streamer may already hold this file decoded (load group prefetch).
   const ready = image ? undefined : prefetchedImage(url);

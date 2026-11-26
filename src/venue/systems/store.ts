@@ -1,5 +1,6 @@
 import type { StallVisit } from "../data/stallVisits";
 import { create } from "zustand";
+import { detectPhone } from "./device";
 
 /**
  * Single source of runtime truth for the venue walkthrough.
@@ -58,6 +59,8 @@ export interface VenueState {
   /* ── device ── */
   quality: QualityTier;
   isMobile: boolean;
+  /** A phone (touch, small screen): loads the phone copies of the models and only nearby zones. */
+  isPhone: boolean;
 
   /* ── actions ── */
   setProgress: (p: number, velocity?: number) => void;
@@ -108,6 +111,7 @@ export const useVenue = create<VenueState>((set, get) => ({
   stallVisit: null,
   quality: "high",
   isMobile: false,
+  isPhone: detectPhone(),
 
   setProgress: (p, velocity = 0) => set({ progress: p, velocity }),
   setPastVenue: (v) => {

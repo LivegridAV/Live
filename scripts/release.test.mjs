@@ -189,12 +189,14 @@ test("build writes a byte manifest per load group, with an opening that fits the
   assert.deepEqual(manifest.groups.map(g => g.id), groups.map(g => g.id));
   for (const group of manifest.groups) {
     assert.ok(group.bytes > 0, `${group.id} has no bytes`);
-    assert.deepEqual(Object.keys(group.bytesByCondition).sort(), ["festival", "mobile"]);
+    assert.deepEqual(Object.keys(group.bytesByCondition).sort(), ["festival", "mobile", "phone"]);
     assert.ok(Array.isArray(group.lite));
   }
   assert.ok(Array.isArray(manifest.ktx2Media));
   const start = manifest.groups.find(g => g.id === "start");
   assert.ok(start.bytes <= 24 * 2 ** 20, `start is ${(start.bytes / 2 ** 20).toFixed(1)} MiB, over the 24 MiB budget`);
+  // Phones open on the phone copies: under half of what a mobile frame loads.
+  assert.ok(start.bytesByCondition.phone <= 10 * 2 ** 20, `start on a phone is ${(start.bytesByCondition.phone / 2 ** 20).toFixed(1)} MiB, over the 10 MiB phone budget`);
 });
 
 // ------------------------------------------------------------ derived models
