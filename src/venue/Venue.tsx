@@ -20,6 +20,7 @@ import { ReviewRecorder } from "./ui/ReviewRecorder";
 import { EntranceFinishes } from "./ui/EntranceFinishes";
 import { EntranceWalkthrough } from "./ui/EntranceWalkthrough";
 import { RotateGate } from "./ui/RotateGate";
+import { DiagnosticsPanel, diagnosticsEnabled } from "./ui/Diagnostics";
 
 /**
  * The venue walkthrough.
@@ -100,6 +101,7 @@ export default function Venue() {
   const entered=useVenue(s=>s.entered);
   const [capture]=useState(()=>new URLSearchParams(location.search).get("capture")==="1");
   const [profile] = useState(detectQuality);
+  const [diag] = useState(diagnosticsEnabled);
 
   useEffect(() => {
     useVenue.setState({ quality: profile.tier, isMobile: profile.mobile, isPhone: profile.phone });
@@ -140,6 +142,7 @@ export default function Venue() {
       <EntranceFinishes />
       <EntranceWalkthrough />
       <RotateGate />
+      {diag && <DiagnosticsPanel />}
     </div>
   );
 }

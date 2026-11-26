@@ -17,6 +17,7 @@ import { Arena } from "./zones/Arena";
 import { useVenue } from "./systems/store";
 import { ZoneGroup } from "./three/ZoneGroup";
 import { RenderMetrics } from "./systems/RenderMetrics";
+import { DiagnosticsProbe, diagnosticsEnabled } from "./ui/Diagnostics";
 import { LocalLightPool } from "./three/LocalLights";
 import * as THREE from "three";
 import { closeWarmupGate, openWarmupGate, submitPrograms, warmScene, warmTarget, warmupHold } from "./three/warmScene";
@@ -146,6 +147,7 @@ function Warmup({ full }: { full: boolean }) {
 
 export function Scene({inspection=false}:{inspection?:boolean}) {
   const [full] = useState(() => fullLoadRequested(inspection));
+  const [diag] = useState(diagnosticsEnabled);
   return (
     <MediaProvider>
       <LocalLightPool>
@@ -157,6 +159,7 @@ export function Scene({inspection=false}:{inspection?:boolean}) {
       <VenueStreaming full={full} />
       <Warmup full={full} />
       <RenderMetrics />
+      {diag && <DiagnosticsProbe />}
       <StallDimensions />
 
       {/* the building */}

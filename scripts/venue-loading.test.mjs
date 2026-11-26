@@ -1082,3 +1082,13 @@ test("opening: phones wait for the walk-pace light packs only, everything else f
   assert.deepEqual(openingLitePacks({ later, walkMinimum, phone: false, override: "walk" }), ["rental", "anamorphic"]);
   assert.deepEqual(openingLitePacks({ later, walkMinimum: [], phone: true }), [], "a fast phone may open with the start group alone");
 });
+
+test("?diag: the on-phone report mounts only with ?diag and changes nothing else", () => {
+  const read = f => readFileSync(path.resolve(f), "utf8");
+  const diag = read("src/venue/ui/Diagnostics.tsx");
+  assert.match(diag, /new URLSearchParams\(location\.search\)\.has\("diag"\)/);
+  assert.match(diag, /pointerEvents: "none"/, "the panel never takes a touch");
+  assert.doesNotMatch(diag, /useVenue\.setState|setState\(\{/, "it only reads the venue's state");
+  assert.match(read("src/venue/Venue.tsx"), /\{diag && <DiagnosticsPanel \/>\}/);
+  assert.match(read("src/venue/Scene.tsx"), /\{diag && <DiagnosticsProbe \/>\}/);
+});
