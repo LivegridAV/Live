@@ -1063,3 +1063,13 @@ test("phone speed: the canvas keeps its pixel ratio, the floor reflection is thr
   assert.match(read("src/venue/three/textureLoading.ts"), /afterRoot[\s\S]{0,120}flattenGlassIn/);
   assert.match(read("src/venue/three/technicalMaterials.ts"), /if\(detectPhone\(\)\)flattenGlass\(material\)/);
 });
+
+test("opening: phones wait for the walk-pace light packs only, everything else for all of them", async () => {
+  const { openingLitePacks } = await import("../src/venue/loading/plan.ts");
+  const later = ["rental", "anamorphic", "technical", "projection", "arena"], walkMinimum = ["rental", "anamorphic"];
+  assert.deepEqual(openingLitePacks({ later, walkMinimum, phone: false }), later);
+  assert.deepEqual(openingLitePacks({ later, walkMinimum, phone: true }), ["rental", "anamorphic"]);
+  assert.deepEqual(openingLitePacks({ later, walkMinimum, phone: true, override: "all" }), later);
+  assert.deepEqual(openingLitePacks({ later, walkMinimum, phone: false, override: "walk" }), ["rental", "anamorphic"]);
+  assert.deepEqual(openingLitePacks({ later, walkMinimum: [], phone: true }), [], "a fast phone may open with the start group alone");
+});
