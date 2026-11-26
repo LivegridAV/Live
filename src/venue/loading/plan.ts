@@ -88,3 +88,13 @@ export function nextToFetch(
   if (priority !== undefined && groups.some(g => g.id === priority) && pending(priority)) return priority;
   return groups.find(g => pending(g.id))?.id;
 }
+
+/**
+ * Which later groups' light packs the opening waits for: every one (the "all
+ * lite" rule) on computers and tablets, the walk-pace minimum on phones.
+ * Review override `?opening=walk|all` picks either on any device.
+ */
+export function openingLitePacks(input: { later: string[]; walkMinimum: string[]; phone: boolean; override?: string | null }): string[] {
+  const walk = input.override === "walk" || (input.phone && input.override !== "all");
+  return walk ? input.later.filter(id => input.walkMinimum.includes(id)) : [...input.later];
+}

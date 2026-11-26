@@ -21,6 +21,13 @@ export function detectPhone(): boolean {
 
 
 /**
+ * Least seconds between two renders of the floor's live reflection on a
+ * phone. Each one redraws the whole venue; the basin, projection deck and
+ * entrance water already hold theirs to 12-15 Hz.
+ */
+export const PHONE_REFLECTION_INTERVAL = 1 / 15;
+
+/**
  * Touch screens (phones and tablets) held upright. The venue is a walk built
  * for a wide frame, so upright touch devices see the rotate screen
  * (RotateGate) and the walk starts only once the device is turned sideways.

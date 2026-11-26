@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import * as THREE from "three";
 import { Scene } from "./Scene";
@@ -58,6 +58,43 @@ function ScrollTrack() {
   );
 }
 
+const GL = { antialias: true, powerPreference: "high-performance", alpha: false, stencil: false } as const;
+const CAMERA = { fov: 52, near: 0.1, far: 340, position: [0, 2.35, 21] as [number, number, number] };
+
+/**
+ * The canvas, memoised. R3F re-applies the Canvas `dpr` prop on every render
+ * of the Canvas element, which undid the QualityGovernor's pixel ratio each
+ * time Venue re-rendered (it does when the walk opens): phones ran at 2x
+ * instead of their tier's 1.35x. With stable props the governor owns it.
+ */
+const VenueCanvas = memo(function VenueCanvas({ dpr }: { dpr: number }) {
+  return (
+    <Canvas
+      shadows="percentage"
+      dpr={dpr}
+      gl={GL}
+      camera={CAMERA}
+      onCreated={({ gl, scene }) => {
+        gl.toneMapping = THREE.ACESFilmicToneMapping;
+        // Medium bright: the venue is a dark room with bright things in it, and
+        // the job is to keep it atmospheric without losing the architecture.
+        // Physical material response and local fixtures supply the lift;
+        // higher exposure would flatten the LED artwork into white.
+        gl.toneMappingExposure = 1.15;
+        gl.outputColorSpace = THREE.SRGBColorSpace;
+        // A program's first draw otherwise asks the driver for its info
+        // log, which waits for the link: 100+ ms long tasks when a group
+        // streams in during the walk (Task 6b trace). Kept in dev.
+        gl.debug.checkShaderErrors = process.env.NODE_ENV === "development";
+        scene.background = new THREE.Color("#05090a");
+        // Environment lifetime is owned by VenueEnvironment.
+      }}
+    >
+      <Scene />
+    </Canvas>
+  );
+});
+
 export default function Venue() {
   const [webgl] = useState(probeWebGL);
   const entered=useVenue(s=>s.entered);
@@ -75,34 +112,7 @@ export default function Venue() {
     <div className="venue" data-capture={capture&&entered?true:undefined}>
       {webgl && (
         <div className="venue-canvas">
-          <Canvas
-            shadows="percentage"
-            dpr={profile.dpr}
-            gl={{
-              antialias: true,
-              powerPreference: "high-performance",
-              alpha: false,
-              stencil: false,
-            }}
-            camera={{ fov: 52, near: 0.1, far: 340, position: [0, 2.35, 21] }}
-            onCreated={({ gl, scene }) => {
-              gl.toneMapping = THREE.ACESFilmicToneMapping;
-              // Medium bright: the venue is a dark room with bright things in it, and
-              // the job is to keep it atmospheric without losing the architecture.
-              // Physical material response and local fixtures supply the lift;
-              // higher exposure would flatten the LED artwork into white.
-              gl.toneMappingExposure = 1.15;
-              gl.outputColorSpace = THREE.SRGBColorSpace;
-              // A program's first draw otherwise asks the driver for its info
-              // log, which waits for the link: 100+ ms long tasks when a group
-              // streams in during the walk (Task 6b trace). Kept in dev.
-              gl.debug.checkShaderErrors = process.env.NODE_ENV === "development";
-              scene.background = new THREE.Color("#05090a");
-              // Environment lifetime is owned by VenueEnvironment.
-            }}
-          >
-            <Scene />
-          </Canvas>
+          <VenueCanvas dpr={profile.dpr} />
         </div>
       )}
 

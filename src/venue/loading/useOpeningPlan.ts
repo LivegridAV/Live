@@ -2,7 +2,7 @@
 import { useMemo, useRef } from "react";
 import { useThree } from "@react-three/fiber";
 import { START_GROUP } from "./groups";
-import { liteBeforeOpening } from "./plan";
+import { liteBeforeOpening, openingLitePacks } from "./plan";
 import { journeyStartZ } from "../data/path";
 import { useVenue } from "../systems/store";
 import {
@@ -14,7 +14,8 @@ import {
  *
  * Owner decision 3, open early and fill in: the venue opens once the start
  * group is warm and every later group's light pack is warm (the "all lite"
- * rule, see below). Full groups never hold the opening; they stream in
+ * rule, see below); on a phone, once the light packs a walker reaches first
+ * are warm. Full groups never hold the opening; they stream in
  * afterwards and sharpen each zone. Review, capture and inspection modes
  * (`full`) wait for every full group instead.
  *
@@ -38,14 +39,18 @@ export function useOpeningPlan(full: boolean) {
           const { size } = get();
           const startZ = journeyStartZ(size.width / Math.max(1, size.height));
           const later = groups.filter(g => g.id !== START_GROUP);
-          // The "all lite" rule (Task 6b fix round 1): normal visits open with
-          // every later group's light pack (~7.4 MiB), so even a jump straight
-          // to the far end right after opening never meets empty space.
-          // liteBeforeOpening (the walk-pace minimum) is kept for the day the
-          // packs shrink; it is reported in ?perf for comparison.
-          const plan = full ? { full: groups.map(g => g.id), lite: [] }
-            : { full: [START_GROUP], lite: later.map(g => g.id) };
+          // The "all lite" rule (Task 6b fix round 1): computers and tablets
+          // open with every later group's light pack (~7.4 MiB), so even a
+          // jump straight to the far end right after opening never meets
+          // empty space. Phones open with the walk-pace minimum (owner
+          // decision, Nov 2026): preparing every zone's shaders first cost a
+          // phone about 4.5 s of its opening; the rest stream in behind.
           const walkMinimum = liteBeforeOpening({ bytesPerSecond, groups: later, startZ });
+          const lite = openingLitePacks({
+            later: later.map(g => g.id), walkMinimum, phone: venue.isPhone,
+            override: new URLSearchParams(location.search).get("opening"),
+          });
+          const plan = full ? { full: groups.map(g => g.id), lite: [] } : { full: [START_GROUP], lite };
           current.planned = true;
           planOpening(plan);
           if (new URLSearchParams(location.search).has("perf")) {

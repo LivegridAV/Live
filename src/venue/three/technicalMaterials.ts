@@ -1,4 +1,6 @@
 import * as THREE from "three";
+import { detectPhone } from "../systems/device";
+import { flattenGlass } from "./phoneGlass";
 import { installationFinishFrame } from "./architecturalFinish";
 import { isPremiumSignMaterial, stylePremiumSign } from "./premiumSignMaterials";
 import { isCompressed, loadVenueTexture, placeholderTexture } from "./textureLoading";
@@ -34,6 +36,8 @@ function acrylicMaterial(source: THREE.Material) {
     attenuationColor:new THREE.Color("#f2f6f8"),
   });
   material.customProgramCacheKey=()=>"technical-transmitted-volume-acrylic-v3";
+  // Plain see-through sheets on a phone (phoneGlass.ts): no extra scene pass.
+  if(detectPhone())flattenGlass(material);
   prepared.add(material);acrylicMaterials.set(source,material);
   return material;
 }

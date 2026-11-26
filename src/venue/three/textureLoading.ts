@@ -2,6 +2,8 @@ import * as THREE from "three";
 import { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader.js";
 import type { GLTFLoader } from "three-stdlib";
 import { venueManifest } from "../loading/manifest";
+import { detectPhone } from "../systems/device";
+import { flattenGlassIn } from "./phoneGlass";
 
 /**
  * KTX2 textures for the venue (the build swaps them in from a local cache,
@@ -117,7 +119,16 @@ function gltfKtx2Loader(gl: THREE.WebGLRenderer) {
 export function configureGltfLoader(loader: GLTFLoader, gl: THREE.WebGLRenderer): void {
   // drei's GLTFLoader is three-stdlib's; it only calls load() on the loader.
   loader.setKTX2Loader(gltfKtx2Loader(gl) as unknown as Parameters<GLTFLoader["setKTX2Loader"]>[0]);
+  // On a phone, glass is plain see-through from the moment a GLB is parsed
+  // (phoneGlass.ts). drei calls this before every load: register once.
+  if (!withPhoneGlass.has(loader) && detectPhone()) {
+    withPhoneGlass.add(loader);
+    loader.register(() => ({ name: "venue_phone_glass", afterRoot: async (gltf: { scenes?: THREE.Object3D[] }) => {
+      for (const scene of gltf.scenes ?? []) flattenGlassIn(scene);
+    } }) as unknown as ReturnType<Parameters<GLTFLoader["register"]>[0]>);
+  }
 }
+const withPhoneGlass = new WeakSet<GLTFLoader>();
 
 type ParsedGltf = { parser?: { json?: { extensionsUsed?: string[] }; textureCache?: Record<string, Promise<unknown>> } };
 

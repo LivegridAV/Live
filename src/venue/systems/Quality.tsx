@@ -39,7 +39,15 @@ export function detectQuality(): { tier: QualityTier; mobile: boolean; phone: bo
   const forced = new URLSearchParams(window.location.search).get("quality");
   if (forced === "low" || forced === "medium" || forced === "high") tier = forced;
 
-  return { tier, mobile, phone: detectPhone(), dpr };
+  // Start at the tier's own pixel ratio (QualityGovernor adapts from there),
+  // not the screen's: a phone's 2-3x would be the first frames' cost.
+  return { tier, mobile, phone: detectPhone(), dpr: startingDpr(tier) };
+}
+
+/** The pixel ratio a tier starts at: the screen's, within the tier's range. */
+export function startingDpr(tier: QualityTier) {
+  const [min, max] = TARGET_DPR[tier];
+  return Math.max(min, Math.min(window.devicePixelRatio || 1, max));
 }
 
 const TARGET_DPR: Record<QualityTier, [number, number]> = {
@@ -58,8 +66,7 @@ export function QualityGovernor() {
   const cooldown = useRef(2.5);
 
   useEffect(() => {
-    const base = Math.min(window.devicePixelRatio || 1, TARGET_DPR[quality][1]);
-    dpr.current = Math.max(TARGET_DPR[quality][0], base);
+    dpr.current = startingDpr(quality);
     setDpr(dpr.current);
   }, [quality, setDpr]);
 
