@@ -3,6 +3,7 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import { phoneRendering } from "../systems/device";
 import { PROJECTION_SCALE, PROJECTION_DECK_POLYGON, inProjectionShowcase } from "../data/projection";
 import { useVenue } from "../systems/store";
 import { technicalFloorSurface } from "./technicalMaterials";
@@ -164,7 +165,8 @@ export function ProjectionFloor({polygonXZ=PROJECTION_DECK_POLYGON,active=inProj
 
   useFrame(({ gl, scene, camera, clock }) => {
     const state = useVenue.getState(), surface = mesh.current, r = reflection;
-    if (!surface || !state.entered || state.pastVenue || !active(state.progress)) return;
+    // A phone has no live reflections (device.ts): the deck keeps its stone.
+    if (phoneRendering() || !surface || !state.entered || state.pastVenue || !active(state.progress)) return;
     if (clock.elapsedTime - r.last < 1 / 15 || !(camera instanceof THREE.PerspectiveCamera)) return;
     for (let ancestor: THREE.Object3D | null = surface; ancestor; ancestor = ancestor.parent) if (!ancestor.visible) return;
     surface.updateWorldMatrix(true, false);

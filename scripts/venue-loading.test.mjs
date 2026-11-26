@@ -763,6 +763,8 @@ test("mergeStaticMeshes: quantized (normalized int16) and interleaved attributes
   for (let v = 0; v < 6; v++) assert.deepEqual([normal.getX(v), normal.getY(v), normal.getZ(v)], [0, 0, 1]);
 });
 
+// warmScene imports extensionless siblings (systems/device): resolve them as the bundler does.
+await import("node:module").then(({ register }) => register(new URL("./ts-extensionless-hook.mjs", import.meta.url)));
 const { prepareBeforeWarm, preparedWithin } = await import("../src/venue/three/warmScene.ts");
 const mergeStaticSoon = root => prepareBeforeWarm(root, () => mergeStaticMeshes(root));
 
@@ -1053,13 +1055,20 @@ test("phone glass: transmission becomes plain see-through, other materials are l
   assert.equal(multi.transmission, 0, "multi-material meshes are covered");
 });
 
-test("phone speed: the canvas keeps its pixel ratio, the floor reflection is throttled on phones, glass is flattened at load", () => {
+test("phone speed: the canvas keeps its pixel ratio, phones render lean, glass is flattened at load", () => {
   const read = f => readFileSync(path.resolve(f), "utf8");
   const venue = read("src/venue/Venue.tsx");
   assert.match(venue, /const VenueCanvas = memo\(/, "the Canvas is memoised, so Venue re-renders do not re-apply its dpr prop");
   assert.match(venue, /gl=\{GL\}/); assert.match(venue, /camera=\{CAMERA\}/);
   assert.match(read("src/venue/systems/Quality.tsx"), /dpr: startingDpr\(tier\)/, "the canvas starts at the tier's pixel ratio");
-  assert.match(read("src/venue/zones/Architecture.tsx"), /interval=\{isPhone \? PHONE_REFLECTION_INTERVAL : 0\}/);
+  assert.match(read("src/venue/zones/Architecture.tsx"), /\{isPhone \? <meshStandardMaterial key="phone" onUpdate=\{material=>preparePolishedFloor\(material,PHONE_FLOOR_REFLECTION\)\}/, "a phone gets the polished finish without the live reflection");
+  assert.match(venue, /shadows=\{!profile\.phone\}/, "no shadow maps on a phone");
+  for (const f of ["src/venue/three/entranceReflection.ts", "src/venue/three/BasinWater.tsx", "src/venue/three/ProjectionFloor.tsx"])
+    assert.match(read(f), /phoneRendering\(\)/, `${f} skips its reflection on a phone`);
+  const warm = read("src/venue/three/warmScene.ts");
+  assert.equal((warm.match(/gl\.setRenderTarget\(target\);\s*gl\.compile/g) ?? []).length, 0, "every warm-up compile goes through compileVariants");
+  assert.equal((warm.match(/new THREE\.WebGLRenderTarget\(32, 32\)/g) ?? []).length, 1, "every warm-up target comes from warmTarget");
+  assert.match(read("src/venue/Scene.tsx"), /early\.current\.target \?\?= warmTarget\(\)/);
   assert.match(read("src/venue/three/textureLoading.ts"), /afterRoot[\s\S]{0,120}flattenGlassIn/);
   assert.match(read("src/venue/three/technicalMaterials.ts"), /if\(detectPhone\(\)\)flattenGlass\(material\)/);
 });

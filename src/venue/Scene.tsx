@@ -19,7 +19,7 @@ import { ZoneGroup } from "./three/ZoneGroup";
 import { RenderMetrics } from "./systems/RenderMetrics";
 import { LocalLightPool } from "./three/LocalLights";
 import * as THREE from "three";
-import { closeWarmupGate, openWarmupGate, submitPrograms, warmScene, warmupHold } from "./three/warmScene";
+import { closeWarmupGate, openWarmupGate, submitPrograms, warmScene, warmTarget, warmupHold } from "./three/warmScene";
 import { shareTextureDownloads } from "./three/sharedTextures";
 
 shareTextureDownloads();
@@ -97,7 +97,7 @@ function Warmup({ full }: { full: boolean }) {
       const { loaded } = useProgress.getState();
       if (loaded !== early.current.loaded && now - early.current.at > 900) {
         early.current.loaded = loaded; early.current.at = now;
-        early.current.target ??= new THREE.WebGLRenderTarget(32, 32);
+        early.current.target ??= warmTarget();
         try { submitPrograms(gl, scene, camera, early.current.target); }
         catch (error) { console.warn("Early shader submission skipped", error); }
       }

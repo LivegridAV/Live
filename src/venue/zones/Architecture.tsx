@@ -1,7 +1,6 @@
 "use client";
 import { useMemo } from "react";
-import { ThrottledReflectorMaterial } from "../three/ThrottledReflectorMaterial";
-import { PHONE_REFLECTION_INTERVAL } from "../systems/device";
+import { MeshReflectorMaterial } from "@react-three/drei";
 import { useWarmupOpen } from "../three/warmScene";
 import * as THREE from "three";
 import { ExpoAsset } from "../three/ExpoAsset";
@@ -48,9 +47,15 @@ function segments(from: number, to: number, size: number) {
 
 /* ── ground ────────────────────────────────────────────── */
 
+/** A phone's floor: the polished finish with the reflected hall as a fixed
+ * dark tone instead of a live render of the whole venue (linear RGB, about
+ * the average of the reflection in the walk captures). */
+const PHONE_FLOOR_REFLECTION = new THREE.Color(0.02, 0.024, 0.027);
+
 export function Ground() {
   const quality = useVenue((s) => s.quality);
-  // A phone redraws the floor's reflection at 15 Hz, not every frame.
+  // A phone keeps the polished stone without the live reflection
+  // (device.ts phoneRendering): it redrew the whole venue every frame.
   const isPhone = useVenue((s) => s.isPhone);
   const reflect = useWarmupOpen();
   const stone = useVenueFloorMaps();
@@ -71,10 +76,12 @@ export function Ground() {
     geometry={geometry} userData={{venuePlanarReflection:true,grandRole:"venue-floor"}}>
     {/* The live reflection draws the whole scene every frame, so it waits
         for the warm-up; before then the loader hides the plain stone. */}
-    {!reflect ? <meshStandardMaterial color={VENUE_FLOOR.colour} map={stone.map} roughnessMap={stone.roughnessMap}
+    {isPhone ? <meshStandardMaterial key="phone" onUpdate={material=>preparePolishedFloor(material,PHONE_FLOOR_REFLECTION)}
+      color={VENUE_FLOOR.colour} map={stone.map} roughnessMap={stone.roughnessMap} normalMap={stone.normalMap}
+      normalScale={[.045,.045]} metalness={.035} roughness={.43} envMapIntensity={.48}/> :
+    !reflect ? <meshStandardMaterial color={VENUE_FLOOR.colour} map={stone.map} roughnessMap={stone.roughnessMap}
       normalMap={stone.normalMap} normalScale={[.045,.045]} metalness={.035} roughness={.43} envMapIntensity={.48}/> :
-    <ThrottledReflectorMaterial color={VENUE_FLOOR.colour}
-      interval={isPhone ? PHONE_REFLECTION_INTERVAL : 0}
+    <MeshReflectorMaterial color={VENUE_FLOOR.colour}
       onUpdate={material=>preparePolishedFloor(material)}
       map={stone.map} roughnessMap={stone.roughnessMap} normalMap={stone.normalMap}
       normalScale={[.045,.045]} metalness={.035} roughness={.43} envMapIntensity={.48}
