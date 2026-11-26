@@ -2,7 +2,7 @@ import { SERVICES } from "@/content/services";
 import { LED_TYPES } from "@/content/led";
 import { ARTICLES } from "@/content/insights";
 import { CITIES } from "@/content/cities";
-import { CONTACT } from "@/experience/contact";
+import { CONTACT, SOCIAL } from "@/experience/contact";
 import { SITE } from "@/content/seo";
 
 /**
@@ -24,6 +24,7 @@ export function GET() {
 - Service area: all of India; the crew travels with its own equipment. Frequent cities: Delhi NCR (Delhi, Gurugram, Noida), Mumbai, Hyderabad, Bengaluru and Kolkata.
 - Contact: ${CONTACT.email} · ${CONTACT.phoneDisplay} · WhatsApp ${CONTACT.phoneDisplay}
 - Start a project: ${SITE}/contact
+- Social: ${SOCIAL.map((s) => `${s.label} ${s.href}`).join(" · ")}
 
 ## Services
 

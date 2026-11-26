@@ -129,6 +129,21 @@ test("home copy, canonical and crawlable business fallback", () => {
   assert.match(read("out/sitemap.xml"), /https:\/\/livegridav.com\/services/);
   assert.match(read("src/app/venue.css"), /\.v-seo\s*\{\s*color: #eef3f2;/);
 });
+test("social accounts: one list, linked from every contact surface and named in the business record", () => {
+  const accounts = ["https://www.instagram.com/livegridav/", "https://www.facebook.com/livegridav"];
+  const home = read("out/index.html");
+  const record = [...home.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/gs)]
+    .flatMap(m => { const j = JSON.parse(m[1]); return j["@graph"] ?? [j]; })
+    .find(n => n["@id"] === "https://livegridav.com/#org");
+  assert.deepEqual(record?.sameAs, accounts, "home business record lists the social accounts as sameAs");
+  for (const page of ["out/index.html", "out/contact.html", "out/services.html"]) {
+    const html = read(page);
+    for (const href of accounts) assert.ok(html.includes(`href="${href}"`), `${page} links ${href}`);
+    assert.doesNotMatch(html, /href="https:\/\/www\.(instagram|facebook)\.com[^"]*"(?![^>]*rel="noopener noreferrer me")[^>]*>/, `${page}: social links open safely`);
+  }
+  for (const href of accounts) assert.ok(read("out/llms.txt").includes(href), `llms.txt lists ${href}`);
+  assert.match(read("src/venue/ui/Contact.tsx"), /<SocialLinks showLabel className="v-contact-social"/);
+});
 test("brand color, stage labels and continuous tunnel contract", () => {
   assert.match(read("public/brand/lockup-inverse.svg"), /#3fd6c8/i);
   const css = read("src/app/venue.css");

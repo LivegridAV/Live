@@ -3,6 +3,7 @@ import { useState, type FormEvent } from "react";
 import Link from "next/link";
 import { useVenue } from "../systems/store";
 import { CONTACT, contactLinks, LEAD_WEBHOOK_URL, LEAD_WEBHOOK_ENABLED } from "@/experience/contact";
+import SocialLinks from "@/components/SocialLinks";
 
 /**
  * The contact experience.
@@ -206,6 +207,7 @@ export function ContactPanel() {
           <span>livegridAV · {CONTACT.address}</span>
           <a href={contactLinks.call()}>{CONTACT.phoneDisplay}</a>
           <a href={contactLinks.email()}>{CONTACT.email}</a>
+          <SocialLinks showLabel className="v-contact-social" tabIndex={visible ? 0 : -1} />
         </div>
       </div>
     </section>

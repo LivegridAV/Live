@@ -7,6 +7,20 @@ export const CONTACT = {
   address: "Uday Vihar 2, Khushi Ram Park, Nangloi, Delhi 110041",
 } as const;
 
+/**
+ * The company's own social accounts. Only real, checked profiles go here:
+ * each one is linked from the footer, the contact page and the venue's
+ * contact panel, and listed as `sameAs` in the business record search
+ * engines read (seo.ts), so a wrong link would tell Google another account
+ * is ours. Add YouTube when the channel exists.
+ */
+export const SOCIAL = [
+  { id: "instagram", label: "Instagram", handle: "@livegridav", href: "https://www.instagram.com/livegridav/" },
+  { id: "facebook", label: "Facebook", handle: "livegridAV", href: "https://www.facebook.com/livegridav" },
+] as const;
+
+export type SocialAccount = (typeof SOCIAL)[number];
+
 export const contactLinks = {
   email: (subject = "Event enquiry — livegridav.com") =>
     `mailto:${CONTACT.email}?subject=${encodeURIComponent(subject)}`,
