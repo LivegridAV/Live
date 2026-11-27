@@ -4,6 +4,18 @@
 # returning visitor re-checks every venue file before the scene can open.
 # Rules must not overlap: Pages joins two values of the same header.
 
+# Security headers for every response. Only this rule sets them, so nothing joins.
+# - HSTS: browsers always use HTTPS for livegridav.com (subdomains not included on purpose).
+# - frame-ancestors / X-Frame-Options: other sites can't show these pages in a frame (clickjacking).
+# - base-uri / object-src: no <base> hijacking, no plugins.
+# - Permissions-Policy: the site never uses the camera, mic, location, payments or USB.
+/*
+  Strict-Transport-Security: max-age=31536000
+  Content-Security-Policy: frame-ancestors 'self'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests
+  X-Frame-Options: SAMEORIGIN
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+
 # Content-hashed names never change meaning: cache for a year.
 /_next/static/*
   Cache-Control: public, max-age=31536000, immutable

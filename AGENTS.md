@@ -62,8 +62,12 @@ node scripts/serve-export.mjs   # serve out/ at http://127.0.0.1:4310 (launch co
 - Static export (`output: "export"`): no server code, no runtime env. `NEXT_PUBLIC_*` values are baked in at build time.
 - `optimize-export.mjs` rewrites only `out/` (KTX2/WebP textures, meshopt GLBs, lite/lod1/phone variants, load manifest)
   and fails on Cloudflare limits (file > 25 MiB, > 20,000 files). Never edit source assets in `public/` to "optimise" them.
-- The real footer is `ShellFooter` in `src/components/site/PageShell.tsx`. `src/components/SiteFooter.tsx` and most of
-  `src/experience/` (old scroll experience) are unused. Only `src/experience/contact.ts` is live.
+- The footer is `ShellFooter` in `src/components/site/PageShell.tsx`. `src/experience/` holds only `contact.ts`.
+- A few venue files are not mounted but are read as text by the release tests (`zones/Tunnel.tsx`, `zones/Arrival.tsx`,
+  `three/cinematicWorld.ts`, `three/ProjectionFloor.tsx`, `three/TechnicalContactShadow.tsx`, `three/ImmersiveVolume.tsx`,
+  `three/immersive.ts`). Don't delete them without updating those tests.
+- Security headers live in the `/*` rule of `public/_headers`. Keep each header in one rule only (Pages joins
+  duplicates). Adding a full Content-Security-Policy needs testing against the 3D venue (workers, WASM, inline JSON-LD).
 - Social accounts are one list, `SOCIAL` in `src/experience/contact.ts`; it feeds the footer, contact page, venue contact
   panel, home page, JSON-LD `sameAs` and `/llms.txt`. Only add verified profiles (YouTube when it exists).
 - Venue debug flags: `?diag` (phone report), `?perf`, `?phone=1|0`. See README.

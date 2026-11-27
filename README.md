@@ -11,7 +11,7 @@ crawlable HTML, so search engines, screen readers and devices without WebGL get 
 - Social posting pipeline (n8n + Telegram → Facebook/Instagram): `../social-automation`.
 
 ## Stack
-Next 16.2.9 (App Router, `output: "export"`) · React 19.2.4 · three 0.185 · @react-three/fiber 9 · drei 10 · zustand 5 ·
+Next 16.4.6 (App Router, `output: "export"`) · React 19.2.4 · three 0.185 · @react-three/fiber 9 · drei 10 · zustand 5 ·
 Tailwind CSS 4 · GSAP, Lenis, motion · TypeScript 5. Node ≥ 22.18 (`.nvmrc`: 24.22.1).
 Hosting: **Cloudflare Pages** (project "live", custom domain livegridav.com), built from `main` in the Cloudflare dashboard.
 Repo: https://github.com/LivegridAV/Live
@@ -38,16 +38,24 @@ Repo: https://github.com/LivegridAV/Live
    in `out/textures/`, `.lite.glb` / `.lod1.glb` / phone variants and `.phone.webp`, writes `out/models/load-manifest.json`.
    Fails if any file > 25 MiB or > 20,000 files (Cloudflare Pages limits).
 
-Cache headers for Pages live in `public/_headers`. `public/0033b5394fd2b9a05838137372c0a8f2.txt` is the IndexNow key.
+Response headers for Pages live in `public/_headers`: cache rules per folder, plus one `/*` rule with the security
+headers (HSTS, `frame-ancestors`/`X-Frame-Options`, `base-uri`, `object-src`, Permissions-Policy). Pages joins repeated
+values of a header, so each header is set by one rule only (a release test checks this).
+`public/0033b5394fd2b9a05838137372c0a8f2.txt` is the IndexNow key.
+
+**Old assets:** the 27 Nov 2026 cleanup removed every model and image the build was already pruning (superseded
+stall versions, old entrance models, the tiger), plus old perf reports, QA screenshots and one-off scripts. They
+remain in git history (`git log --diff-filter=D --name-only` finds them). New iterations should replace files, not
+pile up `-vN` copies.
 
 ## Repo map
 | Path | What |
 |---|---|
 | `src/app/` | Routes (below), `layout.tsx`, `globals.css`, `liquid-glass.css`, `venue.css` (venue overlays), OG/Twitter images, `robots.txt` |
 | `src/content/` | Typed content: `services.ts`, `work.ts` (from `site.ts` PROJECTS), `led.ts`, `insights.ts`, `cities.ts`, `equipment.ts`, `site.ts` (COMPANY, STATS), `seo.ts` (business record) |
-| `src/experience/contact.ts` | CONTACT (email, phone, WhatsApp, address; source of truth `Contact.txt`), `SOCIAL`, lead-webhook flags. The rest of `src/experience/` is an older unused scroll experience. |
+| `src/experience/contact.ts` | CONTACT (email, phone, WhatsApp, address; source of truth `Contact.txt`), `SOCIAL`, lead-webhook flags. (The old scroll experience that lived beside it was removed on 27 Nov 2026.) |
 | `src/components/site/` | Page building blocks: `PageShell.tsx` (nav + `ShellFooter`), detail views, `ContactBrief`, AV Lab, interactive demos |
-| `src/components/` | Shared bits: `SocialLinks.tsx`, `Reveal`, `SignalGrid`, `LiquidGlassLight` (several others are unused leftovers) |
+| `src/components/` | Shared bits: `SocialLinks.tsx`, `Reveal`, `SignalGrid`, `LiquidGlassLight` |
 | `src/venue/` | The 3D homepage: `VenueMount` → `Venue` → `Scene`; `data/` (zones, pavilions, path, placements, media), `loading/` (groups, streamer, planner, lite mode), `systems/` (zustand store, scroll/camera rigs, quality), `three/` (materials, shaders, texture loading), `ui/` (loader, nav, HUD, pavilion panel, contact panel, diagnostics), `zones/` |
 | `public/` | `models/` (GLBs), `media/` (versioned textures/video), `basis/` (KTX2 transcoder), `brand/`, `_headers` |
 | `scripts/` | Build (`prepare-export`, `optimize-export`, `gen-build-info`, KTX2), tests, verification and measurement (`verify-*`, `measure-*`, `walk-mobile`, `smoke-http`), `blender/` asset scripts, `indexnow.mjs` |
