@@ -460,6 +460,35 @@ test("the Basis transcoder is served from /basis/ with a cache rule", () => {
   assert.match(read("public/_headers"), /^\/basis\/\*\r?\n\s+Cache-Control: /m);
 });
 
+test("the export publishes no working records, scripts or local machine paths", () => {
+  const files = [];
+  const walkOut = dir => { for (const e of readdirSync(dir, { withFileTypes: true })) { const f = path.join(dir, e.name); if (e.isDirectory()) walkOut(f); else files.push(f); } };
+  walkOut("out");
+  const rel = f => path.relative("out", f).split(path.sep).join("/");
+  const assetRecords = files.map(rel).filter(r => /^(models|media|brand|videos)\//.test(r) && /\.(md|json|txt|cjs|mjs|js|py|sh)$/i.test(r)
+    && r !== "models/load-manifest.json" && !/(^|\/)(CREDITS\.md|[^/]*LICENSE[^/]*)$/i.test(r));
+  assert.deepEqual(assetRecords, [], "asset folders publish only assets, the load manifest and licence/credit files");
+  assert.deepEqual(files.map(rel).filter(r => /\.(cjs|py|sh|blend\d*)$/i.test(r)), [], "no tooling scripts or Blender files are published");
+  const leaks = files.filter(f => /\.(html|txt|json|md|js|css|xml)$/i.test(f) && /[A-Za-z]:[\\/]{1,2}Users[\\/]/.test(readFileSync(f, "utf8")));
+  assert.deepEqual(leaks.map(rel), [], "no published file names a local Windows user folder");
+});
+
+test("every response carries the security headers, set by one rule only", () => {
+  const headers = read("public/_headers");
+  const all = headers.match(/^\/\*\r?\n((?:[ \t]+\S.*\r?\n?)+)/m);
+  assert.ok(all, "public/_headers has a /* rule");
+  const block = all[1];
+  assert.match(block, /Strict-Transport-Security: max-age=\d{7,}/);
+  assert.match(block, /Content-Security-Policy: .*frame-ancestors 'self'/);
+  assert.match(block, /Content-Security-Policy: .*object-src 'none'/);
+  assert.match(block, /X-Frame-Options: SAMEORIGIN/);
+  assert.match(block, /Permissions-Policy: .*camera=\(\)/);
+  for (const name of ["Strict-Transport-Security", "Content-Security-Policy", "X-Frame-Options", "Permissions-Policy"]) {
+    const lines = headers.match(new RegExp(`^[ \\t]+${name}:`, "gm")) ?? [];
+    assert.equal(lines.length, 1, `${name} is set exactly once (Pages joins repeated values)`);
+  }
+});
+
 test("the Cloudflare build never imports ktx2-encoder", () => {
   for (const file of ["scripts/optimize-export.mjs", "scripts/ktx2-swap.mjs", "scripts/derived-models.mjs", "scripts/prepare-export.mjs"]) {
     assert.doesNotMatch(read(file), /ktx2-encoder/, `${file} mentions ktx2-encoder`);

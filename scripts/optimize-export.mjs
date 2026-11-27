@@ -128,6 +128,24 @@ const prunedBytes = pruned.reduce((sum, p) => sum + p.bytes, 0);
 console.log(`Pruned ${pruned.length} unreferenced assets (${mib(prunedBytes)})${dryRun ? " [dry run]" : ""}.`);
 console.log(`Kept runtime-built directories: ${[...keepDirs].join(", ") || "none"}`);
 
+// ------------------------------------------------------- unpublished records
+// Asset folders also hold working records (provenance notes, prompts, layout and
+// manifest JSON) that the site never fetches: layout JSON is bundled through
+// imports, and the only runtime fetch is models/load-manifest.json, written
+// below. Some records name the machines they were made on, so keep them in git
+// but off the public site. Licence and credit files stay published with the
+// assets they cover.
+const RECORD = /\.(md|json|txt|cjs|mjs|js|py|sh)$/i;
+const PUBLISHED_RECORD = /(^CREDITS\.md$|LICENSE)/i;
+const unpublished = [];
+for (const file of walk(OUT)) {
+  const r = rel(file);
+  if (!ASSET_ROOTS.some(root => r.startsWith(root + "/")) || !RECORD.test(r) || PUBLISHED_RECORD.test(path.basename(r))) continue;
+  unpublished.push(r);
+  if (!dryRun) rmSync(file);
+}
+console.log(`Left ${unpublished.length} working records out of the export${dryRun ? " [dry run]" : ""}.`);
+
 // ---------------------------------------------------------------- compress
 const report = { pruned, compressed: [], sharedTextures: [], derived: [], ktx2Media: [] };
 const ktx2 = createKtx2Swap({ groups: LOAD_GROUPS, startId: START_GROUP, outDir: OUT });
