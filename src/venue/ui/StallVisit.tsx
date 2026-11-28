@@ -8,6 +8,7 @@ import { GRAND, type GrandStall } from "../data/grand";
 import { STALL_PLACEMENTS } from "../data/placements";
 import { zoneAt } from "../data/zones";
 import { STALL_VISITS, stallAtProgress, isStallDiagnostic, stallSectionX, type StallView } from "../data/stallVisits";
+import { reviewToolsAllowed } from "../systems/reviewAccess";
 
 const VIEWS:StallView[]=["front","left","right","entrance","interior","exit","detail","plan","section"];
 const labels:Record<StallView,string>={front:"Front",left:"Left",right:"Right",entrance:"Entrance",interior:"Interior",exit:"Look outside",detail:"Detail",plan:"Plan · cutaway",section:"Section · cutaway",return:"Returning to venue"};
@@ -18,10 +19,12 @@ export function StallVisitControls() {
   const current=visit?.stall??stallAtProgress(state.progress);
   const bounds=current?STALL_PLACEMENTS[current].nativeCompleteBounds:null;
   useEffect(()=>{
-    if(!state.entered)return;
+    // Review links open a visit only where the review modes run (reviewAccess.ts).
+    if(!state.entered||!reviewToolsAllowed())return;
     const query=new URLSearchParams(location.search), shot=query.get("shot"), view=query.get("view");
     const stall=(shot==="counter"?"reception":shot==="rentals"?"led-rental":shot==="spatial"||shot==="projection-mapping"?"projection":shot) as GrandStall;
-    if(stall in STALL_VISITS && VIEWS.includes(view as StallView)) {
+    // Own keys only: `in` would also accept inherited names such as "constructor".
+    if(Object.prototype.hasOwnProperty.call(STALL_VISITS,stall) && VIEWS.includes(view as StallView)) {
       const progress=STALL_VISITS[stall].progress;
       scrollToProgress(progress,"instant");
       // The visit camera stands at the stall itself (after the scroll's own

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { useVenue } from "../systems/store";
+import { reviewToolsAllowed } from "../systems/reviewAccess";
 
 type Sample = ReturnType<typeof readSample>;
 type Running = {
@@ -36,9 +37,9 @@ function readSample() {
   };
 }
 
-/** Opt-in review tool. Explicit saves go only to the loopback report helper. */
+/** Opt-in review tool. Recordings are saved with the browser's own download links. */
 export function ReviewRecorder() {
-  const [enabled] = useState(() => new URLSearchParams(location.search).get("record") === "1");
+  const [enabled] = useState(() => reviewToolsAllowed() && new URLSearchParams(location.search).get("record") === "1");
   const entered = useVenue(s => s.entered);
   const running = useRef<Running | null>(null);
   const mounted = useRef(true);
@@ -46,8 +47,7 @@ export function ReviewRecorder() {
   const [status, setStatus] = useState("Ready to capture the WebGL canvas.");
   const [recording, setRecording] = useState(false);
   const [elapsed, setElapsed] = useState(0);
-  const [result, setResult] = useState<{ video: string; metadata: string; name: string; bytes: number; videoBlob:Blob; metadataBlob:Blob } | null>(null);
-  const [saving,setSaving]=useState(false);
+  const [result, setResult] = useState<{ video: string; metadata: string; name: string; bytes: number } | null>(null);
   const [clean,setClean]=useState(false);
 
   useEffect(()=>{
@@ -137,9 +137,9 @@ export function ReviewRecorder() {
         const metadataBlob=new Blob([JSON.stringify(metadata, null, 2)], { type: "application/json" });
         const metadataUrl = URL.createObjectURL(metadataBlob);
         urls.current = [videoUrl, metadataUrl];
-        setResult({ video: videoUrl, metadata: metadataUrl, name: current.name, bytes: video.size, videoBlob:video, metadataBlob });
+        setResult({ video: videoUrl, metadata: metadataUrl, name: current.name, bytes: video.size });
         setRecording(false);
-        setStatus(video.size ? "Recording complete. Save locally or download both files." : "No video frames were encoded. Retry after the scene is rendering.");
+        setStatus(video.size ? "Recording complete. Download both files." : "No video frames were encoded. Retry after the scene is rendering.");
       });
       recorder.start(1000);
       running.current = current;
@@ -161,36 +161,17 @@ export function ReviewRecorder() {
     }
   }
 
-  async function saveLocally() {
-    if(!result||saving)return;
-    setSaving(true);setStatus("Saving video and metadata to the local report helper…");
-    const files=[{name:`${result.name}.webm`,blob:result.videoBlob},{name:`${result.name}-metadata.json`,blob:result.metadataBlob}];
-    const saved=await Promise.allSettled(files.map(async file=>{
-      const response=await fetch(`http://127.0.0.1:4321/recording?name=${encodeURIComponent(file.name)}`,{
-        method:"POST",headers:{"content-type":file.blob.type},body:file.blob,signal:AbortSignal.timeout(15_000),
-      });
-      if(!response.ok)throw new Error(`${file.name}: helper returned ${response.status}`);
-      return file.name;
-    }));
-    if(!mounted.current)return;
-    setSaving(false);
-    const success=saved.filter((item):item is PromiseFulfilledResult<string>=>item.status==="fulfilled").map(item=>item.value);
-    const errors=saved.filter((item):item is PromiseRejectedResult=>item.status==="rejected").map(item=>item.reason instanceof Error?item.reason.message:String(item.reason));
-    setStatus(errors.length?`Saved ${success.length}/2 files. ${errors.join("; ")}`:`Saved locally: ${success.join(" and ")}`);
-  }
-
   if (!enabled || !entered) return null;
   return <section className="v-review-recorder" aria-label="Local canvas recording controls" data-recording={recording}>
     <strong>LOCAL REVIEW · CANVAS VIDEO</strong>
     <p>Scene only; DOM and audio omitted. Media remains live.</p>
     <div>
-      <button type="button" onClick={start} disabled={recording||saving}>Start recording</button>
+      <button type="button" onClick={start} disabled={recording}>Start recording</button>
       <button type="button" onClick={stop} disabled={!recording}>Stop recording</button>
       <button type="button" onClick={()=>setClean(true)}>Hide review UI (H)</button>
     </div>
     <output role="status">{recording ? `${elapsed.toFixed(1)}s · ` : ""}{status}</output>
     {result && <div className="v-review-recorder-downloads">
-      <button type="button" onClick={saveLocally} disabled={saving||recording}>{saving?"Saving locally…":"Save locally"}</button>
       <a href={result.video} download={`${result.name}.webm`}>Download WebM ({(result.bytes / 1_000_000).toFixed(1)} MB)</a>
       <a href={result.metadata} download={`${result.name}-metadata.json`}>Download recording metadata</a>
     </div>}

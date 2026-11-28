@@ -5,6 +5,7 @@ import { scrollToProgress } from "../systems/ScrollRig";
 import { useVenue } from "../systems/store";
 import { journey } from "../systems/journey";
 import { EXHIBITION_PROGRESS as EP } from "../data/placements";
+import { reviewToolsAllowed } from "../systems/reviewAccess";
 
 /** Development / explicit ?perf=1 diagnostics for repeatable regression review. */
 export function ReviewControls() {
@@ -16,7 +17,7 @@ export function ReviewControls() {
   });
   const [reset, setReset] = useState(0);
   const [initialShot] = useState(() => {
-    const shot = typeof location === "undefined" ? null : new URLSearchParams(location.search).get("shot");
+    const shot = typeof location === "undefined" || !reviewToolsAllowed() ? null : new URLSearchParams(location.search).get("shot");
     return shot === "entrance" ? 0 : shot === "tunnel" ? .21 : shot === "arena" ? .932 : shot === "pillars" ? EP.pillars.overview : shot === "reception" ? EP.reception.overview : shot === "counter" ? .48 : shot === "anamorphic" ? EP.anamorphic.overview
       : shot === "technical" ? EP.technical.overview : shot === "engineering" ? .675 : shot === "show-control" ? .681 : shot === "production" ? .687
       : ["led-rental","rentals"].includes(shot ?? "") ? EP.rental.overview

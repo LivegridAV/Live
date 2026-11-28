@@ -21,6 +21,7 @@ import { EntranceFinishes } from "./ui/EntranceFinishes";
 import { EntranceWalkthrough } from "./ui/EntranceWalkthrough";
 import { RotateGate } from "./ui/RotateGate";
 import { DiagnosticsPanel, diagnosticsEnabled } from "./ui/Diagnostics";
+import { reviewToolsAllowed } from "./systems/reviewAccess";
 
 /**
  * The venue walkthrough.
@@ -99,7 +100,7 @@ const VenueCanvas = memo(function VenueCanvas({ dpr, shadows }: { dpr: number; s
 export default function Venue() {
   const [webgl] = useState(probeWebGL);
   const entered=useVenue(s=>s.entered);
-  const [capture]=useState(()=>new URLSearchParams(location.search).get("capture")==="1");
+  const [capture]=useState(()=>reviewToolsAllowed()&&new URLSearchParams(location.search).get("capture")==="1");
   const [profile] = useState(detectQuality);
   const [diag] = useState(diagnosticsEnabled);
 

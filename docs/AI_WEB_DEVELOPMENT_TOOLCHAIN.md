@@ -68,7 +68,7 @@ commands shown.
 ### In-app Browser (Browser Preview)
 - **Implementation:** Claude Code's built-in Browser pane + `.claude/launch.json`.
 - **Config:** `.claude/launch.json` defines a `dev` server (`next dev`, port 3000, `autoPort`)
-  and a `static-export` server (serves `out/` on 4321).
+  and an `export-preview` server (`scripts/serve-export.mjs`, serves `out/` on 4310).
 - **Use for:** starting the dev server (`preview_start {name:"dev"}`) and the fast
   implement → reload → inspect loop during UI work.
 - **Verified:** started `next dev` (auto-fell-back to a free port when 3000 was busy) and
