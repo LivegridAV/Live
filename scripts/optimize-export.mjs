@@ -146,6 +146,17 @@ for (const file of walk(OUT)) {
 }
 console.log(`Left ${unpublished.length} working records out of the export${dryRun ? " [dry run]" : ""}.`);
 
+// --------------------------------------------------- internal review page
+// /entrance-review is an internal inspection page (noindex, linked from
+// nowhere, not in the sitemap). Leave its HTML and segment files out of the
+// published export unless the build opts in with NEXT_PUBLIC_VENUE_REVIEW=true
+// (for example a preview deployment). `npm run dev` still serves it.
+if (process.env.NEXT_PUBLIC_VENUE_REVIEW !== "true") {
+  const reviewPage = ["entrance-review.html", "entrance-review.txt", "entrance-review"].map(name => path.join(OUT, name)).filter(existsSync);
+  if (!dryRun) for (const target of reviewPage) rmSync(target, { recursive: true, force: true });
+  console.log(`Left the internal /entrance-review page out of the export (${reviewPage.length} entries)${dryRun ? " [dry run]" : ""}.`);
+}
+
 // ---------------------------------------------------------------- compress
 const report = { pruned, compressed: [], sharedTextures: [], derived: [], ktx2Media: [] };
 const ktx2 = createKtx2Swap({ groups: LOAD_GROUPS, startId: START_GROUP, outDir: OUT });

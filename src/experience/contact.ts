@@ -36,11 +36,11 @@ export const contactLinks = {
  * server-side, so nothing secret is ever shipped to the browser.
  * Override at build time with NEXT_PUBLIC_LEAD_WEBHOOK_URL if the n8n host
  * ever changes; this is a static export, so the env var must be set before
- * `next build`, not at runtime.
+ * `next build`, not at runtime. next.config.ts resolves the endpoint (and its
+ * default) and inlines it only when NEXT_PUBLIC_LEAD_WEBHOOK_ENABLED is
+ * "true"; otherwise it is "" and no intake address ships to the browser.
  */
-export const LEAD_WEBHOOK_URL =
-  process.env.NEXT_PUBLIC_LEAD_WEBHOOK_URL ??
-  "https://n8n.livegridav.com/webhook/livegridav-lead-capture";
+export const LEAD_WEBHOOK_URL = process.env.LEAD_WEBHOOK_URL ?? "";
 
 // The default endpoint failed its production CORS preflight on 2026-09-24.
 // Re-enable only after OPTIONS/POST delivery has been verified on the real host.

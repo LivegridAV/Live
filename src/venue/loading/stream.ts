@@ -12,6 +12,7 @@ import { useVenue } from "../systems/store";
 import { phoneMediaUrl } from "./phoneMediaUrl";
 import { phoneMediaPath } from "./phoneMedia";
 import { forgetVenueTexture, gltfExtender, ktx2Available, ktx2Sibling, loadVenueTexture, missingTextures, usesKtx2 } from "../three/textureLoading";
+import { reviewToolsAllowed } from "../systems/reviewAccess";
 
 /**
  * Browser glue for the streamer: what "fetching a group" means in the venue,
@@ -87,8 +88,11 @@ export function loadConditions(): Set<string> {
 export function fullLoadRequested(inspection = false) {
   if (inspection || typeof location === "undefined") return true;
   const query = new URLSearchParams(location.search);
-  return query.has("inspect") || query.get("camera") === "baseline" || query.get("camera") === "qa"
-    || query.get("capture") === "1" || query.has("record") || query.has("view");
+  // Inspection, baseline/QA cameras, capture and recording are local review
+  // modes (reviewAccess.ts); a stall-visit link (?view=) is not gated here.
+  const review = reviewToolsAllowed() && (query.has("inspect") || query.get("camera") === "baseline" || query.get("camera") === "qa"
+    || query.get("capture") === "1" || query.has("record"));
+  return review || query.has("view");
 }
 
 const isThenable = (value: unknown): value is PromiseLike<unknown> =>

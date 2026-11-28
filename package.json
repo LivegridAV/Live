@@ -6,7 +6,7 @@
     "node": ">=22.18"
   },
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -H 127.0.0.1",
     "build": "next build && node scripts/prepare-export.mjs && node scripts/optimize-export.mjs",
     "typecheck": "tsc --noEmit",
     "test": "node --test scripts/release.test.mjs scripts/venue-loading.test.mjs",

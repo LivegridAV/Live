@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { ARENA_SHIFT } from "./grand";
+import { reviewToolsAllowed } from "../systems/reviewAccess";
 /** QA-only historical cameras, extracted from the pre-implementation manifest.
  * This copies camera numbers and capture metadata, never reference pixels.
  * Replaying a camera does not restore old lighting, media, geometry or viewport.
@@ -202,6 +203,7 @@ let cachedSelection: BaselineSelection = null;
 
 /** Explicit URL opt-in only. Unknown shots preserve the normal camera. */
 export function baselineCameraForSearch(search: string): BaselineSelection {
+  if (!reviewToolsAllowed()) return null;
   if (search === cachedSearch) return cachedSelection;
   cachedSearch = search;
   cachedSelection = null;

@@ -3,10 +3,17 @@ import { useEffect, useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { useVenue } from "./store";
+import { reviewToolsAllowed } from "./reviewAccess";
 
-/** Explicit local QA cutaway. Never changes a venue/stall transform or path. */
+/**
+ * Explicit local QA cutaway. Never changes a venue/stall transform or path.
+ * Runs only where the review modes run (reviewAccess.ts); every caller
+ * (Scene, ZoneGroup) goes through this function. The `typeof` guard keeps the
+ * single-expression body that scripts/verify-placement-protection.mjs
+ * evaluates on its own, without this module's imports.
+ */
 export function placementInspectionEnabled() {
-  return typeof location!=="undefined"&&new URLSearchParams(location.search).get("inspect")==="placement";
+  return typeof location!=="undefined"&&new URLSearchParams(location.search).get("inspect")==="placement"&&(typeof reviewToolsAllowed!=="function"||reviewToolsAllowed());
 }
 
 function fingerprint(array:ArrayLike<number>) {

@@ -5,6 +5,7 @@ import { START_GROUP } from "./groups";
 import { liteBeforeOpening, openingLitePacks } from "./plan";
 import { journeyStartZ } from "../data/path";
 import { useVenue } from "../systems/store";
+import { reviewToolsAllowed } from "../systems/reviewAccess";
 import {
   downloadedBytes, groupFailed, openingSet, planOpening, plannerGroups, streamBandwidth,
 } from "./stream";
@@ -48,7 +49,7 @@ export function useOpeningPlan(full: boolean) {
           const walkMinimum = liteBeforeOpening({ bytesPerSecond, groups: later, startZ });
           const lite = openingLitePacks({
             later: later.map(g => g.id), walkMinimum, phone: venue.isPhone,
-            override: new URLSearchParams(location.search).get("opening"),
+            override: reviewToolsAllowed() ? new URLSearchParams(location.search).get("opening") : null,
           });
           const plan = full ? { full: groups.map(g => g.id), lite: [] } : { full: [START_GROUP], lite };
           current.planned = true;

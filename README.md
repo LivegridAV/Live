@@ -27,7 +27,7 @@ Repo: https://github.com/LivegridAV/Live
 | `node scripts/indexnow.mjs` | After a release is live: ping IndexNow with the live sitemap |
 | `npm run measure`, `npm run compare-shots` | Venue performance and screenshot comparison tools |
 
-`.claude/launch.json` defines `dev` (3000), `export-preview` (4310) and `static-export` (4321) for preview tools.
+`.claude/launch.json` defines `dev` (3000) and `export-preview` (4310) for preview tools. Both listen on 127.0.0.1 only; `npm run dev -- -H 0.0.0.0` opens the dev server to other devices when you need it.
 
 ## Build pipeline
 1. **`next build`**: static export to `out/`. `next.config.ts` runs `scripts/gen-build-info.mjs` in production, writing
